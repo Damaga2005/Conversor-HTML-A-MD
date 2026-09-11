@@ -381,7 +381,8 @@
         </div>
 
         <!-- Tektronix DSO Screen -->
-        <div class="tek-scope">
+        <div class="tek-scope" style="position: relative;">
+          <button id="btn-scope-mode" onclick="toggleScopeMode()" style="position: absolute; top: 6px; right: 8px; z-index: 10; font-size: 9px; padding: 2px 6px; background: rgba(0,229,255,0.15); color: #00e5ff; border: 1px solid #00e5ff; border-radius: 3px; cursor: pointer; font-family: 'SF Mono', monospace;">[TIME DOMAIN]</button>
           <canvas class="tek-canvas" id="tek-canvas"></canvas>
           <div class="tek-hud" id="tek-hud">
             CH1: 50 mV/div • 1 ms/div<br>
@@ -794,6 +795,19 @@ const tekCtx = tekCanvas.getContext('2d');
 let animFrameId = null;
 let animPhase = 0;
 
+let scopeMode = "TIME"; // "TIME" o "FFT"
+
+function toggleScopeMode() {
+  scopeMode = (scopeMode === "TIME") ? "FFT" : "TIME";
+  const btn = document.getElementById('btn-scope-mode');
+  if (btn) {
+    btn.innerText = (scopeMode === "TIME") ? "[TIME DOMAIN]" : "[FFT SPECTRUM]";
+    btn.style.color = (scopeMode === "TIME") ? "#00e5ff" : "#f43f5e";
+    btn.style.borderColor = (scopeMode === "TIME") ? "#00e5ff" : "#f43f5e";
+    btn.style.background = (scopeMode === "TIME") ? "rgba(0,229,255,0.15)" : "rgba(244,63,94,0.15)";
+  }
+}
+
 function toggleScopeCursors() {
   scopeCursorsActive = !scopeCursorsActive;
   const btn = document.getElementById('btn-toggle-cursors');
@@ -833,6 +847,66 @@ function renderTekScope() {
   }
   tekCtx.fillStyle = '#020c04';
   tekCtx.fillRect(0, 0, w, h);
+
+  if (scopeMode === "FFT") {
+    // Retícula de Analizador de Espectro FFT
+    tekCtx.strokeStyle = 'rgba(244, 63, 94, 0.15)';
+    tekCtx.lineWidth = 1;
+    for (let x = 0; x <= w; x += w / 10) {
+      tekCtx.beginPath(); tekCtx.moveTo(x, 0); tekCtx.lineTo(x, h); tekCtx.stroke();
+    }
+    for (let y = 0; y <= h; y += h / 8) {
+      tekCtx.beginPath(); tekCtx.moveTo(0, y); tekCtx.lineTo(w, y); tekCtx.stroke();
+    }
+
+    // Calcular y dibujar espectro de frecuencias 0 a 500 Hz
+    const m = currentModule;
+    animPhase += 0.05;
+    tekCtx.strokeStyle = '#f43f5e';
+    tekCtx.fillStyle = 'rgba(244, 63, 94, 0.2)';
+    tekCtx.shadowColor = '#f43f5e';
+    tekCtx.shadowBlur = 6;
+    tekCtx.lineWidth = 2 * dpr;
+    tekCtx.beginPath();
+    tekCtx.moveTo(0, h);
+
+    const fPeaks = (m === 2) ? [50, 150] : ((m === 3) ? [50] : ((m === 4) ? [160, 340] : [50]));
+    for (let px = 0; px < w; px++) {
+      const f = (px / w) * 500.0;
+      let mag = 0.03 + 0.015 * Math.sin(px * 0.1 + animPhase); // piso de ruido
+      fPeaks.forEach(fp => {
+        const dist = Math.abs(f - fp);
+        if (dist < 25) {
+          mag += 0.75 * Math.exp(-0.5 * Math.pow(dist / 4.0, 2));
+        }
+      });
+      const py = h - mag * (h * 0.85);
+      tekCtx.lineTo(px, py);
+    }
+    tekCtx.lineTo(w, h);
+    tekCtx.closePath();
+    tekCtx.stroke();
+    tekCtx.fill();
+    tekCtx.shadowBlur = 0;
+
+    // Marcadores de frecuencia FFT
+    tekCtx.font = `${9 * dpr}px monospace`;
+    tekCtx.fillStyle = '#f43f5e';
+    tekCtx.fillText("0 Hz", 4, h - 4);
+    tekCtx.fillText("250 Hz", w / 2 - 15, h - 4);
+    tekCtx.fillText("500 Hz", w - 45, h - 4);
+    tekCtx.fillText("0 dBV", 4, 12 * dpr);
+    tekCtx.fillText("-60 dBV", 4, h - 18 * dpr);
+
+    const hud = document.getElementById('tek-hud');
+    if (hud) {
+      const fFund = (m === 4) ? "160.0 Hz (Alias)" : "50.0 Hz (Fundamental)";
+      hud.innerHTML = `FFT RBW: 10 Hz • Span: 500 Hz<br><span style="color:#f43f5e;">Pico Espectral: ${fFund} • THD: 1.8%</span>`;
+    }
+    return;
+  }
+
+
 
   // Retícula verde fosforescente
   tekCtx.strokeStyle = 'rgba(0, 255, 102, 0.15)';

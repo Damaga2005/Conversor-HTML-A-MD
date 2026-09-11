@@ -4703,8 +4703,131 @@ def run_gui():
                 user_answers = []
                 current_idx = 0
                 render_question_screen()
+            def generate_printable_exam_pdf():
+                sel_topic = topic_combo.current()
+                if sel_topic == 0: pool = all_quizzes.copy()
+                else: pool = [q for q in all_quizzes if q.get("tema_num") == sel_topic]
 
-            create_btn(cfg_card, "🚀 Comenzar Examen Ahora", start_test, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=(FONT_FAMILY, 12, "bold"), padx=24, pady=10).pack(anchor="w", pady=(10, 0))
+                sel_count_idx = count_combo.current()
+                desired_count = [10, 20, 30, 50][sel_count_idx]
+                random.shuffle(pool)
+                exam_questions = pool[:min(desired_count, len(pool))]
+
+                exam_html = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Simulacro de Examen Oficial · Sistemes de Mesura UPC EEBE</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  @page {{ size: A4; margin: 18mm; }}
+  body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.45; color: #111; background: #fff; max-width: 850px; margin: 0 auto; padding: 20px; }}
+  .header-exam {{ border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: flex-start; }}
+  .header-left h1 {{ font-size: 17px; margin: 0 0 3px 0; text-transform: uppercase; }}
+  .header-left h2 {{ font-size: 13px; font-weight: normal; color: #444; margin: 0; }}
+  .student-box {{ border: 1px solid #333; padding: 8px 12px; border-radius: 4px; font-size: 11px; width: 330px; }}
+  .student-row {{ display: flex; justify-content: space-between; margin-bottom: 5px; }}
+  .instructions {{ background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px 14px; border-radius: 6px; font-size: 11px; margin-bottom: 20px; }}
+  .q-item {{ margin-bottom: 16px; page-break-inside: avoid; }}
+  .q-num {{ font-weight: bold; color: #000; }}
+  .q-theme {{ font-size: 10px; text-transform: uppercase; color: #0071e3; font-weight: bold; margin-left: 6px; }}
+  .q-text {{ margin: 5px 0; font-size: 13px; }}
+  .q-options {{ display: flex; gap: 24px; margin-top: 6px; font-size: 12px; font-weight: bold; }}
+  .q-opt {{ border: 1px solid #999; padding: 4px 12px; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px; }}
+  .page-break {{ page-break-before: always; }}
+  .key-table {{ width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 11px; }}
+  .key-table th, .key-table td {{ border: 1px solid #cbd5e1; padding: 6px 10px; text-align: left; }}
+  .key-table th {{ background: #f1f5f9; }}
+  .no-print-bar {{ position: fixed; top: 12px; right: 16px; background: #0f172a; padding: 8px 16px; border-radius: 20px; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }}
+  .no-print-bar button {{ background: #0a84ff; color: white; border: none; padding: 8px 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 13px; }}
+  @media print {{ .no-print-bar {{ display: none; }} body {{ padding: 0; }} }}
+</style>
+</head>
+<body>
+<div class="no-print-bar">
+  <button onclick="window.print()">🖨️ Imprimir Cuadernillo / Guardar como PDF</button>
+</div>
+
+<div class="header-exam">
+  <div class="header-left">
+    <h1>Universitat Politècnica de Catalunya · EEBE</h1>
+    <h2>Sistemes de Mesura · Simulacro Oficial de Examen de Autoevaluación</h2>
+  </div>
+  <div class="student-box">
+    <div class="student-row"><span><strong>Alumno:</strong> _________________________________</span></div>
+    <div class="student-row"><span><strong>DNI / NIE:</strong> ____________</span><span><strong>Grupo:</strong> _______</span></div>
+    <div><span><strong>Fecha:</strong> _________________</span><span><strong>Calificación:</strong> _______ / 10.0</span></div>
+  </div>
+</div>
+
+<div class="instructions">
+  <strong>Instrucciones y Baremo Oficial UPC:</strong>
+  Cada pregunta dispone de dos alternativas: <strong>VERTADER (V)</strong> o <strong>FALS (F)</strong>.<br>
+  • <strong>Acierto:</strong> +1.00 punto &nbsp;|&nbsp; • <strong>Fallo:</strong> -0.33 puntos &nbsp;|&nbsp; • <strong>No contestada:</strong> 0.00 puntos.<br>
+  Puntuación normalizada sobre 10: <em>Nota = [(Aciertos · 1.00 - Fallos · 0.33) / Total] · 10.0</em>.
+</div>
+
+<div class="questions-list">"""
+
+                for idx, q in enumerate(exam_questions, 1):
+                    clean_txt = q.get('q', '').replace('<', '&lt;').replace('>', '&gt;')
+                    exam_html += f"""
+  <div class="q-item">
+    <div><span class="q-num">Pregunta {idx}.</span> <span class="q-theme">{q.get('tema_label', '')}</span></div>
+    <div class="q-text">{clean_txt}</div>
+    <div class="q-options">
+      <div class="q-opt"><span>[ &nbsp; ]</span> VERTADER (V)</div>
+      <div class="q-opt"><span>[ &nbsp; ]</span> FALS (F)</div>
+    </div>
+  </div>"""
+
+                exam_html += """
+</div>
+
+<div class="page-break"></div>
+<div class="header-exam">
+  <div class="header-left">
+    <h1>Plantilla de Corrección & Justificaciones Técnicas</h1>
+    <h2>Uso docente / Autoevaluación guiada</h2>
+  </div>
+</div>
+
+<table class="key-table">
+  <thead>
+    <tr>
+      <th style="width: 40px;">#</th>
+      <th style="width: 130px;">Tema</th>
+      <th style="width: 90px;">Respuesta</th>
+      <th>Justificación Razonada y Fundamento Matemático</th>
+    </tr>
+  </thead>
+  <tbody>"""
+
+                for idx, q in enumerate(exam_questions, 1):
+                    corr = "VERTADER" if q.get('ans') == 1 else "FALS"
+                    badge_col = "#15803d" if corr == "VERTADER" else "#b91c1c"
+                    exp = q.get('exp', '').replace('<', '&lt;').replace('>', '&gt;') or "Validado según temario oficial UPC."
+                    exam_html += f"""
+    <tr>
+      <td><strong>{idx}</strong></td>
+      <td>{q.get('tema_label', '')}</td>
+      <td><span style="font-weight:bold; color:{badge_col};">{corr}</span></td>
+      <td>{exp}</td>
+    </tr>"""
+
+                exam_html += """
+  </tbody>
+</table>
+</body>
+</html>"""
+                temp_exam = Path(tempfile.gettempdir()) / "Simulacro_Examen_UPC_Imprimible.html"
+                temp_exam.write_text(exam_html, encoding="utf-8")
+                webbrowser.open(str(temp_exam.resolve().as_uri()))
+
+            row_actions_exam = tk.Frame(cfg_card, bg=COLOR_CARD)
+            row_actions_exam.pack(anchor="w", pady=(14, 0))
+            create_btn(row_actions_exam, "🚀 Comenzar Examen Ahora", start_test, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=(FONT_FAMILY, 11, "bold"), padx=20, pady=8).pack(side="left", padx=(0, 10))
+            create_btn(row_actions_exam, "📄 Generar Cuadernillo Impreso (PDF)", generate_printable_exam_pdf, bg="#1a2e3b", hover_bg="#254356", font=(FONT_FAMILY, 11, "bold"), padx=16, pady=8).pack(side="left")
 
         def render_question_screen():
             for w in main_container.winfo_children():
@@ -5794,6 +5917,7 @@ def run_gui():
             "Sallen-Key Pasobajo (2º Orden)",
             "Sallen-Key Pasoalto (2º Orden)",
             "Puente de Wheatstone & Amplificador INA (AD620/AD623)",
+            "Sensores de Temperatura (Pt100, NTC Taylor, Termopar CJC)",
             "Convertidor ADC & Análisis de Cuantización / SNR"
         ]
         combo_filter_mode.pack(side="left", padx=(0, 15))
@@ -6026,6 +6150,85 @@ def run_gui():
                 out_md += f"- **Tensión de Salida Vo:** `{Vo:.4f} V` ({Vo*1000:.1f} mV)\n"
                 out_md += f"- **Potencia disipada por galga:** `P = (Vs/2)² / R = {P_gauge:.2f} mW` (< 50 mW, sin autocalentamiento peligroso)\n"
                 out_md += f"- **Error por rechazo en modo común (CMRR = {cmrr_db:.0f} dB):** `{Verror_cmrr*1000:.3f} mV` ({Verror_cmrr/Vo*100:.2f}% de la señal)\n"
+                txt_filter_out.insert("end", out_md)
+
+            elif "Sensores de Temperatura" in mode:
+                # 1. Pt100 Callendar-Van Dusen
+                R0_pt = 100.0; A_pt = 3.9083e-3; B_pt = -5.775e-7
+                T_pt = 100.0
+                R_100 = R0_pt * (1.0 + A_pt * T_pt + B_pt * (T_pt**2))
+                alpha_pt = 0.3850 # Ohm/°C
+
+                # Error por resistencia de cable (2 hilos vs 3 hilos vs 4 hilos)
+                RL_wire = 2.5 # Ohm por hilo
+                err_2wire = (2 * RL_wire) / alpha_pt
+                err_3wire = (0.05 * RL_wire) / alpha_pt # asimetría 5%
+                err_4wire = 0.0 # rechazo total Kelvin
+
+                # 2. NTC Taylor Linearization
+                R0_ntc = 10000.0; T0_ntc = 298.15; beta_ntc = 3950.0
+                R_lin = R0_ntc * (beta_ntc - 2.0 * T0_ntc) / (beta_ntc + 2.0 * T0_ntc)
+
+                # 3. Termopar Tipo K CJC
+                s_th = 0.04127 # mV/°C
+                Th_th = 350.0; Ta_th = 25.0
+                V_no_cjc = s_th * (Th_th - Ta_th)
+                V_with_cjc = s_th * Th_th
+                err_cjc_temp = Ta_th
+
+                # Dibujar curva de calibración Pt100 en Canvas
+                bode_canvas.delete("all")
+                w_c = bode_canvas.winfo_width() or 460
+                h_c = 180
+                bode_canvas.create_rectangle(40, 15, w_c - 15, h_c - 25, outline="#2c2c35", width=1)
+                bode_canvas.create_text(230, 28, text="Curva de Calibración Pt100 (IEC 60751: 0°C a 200°C)", fill="#38bdf8", font=(FONT_HEAD[0], 9, "bold"))
+
+                # Trazar recta/curva Pt100
+                prev_x, prev_y = None, None
+                for px in range(40, w_c - 15):
+                    frac = (px - 40) / (w_c - 55)
+                    t_val = frac * 200.0
+                    r_val = R0_pt * (1.0 + A_pt * t_val + B_pt * (t_val**2))
+                    py = (h_c - 30) - (r_val - 100.0) / 76.0 * (h_c - 75)
+                    if prev_x is not None:
+                        bode_canvas.create_line(prev_x, prev_y, px, py, fill="#30d158", width=2)
+                    prev_x, prev_y = px, py
+
+                bode_canvas.create_text(55, h_c - 12, text="0°C (100Ω)", fill="#86868b", font=(FONT_SMALL[0], 7))
+                bode_canvas.create_text(w_c - 35, h_c - 12, text="200°C (175.8Ω)", fill="#86868b", font=(FONT_SMALL[0], 7))
+                bode_canvas.create_text(25, 45, text="175Ω", fill="#86868b", font=(FONT_SMALL[0], 7))
+                bode_canvas.create_text(25, h_c - 30, text="100Ω", fill="#86868b", font=(FONT_SMALL[0], 7))
+
+                out_md = "### 🌡️ Sensores de Temperatura: Pt100, NTC y Termopar Tipo K (Normas Oficiales)\n"
+                out_md += "#### 1. Termorresistencia Pt100 (IEC 60751 / Callendar-Van Dusen):\n"
+                out_md += f"- **Ecuación oficial (T ≥ 0°C):** `R(T) = R₀·(1 + A·T + B·T²)` con `A = 3.9083·10⁻³`, `B = -5.775·10⁻⁷`\n"
+                out_md += f"- **Resistencia a 100°C:** `R(100°C) = {R_100:.3f} Ω` (Sensibilidad media: α = 0.3850 Ω/°C)\n"
+                out_md += f"- **Impacto de Resistencia de Cable (RL = {RL_wire:.1f} Ω por hilo):**\n"
+                out_md += f"  • *Conexión a 2 hilos:* Error sistemático = `+2·RL / α = +{err_2wire:.2f} °C` (Crítico en industria)\n"
+                out_md += f"  • *Conexión a 3 hilos (Siemens):* Error residual = `+{err_3wire:.2f} °C`\n"
+                out_md += f"  • *Conexión a 4 hilos Kelvin:* Error = `0.00 °C` (Inmunidad total a RL)\n\n"
+
+                out_md += "#### 2. Termistor NTC y Linealización de Taylor:\n"
+                out_md += f"- **Parámetros:** `R₀ = {R0_ntc/1000:.0f} kΩ` a `T₀ = 25°C` (298.15 K), `β = {beta_ntc:.0f} K`\n"
+                out_md += f"- **Resistencia óptima de linealización (Punto de inflexión en T₀):**\n"
+                out_md += f"  `R_lin = R₀ · (β - 2·T₀) / (β + 2·T₀) = {R_lin:.1f} Ω` ({R_lin/1000:.3f} kΩ)\n"
+                out_md += f"- **Sensibilidad linealizada:** `S = -Vs · β / (4 · T₀²) = {-10.0*beta_ntc/(4*T0_ntc**2)*1000:.2f} mV/°C` (para Vs = 10 V)\n\n"
+
+                out_md += "#### 3. Termopar Tipo K & Compensación de Unión Fría (CJC):\n"
+                out_md += f"- **Sensibilidad Seebeck nominal:** `s_T = 41.27 µV/°C`\n"
+                out_md += f"- **Medida a Th = {Th_th:.0f}°C con ambiente Ta = {Ta_th:.0f}°C:**\n"
+                out_md += f"  • *Tensión generada sin CJC:* `V = s_T · (Th - Ta) = {V_no_cjc:.3f} mV`\n"
+                out_md += f"  • *Error de lectura si no se compensa:* `{-err_cjc_temp:.1f} °C` de error sistemático\n"
+                out_md += f"  • *Con Compensación CJC (Inyección de V(Ta)):* `V_total = {V_with_cjc:.3f} mV` (Lectura exacta {Th_th:.0f}°C)\n\n"
+
+                out_md += "#### 💻 Netlist SPICE / LTspice (.cir) - Acondicionador Pt100 a 4 Hilos:\n```spice\n"
+                out_md += "* Acondicionador Pt100 a 4 Hilos Kelvin con Fuente de Corriente\n"
+                out_md += "I1 0 n_in DC 1.0m\n"
+                out_md += f"R_pt100 n_in 0 {R_100:.2f}\n"
+                out_md += "X_ina n_in 0 out INA_IDEAL\n"
+                out_md += ".subckt INA_IDEAL in+ in- out\nE1 out 0 in+ in- 10.0\n.ends\n"
+                out_md += ".op\n.end\n```\n"
+
                 txt_filter_out.insert("end", out_md)
 
             elif "ADC" in mode:

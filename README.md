@@ -49,34 +49,37 @@
 
 ---
 
-### 🎛️ 4. Diseñador de Filtros Activos & Acondicionadores de Señal
+### 🎛️ 4. Diseñador de Filtros Activos, Sensores & Acondicionadores de Señal
 - **5ª Pestaña Nativa en la Suite:** Herramienta interactiva para el cálculo, análisis circuital y exportación de etapas analógicas clásicas de la UPC:
   - **Filtros Activos Sallen-Key (2º Orden Pasobajo / Pasoalto):** Síntesis de componentes para aproximaciones polinomiales Butterworth ($Q = 0.7071$), Chebyshev 0.5dB ($Q = 0.8637$), Chebyshev 3dB ($Q = 1.3049$) y Bessel ($Q = 0.577$).
   - **Diagrama de Bode en Tiempo Real:** Curva de ganancia en dB renderizada nativamente con gráficos vectoriales acelerados en Tkinter `Canvas`, con retícula logarítmica y marcación visual de $f_c$ y el punto de $-3\text{ dB}$.
+  - **Sensores de Temperatura (Pt100, NTC Taylor, Termopar CJC):**
+    * *Termorresistencia Pt100 (IEC 60751):* Ecuación de Callendar-Van Dusen, inversión analítica exacta $R \to T$ y cálculo del error por resistencia de cable ($+2R_L / \alpha$) en 2, 3 y 4 hilos Kelvin.
+    * *Termistor NTC:* Resistencia óptima de linealización de Taylor ($R_{lin} = R_0 \frac{\beta - 2T_0}{\beta + 2T_0}$) en divisor o puente.
+    * *Termopares K/J:* Cálculo de fuerza electromotriz Seebeck y compensación electrónica de unión fría (CJC).
+    * *Curva de Calibración en Vivo:* Trazado continuo en Canvas y generación de netlist SPICE a 4 hilos.
   - **Generador de Netlists SPICE / LTspice:** Código de circuito `.cir` completo con subcircuitos de amplificador operacional y directivas de simulación en corriente alterna (`.ac dec 100 ...`), copiable en 1 clic para validar en LTspice, Multisim o KiCad.
   - **Puente de Wheatstone & INA (AD620 / AD623):** Cálculo de tensión diferencial, ajuste de resistencia de ganancia $R_g$, error inducido por tensión de modo común según CMRR en dB y disipación térmica en las galgas para evitar autocalentamiento.
   - **Convertidores ADC & Análisis de Cuantización:** Resolución $N$ bits, tamaño de LSB $q$, piso de ruido RMS de cuantización $\sigma_q = q/\sqrt{12}$, SNR teórico ($6.02N + 1.76\text{ dB}$), margen dinámico y criterios de filtrado antialiasing según Nyquist.
 
 ---
 
-### 🔍 3. Buscador Ultrarrápido estilo macOS Spotlight
+### 🔍 5. Buscador Ultrarrápido estilo macOS Spotlight
 - Pulsa el botón **Spotlight** o el atajo de búsqueda para indexar en milisegundos todos los archivos Markdown de tu curso.
 - Búsqueda por palabras clave, fórmulas, conceptos o nombres de preguntas, con previsualización del fragmento y salto directo al visor.
 
 ---
 
-### 🃏 4. Generador de Flashcards y Paquetes Anki (.apkg)
+### 🃏 6. Generador de Flashcards y Paquetes Anki (.apkg)
 - Extrae automáticamente los bancos de preguntas interactivas presentes en los scripts HTML (`BANC`, `DATA.items`, `ITEMS`).
 - Genera el mazo oficial empaquetado **`_Flashcards_Examen.apkg`** listo para importar en [Anki](https://apps.ankiweb.net/) con tarjetas de dos caras estilizadas (anverso con enunciado y tema, reverso con respuesta oficial, color condicional y justificación técnica).
 - Exporta en paralelo el fichero `_Flashcards_Examen.tsv` compatible con Quizlet y herramientas de repaso.
 
 ---
 
-### 🎯 5. Simulador Oficial de Examen UPC
-- Simulador de examen integrado con la reglamentación y baremo oficial de la UPC:
-  $$\text{Nota Final} = \frac{\text{Aciertos} \times 1.00 - \text{Fallos} \times 0.33}{\text{Total de Preguntas}} \times 10.0$$
-- Modo test rápido (10 preguntas), simulacro parcial (20 preguntas), tema completo (50 preguntas) o examen final con el banco de 500 preguntas del curso.
-- Retroalimentación pedagógica instantánea con solución oficial (`VERTADER` / `FALS`) y explicación teórica.
+### 🎯 7. Simulador Oficial de Examen UPC & Generador de Cuadernillos Impresos (PDF)
+- **Simulador de examen en pantalla:** Baremo oficial UPC ($\text{Nota} = [(\text{Aciertos} \times 1.00 - \text{Fallos} \times 0.33)/\text{Total}] \times 10.0$).
+- **📄 Generador de Cuadernillos de Examen Impresos:** Botón para crear al instante un examen en formato A4 formal imprimible con encabezado de la Universitat Politècnica de Catalunya (EEBE), cajetín de identificación del estudiante, casillas de respuesta `[ ] V   [ ] F` y **plantilla de corrección razonada** con fundamento matemático para el profesor o autoevaluación.
 
 ---
 
@@ -103,7 +106,7 @@
 
 ---
 
-### 🔬 7. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`) — v5.0 Enterprise 3D Edition
+### 🔬 8. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`) — v5.2 Enterprise 3D Edition
 - **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue:** 100% autónomo, ejecutable en local sin internet ni CDNs.
 - **🌐 Motor WebGL 3D Nativo Acelerado por GPU (60 FPS):**
   - **Rotación Orbital y Zoom Interactivos:** Control total con ratón (arrastrar para orbitar, rueda para zoom, doble clic para centrar).
@@ -115,7 +118,10 @@
     * *Sensor capacitivo diferencial MEMS 3D* de 3 placas móviles con visualización de desplazamiento micrométrico.
 - **🎛️ Banco de Instrumentación con Réplicas Fidedignas:**
   - **Keysight 34465A Truevolt 6½ Digit DMM:** Pantalla digital VFD de alta resolución, barra analógica bar-graph con rangos automáticos y cálculo de incertidumbre metrológica $u_B$ en vivo.
-  - **Osciloscopio Tektronix TBS2000B (Phosphor 60 FPS):** Retícula fosforescente verde en tiempo real, medidas automáticas ($V_{pp}$, $V_{rms}$, frecuencia, tiempo de subida $t_r$).
+  - **Osciloscopio Tektronix TBS2000B (Phosphor 60 FPS):**
+    * *Modo Doble `[TIME DOMAIN]` / `[FFT SPECTRUM]`:* Permite conmutar con 1 clic al análisis espectral de Fourier con span de $500\text{ Hz}$, detección de picos armónicos y suelo de ruido en dBV.
+    * *Cursores Duales de Medición:* Líneas móviles de precisión para $\Delta t$, $\Delta V$ y cálculo instantáneo de frecuencia $f = 1/\Delta t$.
+    * *Exportación de Telemetría a CSV:* Descarga inmediata de las señales adquiridas para su procesamiento en Python, MATLAB o Excel.
 - **🔊 Síntesis Acústica en Tiempo Real con Web Audio API:** Permite *escuchar* la física de los sensores (aliasing de Nyquist en ADC, zumbido de 50 Hz en INA/filtros y ruido térmico blanco Johnson).
 - **10 Módulos de Simulación Física y Circuital (Temas 1 al 10 UPC):**
   1. *Puente de Wheatstone & Galgas (1/4, 1/2 y completo)*
