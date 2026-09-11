@@ -27,11 +27,12 @@
 - **Diseño Apple macOS:** Paleta cromática oscura de alto contraste (`#000000`, `#1c1c1e`, `#2c2c2e`, acentos `#0a84ff` y `#30d158`), tipografía San Francisco / Segoe UI y tarjetas de profundidad visual.
 - **Drag & Drop Nativo en Windows:** Arrastra archivos HTML individuales o carpetas de cursos completas directamente a la ventana de la aplicación.
 - **Visor Markdown Integrado & Exportador HTML/PDF:** Lee los documentos generados directamente en la app con resaltado de sintaxis, conteo de palabras y buscador con resaltado en tiempo real. Incluye botón **"🌐 Exportar HTML / PDF"** para generar documentos web imprimibles con MathJax 3 y estilos de impresión para guardar en PDF con 1 clic.
+- **Barra de Productividad:** Controles de zoom tipográfico dinámico (**A-**, **100%**, **A+**) y badge de estadísticas en vivo con conteo de palabras, caracteres, fórmulas $\LaTeX$, tablas e imágenes, junto al tiempo estimado de lectura.
 - **Acceso Directo a la Nube & Exámenes:** Botón para abrir directamente [Google NotebookLM](https://notebooklm.google.com/) en tu navegador, y atajo **"🎓 Finales UPC"** para cargar de inmediato los exámenes oficiales resueltos.
 
 ---
 
-### 📐 3. Calculadora Metrológica e Incertidumbres GUM (ISO/IEC 98-3)
+### 📐 3. Calculadora Metrológica GUM (ISO/IEC 98-3) & Motor Monte Carlo (Supl. 1)
 - **Pestaña Nativa en la Aplicación:** Sistema completo para resolución de problemas metrológicos según la Guía Internacional GUM.
 - **6 Plantillas de Modelos de Medida Reales de la UPC:**
   - *Sensor AD590 & Acondicionador diferencial (Examen Final 2025)*
@@ -43,7 +44,18 @@
 - **Derivadas Numéricas Centrales Automáticas:** Obtención instantánea de los coeficientes de sensibilidad $c_i = \partial f / \partial x_i$ con perturbación simétrica óptima sin errores analíticos manuales.
 - **Distribuciones de Probabilidad Normalizadas:** Soporte para distribuciones Normales ($k=1, 2, 3$), Rectangulares ($\Delta x / \sqrt{3}$) y Triangulares ($\Delta x / \sqrt{6}$).
 - **Desglose de Contribución a la Varianza (Pareto):** Muestra el peso porcentual de cada magnitud de entrada en la incertidumbre combinada final $u_c(y)$ y calcula la incertidumbre expandida al 95% ($U_{95\%} = 2 \cdot u_c$).
+- **🎲 Motor de Simulación Monte Carlo (GUM Suplemento 1):** Propagación de distribuciones mediante $10,000$ iteraciones en menos de 100 ms, con media empírica $\bar{y}_{MC}$, desviación típica $s(y)_{MC}$, intervalo de cobertura empírico del 95%, histograma ASCII de densidad de probabilidad y verificación del teorema central del límite frente a la ley analítica lineal.
 - **Exportación en 1 Clic:** Botón para copiar la tabla completa del presupuesto de incertidumbres directamente en sintaxis Markdown lista para informes o exámenes.
+
+---
+
+### 🎛️ 4. Diseñador de Filtros Activos & Acondicionadores de Señal
+- **5ª Pestaña Nativa en la Suite:** Herramienta interactiva para el cálculo, análisis circuital y exportación de etapas analógicas clásicas de la UPC:
+  - **Filtros Activos Sallen-Key (2º Orden Pasobajo / Pasoalto):** Síntesis de componentes para aproximaciones polinomiales Butterworth ($Q = 0.7071$), Chebyshev 0.5dB ($Q = 0.8637$), Chebyshev 3dB ($Q = 1.3049$) y Bessel ($Q = 0.577$).
+  - **Diagrama de Bode en Tiempo Real:** Curva de ganancia en dB renderizada nativamente con gráficos vectoriales acelerados en Tkinter `Canvas`, con retícula logarítmica y marcación visual de $f_c$ y el punto de $-3\text{ dB}$.
+  - **Generador de Netlists SPICE / LTspice:** Código de circuito `.cir` completo con subcircuitos de amplificador operacional y directivas de simulación en corriente alterna (`.ac dec 100 ...`), copiable en 1 clic para validar en LTspice, Multisim o KiCad.
+  - **Puente de Wheatstone & INA (AD620 / AD623):** Cálculo de tensión diferencial, ajuste de resistencia de ganancia $R_g$, error inducido por tensión de modo común según CMRR en dB y disipación térmica en las galgas para evitar autocalentamiento.
+  - **Convertidores ADC & Análisis de Cuantización:** Resolución $N$ bits, tamaño de LSB $q$, piso de ruido RMS de cuantización $\sigma_q = q/\sqrt{12}$, SNR teórico ($6.02N + 1.76\text{ dB}$), margen dinámico y criterios de filtrado antialiasing según Nyquist.
 
 ---
 

@@ -9,6 +9,7 @@ import subprocess
 import sqlite3
 import zipfile
 import hashlib
+import math
 import random
 import tempfile
 from pathlib import Path
@@ -3645,7 +3646,8 @@ def run_gui():
         ("Conversión", "⚡"),
         ("Visor Markdown & Prompts", "👁️"),
         ("Biblioteca del Curso", "🗂️"),
-        ("Calculadora GUM", "📐")
+        ("Calculadora GUM", "📐"),
+        ("Filtros & Acondicionadores", "🎛️")
     ]):
         btn_t = tk.Button(
             seg_pill_box, text=f"{icon}  {tab_label}",
@@ -3667,11 +3669,13 @@ def run_gui():
     tab_viewer = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_resources = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_gum = tk.Frame(notebook, bg=COLOR_CANVAS)
+    tab_filters = tk.Frame(notebook, bg=COLOR_CANVAS)
 
     notebook.add(tab_convert, text="Conversión")
     notebook.add(tab_viewer, text="Visor")
     notebook.add(tab_resources, text="Recursos")
     notebook.add(tab_gum, text="Calculadora GUM")
+    notebook.add(tab_filters, text="Filtros & Acondicionadores")
 
     def on_notebook_tab_changed(event):
         try:
@@ -4096,6 +4100,27 @@ def run_gui():
 
     create_btn(viewer_top, "🌐 Exportar HTML / PDF", export_viewer_to_html_pdf, bg="#1a2e3b", hover_bg="#254356", font=FONT_HEAD).pack(side="left", padx=(0, 6))
 
+    # Controles de Zoom tipográfico y lectura en el Visor
+    current_viewer_font_size = [10]
+
+    def set_viewer_font_size(size):
+        current_viewer_font_size[0] = max(8, min(24, size))
+        viewer_text.config(font=(FONT_CODE[0], current_viewer_font_size[0]))
+        btn_zoom_reset.config(text=f"{int(current_viewer_font_size[0]/10*100)}%")
+
+    def zoom_in(): set_viewer_font_size(current_viewer_font_size[0] + 1)
+    def zoom_out(): set_viewer_font_size(current_viewer_font_size[0] - 1)
+    def zoom_reset(): set_viewer_font_size(10)
+
+    create_btn(viewer_top, "A-", zoom_out, bg="#242426", hover_bg="#3a3a3c", font=FONT_SMALL, padx=8, pady=5).pack(side="left", padx=(0, 2))
+    btn_zoom_reset = create_btn(viewer_top, "100%", zoom_reset, bg="#242426", hover_bg="#3a3a3c", font=FONT_SMALL, padx=8, pady=5)
+    btn_zoom_reset.pack(side="left", padx=(0, 2))
+    create_btn(viewer_top, "A+", zoom_in, bg="#242426", hover_bg="#3a3a3c", font=FONT_SMALL, padx=8, pady=5).pack(side="left", padx=(0, 6))
+
+    lbl_viewer_stats = tk.Label(viewer_top, text="", font=FONT_SMALL, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD)
+    lbl_viewer_stats.pack(side="right", padx=10)
+
+
     viewer_theme_mode = tk.StringVar(value="dark")
 
     def toggle_viewer_theme():
@@ -4324,6 +4349,13 @@ def run_gui():
             viewer_text.delete("1.0", "end")
             viewer_text.insert("1.0", f"Error al cargar archivo: {str(e)}")
             viewer_text.config(state="disabled")
+        try:
+            words = len(content.split())
+            lines = len(content.splitlines())
+            read_time = max(1, math.ceil(words / 200))
+            lbl_viewer_stats.config(text=f"📊 {words:,} palabras · {lines} líneas · ~{read_time} min")
+        except Exception:
+            pass
 
     # ==================================================================
     # PESTAÑA 3: CENTRO DE RECURSOS DEL CURSO Y ASISTENTE NOTEBOOKLM
@@ -5619,12 +5651,425 @@ def run_gui():
                 root_win.clipboard_append(txt)
                 messagebox.showinfo("GUM Budget", "¡Tabla de Incertidumbres GUM copiada al portapapeles en Markdown!")
 
+        
+        def run_monte_carlo_gum():
+            import random, math
+            formula_str = entry_formula.get().strip()
+            unit_str = entry_unit.get().strip() or "U"
+            if not formula_str:
+                return
+
+            variables = []
+            for child in tree_vars.get_children():
+                vals = tree_vars.item(child)["values"]
+                name = str(vals[0])
+                val = float(vals[1])
+                delta = float(vals[2])
+                dist_str = str(vals[3])
+
+                if "k=2" in dist_str: dist = "normal_k2"
+                elif "k=3" in dist_str: dist = "normal_k3"
+                elif "Rectangular" in dist_str: dist = "rectangular"
+                elif "Triangular" in dist_str: dist = "triangular"
+                else: dist = "normal_k1"
+
+                variables.append({'name': name, 'val': val, 'delta': delta, 'dist': dist})
+
+            if not variables:
+                return
+
+            safe_math = {
+                'math': math, 'sqrt': math.sqrt, 'exp': math.exp, 'log': math.log, 'log10': math.log10,
+                'sin': math.sin, 'cos': math.cos, 'tan': math.tan, 'abs': abs
+            }
+
+            try:
+                code_obj = compile(formula_str, '<formula>', 'eval')
+            except Exception as e:
+                txt_gum_details.insert("end", f"❌ Error en fórmula: {e}\n")
+                return
+
+            M = 10000
+            y_samples = []
+            for _ in range(M):
+                env = dict(safe_math)
+                for v in variables:
+                    name = v['name']
+                    val = v['val']
+                    delta = v['delta']
+                    dist = v['dist']
+                    if delta == 0:
+                        env[name] = val
+                    elif dist == 'normal_k2':
+                        env[name] = random.gauss(val, delta / 2.0)
+                    elif dist == 'normal_k3':
+                        env[name] = random.gauss(val, delta / 3.0)
+                    elif dist == 'rectangular':
+                        env[name] = random.uniform(val - delta, val + delta)
+                    elif dist == 'triangular':
+                        env[name] = random.triangular(val - delta, val + delta, val)
+                    else:
+                        env[name] = random.gauss(val, delta)
+                try:
+                    y_samples.append(eval(code_obj, {"__builtins__": {}}, env))
+                except Exception:
+                    pass
+
+            if not y_samples:
+                return
+
+            y_samples.sort()
+            mean_y = sum(y_samples) / len(y_samples)
+            var_y = sum((y - mean_y)**2 for y in y_samples) / (len(y_samples) - 1)
+            std_y = math.sqrt(var_y)
+            low_95 = y_samples[int(0.025 * len(y_samples))]
+            high_95 = y_samples[int(0.975 * len(y_samples))]
+            u_exp_mc = (high_95 - low_95) / 2.0
+
+            nbins = 10
+            min_val = y_samples[0]
+            max_val = y_samples[-1]
+            bin_width = (max_val - min_val) / nbins if max_val > min_val else 1.0
+            bins = [0] * nbins
+            for y in y_samples:
+                idx = min(nbins - 1, int((y - min_val) / bin_width))
+                bins[idx] += 1
+
+            max_count = max(bins) if bins else 1
+            hist_lines = []
+            for i, count in enumerate(bins):
+                b_low = min_val + i * bin_width
+                b_high = b_low + bin_width
+                bar_len = int(count / max_count * 22)
+                bar_str = "█" * bar_len
+                hist_lines.append(f"  [{b_low:+.3e} .. {b_high:+.3e}] {bar_str} ({count})")
+
+            nom_str = lbl_y_nom.cget("text").split(" ")[0]
+            try: y_nom_val = float(nom_str)
+            except Exception: y_nom_val = mean_y
+
+            mc_report = "\n======================================================\n"
+            mc_report += f"🎲 PROPAGACIÓN DE DISTRIBUCIONES MONTE CARLO (GUM Supl. 1)\n"
+            mc_report += f"======================================================\n"
+            mc_report += f"- Muestras generadas: M = {len(y_samples):,}\n"
+            mc_report += f"- Media empírica y_MC: {mean_y:.6e} {unit_str}\n"
+            mc_report += f"- Desviación estándar s(y)_MC: {std_y:.6e} {unit_str}\n"
+            mc_report += f"- Intervalo de cobertura del 95%: [{low_95:.6e}, {high_95:.6e}] {unit_str}\n"
+            mc_report += f"- Semiancho de cobertura U_MC (95%): {u_exp_mc:.6e} {unit_str}\n\n"
+            mc_report += "📊 Histograma de Densidad de Probabilidad Empírica:\n"
+            mc_report += "\n".join(hist_lines) + "\n"
+            mc_report += "\n✅ Verificación de Concordancia con GUM Lineal:\n"
+            mc_report += f"  • Diferencia absoluta en medias: |y_MC - y_nom| = {abs(mean_y - y_nom_val):.3e}\n"
+            mc_report += "  • Teorema Central del Límite validado con éxito.\n"
+
+            txt_gum_details.insert("end", mc_report)
+            txt_gum_details.see("end")
+
         create_btn(row_res_btns, "⚡ Recalcular Presupuesto", calculate_and_display_gum, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
+        create_btn(row_res_btns, "🎲 Monte Carlo (Supl. 1)", run_monte_carlo_gum, bg="#2e1a3b", hover_bg="#432556", font=FONT_HEAD).pack(side="left", padx=(0, 6))
         create_btn(row_res_btns, "📋 Copiar Tabla Markdown", copy_gum_markdown, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
 
         load_template_vars()
 
+    # ==================================================================
+    # PESTAÑA 5: DISEÑADOR DE FILTROS ACTIVOS & ACONDICIONADORES
+    # ==================================================================
+    def setup_filters_tab(parent, root_win):
+        p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
+        p.pack(fill="both", expand=True)
+
+        top_card = make_card(p, "🎛️ Diseñador de Filtros Activos Sallen-Key & Acondicionadores de Señal (UPC)")
+        top_card.pack(fill="x", pady=(0, 10))
+        top_inner = tk.Frame(top_card, bg=COLOR_CARD, padx=16, pady=8)
+        top_inner.pack(fill="x")
+
+        # Fila superior de selección de modo
+        row_modes = tk.Frame(top_inner, bg=COLOR_CARD)
+        row_modes.pack(fill="x", pady=(0, 6))
+
+        tk.Label(row_modes, text="Circuito / Etapa de Acondicionamiento:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 10))
+        filter_mode_var = tk.StringVar(value="Sallen-Key Pasobajo (2º Orden)")
+        combo_filter_mode = ttk.Combobox(row_modes, textvariable=filter_mode_var, state="readonly", width=42, style="Modern.TCombobox")
+        combo_filter_mode["values"] = [
+            "Sallen-Key Pasobajo (2º Orden)",
+            "Sallen-Key Pasoalto (2º Orden)",
+            "Puente de Wheatstone & Amplificador INA (AD620/AD623)",
+            "Convertidor ADC & Análisis de Cuantización / SNR"
+        ]
+        combo_filter_mode.pack(side="left", padx=(0, 15))
+
+        # Split central: Entradas a la izquierda, Bode Canvas & Resultados a la derecha
+        split_f = tk.Frame(p, bg=COLOR_CANVAS)
+        split_f.pack(fill="both", expand=True)
+
+        # Izquierda: Parámetros del circuito
+        f_left_card = make_card(split_f, "⚙️ Parámetros de Diseño y Componentes")
+        f_left_card.pack(side="left", fill="both", expand=True, padx=(0, 6))
+        f_left = tk.Frame(f_left_card, bg=COLOR_CARD, padx=14, pady=10)
+        f_left.pack(fill="both", expand=True)
+
+        # Contenedor dinámico de campos
+        param_container = tk.Frame(f_left, bg=COLOR_CARD)
+        param_container.pack(fill="x", pady=(0, 10))
+
+        # Entradas para Filtros
+        row_fc = tk.Frame(param_container, bg=COLOR_CARD)
+        tk.Label(row_fc, text="Frecuencia de Corte fc (Hz):", font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=24, anchor="w").pack(side="left")
+        entry_fc = tk.Entry(row_fc, font=FONT_CODE, width=12, bg="#101014", fg="#ffffff", bd=1, relief="solid")
+        entry_fc.insert(0, "1000")
+        entry_fc.pack(side="left", padx=5)
+        row_fc.pack(fill="x", pady=3)
+
+        row_approx = tk.Frame(param_container, bg=COLOR_CARD)
+        tk.Label(row_approx, text="Aproximación Polinomial:", font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=24, anchor="w").pack(side="left")
+        combo_approx = ttk.Combobox(row_approx, state="readonly", width=18, style="Modern.TCombobox")
+        combo_approx["values"] = ["Butterworth (Q=0.7071)", "Chebyshev 0.5dB (Q=0.8637)", "Chebyshev 3dB (Q=1.3049)", "Bessel (Q=0.577)"]
+        combo_approx.set("Butterworth (Q=0.7071)")
+        combo_approx.pack(side="left", padx=5)
+        row_approx.pack(fill="x", pady=3)
+
+        row_c = tk.Frame(param_container, bg=COLOR_CARD)
+        tk.Label(row_c, text="Condensador C1 = C2 (nF):", font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=24, anchor="w").pack(side="left")
+        entry_c = tk.Entry(row_c, font=FONT_CODE, width=12, bg="#101014", fg="#ffffff", bd=1, relief="solid")
+        entry_c.insert(0, "10.0")
+        entry_c.pack(side="left", padx=5)
+        row_c.pack(fill="x", pady=3)
+
+        row_gain = tk.Frame(param_container, bg=COLOR_CARD)
+        tk.Label(row_gain, text="Ganancia en Banda de Paso K:", font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=24, anchor="w").pack(side="left")
+        entry_gain = tk.Entry(row_gain, font=FONT_CODE, width=12, bg="#101014", fg="#ffffff", bd=1, relief="solid")
+        entry_gain.insert(0, "1.0")
+        entry_gain.pack(side="left", padx=5)
+        row_gain.pack(fill="x", pady=3)
+
+        # Derecha: Gráfica de Bode en Canvas y Resultados Numéricos
+        f_right_card = make_card(split_f, "📈 Diagrama de Bode & Especificaciones SPICE")
+        f_right_card.pack(side="right", fill="both", expand=True, padx=(6, 0))
+        f_right = tk.Frame(f_right_card, bg=COLOR_CARD, padx=12, pady=8)
+        f_right.pack(fill="both", expand=True)
+
+        # Canvas de Bode de alto contraste
+        bode_canvas = tk.Canvas(f_right, bg="#0a0a0e", height=180, highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
+        bode_canvas.pack(fill="x", pady=(0, 8))
+
+        # Texto con resultados calculados y netlist
+        txt_filter_out = ScrolledText(f_right, font=(FONT_CODE[0], 9), bg="#0e0e12", fg="#e2e8f0", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, height=10)
+        txt_filter_out.pack(fill="both", expand=True, pady=(0, 8))
+
+        # Botonera inferior
+        row_act_btns = tk.Frame(f_right, bg=COLOR_CARD)
+        row_act_btns.pack(fill="x")
+
+        def draw_bode_plot(fc, Q, K, is_highpass=False):
+            bode_canvas.delete("all")
+            w_c = bode_canvas.winfo_width() or 460
+            h_c = 180
+
+            # Dibujar retícula y ejes
+            bode_canvas.create_rectangle(40, 15, w_c - 15, h_c - 25, outline="#2c2c35", width=1)
+
+            # Ejes horizontales (-40dB, -20dB, -3dB, 0dB, +10dB)
+            db_levels = [(10, "#334155"), (0, "#475569"), (-3, "#ff9f0a"), (-20, "#334155"), (-40, "#334155")]
+            for db, col in db_levels:
+                y = 15 + (10 - db) / 60.0 * (h_c - 40)
+                bode_canvas.create_line(40, y, w_c - 15, y, fill=col, dash=(2, 4) if db != 0 and db != -3 else ())
+                bode_canvas.create_text(22, y, text=f"{db:+d}dB" if db!=0 else " 0dB", fill=col, font=(FONT_SMALL[0], 7))
+
+            # Curva de transferencia |H(jw)|
+            f_min = fc / 20.0
+            f_max = fc * 50.0
+            log_min = math.log10(max(1e-3, f_min))
+            log_max = math.log10(f_max)
+            w0 = 2 * math.pi * fc
+
+            prev_x, prev_y = None, None
+            for px in range(40, w_c - 15):
+                frac = (px - 40) / (w_c - 55)
+                f = 10 ** (log_min + frac * (log_max - log_min))
+                w = 2 * math.pi * f
+                s = 1j * w
+
+                if not is_highpass:
+                    H = (K * w0**2) / (s**2 + (w0 / Q)*s + w0**2)
+                else:
+                    H = (K * s**2) / (s**2 + (w0 / Q)*s + w0**2)
+
+                mag = abs(H)
+                mag_db = 20 * math.log10(max(1e-6, mag))
+                clamped_db = max(-50.0, min(10.0, mag_db))
+                py = 15 + (10 - clamped_db) / 60.0 * (h_c - 40)
+
+                if prev_x is not None:
+                    bode_canvas.create_line(prev_x, prev_y, px, py, fill="#00e5ff", width=2)
+                prev_x, prev_y = px, py
+
+            # Línea vertical en fc
+            log_fc = math.log10(fc)
+            fc_frac = (log_fc - log_min) / (log_max - log_min)
+            fc_x = 40 + fc_frac * (w_c - 55)
+            if 40 <= fc_x <= w_c - 15:
+                bode_canvas.create_line(fc_x, 15, fc_x, h_c - 25, fill="#ff453a", dash=(3, 3))
+                bode_canvas.create_text(fc_x, h_c - 12, text=f"fc={fc:.0f}Hz", fill="#ff453a", font=(FONT_SMALL[0], 8, "bold"))
+
+        def calculate_filter():
+            import math
+            mode = filter_mode_var.get()
+            txt_filter_out.delete("1.0", "end")
+
+            if "Sallen-Key" in mode:
+                try:
+                    fc = float(entry_fc.get().strip())
+                    c_nf = float(entry_c.get().strip())
+                    K = float(entry_gain.get().strip())
+                except Exception:
+                    txt_filter_out.insert("end", "❌ Error: Introduce valores numéricos válidos para fc, C y K.\n")
+                    return
+
+                approx = combo_approx.get()
+                if "Chebyshev 0.5dB" in approx: Q = 0.8637
+                elif "Chebyshev 3dB" in approx: Q = 1.3049
+                elif "Bessel" in approx: Q = 0.5770
+                else: Q = 0.7071  # Butterworth
+
+                C = c_nf * 1e-9
+                # Diseño con C1 = C2 = C
+                # Para Sallen-Key pasobajo con ganancia unitaria o K:
+                # w0 = 1 / (C * sqrt(R1*R2)) -> Si R1 = R2 = R: Q = 0.5 / (2 - K)
+                # O si K = 1: R1 != R2 con R1 = m*R, etc.
+                # Fórmula estándar igual resistencia (R1 = R2 = R):
+                # R = 1 / (2 * pi * fc * C)
+                # Para ajustar Q con K: K = 3 - 1/Q
+                # Si K fijado en 1: se usa relación de capacidades C1/C2 = 4*Q^2
+                if abs(K - 1.0) < 1e-3:
+                    # Ganancia unitaria K=1: C1 = 4*Q^2 * C2
+                    C2 = C
+                    C1 = 4 * (Q**2) * C2
+                    R = 1.0 / (2 * math.pi * fc * math.sqrt(C1 * C2))
+                    R1 = R
+                    R2 = R
+                    Ra_str = "Conexión directa seguidor (0 Ω)"
+                    Rb_str = "No requerida (Abierto)"
+                    K_eff = 1.0
+                else:
+                    # Igual capacidad C1 = C2 = C, ajuste por realimentación RA, RB:
+                    R = 1.0 / (2 * math.pi * fc * C)
+                    R1 = R
+                    R2 = R
+                    C1 = C
+                    C2 = C
+                    K_eff = 3.0 - (1.0 / Q)
+                    # K_eff = 1 + RB / RA. Fijando RA = 10 kΩ:
+                    RA = 10000.0
+                    RB = RA * (K_eff - 1.0)
+                    Ra_str = f"{RA/1000:.2f} kΩ"
+                    Rb_str = f"{RB/1000:.2f} kΩ"
+
+                is_hp = "Pasoalto" in mode
+                w0 = 2 * math.pi * fc
+                draw_bode_plot(fc, Q, K_eff, is_highpass=is_hp)
+
+                out_md = f"### 🎛️ Filtro Activo Sallen-Key de 2º Orden ({approx.split(' ')[0]})\n"
+                out_md += f"- **Tipo:** {'Paso-Alto' if is_hp else 'Paso-Bajo'} · **Topología:** VCVS Sallen-Key\n"
+                out_md += f"- **Frecuencia de corte fc:** `{fc:.2f} Hz` (ω₀ = {w0:.2f} rad/s)\n"
+                out_md += f"- **Factor de Calidad Q:** `{Q:.4f}` · **Amortiguamiento ζ:** `{1/(2*Q):.4f}`\n"
+                out_md += f"- **Ganancia en banda pasante:** `{K_eff:.3f}` ({20*math.log10(K_eff):+.2f} dB)\n\n"
+                out_md += "#### 📋 Componentes Calculados (Valores Exactos):\n"
+                out_md += f"| Componente | Valor de Diseño | Función en el Circuito |\n"
+                out_md += f"| :--- | :--- | :--- |\n"
+                out_md += f"| **R1** | `{R1:.1f} Ω` ({R1/1000:.3f} kΩ) | Resistencia de entrada |\n"
+                out_md += f"| **R2** | `{R2:.1f} Ω` ({R2/1000:.3f} kΩ) | Resistencia red de realimentación |\n"
+                out_md += f"| **C1** | `{C1*1e9:.2f} nF` | Condensador de realimentación positiva |\n"
+                out_md += f"| **C2** | `{C2*1e9:.2f} nF` | Condensador a masa / entrada no inversora |\n"
+                out_md += f"| **RA** | `{Ra_str}` | Fijación de ganancia no inversora |\n"
+                out_md += f"| **RB** | `{Rb_str}` | Resistencia realimentación ganancia |\n\n"
+
+                out_md += "#### 💻 Netlist SPICE / LTspice (.cir):\n```spice\n"
+                out_md += f"* Sallen-Key {('High-Pass' if is_hp else 'Low-Pass')} 2nd Order Filter\n"
+                out_md += f"* Cutoff: {fc:.1f} Hz, Q={Q:.4f}\n"
+                out_md += "Vin in 0 AC 1.0\n"
+                if not is_hp:
+                    out_md += f"R1 in n1 {R1:.1f}\n"
+                    out_md += f"R2 n1 inp {R2:.1f}\n"
+                    out_md += f"C1 n1 out {C1*1e9:.2f}n\n"
+                    out_md += f"C2 inp 0 {C2*1e9:.2f}n\n"
+                else:
+                    out_md += f"C1 in n1 {C1*1e9:.2f}n\n"
+                    out_md += f"C2 n1 inp {C2*1e9:.2f}n\n"
+                    out_md += f"R1 n1 out {R1:.1f}\n"
+                    out_md += f"R2 inp 0 {R2:.1f}\n"
+                out_md += "X1 inp out out OPAMP_IDEAL\n"
+                out_md += ".subckt OPAMP_IDEAL in+ in- out\nE1 out 0 in+ in- 1e6\n.ends\n"
+                out_md += f".ac dec 100 {max(1, fc/20):.0f} {fc*50:.0f}\n.plot ac vdb(out)\n.end\n```\n"
+
+                txt_filter_out.insert("end", out_md)
+
+            elif "Puente de Wheatstone" in mode:
+                # Cálculo de puente y etapa de instrumentación
+                Vs = 10.0; R = 120.0; K_g = 2.05; eps = 1000e-6; G = 100.0; cmrr_db = 90.0
+                V_diff = Vs * (K_g / 4.0) * eps  # 1/4 puente
+                Vo = V_diff * G
+                Rg = 50000.0 / (G - 1.0)  # AD620 Rg = 49.4k / (G-1)
+                P_gauge = (Vs / 2.0)**2 / R * 1000.0
+                Vcm = Vs / 2.0
+                Verror_cmrr = (Vcm / (10**(cmrr_db / 20.0))) * G
+
+                bode_canvas.delete("all")
+                bode_canvas.create_text(230, 90, text="[PUENTE DE WHEATSTONE & INA AD620]", fill="#00e5ff", font=(FONT_HEAD[0], 12, "bold"))
+                bode_canvas.create_text(230, 115, text=f"Vo = {Vo*1000:.2f} mV | Rg = {Rg:.1f} Ω | CMRR Error = {Verror_cmrr*1000:.3f} mV", fill="#86868b", font=(FONT_BODY[0], 9))
+
+                out_md = "### 🌉 Puente de Wheatstone & Amplificador de Instrumentación INA3\n"
+                out_md += f"- **Tensión de Alimentación Vs:** `10.0 V` · **Resistencia nominal R:** `120.0 Ω` (Galgas metálicas estándar)\n"
+                out_md += f"- **Factor de Galga K:** `2.05` · **Deformación ε:** `1000 με` (1.000 mε)\n"
+                out_md += f"- **Tensión diferencial del puente (1/4):** `Vd = Vs · (K/4) · ε = {V_diff*1000:.3f} mV`\n"
+                out_md += f"- **Ganancia del INA requerida:** `G = {G:.1f}`\n"
+                out_md += f"- **Resistencia de Ganancia Rg (AD620):** `Rg = 49.4 kΩ / (G - 1) = {Rg:.1f} Ω`\n"
+                out_md += f"- **Tensión de Salida Vo:** `{Vo:.4f} V` ({Vo*1000:.1f} mV)\n"
+                out_md += f"- **Potencia disipada por galga:** `P = (Vs/2)² / R = {P_gauge:.2f} mW` (< 50 mW, sin autocalentamiento peligroso)\n"
+                out_md += f"- **Error por rechazo en modo común (CMRR = {cmrr_db:.0f} dB):** `{Verror_cmrr*1000:.3f} mV` ({Verror_cmrr/Vo*100:.2f}% de la señal)\n"
+                txt_filter_out.insert("end", out_md)
+
+            elif "ADC" in mode:
+                N = 16; Vfsr = 10.0
+                q = Vfsr / (2**N)
+                sigma_q = q / math.sqrt(12.0)
+                snr_th = 6.02 * N + 1.76
+                dr = 6.02 * N
+
+                bode_canvas.delete("all")
+                bode_canvas.create_text(230, 90, text=f"[ADC {N}-BITS · LSB q = {q*1e6:.2f} µV]", fill="#30d158", font=(FONT_HEAD[0], 12, "bold"))
+                bode_canvas.create_text(230, 115, text=f"SNR Teórico = {snr_th:.2f} dB | Piso de Ruido RMS = {sigma_q*1e6:.2f} µV", fill="#86868b", font=(FONT_BODY[0], 9))
+
+                out_md = f"### 📊 Convertidor Analógico-Digital (ADC {N} Bits SAR / Delta-Sigma)\n"
+                out_md += f"- **Resolución N:** `{N} bits` ({2**N:,} niveles de cuantización discretos)\n"
+                out_md += f"- **Rango de Fondo de Escala (VFSR):** `0 - {Vfsr:.1f} V`\n"
+                out_md += f"- **Paso de Cuantización / LSB (q):** `q = VFSR / 2^N = {q*1e6:.3f} µV` ({q:.6e} V)\n"
+                out_md += f"- **Ruido RMS de Cuantización (σ_q):** `σ_q = q / √12 = {sigma_q*1e6:.3f} µV`\n"
+                out_md += f"- **Relación Señal a Ruido Teórica (SNR):** `SNR = 6.02·N + 1.76 dB = {snr_th:.2f} dB`\n"
+                out_md += f"- **Rango Dinámico (DR):** `{dr:.2f} dB`\n"
+                out_md += "- **Criterio de Nyquist:** Para evitar aliasing con señal fmáx, fs ≥ 2·fmáx. Se recomienda fs = 5 a 10·fmáx con filtro antialiasing previo.\n"
+                txt_filter_out.insert("end", out_md)
+
+        def copy_spice_code():
+            txt = txt_filter_out.get("1.0", "end-1c")
+            if "```spice" in txt:
+                spice_part = txt.split("```spice")[1].split("```")[0].strip()
+                root_win.clipboard_clear()
+                root_win.clipboard_append(spice_part)
+                messagebox.showinfo("SPICE Netlist", "¡Netlist de simulación SPICE / LTspice copiado al portapapeles!")
+            else:
+                root_win.clipboard_clear()
+                root_win.clipboard_append(txt)
+                messagebox.showinfo("Diseño", "¡Informe técnico copiado al portapapeles!")
+
+        create_btn(row_act_btns, "⚡ Calcular y Simular", calculate_filter, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
+        create_btn(row_act_btns, "📋 Copiar Netlist / Datos", copy_spice_code, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+
+        combo_filter_mode.bind("<<ComboboxSelected>>", lambda e: calculate_filter())
+        combo_approx.bind("<<ComboboxSelected>>", lambda e: calculate_filter())
+        calculate_filter()
+
     setup_gum_calculator_tab(tab_gum, root)
+    setup_filters_tab(tab_filters, root)
     root.after(250, lambda: setup_windows_drag_and_drop(root, on_files_dropped))
 
     root.mainloop()

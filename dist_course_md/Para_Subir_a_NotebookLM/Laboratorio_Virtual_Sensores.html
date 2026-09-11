@@ -354,8 +354,12 @@
         <div class="rack-title">
           <span class="rack-logo">KEYSIGHT</span> 34465A Truevolt 6½ Digit DMM &nbsp;|&nbsp; TEKTRONIX TBS2000B DSO
         </div>
-        <div style="font-size: 10px; color: #888; font-family: 'SF Mono', monospace;">
-          NPLC: 10 &nbsp;•&nbsp; Input Z: 10 MΩ &nbsp;•&nbsp; BW: 100 MHz
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="btn btn-sm" onclick="exportScopeDataCSV()" style="font-size: 10px; padding: 3px 8px; background: #0f2338; color: #38bdf8; border: 1px solid #0284c7; cursor: pointer; border-radius: 4px;">📊 Exportar CSV</button>
+          <button class="btn btn-sm" id="btn-toggle-cursors" onclick="toggleScopeCursors()" style="font-size: 10px; padding: 3px 8px; background: #291e0a; color: #fbbf24; border: 1px solid #d97706; cursor: pointer; border-radius: 4px;">📐 Cursores Δt/ΔV</button>
+          <div style="font-size: 10px; color: #888; font-family: 'SF Mono', monospace; margin-left: 6px;">
+            NPLC: 10 • Input Z: 10 MΩ • BW: 100 MHz
+          </div>
         </div>
       </div>
       <div class="rack-body">
@@ -416,6 +420,8 @@
 // ======================================================================
 // 1. MOTOR DE AUDIO FISICO (Web Audio API)
 // ======================================================================
+let scopeCursorsActive = false;
+let telemetryHistory = [];
 let audioCtx = null;
 let audioEnabled = false;
 let audioOsc = null;
@@ -788,6 +794,36 @@ const tekCtx = tekCanvas.getContext('2d');
 let animFrameId = null;
 let animPhase = 0;
 
+function toggleScopeCursors() {
+  scopeCursorsActive = !scopeCursorsActive;
+  const btn = document.getElementById('btn-toggle-cursors');
+  if (btn) {
+    btn.style.background = scopeCursorsActive ? '#d97706' : '#291e0a';
+    btn.style.color = scopeCursorsActive ? '#000000' : '#fbbf24';
+    btn.style.fontWeight = scopeCursorsActive ? 'bold' : 'normal';
+  }
+}
+
+function exportScopeDataCSV() {
+  if (!telemetryHistory.length) {
+    alert("Iniciando registro de telemetría... Espera 1 segundo y vuelve a pulsar.");
+    return;
+  }
+  let csv = "Timestamp_ms,Time_s,Signal_Vin_V,Signal_Vout_V,Sensor_Param,Measurement_Unit\n";
+  telemetryHistory.forEach(row => {
+    csv += `${row.ts},${row.t.toFixed(4)},${row.vin.toFixed(4)},${row.vout.toFixed(4)},"${row.param}",${row.unit}\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Telemetria_Sensores_UPC_Modulo_${currentModule + 1}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 function renderTekScope() {
   const dpr = window.devicePixelRatio || 1;
   const w = tekCanvas.clientWidth * dpr;
@@ -838,6 +874,59 @@ function renderTekScope() {
   }
   tekCtx.stroke();
   tekCtx.shadowBlur = 0;
+
+  // Registrar muestra en buffer de telemetría (máx 1200 puntos)
+  if (telemetryHistory.length > 1200) telemetryHistory.shift();
+  const now = Date.now();
+  telemetryHistory.push({
+    ts: now,
+    t: (now % 10000) / 1000.0,
+    vin: 1.0,
+    vout: (m === 2 ? 0.025 : (m === 3 ? 0.707 : 0.989)),
+    param: document.getElementById('dmm-mode-badge') ? document.getElementById('dmm-mode-badge').innerText : "V",
+    unit: "V"
+  });
+
+  // Renderizado de Cursores Duales Tektronix
+  if (scopeCursorsActive) {
+    const cX1 = w * 0.35;
+    const cX2 = w * 0.75;
+    const cY1 = h * 0.25;
+    const cY2 = h * 0.75;
+
+    tekCtx.setLineDash([4, 4]);
+    tekCtx.lineWidth = 1.5 * dpr;
+
+    // Cursores verticales X1, X2 (Tiempo)
+    tekCtx.strokeStyle = '#38bdf8';
+    tekCtx.beginPath(); tekCtx.moveTo(cX1, 0); tekCtx.lineTo(cX1, h); tekCtx.stroke();
+    tekCtx.beginPath(); tekCtx.moveTo(cX2, 0); tekCtx.lineTo(cX2, h); tekCtx.stroke();
+
+    // Cursores horizontales Y1, Y2 (Tensión)
+    tekCtx.strokeStyle = '#fbbf24';
+    tekCtx.beginPath(); tekCtx.moveTo(0, cY1); tekCtx.lineTo(w, cY1); tekCtx.stroke();
+    tekCtx.beginPath(); tekCtx.moveTo(0, cY2); tekCtx.lineTo(w, cY2); tekCtx.stroke();
+    tekCtx.setLineDash([]);
+
+    // Etiquetas en pantalla
+    tekCtx.font = `${10 * dpr}px monospace`;
+    tekCtx.fillStyle = '#38bdf8';
+    tekCtx.fillText("T1", cX1 + 4, 14 * dpr);
+    tekCtx.fillText("T2", cX2 + 4, 14 * dpr);
+
+    tekCtx.fillStyle = '#fbbf24';
+    tekCtx.fillText("V1", 4, cY1 - 4);
+    tekCtx.fillText("V2", 4, cY2 - 4);
+
+    const deltaT_ms = (0.40 * 10).toFixed(2);
+    const freq_Hz = (1000.0 / 4.0).toFixed(1);
+    const deltaV_mV = (0.50 * 200).toFixed(1);
+
+    const hud = document.getElementById('tek-hud');
+    if (hud) {
+      hud.innerHTML = `CH1: 50 mV/div • 1 ms/div<br><span style="color:#38bdf8;">Δt: ${deltaT_ms} ms (f: ${freq_Hz} Hz)</span> • <span style="color:#fbbf24;">ΔV: ${deltaV_mV} mV</span>`;
+    }
+  }
 }
 
 // Bucle de animación global 60 FPS
