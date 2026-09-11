@@ -26,8 +26,24 @@
 ### 🎨 2. Interfaz Gráfica de Escritorio (Apple Dark Aesthetic)
 - **Diseño Apple macOS:** Paleta cromática oscura de alto contraste (`#000000`, `#1c1c1e`, `#2c2c2e`, acentos `#0a84ff` y `#30d158`), tipografía San Francisco / Segoe UI y tarjetas de profundidad visual.
 - **Drag & Drop Nativo en Windows:** Arrastra archivos HTML individuales o carpetas de cursos completas directamente a la ventana de la aplicación.
-- **Visor Markdown Integrado:** Lee los documentos generados directamente en la app con resaltado de sintaxis, conteo de palabras y buscador con resaltado en tiempo real.
-- **Acceso Directo a la Nube:** Botón para abrir directamente [Google NotebookLM](https://notebooklm.google.com/) en tu navegador predeterminado.
+- **Visor Markdown Integrado & Exportador HTML/PDF:** Lee los documentos generados directamente en la app con resaltado de sintaxis, conteo de palabras y buscador con resaltado en tiempo real. Incluye botón **"🌐 Exportar HTML / PDF"** para generar documentos web imprimibles con MathJax 3 y estilos de impresión para guardar en PDF con 1 clic.
+- **Acceso Directo a la Nube & Exámenes:** Botón para abrir directamente [Google NotebookLM](https://notebooklm.google.com/) en tu navegador, y atajo **"🎓 Finales UPC"** para cargar de inmediato los exámenes oficiales resueltos.
+
+---
+
+### 📐 3. Calculadora Metrológica e Incertidumbres GUM (ISO/IEC 98-3)
+- **Pestaña Nativa en la Aplicación:** Sistema completo para resolución de problemas metrológicos según la Guía Internacional GUM.
+- **6 Plantillas de Modelos de Medida Reales de la UPC:**
+  - *Sensor AD590 & Acondicionador diferencial (Examen Final 2025)*
+  - *Puente de Wheatstone Completo con Galgas Extensométricas*
+  - *Termopar Tipo K con Compensación de Unión Fría (Pt100 / CJC)*
+  - *Acondicionador Inversor para Sensor Capacitivo*
+  - *Divisor de Tensión Resistivo*
+  - *Ley de Ohm (Disipación de Potencia)*
+- **Derivadas Numéricas Centrales Automáticas:** Obtención instantánea de los coeficientes de sensibilidad $c_i = \partial f / \partial x_i$ con perturbación simétrica óptima sin errores analíticos manuales.
+- **Distribuciones de Probabilidad Normalizadas:** Soporte para distribuciones Normales ($k=1, 2, 3$), Rectangulares ($\Delta x / \sqrt{3}$) y Triangulares ($\Delta x / \sqrt{6}$).
+- **Desglose de Contribución a la Varianza (Pareto):** Muestra el peso porcentual de cada magnitud de entrada en la incertidumbre combinada final $u_c(y)$ y calcula la incertidumbre expandida al 95% ($U_{95\%} = 2 \cdot u_c$).
+- **Exportación en 1 Clic:** Botón para copiar la tabla completa del presupuesto de incertidumbres directamente en sintaxis Markdown lista para informes o exámenes.
 
 ---
 

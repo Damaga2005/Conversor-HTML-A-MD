@@ -3395,6 +3395,105 @@ def score_exam(answers: list[dict]) -> tuple:
 # 9. INTERFAZ GRÁFICA MULTIHILO CON VISOR MARKDOWN Y PORTAPAPELES
 # ----------------------------------------------------------------------
 
+# ======================================================================
+# PLANTILLAS DE MODELOS METROLÓGICOS GUM (ISO/IEC 98-3)
+# ======================================================================
+GUM_TEMPLATES = {
+    "Sensor AD590 & Acondicionador (Examen Final 2025)": {
+        "formula": "I * R1 * (1 + R3/R4 + R3/R2) - Vref * (R3/R2)",
+        "unit": "V",
+        "vars": [
+            ("I", 293.15e-6, 0.5e-6, "Normal (k=3)", "Corriente nominal sensor a 20°C (1 µA/K)"),
+            ("R1", 10000.0, 10.0, "Normal (k=2)", "Resistencia conversión corriente-tensión (0.1%)"),
+            ("R2", 3650.0, 3.65, "Normal (k=2)", "Resistencia división ganancia (0.1%)"),
+            ("R3", 10000.0, 10.0, "Normal (k=2)", "Resistencia realimentación (0.1%)"),
+            ("R4", 7870.0, 7.87, "Normal (k=2)", "Resistencia división a masa (0.1%)"),
+            ("Vref", 5.0, 0.0, "Normal (k=1)", "Tensión de referencia estable (sin incertidumbre)")
+        ]
+    },
+    "Puente de Wheatstone Completo (Galgas Extensométricas)": {
+        "formula": "Vs * K * eps",
+        "unit": "V",
+        "vars": [
+            ("Vs", 10.0, 0.05, "Rectangular", "Tensión de alimentación del puente"),
+            ("K", 2.05, 0.02, "Triangular", "Factor de galga según fabricante"),
+            ("eps", 1200e-6, 20e-6, "Normal (k=2)", "Deformación unitaria mecánica (με)")
+        ]
+    },
+    "Termopar Tipo K con Compensación de Unión Fría": {
+        "formula": "sT * (Th - Ta) + sTa * Ta",
+        "unit": "mV",
+        "vars": [
+            ("sT", 0.04108, 0.0005, "Normal (k=2)", "Sensibilidad termopar unión caliente (mV/°C)"),
+            ("sTa", 0.03961, 0.0005, "Normal (k=2)", "Sensibilidad unión fría (mV/°C)"),
+            ("Th", 300.0, 1.0, "Normal (k=2)", "Temperatura unión de medida (°C)"),
+            ("Ta", 25.0, 0.5, "Normal (k=2)", "Temperatura unión de referencia (°C)")
+        ]
+    },
+    "Acondicionador Inversor para Sensor Capacitivo": {
+        "formula": "-Vs * (1 + x)",
+        "unit": "V",
+        "vars": [
+            ("Vs", 1.0, 0.01, "Normal (k=2)", "Amplitud portadora senoidal"),
+            ("x", 0.35, 0.005, "Normal (k=2)", "Desplazamiento relativo del sensor")
+        ]
+    },
+    "Divisor de Tensión Resistivo": {
+        "formula": "Vi * R2 / (R1 + R2)",
+        "unit": "V",
+        "vars": [
+            ("Vi", 10.0, 0.02, "Normal (k=2)", "Tensión de entrada"),
+            ("R1", 10000.0, 10.0, "Normal (k=2)", "Resistencia superior"),
+            ("R2", 10000.0, 10.0, "Normal (k=2)", "Resistencia inferior")
+        ]
+    },
+    "Ley de Ohm (Disipación de Potencia)": {
+        "formula": "V**2 / R",
+        "unit": "W",
+        "vars": [
+            ("V", 12.0, 0.05, "Normal (k=2)", "Tensión en bornas"),
+            ("R", 100.0, 1.0, "Normal (k=2)", "Resistencia de carga")
+        ]
+    }
+}
+
+def markdown_to_simple_html(md_text: str) -> str:
+    """Convierte Markdown básico a HTML para previsualización e impresión limpia con MathJax."""
+    lines = md_text.splitlines()
+    html_out = []
+    in_table = False
+    for line in lines:
+        s = line.strip()
+        if s.startswith("# "):
+            html_out.append(f"<h1>{s[2:]}</h1>")
+        elif s.startswith("## "):
+            html_out.append(f"<h2>{s[3:]}</h2>")
+        elif s.startswith("### "):
+            html_out.append(f"<h3>{s[4:]}</h3>")
+        elif s.startswith("#### "):
+            html_out.append(f"<h4>{s[5:]}</h4>")
+        elif s.startswith("> "):
+            html_out.append(f"<blockquote>{s[2:]}</blockquote>")
+        elif s.startswith("|") and s.endswith("|"):
+            if "---" in s:
+                continue
+            cells = [c.strip() for c in s[1:-1].split("|")]
+            tag = "th" if not in_table else "td"
+            row_html = "".join([f"<{tag}>{c}</{tag}>" for c in cells])
+            if not in_table:
+                html_out.append("<table>")
+                in_table = True
+            html_out.append(f"<tr>{row_html}</tr>")
+        else:
+            if in_table:
+                html_out.append("</table>")
+                in_table = False
+            if s:
+                html_out.append(f"<p>{s}</p>")
+    if in_table:
+        html_out.append("</table>")
+    return "\n".join(html_out)
+
 def run_gui():
     # 1. Habilitar High-DPI en Windows para renderizado nítido
     try:
@@ -3522,6 +3621,7 @@ def run_gui():
     create_btn(h_right, "🎯 Examen UPC", lambda: open_exam_simulator_modal(), bg="#112530", hover_bg="#1b3b4d", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=3)
     create_btn(h_right, "🔬 Lab Virtual", lambda: open_virtual_lab(), bg="#132a19", hover_bg="#1b3d24", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=3)
     create_btn(h_right, "📝 Problemas", lambda: load_resource_in_viewer("_Problemas_Examen_Resueltos.md"), bg="#251a30", hover_bg="#38274a", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=3)
+    create_btn(h_right, "🎓 Finales UPC", lambda: load_resource_in_viewer("_Examenes_Finales_Oficiales_UPC.md"), bg="#2c1a1a", hover_bg="#422525", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=3)
     tk.Label(h_right, text="UPC · EEBE", fg=COLOR_TEXT_MUTED, bg="#242426", font=FONT_SMALL, padx=8, pady=4).pack(side="left", padx=3)
     tk.Label(h_right, text="v3.1 Ultra", fg=COLOR_ACCENT_GREEN, bg="#132a19", font=FONT_SMALL, padx=8, pady=4).pack(side="left", padx=3)
 
@@ -3544,7 +3644,8 @@ def run_gui():
     for i, (tab_label, icon) in enumerate([
         ("Conversión", "⚡"),
         ("Visor Markdown & Prompts", "👁️"),
-        ("Biblioteca del Curso", "🗂️")
+        ("Biblioteca del Curso", "🗂️"),
+        ("Calculadora GUM", "📐")
     ]):
         btn_t = tk.Button(
             seg_pill_box, text=f"{icon}  {tab_label}",
@@ -3565,10 +3666,12 @@ def run_gui():
     tab_convert = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_viewer = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_resources = tk.Frame(notebook, bg=COLOR_CANVAS)
+    tab_gum = tk.Frame(notebook, bg=COLOR_CANVAS)
 
     notebook.add(tab_convert, text="Conversión")
     notebook.add(tab_viewer, text="Visor")
     notebook.add(tab_resources, text="Recursos")
+    notebook.add(tab_gum, text="Calculadora GUM")
 
     def on_notebook_tab_changed(event):
         try:
@@ -3949,6 +4052,49 @@ def run_gui():
                 subprocess.run(["xdg-open", str(target_path)])
 
     create_btn(viewer_top, "📝 Abrir en Editor", open_in_editor, bg="#2c2c2e", hover_bg="#3a3a3c").pack(side="left", padx=(0, 6))
+
+    def export_viewer_to_html_pdf():
+        txt = viewer_text.get("1.0", "end-1c")
+        if not txt.strip():
+            return
+        sel = combo_viewer.get().strip() or "Documento"
+        title = sel.replace(".md", "")
+
+        html_doc = f"""<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>{title} · Sistemes de Mesura UPC</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a1a; background: #ffffff; max-width: 900px; margin: 40px auto; padding: 0 20px; }}
+  h1, h2, h3, h4 {{ color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-top: 24px; }}
+  table {{ border-collapse: collapse; width: 100%; margin: 16px 0; }}
+  th, td {{ border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }}
+  th {{ background: #f1f5f9; font-weight: 600; }}
+  code {{ background: #f1f5f9; color: #0f172a; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; }}
+  pre {{ background: #0f172a; color: #f8fafc; padding: 14px; border-radius: 8px; overflow-x: auto; }}
+  blockquote {{ border-left: 4px solid #0a84ff; padding: 8px 16px; background: #f0f7ff; color: #1e293b; margin: 16px 0; }}
+  .no-print-bar {{ position: fixed; top: 12px; right: 16px; background: rgba(15,23,42,0.9); padding: 8px 16px; border-radius: 20px; z-index: 999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }}
+  .no-print-bar button {{ background: #0a84ff; color: white; border: none; padding: 8px 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 13px; }}
+  .no-print-bar button:hover {{ background: #0071e3; }}
+  @media print {{ .no-print-bar {{ display: none; }} body {{ max-width: 100%; margin: 0; padding: 0; }} }}
+</style>
+</head>
+<body>
+<div class="no-print-bar">
+  <button onclick="window.print()">🖨️ Imprimir / Guardar como PDF</button>
+</div>
+<div id="content">
+{markdown_to_simple_html(txt)}
+</div>
+</body>
+</html>"""
+        temp_html = Path(tempfile.gettempdir()) / f"{title}_Print.html"
+        temp_html.write_text(html_doc, encoding="utf-8")
+        webbrowser.open(str(temp_html.resolve().as_uri()))
+
+    create_btn(viewer_top, "🌐 Exportar HTML / PDF", export_viewer_to_html_pdf, bg="#1a2e3b", hover_bg="#254356", font=FONT_HEAD).pack(side="left", padx=(0, 6))
 
     viewer_theme_mode = tk.StringVar(value="dark")
 
@@ -5243,6 +5389,242 @@ def run_gui():
             else:
                 log(f"⚠️ El archivo arrastrado no es HTML ({p.name})", "warn")
 
+    
+    # ==================================================================
+    # PESTAÑA 4: CALCULADORA METROLÓGICA GUM (ISO/IEC 98-3)
+    # ==================================================================
+    def setup_gum_calculator_tab(parent, root_win):
+        p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
+        p.pack(fill="both", expand=True)
+
+        top_card = make_card(p, "📐 Calculadora Metrológica e Incertidumbres GUM (Guía ISO/IEC 98-3)")
+        top_card.pack(fill="x", pady=(0, 10))
+        top_inner = tk.Frame(top_card, bg=COLOR_CARD, padx=16, pady=10)
+        top_inner.pack(fill="x")
+
+        row_tpl = tk.Frame(top_inner, bg=COLOR_CARD)
+        row_tpl.pack(fill="x", pady=(0, 8))
+
+        tk.Label(row_tpl, text="Plantilla de Examen / Curso:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 10))
+        combo_tpl = ttk.Combobox(row_tpl, state="readonly", width=48, style="Modern.TCombobox")
+        combo_tpl["values"] = list(GUM_TEMPLATES.keys())
+        combo_tpl.set("Sensor AD590 & Acondicionador (Examen Final 2025)")
+        combo_tpl.pack(side="left", padx=(0, 10))
+
+        row_form = tk.Frame(top_inner, bg=COLOR_CARD)
+        row_form.pack(fill="x")
+
+        tk.Label(row_form, text="Función de Medida Y = f(X1, X2, ...):", font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 8))
+        entry_formula = tk.Entry(row_form, font=(FONT_CODE[0], 10, "bold"), bg="#101014", fg=COLOR_ACCENT_AMBER, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
+        entry_formula.pack(side="left", fill="x", expand=True, padx=(0, 10))
+
+        lbl_unit = tk.Label(row_form, text="Unidad Y:", font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD)
+        lbl_unit.pack(side="left", padx=(0, 4))
+        entry_unit = tk.Entry(row_form, font=FONT_CODE, width=6, bg="#101014", fg="#ffffff", bd=1, relief="solid")
+        entry_unit.pack(side="left")
+
+        split_frame = tk.Frame(p, bg=COLOR_CANVAS)
+        split_frame.pack(fill="both", expand=True)
+
+        left_card = make_card(split_frame, "📊 Magnitudes de Entrada (x_i, Δx_i, Distribución)")
+        left_card.pack(side="left", fill="both", expand=True, padx=(0, 6))
+        left_inner = tk.Frame(left_card, bg=COLOR_CARD, padx=12, pady=8)
+        left_inner.pack(fill="both", expand=True)
+
+        columns = ("name", "val", "delta", "dist", "ui", "desc")
+        tree_vars = ttk.Treeview(left_inner, columns=columns, show="headings", height=8)
+        tree_vars.heading("name", text="Variable")
+        tree_vars.heading("val", text="Valor Nominal (x_i)")
+        tree_vars.heading("delta", text="Semiancho (Δx)")
+        tree_vars.heading("dist", text="Distribución")
+        tree_vars.heading("ui", text="Incertidumbre u(x_i)")
+        tree_vars.heading("desc", text="Descripción")
+
+        tree_vars.column("name", width=65, anchor="center")
+        tree_vars.column("val", width=110, anchor="e")
+        tree_vars.column("delta", width=95, anchor="e")
+        tree_vars.column("dist", width=105, anchor="center")
+        tree_vars.column("ui", width=115, anchor="e")
+        tree_vars.column("desc", width=180, anchor="w")
+        tree_vars.pack(fill="both", expand=True, pady=(0, 8))
+
+        row_var_btns = tk.Frame(left_inner, bg=COLOR_CARD)
+        row_var_btns.pack(fill="x")
+
+        def load_template_vars(event=None):
+            tpl_name = combo_tpl.get()
+            tree_vars.delete(*tree_vars.get_children())
+            if tpl_name in GUM_TEMPLATES:
+                tpl = GUM_TEMPLATES[tpl_name]
+                entry_formula.delete(0, "end")
+                entry_formula.insert(0, tpl["formula"])
+                entry_unit.delete(0, "end")
+                entry_unit.insert(0, tpl["unit"])
+                for item in tpl["vars"]:
+                    name, val, delta, dist, desc = item
+                    if dist == "Normal (k=2)": u_val = delta / 2.0
+                    elif dist == "Normal (k=3)": u_val = delta / 3.0
+                    elif dist == "Rectangular": u_val = delta / 1.73205
+                    elif dist == "Triangular": u_val = delta / 2.44949
+                    else: u_val = delta
+                    tree_vars.insert("", "end", values=(name, f"{val:.4e}" if (val!=0 and (abs(val)<1e-2 or abs(val)>1e5)) else f"{val}", f"{delta:.4e}" if (delta!=0 and (abs(delta)<1e-2 or abs(delta)>1e5)) else f"{delta}", dist, f"{u_val:.4e}", desc))
+                calculate_and_display_gum()
+
+        combo_tpl.bind("<<ComboboxSelected>>", load_template_vars)
+
+        right_card = make_card(split_frame, "📈 Presupuesto de Incertidumbre y Resultados GUM")
+        right_card.pack(side="right", fill="both", expand=True, padx=(6, 0))
+        right_inner = tk.Frame(right_card, bg=COLOR_CARD, padx=14, pady=10)
+        right_inner.pack(fill="both", expand=True)
+
+        res_kpi_frame = tk.Frame(right_inner, bg=COLOR_CARD)
+        res_kpi_frame.pack(fill="x", pady=(0, 10))
+
+        kpi1 = tk.Frame(res_kpi_frame, bg="#141418", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, padx=12, pady=8)
+        kpi1.pack(side="left", fill="both", expand=True, padx=(0, 6))
+        tk.Label(kpi1, text="VALOR ESTIMADO (Y)", font=FONT_SMALL, fg=COLOR_TEXT_MUTED, bg="#141418").pack(anchor="w")
+        lbl_y_nom = tk.Label(kpi1, text="0.9893 V", font=(FONT_CODE[0], 15, "bold"), fg=COLOR_ACCENT_GREEN, bg="#141418")
+        lbl_y_nom.pack(anchor="w")
+
+        kpi2 = tk.Frame(res_kpi_frame, bg="#141418", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, padx=12, pady=8)
+        kpi2.pack(side="left", fill="both", expand=True, padx=6)
+        tk.Label(kpi2, text="INCERTIDUMBRE COMBINADA u_c(y)", font=FONT_SMALL, fg=COLOR_TEXT_MUTED, bg="#141418").pack(anchor="w")
+        lbl_u_c = tk.Label(kpi2, text="11.67 mV", font=(FONT_CODE[0], 15, "bold"), fg=COLOR_ACCENT_CYAN, bg="#141418")
+        lbl_u_c.pack(anchor="w")
+
+        kpi3 = tk.Frame(res_kpi_frame, bg="#141418", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, padx=12, pady=8)
+        kpi3.pack(side="left", fill="both", expand=True, padx=(6, 0))
+        tk.Label(kpi3, text="EXPANDIDA U (95%, k=2)", font=FONT_SMALL, fg=COLOR_TEXT_MUTED, bg="#141418").pack(anchor="w")
+        lbl_u_exp = tk.Label(kpi3, text="23.33 mV", font=(FONT_CODE[0], 15, "bold"), fg=COLOR_ACCENT_AMBER, bg="#141418")
+        lbl_u_exp.pack(anchor="w")
+
+        txt_gum_details = ScrolledText(right_inner, font=(FONT_CODE[0], 9), bg="#0e0e12", fg="#e2e8f0", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, height=10)
+        txt_gum_details.pack(fill="both", expand=True, pady=(0, 10))
+
+        def calculate_and_display_gum():
+            import math
+            formula_str = entry_formula.get().strip()
+            unit_str = entry_unit.get().strip() or "U"
+            if not formula_str:
+                return
+
+            variables = []
+            for child in tree_vars.get_children():
+                vals = tree_vars.item(child)["values"]
+                name = str(vals[0])
+                val = float(vals[1])
+                delta = float(vals[2])
+                dist_str = str(vals[3])
+
+                if "k=2" in dist_str: dist = "normal_k2"
+                elif "k=3" in dist_str: dist = "normal_k3"
+                elif "Rectangular" in dist_str: dist = "rectangular"
+                elif "Triangular" in dist_str: dist = "triangular"
+                else: dist = "normal_k1"
+
+                variables.append({'name': name, 'val': val, 'delta': delta, 'dist': dist})
+
+            if not variables:
+                return
+
+            var_map = {v['name']: v['val'] for v in variables}
+            u_map = {}
+            for v in variables:
+                d = v['delta']
+                if v['dist'] == 'normal_k2': u_i = d / 2.0
+                elif v['dist'] == 'normal_k3': u_i = d / 3.0
+                elif v['dist'] == 'rectangular': u_i = d / math.sqrt(3.0)
+                elif v['dist'] == 'triangular': u_i = d / math.sqrt(6.0)
+                else: u_i = d
+                u_map[v['name']] = u_i
+
+            safe_dict = {
+                'math': math, 'sqrt': math.sqrt, 'exp': math.exp, 'log': math.log, 'log10': math.log10,
+                'sin': math.sin, 'cos': math.cos, 'tan': math.tan, 'abs': abs
+            }
+            safe_dict.update(var_map)
+
+            try:
+                y_nom = eval(formula_str, {"__builtins__": {}}, safe_dict)
+            except Exception as e:
+                txt_gum_details.delete("1.0", "end")
+                txt_gum_details.insert("end", f"❌ Error evaluando fórmula: {e}\n")
+                return
+
+            contribs = []
+            sum_sq = 0.0
+            for v in variables:
+                name = v['name']
+                val = v['val']
+                h = max(1e-6, abs(val) * 1e-6)
+
+                dict_plus = dict(safe_dict)
+                dict_plus[name] = val + h
+                y_plus = eval(formula_str, {"__builtins__": {}}, dict_plus)
+
+                dict_minus = dict(safe_dict)
+                dict_minus[name] = val - h
+                y_minus = eval(formula_str, {"__builtins__": {}}, dict_minus)
+
+                c_i = (y_plus - y_minus) / (2.0 * h)
+                u_i = u_map[name]
+                ui_contrib = abs(c_i) * u_i
+                var_contrib = ui_contrib ** 2
+                sum_sq += var_contrib
+
+                contribs.append({
+                    'name': name, 'val': val, 'u_i': u_i, 'c_i': c_i,
+                    'contrib': ui_contrib, 'variance': var_contrib
+                })
+
+            u_c = math.sqrt(sum_sq)
+            U_95 = 2.0 * u_c
+
+            if abs(y_nom) < 1e-2 or abs(y_nom) > 1e4:
+                lbl_y_nom.config(text=f"{y_nom:.4e} {unit_str}")
+            else:
+                lbl_y_nom.config(text=f"{y_nom:.4f} {unit_str}")
+
+            if u_c < 1e-3:
+                lbl_u_c.config(text=f"{u_c*1e6:.2f} µ{unit_str}")
+                lbl_u_exp.config(text=f"{U_95*1e6:.2f} µ{unit_str}")
+            elif u_c < 1.0:
+                lbl_u_c.config(text=f"{u_c*1e3:.2f} m{unit_str}")
+                lbl_u_exp.config(text=f"{U_95*1e3:.2f} m{unit_str}")
+            else:
+                lbl_u_c.config(text=f"{u_c:.4f} {unit_str}")
+                lbl_u_exp.config(text=f"{U_95:.4f} {unit_str}")
+
+            md = f"### Presupuesto de Incertidumbres (GUM Budget)\n"
+            md += f"- **Modelo de Medición:** `Y = {formula_str}`\n"
+            md += f"- **Resultado Final:** `Y = {y_nom:.5f} ± {U_95:.5f} {unit_str} (k=2, 95%)`\n\n"
+            md += "| Magnitud x_i | Valor Nominal | Incert. u(x_i) | Coef. Sensib. c_i | Contribución u_i | % Varianza |\n"
+            md += "| :--- | :--- | :--- | :--- | :--- | :--- |\n"
+            for c in contribs:
+                pct = (c['variance'] / sum_sq * 100.0) if sum_sq > 0 else 0.0
+                md += f"| **{c['name']}** | {c['val']:.3e} | {c['u_i']:.3e} | {c['c_i']:.3e} | {c['contrib']:.3e} {unit_str} | **{pct:.1f}%** |\n"
+            md += f"\n**Incertidumbre Típica Combinada:** `u_c(Y) = {u_c:.5e} {unit_str}`\n"
+            md += f"**Incertidumbre Expandida:** `U_95 = {U_95:.5e} {unit_str}`\n"
+
+            txt_gum_details.delete("1.0", "end")
+            txt_gum_details.insert("end", md)
+
+        row_res_btns = tk.Frame(right_inner, bg=COLOR_CARD)
+        row_res_btns.pack(fill="x")
+
+        def copy_gum_markdown():
+            txt = txt_gum_details.get("1.0", "end-1c")
+            if txt.strip():
+                root_win.clipboard_clear()
+                root_win.clipboard_append(txt)
+                messagebox.showinfo("GUM Budget", "¡Tabla de Incertidumbres GUM copiada al portapapeles en Markdown!")
+
+        create_btn(row_res_btns, "⚡ Recalcular Presupuesto", calculate_and_display_gum, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
+        create_btn(row_res_btns, "📋 Copiar Tabla Markdown", copy_gum_markdown, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+
+        load_template_vars()
+
+    setup_gum_calculator_tab(tab_gum, root)
     root.after(250, lambda: setup_windows_drag_and_drop(root, on_files_dropped))
 
     root.mainloop()
