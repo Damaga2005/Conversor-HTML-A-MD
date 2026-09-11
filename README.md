@@ -75,27 +75,33 @@
 
 ---
 
-### 🔬 7. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`) — v4.0 Ultimate Edition
-- **Simulador Web Autónomo de Categoría PhET / Apple Studio Display:** Sin dependencias externas, sin CDNs ni compilación. Ejecutable en local en cualquier navegador web moderno con estética visual Apple Dark Mode (`#000000`, `#1c1c1e`, `#0a84ff`, `#30d158`) y renderizado Retina High-DPI.
-- **🔊 Síntesis Acústica en Tiempo Real con Web Audio API:** Permite *escuchar* la física de los sensores directamente en el navegador:
-  - **Aliasing Acústico en ADC:** Escucha el colapso tonal de Nyquist al reducir la frecuencia de muestreo $f_s$ por debajo de $2 f_{in}$.
-  - **Zumbido de Red 50 Hz en INA/Filtros:** Escucha el zumbido de modo común desaparecer al elevar el CMRR o al pasar por el filtro pasobajos Sallen-Key.
-  - **Ruido Blanco Térmico Johnson:** Escucha el silbido de ruido blanco variar en amplitud según la temperatura y el valor óhmico.
-- **📈 Osciloscopio Activo a 60 FPS (`requestAnimationFrame`):** Formas de onda continuas en barrido temporal interactivo con botón Play/Pausa, controles de escala (Volts/Div y Time/Div) y retícula phosphor-green.
-- **10 Módulos de Simulación Física y Circuital en Tiempo Real (HTML5 Canvas):**
-  1. **Puente de Wheatstone & Galgas:** Selector 1/4, 1/2 y puente completo, deformación $\varepsilon$, viga en voladizo animada con zonas de tracción y compresión, esquema en rombo y cálculo de sensibilidad ($\mu\text{V}/\mu\varepsilon$).
-  2. **Sensor Pt100 (2, 3 y 4 hilos):** Sonda industrial, error sistemático por resistencia de cables ($R_{cable}$) y demostración gráfica de compensación con termómetro comparativo.
-  3. **Amplificador de Instrumentación INA3 & CMRR Real:** Arquitectura de 3 amplificadores operacionales ($A_1, A_2$ con $R_g$, y $A_3$ sustractor con tolerancia $\delta$), con osciloscopio dual mostrando el rechazo de armónicos parásitos de $50\text{ Hz}$.
-  4. **Filtro Activo Sallen-Key (Butterworth & Chebyshev):** Diagrama de Bode en vivo con respuesta en frecuencia, ganancia en dB y fase, junto a visualización temporal de filtrado.
-  5. **Muestreo Nyquist & ADC:** Reconstrucción de onda analógica frente a la frecuencia de muestreo $f_s$ y resolución en bits (3 a 16 bits), con analizador de espectro FFT animado que muestra el deslizamiento del *alias*.
-  6. **Termopares & Compensación de Unión Fría (CJC):** Tipos K, J y T con unión caliente $T_h$ y de referencia $T_0$, simulando la corrección electrónica con sensor LM35/Pt100.
-  7. **Linealización de Termistores NTC (Circuito de Taylor):** Curva exponencial $R(T)$ y cálculo de la resistencia en paralelo $R_p = R_0 \frac{\beta - 2T_0}{\beta + 2T_0}$ que anula la segunda derivada en el punto de inflexión.
-  8. **Ruido Térmico Johnson-Nyquist & SNR:** Ruido de tensión $v_n = \sqrt{4 k_B T R \Delta f}$, densidad espectral en $\text{nV}/\sqrt{\text{Hz}}$, relación señal/ruido (SNR) y osciloscopio virtual.
-  9. **Sensor Piezoeléctrico & Amplificador de Carga vs Tensión:** Cristal dinámico piezoeléctrico de cuarzo/PZT ($d_{33}$), modelado de respuesta en frecuencia $f_L = \frac{1}{2\pi R_f C_f}$, demostración gráfica de la inmunidad al cable largo ($C_c$) del amplificador de carga frente a la atenuación severa del amplificador de tensión.
-  10. **Sensor Capacitivo Diferencial & Detección Síncrona (Lock-in/PSD):** Transductor capacitivo diferencial de 3 placas (placa central móvil), excitación senoidal en antifase, y desmodulación síncrona sensible a la fase (PSD) con filtro pasobajo para eliminar la portadora y recuperar el signo exacto del desplazamiento.
-- **🎯 10 Retos de Examen Interactivos:** Cada módulo incluye un problema numérico oficial de examen UPC con verificación en tiempo real de tolerancia y resolución detallada paso a paso.
-- **🖥️ Modo Presentación Pantalla Completa:** Vista inmersiva optimizada para docencia, proyectores de aula y monitores Ultra-Wide con tecla rápida o botón Fullscreen.
-- **📄 Exportador de Informes de Prácticas:** Genera y descarga en 1 clic un informe experimental completo en formato Markdown con todos los parámetros actuales y deducciones de los 10 temas.
+### 🔬 7. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`) — v5.0 Enterprise 3D Edition
+- **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue:** 100% autónomo, ejecutable en local sin internet ni CDNs.
+- **🌐 Motor WebGL 3D Nativo Acelerado por GPU (60 FPS):**
+  - **Rotación Orbital y Zoom Interactivos:** Control total con ratón (arrastrar para orbitar, rueda para zoom, doble clic para centrar).
+  - **Iluminación Realista Phong:** Materiales metálicos (oro, acero pulido, cobre) y dieléctricos con reflejos especulares dinámicos.
+  - **Modelos Físicos 3D Paramétricos:**
+    * *Viga en voladizo 3D deformable* con curvatura elástica de Euler-Bernoulli y mapa de calor de tensiones mecánicas de von Mises.
+    * *Sonda industrial Pt100 3D* con termopozo de acero inoxidable y cabezal DIN B sumergida en baño termostático agitado.
+    * *Acelerómetro piezoeléctrico 3D* con cristal de cuarzo $d_{33}$ deformable bajo masa sísmica.
+    * *Sensor capacitivo diferencial MEMS 3D* de 3 placas móviles con visualización de desplazamiento micrométrico.
+- **🎛️ Banco de Instrumentación con Réplicas Fidedignas:**
+  - **Keysight 34465A Truevolt 6½ Digit DMM:** Pantalla digital VFD de alta resolución, barra analógica bar-graph con rangos automáticos y cálculo de incertidumbre metrológica $u_B$ en vivo.
+  - **Osciloscopio Tektronix TBS2000B (Phosphor 60 FPS):** Retícula fosforescente verde en tiempo real, medidas automáticas ($V_{pp}$, $V_{rms}$, frecuencia, tiempo de subida $t_r$).
+- **🔊 Síntesis Acústica en Tiempo Real con Web Audio API:** Permite *escuchar* la física de los sensores (aliasing de Nyquist en ADC, zumbido de 50 Hz en INA/filtros y ruido térmico blanco Johnson).
+- **10 Módulos de Simulación Física y Circuital (Temas 1 al 10 UPC):**
+  1. *Puente de Wheatstone & Galgas (1/4, 1/2 y completo)*
+  2. *Pt100 y compensación a 4 hilos Kelvin*
+  3. *INA3 & CMRR real con AD623/AD620*
+  4. *Filtro activo Sallen-Key pasobajo de 2º orden*
+  5. *Muestreo Nyquist & ADC con analizador FFT*
+  6. *Termopares K/J & compensación de unión fría (CJC)*
+  7. *Termistor NTC & linealización analítica de Taylor*
+  8. *Ruido térmico Johnson-Nyquist & relación SNR*
+  9. *Sensor piezoeléctrico & amplificador de carga vs tensión*
+  10. *Sensor capacitivo diferencial & detección síncrona lock-in (PSD)*
+- **🎯 10 Retos de Examen Oficiales UPC:** Problemas numéricos reales con comprobación de tolerancia y solución matemática paso a paso.
+- **📄 Exportador de Informes Experimentales:** Generador de informe en Markdown descargable en 1 clic.
 
 ---
 
@@ -103,7 +109,7 @@
 Al procesar el curso completo, la herramienta sintetiza automáticamente:
 1. **`_Examenes_Finales_Oficiales_UPC.md`:** 3 exámenes finales oficiales completos (2021, 2024, 2025) resueltos con 100% rigor analítico en LaTeX.
 2. **`_Problemas_Examen_Resueltos.md`:** 10 problemas numéricos de nivel de examen completamente resueltos y explicados.
-3. **`Laboratorio_Virtual_Sensores.html`:** Simulador interactivo en tiempo real de instrumentación (v4.0 Ultimate Edition).
+3. **`Laboratorio_Virtual_Sensores.html`:** Simulador industrial de física e instrumentación 3D (v5.0 Enterprise 3D Edition).
 4. **`_Cuaderno_Maestro_Tema_XX.md`:** 10 cuadernos maestros temáticos de alta densidad.
 5. **`_Formulario_Oficial_Examen.md`:** Formulario consolidado con todas las ecuaciones matemáticas del curso.
 6. **`_Glosario_Conceptos_Clave.md`:** Vocabulario técnico y definiciones operativas.

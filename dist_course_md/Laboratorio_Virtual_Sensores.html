@@ -1,2688 +1,1435 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Laboratorio Virtual de Sensores e Instrumentación v4.0 Ultimate · UPC EEBE</title>
-  <style>
-    :root {
-      --bg-canvas: #000000;
-      --bg-card: #1c1c1e;
-      --bg-inset: #121214;
-      --bg-element: #2c2c2e;
-      --bg-hover: #3a3a3c;
-      --border-card: #2c2c2e;
-      --border-focus: #0a84ff;
-      --text-primary: #f5f5f7;
-      --text-secondary: #86868b;
-      --accent-blue: #0a84ff;
-      --accent-blue-hover: #0077ed;
-      --accent-green: #30d158;
-      --accent-red: #ff453a;
-      --accent-amber: #ffd60a;
-      --accent-purple: #bf5af2;
-      --accent-cyan: #64d2ff;
-      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: var(--bg-canvas);
-      color: var(--text-primary);
-      font-family: var(--font-family);
-      line-height: 1.45;
-      padding: 16px 20px 60px;
-      -webkit-font-smoothing: antialiased;
-    }
-    header {
-      max-width: 1400px;
-      margin: 0 auto 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border-card);
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .header-titles h1 {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .header-titles p {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .badge {
-      background: rgba(10, 132, 255, 0.12);
-      color: var(--accent-cyan);
-      border: 1px solid rgba(100, 210, 255, 0.25);
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .badge.green {
-      background: rgba(48, 209, 88, 0.12);
-      color: var(--accent-green);
-      border-color: rgba(48, 209, 88, 0.25);
-    }
-    .action-btn {
-      background: var(--bg-element);
-      border: 1px solid var(--border-card);
-      color: var(--text-primary);
-      padding: 6px 12px;
-      border-radius: 9px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-    .action-btn:hover {
-      background: var(--bg-hover);
-      border-color: #48484a;
-    }
-    .action-btn.primary {
-      background: var(--accent-blue);
-      border-color: var(--accent-blue);
-      color: #fff;
-    }
-    .action-btn.primary:hover {
-      background: var(--accent-blue-hover);
-    }
-    .action-btn.audio-on {
-      background: #193822;
-      border-color: #2b5c39;
-      color: #a8f5be;
-    }
-    .tabs-nav {
-      max-width: 1400px;
-      margin: 0 auto 16px;
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border-card) transparent;
-    }
-    .tab-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      color: var(--text-secondary);
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .tab-btn:hover {
-      background: var(--bg-element);
-      color: #fff;
-      border-color: #38383a;
-    }
-    .tab-btn.active {
-      background: var(--accent-blue);
-      border-color: var(--accent-blue);
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(10, 132, 255, 0.35);
-    }
-    .lab-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: none;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .lab-container.active { display: block; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .lab-grid {
-      display: grid;
-      grid-template-columns: 460px 1fr;
-      gap: 16px;
-    }
-    @media (max-width: 1080px) {
-      .lab-grid { grid-template-columns: 1fr; }
-    }
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      border-radius: 15px;
-      padding: 20px;
-      position: relative;
-    }
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #fff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .presets-bar {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .preset-pill {
-      background: var(--bg-inset);
-      border: 1px solid var(--border-card);
-      color: var(--text-secondary);
-      padding: 4px 9px;
-      border-radius: 7px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .preset-pill:hover {
-      background: var(--bg-hover);
-      color: #fff;
-      border-color: #555;
-    }
-    .control-group { margin-bottom: 14px; }
-    .control-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 5px;
-    }
-    .control-label span.val {
-      color: var(--accent-cyan);
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-      font-size: 13px;
-    }
-    input[type="range"] {
-      width: 100%;
-      height: 6px;
-      border-radius: 3px;
-      background: var(--bg-element);
-      outline: none;
-      -webkit-appearance: none;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 17px;
-      height: 17px;
-      border-radius: 50%;
-      background: var(--accent-blue);
-      cursor: pointer;
-      border: 2px solid #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-      transition: transform 0.1s;
-    }
-    input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.15);
-    }
-    select, .input-select {
-      width: 100%;
-      padding: 8px 12px;
-      background: var(--bg-inset);
-      border: 1px solid var(--border-card);
-      color: #fff;
-      border-radius: 9px;
-      font-size: 12px;
-      outline: none;
-      cursor: pointer;
-    }
-    select:focus { border-color: var(--accent-blue); }
-    .radio-pill-group {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 14px;
-      background: var(--bg-inset);
-      padding: 3px;
-      border-radius: 9px;
-      border: 1px solid var(--border-card);
-    }
-    .pill-btn {
-      flex: 1;
-      text-align: center;
-      padding: 6px 4px;
-      border-radius: 7px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--text-secondary);
-      transition: all 0.15s ease;
-      user-select: none;
-    }
-    .pill-btn:hover { color: #fff; }
-    .pill-btn.active {
-      background: var(--accent-blue);
-      color: #fff;
-      box-shadow: 0 2px 7px rgba(10, 132, 255, 0.35);
-    }
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 9px;
-      margin-bottom: 14px;
-    }
-    .metric-box {
-      background: var(--bg-inset);
-      padding: 10px 12px;
-      border-radius: 11px;
-      border: 1px solid var(--border-card);
-    }
-    .metric-title {
-      font-size: 10px;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 0.4px;
-    }
-    .metric-val {
-      font-size: 17px;
-      font-weight: 700;
-      color: #fff;
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-      margin-top: 3px;
-    }
-    .metric-val.green { color: var(--accent-green); }
-    .metric-val.amber { color: var(--accent-amber); }
-    .metric-val.red { color: var(--accent-red); }
-    .metric-val.cyan { color: var(--accent-cyan); }
-    .metric-val.purple { color: var(--accent-purple); }
-    .view-toggle-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .canvas-container {
-      position: relative;
-      width: 100%;
-      height: 310px;
-      background: #0b0b0d;
-      border-radius: 13px;
-      border: 1px solid var(--border-card);
-      overflow: hidden;
-    }
-    canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    .formula-box {
-      background: rgba(10, 132, 255, 0.08);
-      border-left: 3px solid var(--accent-blue);
-      padding: 10px 14px;
-      border-radius: 7px;
-      font-size: 12px;
-      color: #d1d1d6;
-      margin-top: 12px;
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-    }
-    .challenge-card {
-      background: linear-gradient(145deg, #152419, #111a14);
-      border: 1px solid rgba(48, 209, 88, 0.28);
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 14px;
-    }
-    .challenge-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent-green);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-    .challenge-desc {
-      font-size: 12px;
-      color: #e5e5ea;
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
-    .challenge-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .challenge-input {
-      flex: 1;
-      padding: 7px 10px;
-      background: #000;
-      border: 1px solid #333;
-      border-radius: 7px;
-      color: #fff;
-      font-size: 12px;
-      font-family: monospace;
-    }
-    .challenge-feedback {
-      margin-top: 8px;
-      font-size: 11px;
-      padding: 8px 10px;
-      border-radius: 7px;
-      display: none;
-      line-height: 1.4;
-    }
-    .challenge-feedback.success {
-      background: rgba(48, 209, 88, 0.15);
-      border: 1px solid var(--accent-green);
-      color: #b7f5c5;
-      display: block;
-    }
-    .challenge-feedback.error {
-      background: rgba(255, 69, 58, 0.15);
-      border: 1px solid var(--accent-red);
-      color: #ffb4af;
-      display: block;
-    }
-    .scope-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #141416;
-      border: 1px solid var(--border-card);
-      border-radius: 8px;
-      padding: 6px 12px;
-      margin-top: 8px;
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-    .scope-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-weight: 600;
-      color: var(--accent-green);
-    }
-    /* Modal export */
-    .modal-backdrop {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(10px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    .modal-backdrop.open { display: flex; }
-    .modal-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      border-radius: 16px;
-      width: 800px;
-      max-width: 92vw;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 22px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .modal-content textarea {
-      width: 100%;
-      height: 330px;
-      background: var(--bg-inset);
-      border: 1px solid var(--border-card);
-      border-radius: 9px;
-      color: #e5e5ea;
-      font-family: monospace;
-      font-size: 12px;
-      padding: 12px;
-      resize: vertical;
-      margin-bottom: 14px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio Virtual de Sensores e Instrumentación · v5.0 Enterprise 3D (UPC)</title>
+<style>
+  :root {
+    --bg-primary: #0a0a0c;
+    --bg-secondary: #141418;
+    --bg-card: #1c1c24;
+    --bg-card-hover: #262632;
+    --border-color: #2e2e3e;
+    --text-main: #f5f5f7;
+    --text-muted: #9898a6;
+    --accent-blue: #0a84ff;
+    --accent-green: #30d158;
+    --accent-amber: #ffd60a;
+    --accent-red: #ff453a;
+    --accent-purple: #bf5af2;
+    --accent-cyan: #64d2ff;
+    --phosphor-green: #00ff66;
+    --vfd-teal: #00e5ff;
+    --keysight-orange: #ff6600;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-main);
+    line-height: 1.5;
+    overflow-x: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo {
+    width: 36px; height: 36px; background: linear-gradient(135deg, #0a84ff, #30d158);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: #fff; box-shadow: 0 4px 12px rgba(10,132,255,0.4);
+  }
+  .brand-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+  .brand-subtitle { font-size: 11px; color: var(--text-muted); }
+  .badge-v5 {
+    background: rgba(48,209,88,0.15); color: var(--accent-green);
+    border: 1px solid rgba(48,209,88,0.3); padding: 3px 8px; border-radius: 12px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  .header-actions { display: flex; align-items: center; gap: 10px; }
+  .btn {
+    background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);
+    padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; user-select: none;
+  }
+  .btn:hover { background: var(--bg-card-hover); border-color: #4a4a5e; }
+  .btn-primary { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+  .btn-primary:hover { background: #0071e3; }
+  .btn-green { background: #13381e; color: var(--accent-green); border-color: rgba(48,209,88,0.3); }
+  .btn-green:hover { background: #1c522b; }
+
+  /* Nav Modules */
+  .modules-bar {
+    background: #101014; border-bottom: 1px solid var(--border-color);
+    display: flex; overflow-x: auto; padding: 6px 16px; gap: 8px; flex-shrink: 0;
+  }
+  .modules-bar::-webkit-scrollbar { height: 4px; }
+  .modules-bar::-webkit-scrollbar-thumb { background: #2e2e3e; border-radius: 2px; }
+  .mod-tab {
+    padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+    white-space: nowrap; color: var(--text-muted); background: transparent; border: 1px solid transparent;
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .mod-tab:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+  .mod-tab.active {
+    color: #fff; background: var(--accent-blue); border-color: var(--accent-blue);
+    box-shadow: 0 2px 8px rgba(10,132,255,0.4);
+  }
+
+  /* Main Workspace Layout */
+  .workspace {
+    flex: 1; display: grid; grid-template-columns: 340px 1fr 340px; overflow: hidden;
+  }
+
+  /* Left Panel: Controls */
+  .panel-left {
+    background: var(--bg-secondary); border-right: 1px solid var(--border-color);
+    padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+  }
+  .section-title {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;
+  }
+  .control-group {
+    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px;
+    padding: 12px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .control-label {
+    font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; color: var(--text-main);
+  }
+  .control-val { font-family: "SF Mono", monospace; color: var(--accent-cyan); font-weight: 700; }
+  .slider {
+    -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
+    background: #2e2e3e; outline: none; transition: background 0.2s;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--accent-blue); cursor: pointer; box-shadow: 0 0 8px rgba(10,132,255,0.6);
+  }
+  .select-styled {
+    background: #101014; color: var(--text-main); border: 1px solid var(--border-color);
+    border-radius: 6px; padding: 6px 10px; font-size: 12px; outline: none; width: 100%;
+  }
+
+  .presets-box {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .preset-chip {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted); font-size: 11px; padding: 4px 8px; border-radius: 6px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .preset-chip:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+  /* Center Stage: 3D Viewport & Instruments */
+  .panel-center {
+    background: #08080a; display: flex; flex-direction: column; overflow: hidden; position: relative;
+  }
+  .view-toolbar {
+    background: rgba(20,20,24,0.9); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color); padding: 8px 16px;
+    display: flex; justify-content: space-between; align-items: center; z-index: 10;
+  }
+  .view-toggle { display: flex; gap: 4px; background: #0c0c10; padding: 3px; border-radius: 8px; }
+  .view-btn {
+    padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;
+    background: transparent; border: none; color: var(--text-muted); transition: all 0.2s;
+  }
+  .view-btn.active { background: var(--bg-card); color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+
+  .canvas-container {
+    flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
+  }
+  #webgl-canvas {
+    width: 100%; height: 100%; display: block; cursor: grab;
+  }
+  #webgl-canvas:active { cursor: grabbing; }
+
+  /* 3D Overlay HUD */
+  .hud-3d {
+    position: absolute; top: 16px; left: 16px; pointer-events: none;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .hud-tag {
+    background: rgba(16,16,22,0.85); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.12); padding: 5px 10px; border-radius: 6px;
+    font-size: 11px; font-family: "SF Mono", monospace; color: var(--accent-cyan);
+  }
+  .hud-controls-hint {
+    position: absolute; bottom: 12px; left: 16px; pointer-events: none;
+    font-size: 11px; color: rgba(255,255,255,0.4); display: flex; gap: 12px;
+  }
+
+  /* Lower Instrument Rack: Keysight / Tektronix */
+  .instrument-rack {
+    height: 240px; background: #121216; border-top: 1px solid var(--border-color);
+    display: flex; flex-direction: column; flex-shrink: 0;
+  }
+  .rack-header {
+    background: #181820; padding: 6px 16px; border-bottom: 1px solid var(--border-color);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .rack-title { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
+  .rack-logo { color: var(--keysight-orange); font-weight: 900; }
+  
+  .rack-body {
+    flex: 1; display: grid; grid-template-columns: 1fr 340px; padding: 10px; gap: 10px;
+  }
+
+  /* Keysight 34465A DMM Faceplate */
+  .keysight-dmm {
+    background: #050508; border: 2px solid #2a2a38; border-radius: 8px;
+    padding: 10px 14px; display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+  }
+  .dmm-top { display: flex; justify-content: space-between; align-items: center; }
+  .dmm-mode-badge { font-size: 10px; font-weight: 800; color: #fff; background: var(--keysight-orange); padding: 2px 6px; border-radius: 4px; }
+  .dmm-display {
+    font-family: "SF Mono", "Courier New", monospace;
+    color: var(--vfd-teal); text-shadow: 0 0 10px rgba(0,229,255,0.6);
+    font-size: 28px; font-weight: 800; text-align: right; margin: 4px 0;
+    letter-spacing: 1px;
+  }
+  .dmm-bar {
+    width: 100%; height: 6px; background: #1a1a24; border-radius: 3px; overflow: hidden; position: relative;
+  }
+  .dmm-bar-fill {
+    height: 100%; width: 50%; background: linear-gradient(90deg, #00e5ff, #30d158); transition: width 0.1s;
+  }
+  .dmm-footer {
+    display: flex; justify-content: space-between; font-size: 10px; color: #666; font-family: "SF Mono", monospace;
+  }
+
+  /* Tektronix Mini DSO Screen */
+  .tek-scope {
+    background: #020c04; border: 2px solid #1a3320; border-radius: 8px;
+    padding: 6px; display: flex; flex-direction: column; position: relative;
+    box-shadow: inset 0 0 15px rgba(0,255,102,0.15);
+  }
+  .tek-canvas { width: 100%; height: 100%; border-radius: 4px; }
+  .tek-hud {
+    position: absolute; top: 10px; left: 10px; font-size: 10px; font-family: "SF Mono", monospace;
+    color: var(--phosphor-green); text-shadow: 0 0 6px rgba(0,255,102,0.6);
+  }
+
+  /* Right Panel: Physics & Exam Challenge */
+  .panel-right {
+    background: var(--bg-secondary); border-left: 1px solid var(--border-color);
+    padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+  }
+  .metric-card {
+    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px;
+    padding: 12px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .metric-header { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+  .metric-value { font-size: 20px; font-weight: 800; font-family: "SF Mono", monospace; color: var(--accent-green); }
+  .metric-sub { font-size: 11px; color: #888; }
+
+  .formula-box {
+    background: #0e0e12; border: 1px solid #22222e; border-radius: 8px;
+    padding: 10px; font-family: "SF Mono", monospace; font-size: 11px; color: #ccc;
+    line-height: 1.6;
+  }
+  .formula-highlight { color: var(--accent-amber); font-weight: 700; }
+
+  .challenge-box {
+    background: linear-gradient(135deg, rgba(191,90,242,0.1), rgba(10,132,255,0.1));
+    border: 1px solid rgba(191,90,242,0.3); border-radius: 10px; padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .challenge-title { font-size: 12px; font-weight: 800; color: #d8b4fe; display: flex; align-items: center; gap: 6px; }
+  .challenge-desc { font-size: 12px; color: #e2e8f0; }
+  .challenge-input-row { display: flex; gap: 6px; }
+  .challenge-input {
+    flex: 1; background: #101018; border: 1px solid #3b3b4f; border-radius: 6px;
+    padding: 6px 10px; color: #fff; font-family: "SF Mono", monospace; font-size: 12px; outline: none;
+  }
+  .challenge-res {
+    font-size: 11px; padding: 8px; border-radius: 6px; display: none; line-height: 1.4;
+  }
+  .challenge-res.correct { background: rgba(48,209,88,0.15); color: #86efac; border: 1px solid rgba(48,209,88,0.3); }
+  .challenge-res.incorrect { background: rgba(255,69,58,0.15); color: #fca5a5; border: 1px solid rgba(255,69,58,0.3); }
+
+  /* Modal Report */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .modal-box {
+    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px;
+    width: 90%; max-width: 750px; max-height: 85vh; display: flex; flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+  }
+  .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+  .modal-body { padding: 20px; overflow-y: auto; font-family: "SF Mono", monospace; font-size: 12px; color: #ccc; line-height: 1.6; }
+  .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
+</style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="header-titles">
-      <h1>🔬 Laboratorio Virtual de Sensores e Instrumentación <span class="badge green">v4.0 Ultimate</span></h1>
-      <p>Universitat Politècnica de Catalunya · 10 Temas Oficiales (EEBE · ETSETB)</p>
+<!-- Header -->
+<header>
+  <div class="brand">
+    <div class="brand-logo">μ</div>
+    <div>
+      <div class="brand-title">SISTEMES DE MESURA · LABORATORI VIRTUAL 3D</div>
+      <div class="brand-subtitle">Universitat Politècnica de Catalunya · EEBE / ETSETB</div>
     </div>
-    <div class="header-actions">
-      <button id="btn-audio-toggle" class="action-btn" onclick="toggleAudioSynthesis()">🔊 Audio Síntesis: OFF</button>
-      <button id="btn-anim-toggle" class="action-btn" onclick="toggleAnimationLoop()">⏸ Pausar Osciloscopio</button>
-      <button class="action-btn" onclick="toggleFullScreen()">⛶ Pantalla Completa</button>
-      <button class="action-btn primary" onclick="openReportModal()">📄 Exportar Informe (10 Temas)</button>
-    </div>
-  </header>
-
-  <!-- NAVIGATION TABS: 10 MODULES (1 per TEMA) -->
-  <div class="tabs-nav">
-    <button class="tab-btn active" onclick="switchLab('lab-wheatstone')">⚖️ T1. Wheatstone & Galgas</button>
-    <button class="tab-btn" onclick="switchLab('lab-pt100')">🌡️ T2. Pt100 (2/3/4 Hilos)</button>
-    <button class="tab-btn" onclick="switchLab('lab-tc')">🔥 T3. Termopar & CJC</button>
-    <button class="tab-btn" onclick="switchLab('lab-ntc')">📈 T4. Termistor NTC (Taylor)</button>
-    <button class="tab-btn" onclick="switchLab('lab-ina')">⚡ T5. INA3 & CMRR Real</button>
-    <button class="tab-btn" onclick="switchLab('lab-filter')">〰️ T6. Filtro Sallen-Key</button>
-    <button class="tab-btn" onclick="switchLab('lab-piezo')">💎 T7. Sensor Piezoeléctrico</button>
-    <button class="tab-btn" onclick="switchLab('lab-capacitive')">⚡ T8. Capacitivo & Lock-in</button>
-    <button class="tab-btn" onclick="switchLab('lab-adc')">📊 T9. Muestreo & ADC</button>
-    <button class="tab-btn" onclick="switchLab('lab-noise')">🔊 T10. Ruido Johnson & SNR</button>
+    <span class="badge-v5">v5.0 Enterprise 3D</span>
   </div>
+  <div class="header-actions">
+    <button class="btn btn-green" id="btn-audio" onclick="toggleAudio()">
+      <span id="audio-icon">🔊</span> <span id="audio-text">Audio Físico: ON</span>
+    </button>
+    <button class="btn" onclick="toggleFullscreen()">🖥️ Pantalla Completa</button>
+    <button class="btn btn-primary" onclick="openReportModal()">📄 Exportar Informe</button>
+  </div>
+</header>
 
-  <!-- 1. PUENTE DE WHEATSTONE (TEMA 1) -->
-  <div id="lab-wheatstone" class="lab-container active">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Parámetros y Galgas Extensométricas</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('w_scale')">⚖️ Báscula 2 mV/V</div>
-          <div class="preset-pill" onclick="applyPreset('w_wind')">💨 Túnel Viento</div>
-          <div class="preset-pill" onclick="applyPreset('w_quarter')">🎯 1 Galga Simple</div>
+<!-- Modules Nav -->
+<nav class="modules-bar" id="modules-bar">
+  <button class="mod-tab active" onclick="switchModule(0)">⚖️ 1. Galgas & Viga 3D</button>
+  <button class="mod-tab" onclick="switchModule(1)">🌡️ 2. Pt100 & 4 Hilos</button>
+  <button class="mod-tab" onclick="switchModule(2)">⚡ 3. INA3 & CMRR Real</button>
+  <button class="mod-tab" onclick="switchModule(3)">〰️ 4. Filtro Sallen-Key</button>
+  <button class="mod-tab" onclick="switchModule(4)">📊 5. ADC & Nyquist 3D</button>
+  <button class="mod-tab" onclick="switchModule(5)">🔥 6. Termopar & CJC</button>
+  <button class="mod-tab" onclick="switchModule(6)">📈 7. Termistor Taylor</button>
+  <button class="mod-tab" onclick="switchModule(7)">🔊 8. Ruido Johnson</button>
+  <button class="mod-tab" onclick="switchModule(8)">💎 9. Piezoeléctrico 3D</button>
+  <button class="mod-tab" onclick="switchModule(9)">⚡ 10. Capacitivo Diferencial</button>
+</nav>
+
+<!-- Main Workspace -->
+<div class="workspace">
+
+  <!-- Left Controls Panel -->
+  <aside class="panel-left" id="panel-left">
+    <!-- Controls injected by JS -->
+  </aside>
+
+  <!-- Center 3D Viewport & Instruments -->
+  <main class="panel-center">
+    <div class="view-toolbar">
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-view-3d" onclick="setViewMode('3d')">🌐 Vista 3D Física (WebGL)</button>
+        <button class="view-btn" id="btn-view-diag" onclick="setViewMode('diag')">📐 Esquemático Circuital</button>
+      </div>
+      <div style="font-size: 11px; color: var(--text-muted);">
+        Motor: <span style="color: var(--accent-green); font-weight: 700;">WebGL GPU 60 FPS</span>
+      </div>
+    </div>
+
+    <!-- 3D Canvas Viewport -->
+    <div class="canvas-container">
+      <canvas id="webgl-canvas"></canvas>
+      <div class="hud-3d">
+        <div class="hud-tag" id="hud-tag-1">Modelo: Viga en Voladizo 3D</div>
+        <div class="hud-tag" id="hud-tag-2">Carga: F = 5.00 N</div>
+      </div>
+      <div class="hud-controls-hint">
+        <span>🖱️ Arrastrar: Rotar 3D</span>
+        <span>🔄 Rueda: Zoom</span>
+        <span>🎯 Doble clic: Centrar</span>
+      </div>
+    </div>
+
+    <!-- Instrument Rack (Keysight DMM & Tek Scope) -->
+    <div class="instrument-rack">
+      <div class="rack-header">
+        <div class="rack-title">
+          <span class="rack-logo">KEYSIGHT</span> 34465A Truevolt 6½ Digit DMM &nbsp;|&nbsp; TEKTRONIX TBS2000B DSO
         </div>
-        <label class="control-label">Topología de Montaje:</label>
-        <div class="radio-pill-group">
-          <div id="btn-topo-quarter" class="pill-btn active" onclick="setWheatstoneTopo('quarter')">1/4 Puente</div>
-          <div id="btn-topo-half" class="pill-btn" onclick="setWheatstoneTopo('half')">1/2 Push-Pull</div>
-          <div id="btn-topo-full" class="pill-btn" onclick="setWheatstoneTopo('full')">Puente Completo (4)</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Deformación Mecánica (ε): <span class="val" id="val-w-eps">+1000 µε</span></div>
-          <input type="range" id="slider-w-eps" min="-2500" max="2500" step="50" value="1000" oninput="updateWheatstone()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Tensión de Excitación (Vs): <span class="val" id="val-w-vs">10.0 V</span></div>
-          <input type="range" id="slider-w-vs" min="1.0" max="15.0" step="0.5" value="10.0" oninput="updateWheatstone()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Factor de Galga (K): <span class="val" id="val-w-k">2.05</span></div>
-          <input type="range" id="slider-w-k" min="1.50" max="4.00" step="0.05" value="2.05" oninput="updateWheatstone()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Resistencia Nominal Galga (R0): <span class="val" id="val-w-r0">120.0 Ω</span></div>
-          <select id="select-w-r0" onchange="updateWheatstone()">
-            <option value="120">120.0 Ω (Metálica Estándar)</option>
-            <option value="350">350.0 Ω (Baja Disipación Térmica)</option>
-            <option value="1000">1000.0 Ω (Alta Impedancia)</option>
-          </select>
-        </div>
-        <div class="formula-box" id="w-formula">Vo = (Vs / 4) * [ (ΔR/R) / (1 + 0.5*(ΔR/R)) ]</div>
-        
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Sensibilidad</div>
-          <div class="challenge-desc">¿Qué deformación ε (en µε) se requiere para obtener exactamente Vo = +10.00 mV con Vs=10V y K=2.00 en 1/4 de puente?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-w-ans" class="challenge-input" placeholder="Introduce valor en µε...">
-            <button class="action-btn primary" onclick="checkWheatstoneChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-w-fb" class="challenge-feedback"></div>
+        <div style="font-size: 10px; color: #888; font-family: 'SF Mono', monospace;">
+          NPLC: 10 &nbsp;•&nbsp; Input Z: 10 MΩ &nbsp;•&nbsp; BW: 100 MHz
         </div>
       </div>
-
-      <div class="card">
-        <div class="view-toggle-bar">
-          <div class="card-title" style="margin:0;">📊 Salida y Viga en Voladizo</div>
-          <div class="radio-pill-group" style="margin:0;width:240px;">
-            <div id="btn-wview-beam" class="pill-btn active" onclick="setWheatstoneView('beam')">🏗️ Viga Mecánica</div>
-            <div id="btn-wview-schematic" class="pill-btn" onclick="setWheatstoneView('schematic')">⚡ Circuito Rombo</div>
+      <div class="rack-body">
+        <!-- Keysight 34465A Display -->
+        <div class="keysight-dmm">
+          <div class="dmm-top">
+            <span class="dmm-mode-badge" id="dmm-mode-badge">DC VOLTAGE</span>
+            <span style="font-size: 10px; color: #888; font-family: 'SF Mono', monospace;">AUTO 10V • 10 PLC</span>
+          </div>
+          <div class="dmm-display" id="dmm-display">+0.000 000 V</div>
+          <div class="dmm-bar">
+            <div class="dmm-bar-fill" id="dmm-bar-fill"></div>
+          </div>
+          <div class="dmm-footer">
+            <span>Min: <span id="dmm-min">0.000 V</span></span>
+            <span>Max: <span id="dmm-max">0.000 V</span></span>
+            <span>u_B (Keysight): <span id="dmm-ub">±0.000014 V</span></span>
           </div>
         </div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">ΔR en Galga</div><div class="metric-val cyan" id="m-w-dr">0.246 Ω</div></div>
-          <div class="metric-box"><div class="metric-title">Tensión Salida (Vo)</div><div class="metric-val green" id="m-w-vo">+5.122 mV</div></div>
-          <div class="metric-box"><div class="metric-title">Sensibilidad</div><div class="metric-val" id="m-w-sens">5.12 µV/µε</div></div>
-          <div class="metric-box"><div class="metric-title">Error No-Linealidad</div><div class="metric-val amber" id="m-w-nl">0.051 %</div></div>
-          <div class="metric-box"><div class="metric-title">Potencia Galga</div><div class="metric-val" id="m-w-pwr">208 mW</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-wheatstone"></canvas>
+
+        <!-- Tektronix DSO Screen -->
+        <div class="tek-scope">
+          <canvas class="tek-canvas" id="tek-canvas"></canvas>
+          <div class="tek-hud" id="tek-hud">
+            CH1: 50 mV/div • 1 ms/div<br>
+            Vpp: 120.5 mV • f: 50.0 Hz
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
-  <!-- 2. PT100 (TEMA 2) -->
-  <div id="lab-pt100" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Parámetros Pt100 y Cable</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('pt_hvac')">❄️ Cámara Frigorífica (-20°C)</div>
-          <div class="preset-pill" onclick="applyPreset('pt_long')">🏭 Cable Largo 100m (RL=8Ω)</div>
-          <div class="preset-pill" onclick="applyPreset('pt_oven')">🔥 Horno Industrial (200°C)</div>
-        </div>
-        <label class="control-label">Modo de Conexión de la Sonda:</label>
-        <div class="radio-pill-group">
-          <div id="btn-pt-2w" class="pill-btn active" onclick="setPtWires(2)">2 Hilos</div>
-          <div id="btn-pt-3w" class="pill-btn" onclick="setPtWires(3)">3 Hilos (Siemens)</div>
-          <div id="btn-pt-4w" class="pill-btn" onclick="setPtWires(4)">4 Hilos (Kelvin)</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Temperatura del Medio (T): <span class="val" id="val-pt-t">50.0 °C</span></div>
-          <input type="range" id="slider-pt-t" min="-50" max="250" step="1" value="50" oninput="updatePt100()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Resistencia Cable por Hilo (RL): <span class="val" id="val-pt-rl">2.5 Ω</span></div>
-          <input type="range" id="slider-pt-rl" min="0.0" max="10.0" step="0.2" value="2.5" oninput="updatePt100()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Corriente Excitación (Ibias): <span class="val" id="val-pt-i">1.00 mA</span></div>
-          <input type="range" id="slider-pt-i" min="0.2" max="3.0" step="0.1" value="1.0" oninput="updatePt100()">
-        </div>
-        <div class="formula-box" id="pt-formula">2 Hilos: R_aparente = R(T) + 2*RL. Error = +2*RL / 0.385 Ω/°C.</div>
+  <!-- Right Physics & Exam Challenge Panel -->
+  <aside class="panel-right" id="panel-right">
+    <!-- Injected by JS -->
+  </aside>
 
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Error de Cable</div>
-          <div class="challenge-desc">Si se usa conexión a 2 hilos con RL = 3.85 Ω por hilo, ¿cuántos grados Celsius de error sistemático se cometerán? (α = 0.00385 °C⁻¹).</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-pt-ans" class="challenge-input" placeholder="Error en °C...">
-            <button class="action-btn primary" onclick="checkPt100Challenge()">Comprobar</button>
-          </div>
-          <div id="ch-pt-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
+</div>
 
-      <div class="card">
-        <div class="view-toggle-bar">
-          <div class="card-title" style="margin:0;">📊 Termometría y Circuito</div>
-          <div class="radio-pill-group" style="margin:0;width:240px;">
-            <div id="btn-ptview-thermo" class="pill-btn active" onclick="setPtView('thermo')">🌡️ Termómetro Dual</div>
-            <div id="btn-ptview-schematic" class="pill-btn" onclick="setPtView('schematic')">⚡ Circuito Hilos</div>
-          </div>
-        </div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Resistencia Real</div><div class="metric-val cyan" id="m-pt-rreal">119.25 Ω</div></div>
-          <div class="metric-box"><div class="metric-title">Resistencia Medida</div><div class="metric-val" id="m-pt-rapp">124.25 Ω</div></div>
-          <div class="metric-box"><div class="metric-title">Temp. Interpretada</div><div class="metric-val amber" id="m-pt-tapp">62.99 °C</div></div>
-          <div class="metric-box"><div class="metric-title">Error Sistemático</div><div class="metric-val red" id="m-pt-error">+12.99 °C</div></div>
-          <div class="metric-box"><div class="metric-title">Autocalentamiento</div><div class="metric-val" id="m-pt-diss">0.12 mW</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-pt100"></canvas>
-        </div>
-      </div>
+<!-- Modal Report -->
+<div class="modal-overlay" id="modal-report">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px;">📄 Informe Experimental de Laboratorio (Markdown)</div>
+      <button class="btn" onclick="closeReportModal()">✕ Cerrar</button>
+    </div>
+    <div class="modal-body" id="modal-report-text">
+      <!-- Report text generated by JS -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="copyReportToClipboard()">📋 Copiar al Portapapeles</button>
+      <button class="btn btn-primary" onclick="downloadReportMarkdown()">💾 Descargar Fichero .md</button>
     </div>
   </div>
+</div>
 
-  <!-- 3. TERMOPAR & CJC (TEMA 3) -->
-  <div id="lab-tc" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Termopar y Compensación CJC</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('tc_typek')">🔥 Tipo K Industrial (41 µV/°C)</div>
-          <div class="preset-pill" onclick="applyPreset('tc_typej')">⚡ Tipo J (51 µV/°C)</div>
-          <div class="preset-pill" onclick="applyPreset('tc_nocjc')">❌ Sin Compensación (Error)</div>
-        </div>
-        <label class="control-label">Tipo de Termopar:</label>
-        <div class="radio-pill-group">
-          <div id="btn-tctype-k" class="pill-btn active" onclick="setTCType('K')">Tipo K</div>
-          <div id="btn-tctype-j" class="pill-btn" onclick="setTCType('J')">Tipo J</div>
-          <div id="btn-tctype-t" class="pill-btn" onclick="setTCType('T')">Tipo T</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Temp. Unión Caliente (Th): <span class="val" id="val-tc-th">450 °C</span></div>
-          <input type="range" id="slider-tc-th" min="0" max="1000" step="5" value="450" oninput="updateTC()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Temp. Unión Fría / Ambiente (Tamb): <span class="val" id="val-tc-t0">25.0 °C</span></div>
-          <input type="range" id="slider-tc-t0" min="-10" max="60" step="1" value="25" oninput="updateTC()">
-        </div>
-        <label class="control-label">Compensación de Unión Fría (CJC):</label>
-        <div class="radio-pill-group">
-          <div id="btn-tccjc-on" class="pill-btn active" onclick="setTCCJC(true)">✅ CJC Activada (LM35/Pt100)</div>
-          <div id="btn-tccjc-off" class="pill-btn" onclick="setTCCJC(false)">❌ Sin CJC (Asume 0°C)</div>
-        </div>
-        <div class="formula-box" id="tc-formula">V_termo = S * (Th - T0) | V_cjc = S * T0 | V_total = V_termo + V_cjc = S * Th</div>
+<script>
+// ======================================================================
+// 1. MOTOR DE AUDIO FISICO (Web Audio API)
+// ======================================================================
+let audioCtx = null;
+let audioEnabled = false;
+let audioOsc = null;
+let audioNoise = null;
+let audioGain = null;
 
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Termoelectricidad</div>
-          <div class="challenge-desc">Un termopar Tipo K (S = 41.2 µV/°C) mide Th = 300°C en un entorno a Tamb = 30°C sin compensar (referencia a 0°C). ¿Qué temperatura indicará el voltímetro?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-tc-ans" class="challenge-input" placeholder="Temp. indicada en °C...">
-            <button class="action-btn primary" onclick="checkTCChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-tc-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AudioContext();
+    audioGain = audioCtx.createGain();
+    audioGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+    audioGain.connect(audioCtx.destination);
+  }
+}
 
-      <div class="card">
-        <div class="view-toggle-bar">
-          <div class="card-title" style="margin:0;">📊 Circuito Termoeléctrico y Lectura</div>
-          <div class="radio-pill-group" style="margin:0;width:240px;">
-            <div id="btn-tcview-schematic" class="pill-btn active" onclick="setTCView('schematic')">⚡ Circuito CJC</div>
-            <div id="btn-tcview-curve" class="pill-btn" onclick="setTCView('curve')">📈 Curva Seebeck</div>
-          </div>
-        </div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Tensión Termopar</div><div class="metric-val cyan" id="m-tc-vth">17.51 mV</div></div>
-          <div class="metric-box"><div class="metric-title">Tensión CJC</div><div class="metric-val purple" id="m-tc-vcjc">1.03 mV</div></div>
-          <div class="metric-box"><div class="metric-title">Temp. Medida</div><div class="metric-val green" id="m-tc-tmed">450.0 °C</div></div>
-          <div class="metric-box"><div class="metric-title">Error Térmico</div><div class="metric-val" id="m-tc-err">0.0 °C</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-tc"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
+function toggleAudio() {
+  initAudio();
+  if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+  audioEnabled = !audioEnabled;
+  document.getElementById('audio-icon').textContent = audioEnabled ? '🔊' : '🔇';
+  document.getElementById('audio-text').textContent = 'Audio Físico: ' + (audioEnabled ? 'ON' : 'OFF');
+  document.getElementById('btn-audio').className = audioEnabled ? 'btn btn-green' : 'btn';
+  updateAudioSynthesis();
+}
 
-  <!-- 4. NTC & TAYLOR (TEMA 4) -->
-  <div id="lab-ntc" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Linealización de Termistor NTC</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('ntc_opt')">✨ Resistencia Taylor Óptima</div>
-          <div class="preset-pill" onclick="applyPreset('ntc_none')">❌ Sin Linealizar (Rp=∞)</div>
-          <div class="preset-pill" onclick="applyPreset('ntc_highb')">📈 Beta Alto (4500K)</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Parámetro Beta (β): <span class="val" id="val-ntc-beta">3950 K</span></div>
-          <input type="range" id="slider-ntc-beta" min="3000" max="4800" step="50" value="3950" oninput="updateNTC()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Resistencia a 25°C (R25): <span class="val" id="val-ntc-r25">10.0 kΩ</span></div>
-          <input type="range" id="slider-ntc-r25" min="1.0" max="50.0" step="0.5" value="10.0" oninput="updateNTC()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Temp. Inflexión Central (T0): <span class="val" id="val-ntc-t0">25 °C</span></div>
-          <input type="range" id="slider-ntc-t0" min="10" max="60" step="1" value="25" oninput="updateNTC()">
-        </div>
-        <label class="control-label">Resistencia en Paralelo (Rp):</label>
-        <div class="radio-pill-group">
-          <div id="btn-ntc-taylor" class="pill-btn active" onclick="setNTCRp('taylor')">Rp Taylor Óptima</div>
-          <div id="btn-ntc-none" class="pill-btn" onclick="setNTCRp('none')">Sin Paralelo (Rp=∞)</div>
-        </div>
-        <div class="formula-box" id="ntc-formula">Rp = R0 * (β - 2*T0) / (β + 2*T0) | Segunda derivada d²Req/dT² = 0 en T0.</div>
-
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Taylor NTC</div>
-          <div class="challenge-desc">Para R25 = 10 kΩ, β = 3950 K y T0 = 25°C (298.15 K), ¿qué valor de Rp (en kΩ) anula la segunda derivada en T0?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-ntc-ans" class="challenge-input" placeholder="Rp en kΩ...">
-            <button class="action-btn primary" onclick="checkNTCChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-ntc-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📊 Curva de Linealización vs Ideal</div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Rp Calculada</div><div class="metric-val cyan" id="m-ntc-rp">7.38 kΩ</div></div>
-          <div class="metric-box"><div class="metric-title">Req a 25°C</div><div class="metric-val green" id="m-ntc-req">4.25 kΩ</div></div>
-          <div class="metric-box"><div class="metric-title">Sensibilidad S0</div><div class="metric-val" id="m-ntc-sens">-73.1 Ω/°C</div></div>
-          <div class="metric-box"><div class="metric-title">Error Linealidad</div><div class="metric-val amber" id="m-ntc-nl">0.82 %</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-ntc"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. INA3 (TEMA 5) -->
-  <div id="lab-ina" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Parámetros INA3 (3 Op-Amps)</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('ina_ecg')">🫀 Señal ECG (1mV, 50Hz)</div>
-          <div class="preset-pill" onclick="applyPreset('ina_highgain')">📈 Alta Ganancia (Gd=1000)</div>
-          <div class="preset-pill" onclick="applyPreset('ina_clean')">✨ CMRR 120 dB (0.01% tol)</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Tensión Diferencial Entrada (Vd): <span class="val" id="val-ina-vd">20.0 mV</span></div>
-          <input type="range" id="slider-ina-vd" min="-50" max="50" step="1" value="20" oninput="updateINA()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Ruido Modo Común Entrada (Vcm, 50Hz): <span class="val" id="val-ina-vcm">2.50 V</span></div>
-          <input type="range" id="slider-ina-vcm" min="0.0" max="10.0" step="0.2" value="2.5" oninput="updateINA()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Resistencia Ganancia (Rg): <span class="val" id="val-ina-rg">200 Ω</span></div>
-          <input type="range" id="slider-ina-rg" min="50" max="5000" step="10" value="200" oninput="updateINA()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Tolerancia Resistencias Sustractor (δ): <span class="val" id="val-ina-tol">1.0 %</span></div>
-          <select id="select-ina-tol" onchange="updateINA()">
-            <option value="0.0001">0.01 % (Ultra Precisión Laser)</option>
-            <option value="0.001">0.10 % (Precisión Instrumental)</option>
-            <option value="0.01" selected>1.00 % (Comercial Estándar)</option>
-            <option value="0.05">5.00 % (Baja Precisión)</option>
-          </select>
-        </div>
-        <div class="formula-box">Gd = 1 + 50kΩ / Rg | CMRR ≈ Gd / (4*δ) | Vo = Gd*Vd + (Gd/CMRR)*Vcm</div>
-
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Elección de Rg</div>
-          <div class="challenge-desc">Se desea una ganancia diferencial Gd = 501 con R1=R2=25 kΩ. ¿Qué valor exacto en Ohmios debe tener Rg?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-ina-ans" class="challenge-input" placeholder="Valor de Rg en Ω...">
-            <button class="action-btn primary" onclick="checkINAChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-ina-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="view-toggle-bar">
-          <div class="card-title" style="margin:0;">📊 Osciloscopio y Esquemático</div>
-          <div class="radio-pill-group" style="margin:0;width:240px;">
-            <div id="btn-inaview-scope" class="pill-btn active" onclick="setINAView('scope')">📈 Osciloscopio Vivo</div>
-            <div id="btn-inaview-schematic" class="pill-btn" onclick="setINAView('schematic')">⚡ Esquema 3 Op-Amps</div>
-          </div>
-        </div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Ganancia Gd</div><div class="metric-val green" id="m-ina-gd">251.0</div></div>
-          <div class="metric-box"><div class="metric-title">CMRR Teórico</div><div class="metric-val cyan" id="m-ina-cmrr">75.9 dB</div></div>
-          <div class="metric-box"><div class="metric-title">Salida Útil (Voud)</div><div class="metric-val" id="m-ina-voud">+5.02 V</div></div>
-          <div class="metric-box"><div class="metric-title">Ruido 50Hz (Vocm)</div><div class="metric-val amber" id="m-ina-vocm">100.4 mV</div></div>
-          <div class="metric-box"><div class="metric-title">Error Relativo</div><div class="metric-val red" id="m-ina-err">2.0 %</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-ina"></canvas>
-        </div>
-        <div class="scope-bar">
-          <span class="scope-badge">● CH1: 2.0 V/Div (Verde)</span>
-          <span class="scope-badge" style="color:var(--accent-cyan)">● CH2: 100 mV/Div (50Hz Hum)</span>
-          <span>Base de tiempos: 5 ms/Div</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. FILTRO SALLEN-KEY (TEMA 6) -->
-  <div id="lab-filter" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Filtro Activo Sallen-Key Paso Bajo</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('f_anti50')">⚡ Anti-Red 50 Hz (fc=10Hz)</div>
-          <div class="preset-pill" onclick="applyPreset('f_audio')">🎵 Audio Bass (fc=250Hz)</div>
-          <div class="preset-pill" onclick="applyPreset('f_cheby')">📊 Chebyshev (Q=1.3)</div>
-        </div>
-        <label class="control-label">Alineamiento del Filtro:</label>
-        <div class="radio-pill-group">
-          <div id="btn-ftype-butter" class="pill-btn active" onclick="setFilterType('butter')">Butterworth (Q=0.707)</div>
-          <div id="btn-ftype-cheby" class="pill-btn" onclick="setFilterType('cheby')">Chebyshev (Q=1.300)</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Frecuencia de Corte (fc): <span class="val" id="val-f-fc">15.0 Hz</span></div>
-          <input type="range" id="slider-f-fc" min="5" max="300" step="1" value="15" oninput="updateFilter()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Frecuencia Ruido Parásito (fn): <span class="val" id="val-f-fn">50.0 Hz</span></div>
-          <select id="select-f-fn" onchange="updateFilter()">
-            <option value="50" selected>50.0 Hz (Red Eléctrica Europa)</option>
-            <option value="60">60.0 Hz (Red Eléctrica USA)</option>
-            <option value="100">100.0 Hz (Segundo Armónico Rectificado)</option>
-            <option value="200">200.0 Hz (Ruido de Conmutación)</option>
-          </select>
-        </div>
-        <div class="formula-box" id="f-formula">Orden n=2 Butterworth: |H(f)| = 1 / sqrt(1 + (f/fc)^4). Caída asintótica: -40 dB/década.</div>
-
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Atenuación</div>
-          <div class="challenge-desc">Para un filtro Butterworth de orden 2 con fc = 10 Hz, ¿cuál será la atenuación teórica a f = 100 Hz (en dB)?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-f-ans" class="challenge-input" placeholder="Atenuación en dB (ej: -40)...">
-            <button class="action-btn primary" onclick="checkFilterChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-f-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="view-toggle-bar">
-          <div class="card-title" style="margin:0;">📊 Diagrama de Bode y Filtrado en Vivo</div>
-          <div class="radio-pill-group" style="margin:0;width:240px;">
-            <div id="btn-fview-bode" class="pill-btn active" onclick="setFilterView('bode')">📉 Diagrama Bode</div>
-            <div id="btn-fview-time" class="pill-btn" onclick="setFilterView('time')">〰️ Osciloscopio Vivo</div>
-          </div>
-        </div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Atenuación Ruido</div><div class="metric-val green" id="m-f-att">-20.9 dB</div></div>
-          <div class="metric-box"><div class="metric-title">Transmisión (%)</div><div class="metric-val" id="m-f-trans">8.96 %</div></div>
-          <div class="metric-box"><div class="metric-title">Desfase</div><div class="metric-val" id="m-f-phase">-155.0 °</div></div>
-          <div class="metric-box"><div class="metric-title">Resistencia R</div><div class="metric-val cyan" id="m-f-rval">10.6 kΩ</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-filter"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 7. SENSOR PIEZOELÉCTRICO & AMPLIFICADOR DE CARGA (TEMA 7) [NUEVO] -->
-  <div id="lab-piezo" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Sensor Piezoeléctrico & Amplificador</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('pz_charge')">✨ Amplificador de Carga</div>
-          <div class="preset-pill" onclick="applyPreset('pz_voltage')">❌ Modo Tensión (Efecto Cable)</div>
-          <div class="preset-pill" onclick="applyPreset('pz_impact')">🔨 Choque / Impacto Rápido</div>
-        </div>
-        <label class="control-label">Acondicionador de Señal:</label>
-        <div class="radio-pill-group">
-          <div id="btn-pzmode-charge" class="pill-btn active" onclick="setPiezoMode('charge')">Amplificador de Carga (Inmune Cable)</div>
-          <div id="btn-pzmode-volt" class="pill-btn" onclick="setPiezoMode('volt')">Amplificador de Tensión (Sensible a Cc)</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Fuerza Dinámica Aplicada (F): <span class="val" id="val-pz-f">50.0 N</span></div>
-          <input type="range" id="slider-pz-f" min="5" max="200" step="5" value="50" oninput="updatePiezo()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Frecuencia de Vibración (fvib): <span class="val" id="val-pz-fvib">20.0 Hz</span></div>
-          <input type="range" id="slider-pz-fvib" min="1" max="100" step="1" value="20" oninput="updatePiezo()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Capacitancia Parásita Cable (Cc): <span class="val" id="val-pz-cc">200 pF</span></div>
-          <input type="range" id="slider-pz-cc" min="0" max="1000" step="50" value="200" oninput="updatePiezo()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Condensador Realimentación (Cf): <span class="val" id="val-pz-cf">1.0 nF</span></div>
-          <select id="select-pz-cf" onchange="updatePiezo()">
-            <option value="0.1">0.1 nF (Alta Ganancia)</option>
-            <option value="1.0" selected>1.0 nF (Estándar)</option>
-            <option value="10.0">10.0 nF (Rango Alto de Fuerza)</option>
-          </select>
-        </div>
-        <div class="formula-box" id="pz-formula">Carga: Vo = -q / Cf = -(d · F) / Cf | Frecuencia de corte inferior fL = 1 / (2π · Rf · Cf).</div>
-
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Amplificador de Carga</div>
-          <div class="challenge-desc">Un sensor piezoeléctrico con d = 20.0 pC/N recibe F = 50 N. Si queremos Vo = -1.00 V, ¿cuánto debe valer Cf (en nF)?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-pz-ans" class="challenge-input" placeholder="Cf en nF...">
-            <button class="action-btn primary" onclick="checkPiezoChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-pz-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📊 Cristal Piezoeléctrico & Osciloscopio Dinámico</div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Carga Generada (q)</div><div class="metric-val cyan" id="m-pz-q">1.00 nC</div></div>
-          <div class="metric-box"><div class="metric-title">Tensión Salida (Vo)</div><div class="metric-val green" id="m-pz-vo">-1.00 V</div></div>
-          <div class="metric-box"><div class="metric-title">Corte Inferior (fL)</div><div class="metric-val" id="m-pz-fl">0.16 Hz</div></div>
-          <div class="metric-box"><div class="metric-title">Atenuación por Cable</div><div class="metric-val amber" id="m-pz-att">0.0 %</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-piezo"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 8. SENSOR CAPACITIVO & LOCK-IN (TEMA 8) [NUEVO] -->
-  <div id="lab-capacitive" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Condensador Diferencial & Detección Síncrona</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('cap_pos')">➡️ Desplazamiento (+50 µm)</div>
-          <div class="preset-pill" onclick="applyPreset('cap_neg')">⬅️ Desplazamiento (-50 µm)</div>
-          <div class="preset-pill" onclick="applyPreset('cap_center')">⚖️ Centro Exacto (x=0)</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Desplazamiento Placa Móvil (x): <span class="val" id="val-cap-x">+25.0 µm</span></div>
-          <input type="range" id="slider-cap-x" min="-100" max="100" step="2.5" value="25" oninput="updateCapacitive()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Distancia Entre Placas en Reposo (d0): <span class="val" id="val-cap-d0">200 µm</span></div>
-          <input type="range" id="slider-cap-d0" min="100" max="500" step="10" value="200" oninput="updateCapacitive()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Tensión de Portadora AC (Vc): <span class="val" id="val-cap-vc">5.0 V</span></div>
-          <input type="range" id="slider-cap-vc" min="1.0" max="10.0" step="0.5" value="5.0" oninput="updateCapacitive()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Frecuencia Portadora (fc): <span class="val" id="val-cap-fc">10.0 kHz</span></div>
-          <select id="select-cap-fc" onchange="updateCapacitive()">
-            <option value="5">5.0 kHz</option>
-            <option value="10" selected>10.0 kHz (Estándar)</option>
-            <option value="50">50.0 kHz (Alta Velocidad)</option>
-          </select>
-        </div>
-        <div class="formula-box">C1 = εA / (d0 - x), C2 = εA / (d0 + x) | Puente relación transformador: Vo = Vc · (x / d0) · sin(ωc·t)</div>
-
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Sensibilidad Capacitiva</div>
-          <div class="challenge-desc">Para Vc = 10 V y d0 = 200 µm, ¿cuál es la sensibilidad de salida DC tras el demodulador síncrono (en mV/µm)?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-cap-ans" class="challenge-input" placeholder="Sensibilidad en mV/µm...">
-            <button class="action-btn primary" onclick="checkCapChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-cap-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📊 Placas Diferenciales & Demodulación Síncrona PSD</div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Capacitancia C1</div><div class="metric-val cyan" id="m-cap-c1">57.1 pF</div></div>
-          <div class="metric-box"><div class="metric-title">Capacitancia C2</div><div class="metric-val purple" id="m-cap-c2">44.4 pF</div></div>
-          <div class="metric-box"><div class="metric-title">Tensión Modulada</div><div class="metric-val" id="m-cap-vam">0.62 Vp</div></div>
-          <div class="metric-box"><div class="metric-title">Salida Demodulada DC</div><div class="metric-val green" id="m-cap-vdc">+0.625 V</div></div>
-          <div class="metric-box"><div class="metric-title">Sensibilidad Sx</div><div class="metric-val" id="m-cap-sx">25.0 mV/µm</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-capacitive"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 9. MUESTREO & ADC (TEMA 9) -->
-  <div id="lab-adc" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Muestreo y Convertidor ADC</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('adc_aliasing')">⚠️ Aliasing Severo (fs=15Hz)</div>
-          <div class="preset-pill" onclick="applyPreset('adc_safe')">✅ Sobre-muestreo (fs=80Hz)</div>
-          <div class="preset-pill" onclick="applyPreset('adc_12bit')">🎯 ADC 12 bits Industrial</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Frecuencia Señal Analógica (fin): <span class="val" id="val-adc-fin">12.0 Hz</span></div>
-          <input type="range" id="slider-adc-fin" min="2" max="40" step="1" value="12" oninput="updateADC()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Frecuencia Muestreo (fs): <span class="val" id="val-adc-fs">20.0 Hz</span></div>
-          <input type="range" id="slider-adc-fs" min="5" max="100" step="1" value="20" oninput="updateADC()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Resolución ADC (N bits): <span class="val" id="val-adc-n">8 bits</span></div>
-          <input type="range" id="slider-adc-n" min="3" max="16" step="1" value="8" oninput="updateADC()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Rango Dinámico Tensión (Vref): <span class="val" id="val-adc-vref">5.0 V</span></div>
-          <select id="select-adc-vref" onchange="updateADC()">
-            <option value="3.3">3.3 V (Microcontroladores modernos ARM/ESP32)</option>
-            <option value="5.0" selected>5.0 V (Estándar TTL industrial)</option>
-            <option value="10.0">10.0 V (Adquisición de datos DAQ)</option>
-          </select>
-        </div>
-        <div class="formula-box" id="adc-status-box">fs < 2*fin -> ¡Violación de Nyquist! Frecuencia aparente = |fin - fs|.</div>
-
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Cuanto y SNR</div>
-          <div class="challenge-desc">Para un ADC de 10 bits con Vref = 5.12 V, ¿cuántos milivoltios mide exactamente un LSB (cuanto de cuantización q)?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-adc-ans" class="challenge-input" placeholder="Cuanto q en mV...">
-            <button class="action-btn primary" onclick="checkADCChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-adc-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="view-toggle-bar">
-          <div class="card-title" style="margin:0;">📊 Dominio Temporal y FFT</div>
-          <div class="radio-pill-group" style="margin:0;width:240px;">
-            <div id="btn-adcview-time" class="pill-btn active" onclick="setADCView('time')">〰️ Tiempo & Muestras</div>
-            <div id="btn-adcview-fft" class="pill-btn" onclick="setADCView('fft')">📶 Espectro FFT</div>
-          </div>
-        </div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Criterio Nyquist</div><div class="metric-val red" id="m-adc-status">⚠️ ALIASING</div></div>
-          <div class="metric-box"><div class="metric-title">Frec. Aparente</div><div class="metric-val amber" id="m-adc-falias">8.0 Hz</div></div>
-          <div class="metric-box"><div class="metric-title">Cuanto (q)</div><div class="metric-val cyan" id="m-adc-q">19.5 mV</div></div>
-          <div class="metric-box"><div class="metric-title">SNR Teórico</div><div class="metric-val green" id="m-adc-snr">49.9 dB</div></div>
-          <div class="metric-box"><div class="metric-title">Niveles (2^N)</div><div class="metric-val" id="m-adc-levels">256</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-adc"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 10. RUIDO JOHNSON & SNR (TEMA 10) -->
-  <div id="lab-noise" class="lab-container">
-    <div class="lab-grid">
-      <div class="card">
-        <div class="card-title"><span>⚙️ Ruido Térmico Johnson-Nyquist</span></div>
-        <div class="presets-bar">
-          <span style="font-size:11px;color:var(--text-secondary);align-self:center;">Presets:</span>
-          <div class="preset-pill" onclick="applyPreset('n_hifi')">🎵 Hi-Fi Audio (20kHz, 1kΩ)</div>
-          <div class="preset-pill" onclick="applyPreset('n_rf')">📡 RF Banda Ancha (10MHz)</div>
-          <div class="preset-pill" onclick="applyPreset('n_cryo')">❄️ Criogénico (77 Kelvin)</div>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Resistencia Fuente (R): <span class="val" id="val-n-r">10.0 kΩ</span></div>
-          <input type="range" id="slider-n-r" min="0.1" max="100.0" step="0.5" value="10.0" oninput="updateNoise()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Ancho de Banda (Δf): <span class="val" id="val-n-bw">10.0 kHz</span></div>
-          <select id="select-n-bw" onchange="updateNoise()">
-            <option value="100">100 Hz (Sensores Cuasi-Estáticos)</option>
-            <option value="1000">1.0 kHz (Instrumentación Estándar)</option>
-            <option value="10000" selected>10.0 kHz (Banda Audio / Industrial)</option>
-            <option value="100000">100.0 kHz (Ultrasonidos / Adquisición)</option>
-            <option value="1000000">1.0 MHz (Banda Ancha)</option>
-          </select>
-        </div>
-        <div class="control-group">
-          <div class="control-label">Temperatura (T): <span class="val" id="val-n-temp">298 K (25°C)</span></div>
-          <input type="range" id="slider-n-temp" min="77" max="400" step="5" value="298" oninput="updateNoise()">
-        </div>
-        <div class="control-group">
-          <div class="control-label">Amplitud Señal Útil (Vs): <span class="val" id="val-n-vs">50.0 µV</span></div>
-          <input type="range" id="slider-n-vs" min="1.0" max="200.0" step="1.0" value="50.0" oninput="updateNoise()">
-        </div>
-        <div class="formula-box">vn = sqrt(4 * kB * T * R * Δf) | en = 4 * sqrt(R [kΩ]) nV/√Hz a 25°C | SNR = 20*log10(Vs / vn)</div>
-
-        <div class="challenge-card">
-          <div class="challenge-title">🎯 Reto de Examen UPC: Ruido de Resistencia</div>
-          <div class="challenge-desc">¿Cuál es la densidad espectral de ruido de tensión (en nV/√Hz) generada por una resistencia de 100 kΩ a 25°C?</div>
-          <div class="challenge-row">
-            <input type="number" id="ch-n-ans" class="challenge-input" placeholder="Densidad en nV/√Hz...">
-            <button class="action-btn primary" onclick="checkNoiseChallenge()">Comprobar</button>
-          </div>
-          <div id="ch-n-fb" class="challenge-feedback"></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📊 Osciloscopio: Señal Útil vs Suelo de Ruido</div>
-        <div class="metrics-grid">
-          <div class="metric-box"><div class="metric-title">Tensión Ruido RMS</div><div class="metric-val red" id="m-n-vn">1.28 µV</div></div>
-          <div class="metric-box"><div class="metric-title">Densidad Ruido</div><div class="metric-val cyan" id="m-n-den">12.8 nV/√Hz</div></div>
-          <div class="metric-box"><div class="metric-title">SNR</div><div class="metric-val green" id="m-n-snr">31.8 dB</div></div>
-          <div class="metric-box"><div class="metric-title">ENOB Límite</div><div class="metric-val" id="m-n-enob">5.0 bits</div></div>
-        </div>
-        <div class="canvas-container">
-          <canvas id="canvas-noise"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL EXPORTAR INFORME -->
-  <div id="report-modal" class="modal-backdrop">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h2 style="font-size:17px;">📄 Informe Experimental de Laboratorio (10 Temas Oficiales)</h2>
-        <button class="action-btn" onclick="closeReportModal()">✕ Cerrar</button>
-      </div>
-      <div class="modal-content">
-        <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">
-          Este informe sintetiza las variables experimentales, fórmulas y lecturas de los 10 módulos del curso:
-        </p>
-        <textarea id="report-text" readonly></textarea>
-        <div style="display:flex;justify-content:flex-end;gap:10px;">
-          <button class="action-btn" onclick="copyReportText()">📋 Copiar al Portapapeles</button>
-          <button class="action-btn primary" onclick="downloadReportFile()">💾 Descargar como .MD</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT MASTER CONTROLLER & AUDIO / ANIMATION ENGINES -->
-  <script>
-    let currentLab = 'lab-wheatstone';
-    let isRunning = true;
-    let animTime = 0;
-    let lastTimestamp = 0;
-
-    // Web Audio API Synthesizer
-    let audioCtx = null;
-    let audioGain = null;
-    let audioOsc = null;
-    let audioNoiseNode = null;
-    let isAudioActive = false;
-
-    function initAudio() {
-      if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
-        audioGain = audioCtx.createGain();
-        audioGain.gain.value = 0.12;
-        audioGain.connect(audioCtx.destination);
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
+function updateAudioSynthesis() {
+  if (!audioEnabled || !audioCtx) {
+    if (audioOsc) { try { audioOsc.stop(); audioOsc.disconnect(); } catch(e){} audioOsc = null; }
+    if (audioNoise) { try { audioNoise.stop(); audioNoise.disconnect(); } catch(e){} audioNoise = null; }
+    return;
+  }
+  // Síntesis adaptada al módulo actual
+  const m = currentModule;
+  if (m === 4) { // ADC / Nyquist
+    const fin = parseFloat(document.getElementById('param-fin')?.value || 440);
+    const fs = parseFloat(document.getElementById('param-fs')?.value || 1000);
+    let fAlias = fin;
+    if (fs < 2 * fin) { fAlias = Math.abs(fin - Math.round(fin / fs) * fs); }
+    if (!audioOsc) {
+      audioOsc = audioCtx.createOscillator();
+      audioOsc.type = 'sine';
+      audioOsc.connect(audioGain);
+      audioOsc.start();
     }
-
-    function toggleAudioSynthesis() {
-      initAudio();
-      isAudioActive = !isAudioActive;
-      const btn = document.getElementById('btn-audio-toggle');
-      if (isAudioActive) {
-        btn.innerText = '🔊 Audio Síntesis: ACTIVO';
-        btn.classList.add('audio-on');
-        playAudioForModule();
-      } else {
-        btn.innerText = '🔊 Audio Síntesis: OFF';
-        btn.classList.remove('audio-on');
-        stopAudio();
-      }
+    audioOsc.frequency.setTargetAtTime(Math.max(20, Math.min(4000, fAlias)), audioCtx.currentTime, 0.05);
+  } else if (m === 2 || m === 3) { // INA3 / Filtro: 50 Hz Hum
+    const cmrr = parseFloat(document.getElementById('param-cmrr')?.value || 80);
+    const atten = Math.pow(10, -cmrr / 20);
+    if (!audioOsc) {
+      audioOsc = audioCtx.createOscillator();
+      audioOsc.type = 'sine';
+      audioOsc.connect(audioGain);
+      audioOsc.start();
     }
+    audioOsc.frequency.setTargetAtTime(50, audioCtx.currentTime, 0.05);
+    audioGain.gain.setTargetAtTime(0.08 * atten, audioCtx.currentTime, 0.05);
+  } else if (m === 7) { // Ruido Johnson
+    const R = parseFloat(document.getElementById('param-r')?.value || 10000);
+    const vn = Math.sqrt(4 * 1.38e-23 * 300 * R * 100000);
+    audioGain.gain.setTargetAtTime(Math.min(0.2, vn * 5e5), audioCtx.currentTime, 0.05);
+  } else {
+    if (audioOsc) { try { audioOsc.stop(); audioOsc.disconnect(); } catch(e){} audioOsc = null; }
+  }
+}
 
-    function playAudioForModule() {
-      if (!isAudioActive || !audioCtx) return;
-      stopAudio();
+// ======================================================================
+// 2. MOTOR WEBGL 3D NATIVO (High Performance GPU 60 FPS)
+// ======================================================================
+const glCanvas = document.getElementById('webgl-canvas');
+let gl = glCanvas.getContext('webgl') || glCanvas.getContext('experimental-webgl');
 
-      if (currentLab === 'lab-adc') {
-        const fin = parseFloat(document.getElementById('slider-adc-fin').value);
-        const fs = parseFloat(document.getElementById('slider-adc-fs').value);
-        let freq = fin * 30; // Scale to audible range
-        if (fs < 2 * fin) {
-          freq = Math.abs(fin - fs) * 30;
+// Variables de rotación orbital 3D
+let rotX = 25, rotY = -35, zoom = 6.5;
+let isDragging = false, lastMouseX = 0, lastMouseY = 0;
+
+glCanvas.addEventListener('mousedown', (e) => {
+  isDragging = true; lastMouseX = e.clientX; lastMouseY = e.clientY;
+});
+window.addEventListener('mouseup', () => isDragging = false);
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const dx = e.clientX - lastMouseX;
+  const dy = e.clientY - lastMouseY;
+  rotY += dx * 0.5;
+  rotX += dy * 0.5;
+  rotX = Math.max(-85, Math.min(85, rotX));
+  lastMouseX = e.clientX; lastMouseY = e.clientY;
+});
+glCanvas.addEventListener('wheel', (e) => {
+  zoom += e.deltaY * 0.005;
+  zoom = Math.max(2.5, Math.min(15, zoom));
+  e.preventDefault();
+}, { passive: false });
+glCanvas.addEventListener('dblclick', () => { rotX = 25; rotY = -35; zoom = 6.5; });
+
+// Shader Sources
+const vsSource = `
+  attribute vec3 aPos;
+  attribute vec3 aNormal;
+  attribute vec4 aColor;
+  uniform mat4 uMVP;
+  uniform mat4 uModel;
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  varying vec4 vColor;
+  void main(void) {
+    gl_Position = uMVP * vec4(aPos, 1.0);
+    vNormal = mat3(uModel) * aNormal;
+    vWorldPos = (uModel * vec4(aPos, 1.0)).xyz;
+    vColor = aColor;
+  }
+`;
+
+const fsSource = `
+  precision mediump float;
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  varying vec4 vColor;
+  void main(void) {
+    vec3 N = normalize(vNormal);
+    vec3 lightDir = normalize(vec3(0.5, 1.0, 0.8));
+    float diff = max(dot(N, lightDir), 0.0);
+    vec3 viewDir = normalize(vec3(0.0, 0.0, 10.0) - vWorldPos);
+    vec3 reflectDir = reflect(-lightDir, N);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
+    vec3 ambient = 0.35 * vColor.rgb;
+    vec3 diffuse = 0.65 * diff * vColor.rgb;
+    vec3 specular = 0.4 * spec * vec3(1.0, 1.0, 1.0);
+    gl_FragColor = vec4(ambient + diffuse + specular, vColor.a);
+  }
+`;
+
+let shaderProgram, aPosLoc, aNormalLoc, aColorLoc, uMVPLoc, uModelLoc;
+let vertexBuffer, normalBuffer, colorBuffer, indexBuffer, indexCount = 0;
+
+function initShaders() {
+  if (!gl) return;
+  const vs = gl.createShader(gl.VERTEX_SHADER);
+  gl.shaderSource(vs, vsSource); gl.compileShader(vs);
+  const fs = gl.createShader(gl.FRAGMENT_SHADER);
+  gl.shaderSource(fs, fsSource); gl.compileShader(fs);
+
+  shaderProgram = gl.createProgram();
+  gl.attachShader(shaderProgram, vs); gl.attachShader(shaderProgram, fs);
+  gl.linkProgram(shaderProgram);
+  gl.useProgram(shaderProgram);
+
+  aPosLoc = gl.getAttribLocation(shaderProgram, "aPos");
+  aNormalLoc = gl.getAttribLocation(shaderProgram, "aNormal");
+  aColorLoc = gl.getAttribLocation(shaderProgram, "aColor");
+  uMVPLoc = gl.getUniformLocation(shaderProgram, "uMVP");
+  uModelLoc = gl.getUniformLocation(shaderProgram, "uModel");
+
+  vertexBuffer = gl.createBuffer();
+  normalBuffer = gl.createBuffer();
+  colorBuffer = gl.createBuffer();
+  indexBuffer = gl.createBuffer();
+}
+initShaders();
+
+// Matemáticas Matriciales 3D
+function mat4Identity() {
+  return [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
+}
+function mat4Multiply(A, B) {
+  const C = new Array(16);
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      C[i*4 + j] = A[i*4 + 0]*B[0*4 + j] + A[i*4 + 1]*B[1*4 + j] + A[i*4 + 2]*B[2*4 + j] + A[i*4 + 3]*B[3*4 + j];
+    }
+  }
+  return C;
+}
+function mat4Perspective(fovRad, aspect, near, far) {
+  const f = 1.0 / Math.tan(fovRad / 2);
+  const d = 1.0 / (near - far);
+  return [
+    f / aspect, 0, 0, 0,
+    0, f, 0, 0,
+    0, 0, (far + near) * d, -1,
+    0, 0, (2 * far * near) * d, 0
+  ];
+}
+function mat4RotateX(m, rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const R = [1,0,0,0, 0,c,-s,0, 0,s,c,0, 0,0,0,1];
+  return mat4Multiply(m, R);
+}
+function mat4RotateY(m, rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const R = [c,0,s,0, 0,1,0,0, -s,0,c,0, 0,0,0,1];
+  return mat4Multiply(m, R);
+}
+function mat4Translate(m, tx, ty, tz) {
+  const T = [1,0,0,0, 0,1,0,0, 0,0,1,0, tx,ty,tz,1];
+  return mat4Multiply(m, T);
+}
+
+// Generador de Geometría 3D según el Módulo Actual
+function build3DGeometry() {
+  if (!gl) return;
+  const positions = [];
+  const normals = [];
+  const colors = [];
+  const indices = [];
+
+  function addBox(x, y, z, w, h, d, r, g, b) {
+    const startIdx = positions.length / 3;
+    const hw = w/2, hh = h/2, hd = d/2;
+    // 8 vértices
+    const v = [
+      [x-hw, y-hh, z+hd], [x+hw, y-hh, z+hd], [x+hw, y+hh, z+hd], [x-hw, y+hh, z+hd], // Front
+      [x-hw, y-hh, z-hd], [x+hw, y-hh, z-hd], [x+hw, y+hh, z-hd], [x-hw, y+hh, z-hd]  // Back
+    ];
+    // 6 caras con normales
+    const faces = [
+      { idx: [0,1,2, 0,2,3], norm: [0,0,1] },   // Front
+      { idx: [5,4,7, 5,7,6], norm: [0,0,-1] },  // Back
+      { idx: [3,2,6, 3,6,7], norm: [0,1,0] },   // Top
+      { idx: [4,5,1, 4,1,0], norm: [0,-1,0] },  // Bottom
+      { idx: [1,5,6, 1,6,2], norm: [1,0,0] },   // Right
+      { idx: [4,0,3, 4,3,7], norm: [-1,0,0] }   // Left
+    ];
+    faces.forEach(f => {
+      f.idx.forEach(vi => {
+        positions.push(v[vi][0], v[vi][1], v[vi][2]);
+        normals.push(f.norm[0], f.norm[1], f.norm[2]);
+        colors.push(r, g, b, 1.0);
+      });
+    });
+    for (let i = 0; i < 36; i++) { indices.push(startIdx + i); }
+  }
+
+  const m = currentModule;
+  if (m === 0) { // Viga en voladizo 3D deformable con galgas
+    const eps = parseFloat(document.getElementById('param-eps')?.value || 1000) * 1e-6;
+    const deflection = eps * 1500;
+    // Base de fijación (soporte de mordaza gris oscuro)
+    addBox(-2.5, 0, 0, 0.8, 2.0, 1.6, 0.25, 0.25, 0.3);
+    // Viga metálica segmentada en 12 secciones con curvatura elástica
+    const segs = 12, len = 4.0;
+    const dx = len / segs;
+    for (let i = 0; i < segs; i++) {
+      const u = (i + 0.5) / segs;
+      const curY = -deflection * (3*u*u - u*u*u);
+      // Colormap von Mises: compresión cian/azul, tracción rojo/naranja
+      const stress = u * eps * 3000;
+      const r = Math.max(0.2, Math.min(1.0, 0.5 + stress));
+      const b = Math.max(0.2, Math.min(1.0, 0.5 - stress));
+      addBox(-2.0 + (i + 0.5)*dx, curY, 0, dx*0.96, 0.15, 0.8, r, 0.5, b);
+    }
+    // Galgas extensométricas adheridas (cobre/oro)
+    addBox(-1.2, -deflection*0.1 + 0.08, 0.2, 0.6, 0.02, 0.25, 0.9, 0.6, 0.1);
+    addBox(-1.2, -deflection*0.1 + 0.08, -0.2, 0.6, 0.02, 0.25, 0.9, 0.6, 0.1);
+    // Masa / Carga en el extremo libre
+    addBox(2.0, -deflection, 0, 0.4, 0.6, 0.4, 0.8, 0.1, 0.1);
+
+  } else if (m === 1) { // Sensor Pt100 Industrial 3D y Baño Termostático
+    // Vaina de acero inoxidable cilíndrica (aproximada)
+    addBox(0, 0.5, 0, 0.25, 3.5, 0.25, 0.75, 0.78, 0.82);
+    // Cabezal de conexión DIN forma B (aluminio azul industrial)
+    addBox(0, 2.4, 0, 0.9, 0.8, 0.9, 0.1, 0.4, 0.8);
+    // Baño termostático agitado de líquido (vidrio/fluido traslúcido)
+    addBox(0, -0.8, 0, 2.2, 1.8, 2.2, 0.0, 0.6, 0.9);
+    // 4 Cables de compensación saliendo del cabezal (rojo, blanco, etc.)
+    addBox(-0.15, 2.9, 0, 0.04, 0.6, 0.04, 0.9, 0.1, 0.1);
+    addBox(-0.05, 2.9, 0, 0.04, 0.6, 0.04, 0.9, 0.1, 0.1);
+    addBox(0.05, 2.9, 0, 0.04, 0.6, 0.04, 0.9, 0.9, 0.9);
+    addBox(0.15, 2.9, 0, 0.04, 0.6, 0.04, 0.9, 0.9, 0.9);
+
+  } else if (m === 8) { // Sensor Piezoeléctrico 3D (Acelerómetro)
+    // Base sísmica de fijación (acero pulido)
+    addBox(0, -1.2, 0, 2.4, 0.4, 2.4, 0.6, 0.6, 0.65);
+    // Electrodo inferior (oro)
+    addBox(0, -0.9, 0, 1.6, 0.1, 1.6, 0.9, 0.75, 0.1);
+    // Cristal de cuarzo / PZT piezoeléctrico deformable
+    addBox(0, -0.3, 0, 1.4, 1.1, 1.4, 0.3, 0.7, 0.9);
+    // Electrodo superior (oro)
+    addBox(0, 0.3, 0, 1.6, 0.1, 1.6, 0.9, 0.75, 0.1);
+    // Masa sísmica inercial de tungsteno
+    addBox(0, 0.9, 0, 2.0, 0.9, 2.0, 0.4, 0.45, 0.5);
+    // Conector coaxial microdot / BNC lateral
+    addBox(1.3, -0.3, 0, 0.6, 0.3, 0.3, 0.7, 0.7, 0.2);
+
+  } else if (m === 9) { // Sensor Capacitivo Diferencial 3D (3 Placas)
+    const xPos = parseFloat(document.getElementById('param-x')?.value || 0.0) * 0.8;
+    // Placa fija superior A (fija en Y = +1.0)
+    addBox(0, 1.0, 0, 2.5, 0.12, 1.8, 0.85, 0.6, 0.2);
+    // Placa móvil central (desplazable en Y según xPos)
+    addBox(0, xPos, 0, 2.8, 0.12, 1.8, 0.2, 0.7, 0.9);
+    // Placa fija inferior B (fija en Y = -1.0)
+    addBox(0, -1.0, 0, 2.5, 0.12, 1.8, 0.85, 0.6, 0.2);
+    // Postes cerámicos de aislamiento lateral
+    addBox(-1.4, 0, 0, 0.2, 2.4, 0.2, 0.3, 0.3, 0.35);
+    addBox(1.4, 0, 0, 0.2, 2.4, 0.2, 0.3, 0.3, 0.35);
+
+  } else { // Circuito / Chip Integrado / Instrumento General
+    // PCB verde mate con pistas doradas
+    addBox(0, -0.3, 0, 4.0, 0.1, 3.0, 0.05, 0.4, 0.15);
+    // Circuito integrado DIP-8 (AD623 / OPA134 / LM35)
+    addBox(0, -0.1, 0, 1.6, 0.3, 1.0, 0.1, 0.1, 0.12);
+    // Conectores BNC
+    addBox(-1.6, 0.2, 0, 0.4, 0.4, 0.4, 0.7, 0.7, 0.75);
+    addBox(1.6, 0.2, 0, 0.4, 0.4, 0.4, 0.7, 0.7, 0.75);
+  }
+
+  indexCount = indices.length;
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.DYNAMIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.DYNAMIC_DRAW);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.DYNAMIC_DRAW);
+}
+
+function render3D() {
+  if (!gl || !shaderProgram) return;
+
+  // Adaptar viewport a resolución retina
+  const dpr = window.devicePixelRatio || 1;
+  const w = glCanvas.clientWidth * dpr;
+  const h = glCanvas.clientHeight * dpr;
+  if (glCanvas.width !== w || glCanvas.height !== h) {
+    glCanvas.width = w; glCanvas.height = h;
+    gl.viewport(0, 0, w, h);
+  }
+
+  gl.clearColor(0.03, 0.03, 0.04, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST);
+
+  const aspect = w / h;
+  const pMatrix = mat4Perspective(45 * Math.PI / 180, aspect, 0.1, 100.0);
+  
+  let mvMatrix = mat4Identity();
+  mvMatrix = mat4Translate(mvMatrix, 0, 0, -zoom);
+  mvMatrix = mat4RotateX(mvMatrix, rotX * Math.PI / 180);
+  mvMatrix = mat4RotateY(mvMatrix, rotY * Math.PI / 180);
+
+  const mvp = mat4Multiply(pMatrix, mvMatrix);
+
+  gl.useProgram(shaderProgram);
+  gl.uniformMatrix4fv(uMVPLoc, false, new Float32Array(mvp));
+  gl.uniformMatrix4fv(uModelLoc, false, new Float32Array(mvMatrix));
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.vertexAttribPointer(aPosLoc, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(aPosLoc);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+  gl.vertexAttribPointer(aNormalLoc, 3, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(aNormalLoc);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+  gl.vertexAttribPointer(aColorLoc, 4, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(aColorLoc);
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.drawElements(gl.TRIANGLES, indexCount, gl.UNSIGNED_SHORT, 0);
+}
+
+// ======================================================================
+// 3. RENDERIZADO DEL OSCILOSCOPIO TEKTRONIX (Phosphor 60 FPS)
+// ======================================================================
+const tekCanvas = document.getElementById('tek-canvas');
+const tekCtx = tekCanvas.getContext('2d');
+let animFrameId = null;
+let animPhase = 0;
+
+function renderTekScope() {
+  const dpr = window.devicePixelRatio || 1;
+  const w = tekCanvas.clientWidth * dpr;
+  const h = tekCanvas.clientHeight * dpr;
+  if (tekCanvas.width !== w || tekCanvas.height !== h) {
+    tekCanvas.width = w; tekCanvas.height = h;
+  }
+  tekCtx.fillStyle = '#020c04';
+  tekCtx.fillRect(0, 0, w, h);
+
+  // Retícula verde fosforescente
+  tekCtx.strokeStyle = 'rgba(0, 255, 102, 0.15)';
+  tekCtx.lineWidth = 1;
+  const divX = w / 10;
+  const divY = h / 8;
+  for (let x = 0; x <= w; x += divX) {
+    tekCtx.beginPath(); tekCtx.moveTo(x, 0); tekCtx.lineTo(x, h); tekCtx.stroke();
+  }
+  for (let y = 0; y <= h; y += divY) {
+    tekCtx.beginPath(); tekCtx.moveTo(0, y); tekCtx.lineTo(w, y); tekCtx.stroke();
+  }
+
+  // Traza de onda fosforescente viva
+  tekCtx.strokeStyle = '#00ff66';
+  tekCtx.shadowColor = '#00ff66';
+  tekCtx.shadowBlur = 8;
+  tekCtx.lineWidth = 2 * dpr;
+  tekCtx.beginPath();
+
+  const m = currentModule;
+  animPhase += 0.05;
+
+  for (let x = 0; x < w; x++) {
+    const t = x / w * 4 * Math.PI;
+    let yVal = 0;
+    if (m === 2) { // INA3 con ruido 50 Hz
+      yVal = Math.sin(t*2 + animPhase) * 0.6 + Math.sin(t*10 + animPhase*5) * 0.15;
+    } else if (m === 3) { // Sallen-Key filtrado
+      yVal = Math.sin(t*2 + animPhase) * 0.7;
+    } else if (m === 7) { // Ruido Johnson puro
+      yVal = (Math.random() - 0.5) * 0.6 + Math.sin(t*2 + animPhase)*0.3;
+    } else {
+      yVal = Math.sin(t*3 + animPhase) * 0.65;
+    }
+    const canvasY = h/2 - yVal * (h * 0.35);
+    if (x === 0) tekCtx.moveTo(x, canvasY);
+    else tekCtx.lineTo(x, canvasY);
+  }
+  tekCtx.stroke();
+  tekCtx.shadowBlur = 0;
+}
+
+// Bucle de animación global 60 FPS
+function loop() {
+  render3D();
+  renderTekScope();
+  animFrameId = requestAnimationFrame(loop);
+}
+
+// ======================================================================
+// 4. MODULOS DE LA UPC (10 Temas con Parámetros y Retos Oficiales)
+// ======================================================================
+let currentModule = 0;
+
+
+const MODULE_DATA = [
+  {
+    title: "1. Puente de Wheatstone & Galgas Extensométricas",
+    hud: ["Modelo: Viga 3D con Galgas", "Mapeo: Tensión von Mises"],
+    controls: [
+      { id: "eps", label: "Deformación Mecánica (ε)", min: -2500, max: 2500, val: 1200, unit: "με", step: 50 },
+      { id: "vs", label: "Alimentación del Puente (Vs)", min: 1, max: 15, val: 10, unit: "V", step: 0.5 },
+      { id: "k", label: "Factor de Galga (K)", min: 1.5, max: 4.5, val: 2.05, unit: "", step: 0.05 },
+      { id: "r0", label: "Resistencia Nominal (R0)", min: 120, max: 350, val: 120, unit: "Ω", step: 10 },
+      { id: "topo", label: "Topología del Puente", type: "select", options: ["1/4 de Puente (1 galga activa)", "1/2 Puente Push-Pull (2 galgas)", "Puente Completo (4 galgas)"], val: 2 }
+    ],
+    presets: [
+      { name: "Examen Final 2021 (ε = 1500 με)", eps: 1500, vs: 10, k: 2.05, r0: 120, topo: 0 },
+      { name: "Báscula Pesaje Puente Completo", eps: 2000, vs: 10, k: 2.1, r0: 350, topo: 2 }
+    ],
+    calc: (p) => {
+      const dR_R = p.k * (p.eps * 1e-6);
+      let vo = 0;
+      if (p.topo === 0) vo = p.vs * (dR_R / (4 + 2*dR_R));
+      else if (p.topo === 1) vo = p.vs * (dR_R / 2);
+      else vo = p.vs * dR_R;
+      const sens = (vo / (p.eps * 1e-6)) * 1e-3;
+      return {
+        dmmText: (vo * 1000).toFixed(3) + " mV",
+        dmmMin: "-25.000 mV", dmmMax: "+25.000 mV",
+        dmmBar: Math.max(0, Math.min(100, 50 + (vo / 0.05) * 50)),
+        dmmUb: "±0.003 mV",
+        metrics: [
+          { name: "Tensión de Salida (Vo)", val: (vo * 1000).toFixed(4) + " mV", sub: "Lectura diferencial de puente" },
+          { name: "Sensibilidad Real", val: sens.toFixed(3) + " μV/με", sub: "Pendiente dVo/dε" },
+          { name: "Variación ΔR", val: (p.r0 * dR_R).toFixed(4) + " Ω", sub: "R0 = " + p.r0 + " Ω" }
+        ],
+        formula: "Vo = Vs · [ K·ε / 4 ] (1/4 puente)\\nVo = Vs · K·ε (Puente Completo)\\nSensibilidad S = Vs·K = " + (p.vs * p.k).toFixed(2) + " V/ε",
+        challenge: {
+          q: "Si se dispone de un puente completo con Vs = 10 V y K = 2.05, calcule la deformación ε en με para obtener exactamente Vo = 25.0 mV.",
+          ans: 1219.5, tol: 2.0, unit: "με",
+          sol: "Vo = Vs · K · ε => ε = Vo / (Vs · K) = 0.025 / (10 · 2.05) = 1.2195e-3 = 1219.5 με."
         }
-        audioOsc = audioCtx.createOscillator();
-        audioOsc.type = 'sine';
-        audioOsc.frequency.setValueAtTime(Math.max(40, freq), audioCtx.currentTime);
-        audioOsc.connect(audioGain);
-        audioOsc.start();
-      } else if (currentLab === 'lab-filter') {
-        audioOsc = audioCtx.createOscillator();
-        audioOsc.type = 'sawtooth';
-        audioOsc.frequency.setValueAtTime(100, audioCtx.currentTime); // Hum
-        audioOsc.connect(audioGain);
-        audioOsc.start();
-      } else if (currentLab === 'lab-noise') {
-        // White noise generator
-        const bufferSize = audioCtx.sampleRate * 2;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
+      };
+    }
+  },
+  {
+    title: "2. Sensor Pt100 & Compensación de Cable a 4 Hilos",
+    hud: ["Sonda: Pt100 IEC 60751", "Cable: 4 Hilos Kelvin"],
+    controls: [
+      { id: "temp", label: "Temperatura del Baño (T)", min: -50, max: 250, val: 100, unit: "°C", step: 1 },
+      { id: "rcable", label: "Resistencia de Cable (R_cable)", min: 0, max: 10, val: 2.5, unit: "Ω", step: 0.1 },
+      { id: "ibias", label: "Corriente de Excitación (I_bias)", min: 0.1, max: 5.0, val: 1.0, unit: "mA", step: 0.1 },
+      { id: "wiring", label: "Configuración de Cableado", type: "select", options: ["2 Hilos (Sin compensación)", "3 Hilos (Puente Siemens)", "4 Hilos Kelvin (True 4-Wire)"], val: 2 }
+    ],
+    presets: [
+      { name: "Examen Final 2021 (Pt100 CJC)", temp: 0, rcable: 0, ibias: 0.1, wiring: 2 },
+      { name: "Cable Largo Industrial (10 Ω)", temp: 150, rcable: 8.0, ibias: 1.0, wiring: 0 }
+    ],
+    calc: (p) => {
+      const rPt = 100 * (1 + 0.00385 * p.temp);
+      let rMedida = rPt;
+      let errorTemp = 0;
+      if (p.wiring === 0) { rMedida = rPt + 2 * p.rcable; errorTemp = (2 * p.rcable) / (100 * 0.00385); }
+      else if (p.wiring === 1) { rMedida = rPt + 0.05 * p.rcable; errorTemp = (0.05 * p.rcable) / (100 * 0.00385); }
+      else { rMedida = rPt; errorTemp = 0.00; }
+      const vPt = rMedida * (p.ibias * 1e-3);
+      return {
+        dmmText: rMedida.toFixed(3) + " Ω",
+        dmmMin: "80.000 Ω", dmmMax: "200.000 Ω",
+        dmmBar: Math.max(0, Math.min(100, ((rMedida - 80) / 120) * 100)),
+        dmmUb: "±0.004 Ω",
+        metrics: [
+          { name: "Resistencia Leída", val: rMedida.toFixed(3) + " Ω", sub: "Pt100 real: " + rPt.toFixed(3) + " Ω" },
+          { name: "Error Sistemático", val: errorTemp.toFixed(2) + " °C", sub: "Debido a cables de línea" },
+          { name: "Tensión en Bornas", val: (vPt * 1000).toFixed(2) + " mV", sub: "I = " + p.ibias + " mA" }
+        ],
+        formula: "R(T) = 100·(1 + 0.00385·T)\\nError 2-hilos: ΔT = 2·R_cable / (100·α)\\nCompensación 4-hilos: Error = 0.000 °C",
+        challenge: {
+          q: "En un montaje de 2 hilos con R_cable = 2.5 Ω por hilo y α = 0.00385 °C⁻¹, ¿cuál es el error sistemático en °C?",
+          ans: 12.99, tol: 0.1, unit: "°C",
+          sol: "ΔT = 2 · R_cable / (100 · 0.00385) = 5.0 / 0.385 = 12.987 °C ≈ 12.99 °C."
         }
-        audioNoiseNode = audioCtx.createBufferSource();
-        audioNoiseNode.buffer = buffer;
-        audioNoiseNode.loop = true;
-        audioNoiseNode.connect(audioGain);
-        audioNoiseNode.start();
-      }
+      };
     }
-
-    function stopAudio() {
-      if (audioOsc) {
-        try { audioOsc.stop(); audioOsc.disconnect(); } catch (e) {}
-        audioOsc = null;
-      }
-      if (audioNoiseNode) {
-        try { audioNoiseNode.stop(); audioNoiseNode.disconnect(); } catch (e) {}
-        audioNoiseNode = null;
-      }
-    }
-
-    function toggleAnimationLoop() {
-      isRunning = !isRunning;
-      const btn = document.getElementById('btn-anim-toggle');
-      btn.innerText = isRunning ? '⏸ Pausar Osciloscopio' : '▶ Reanudar Osciloscopio';
-    }
-
-    function toggleFullScreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      } else {
-        if (document.exitFullscreen) document.exitFullscreen();
-      }
-    }
-
-    // Tab Switching
-    function switchLab(id) {
-      currentLab = id;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.lab-container').forEach(c => c.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-      document.getElementById(id).classList.add('active');
-      
-      if (isAudioActive) {
-        playAudioForModule();
-      }
-      triggerUpdate(id);
-    }
-
-    function triggerUpdate(id) {
-      if (id === 'lab-wheatstone') updateWheatstone();
-      else if (id === 'lab-pt100') updatePt100();
-      else if (id === 'lab-ina') updateINA();
-      else if (id === 'lab-filter') updateFilter();
-      else if (id === 'lab-adc') updateADC();
-      else if (id === 'lab-tc') updateTC();
-      else if (id === 'lab-ntc') updateNTC();
-      else if (id === 'lab-noise') updateNoise();
-      else if (id === 'lab-piezo') updatePiezo();
-      else if (id === 'lab-capacitive') updateCapacitive();
-    }
-
-    function setupCanvas(canvasId) {
-      const cv = document.getElementById(canvasId);
-      const dpr = window.devicePixelRatio || 1;
-      const rect = cv.getBoundingClientRect();
-      cv.width = rect.width * dpr;
-      cv.height = rect.height * dpr;
-      const ctx = cv.getContext('2d');
-      ctx.scale(dpr, dpr);
-      return { cv, ctx, width: rect.width, height: rect.height };
-    }
-
-    // 60 FPS MAIN LOOP
-    function animLoop(timestamp) {
-      if (!lastTimestamp) lastTimestamp = timestamp;
-      const dt = (timestamp - lastTimestamp) / 1000.0;
-      lastTimestamp = timestamp;
-
-      if (isRunning) {
-        animTime += dt;
-        if (currentLab === 'lab-ina' && inaView === 'scope') {
-          drawINAAnimation(animTime);
-        } else if (currentLab === 'lab-filter' && filterView === 'time') {
-          drawFilterAnimation(animTime);
-        } else if (currentLab === 'lab-adc' && adcView === 'time') {
-          drawADCAnimation(animTime);
-        } else if (currentLab === 'lab-piezo') {
-          drawPiezoAnimation(animTime);
-        } else if (currentLab === 'lab-capacitive') {
-          drawCapacitiveAnimation(animTime);
-        } else if (currentLab === 'lab-noise') {
-          drawNoiseAnimation(animTime);
+  },
+  {
+    title: "3. Amplificador de Instrumentación INA3 & CMRR Real",
+    hud: ["Amplificador: AD620 / AD623", "Rechazo de Red: 50 Hz"],
+    controls: [
+      { id: "vd", label: "Tensión Diferencial Útil (Vd)", min: 0.1, max: 20, val: 5.0, unit: "mV", step: 0.5 },
+      { id: "vcm", label: "Tensión Modo Común 50Hz (Vcm)", min: 0.1, max: 10, val: 2.5, unit: "V", step: 0.1 },
+      { id: "rg", label: "Resistencia de Ganancia (Rg)", min: 50, max: 5000, val: 494, unit: "Ω", step: 10 },
+      { id: "cmrr", label: "CMRR del Amplificador", min: 40, max: 120, val: 90, unit: "dB", step: 2 }
+    ],
+    presets: [
+      { name: "Examen Final 2024 (AD620, Rg = 203.8 Ω)", vd: 4.1, vcm: 2.5, rg: 203.8, cmrr: 90 },
+      { name: "Bajo CMRR con Red Intensa", vd: 2.0, vcm: 5.0, rg: 1000, cmrr: 60 }
+    ],
+    calc: (p) => {
+      const Gd = 1 + (49400 / p.rg);
+      const atten = Math.pow(10, -p.cmrr / 20);
+      const vo_useful = (p.vd * 1e-3) * Gd;
+      const vo_noise = p.vcm * Gd * atten;
+      const vo_total = vo_useful + vo_noise;
+      return {
+        dmmText: vo_total.toFixed(4) + " V",
+        dmmMin: "0.000 V", dmmMax: "10.000 V",
+        dmmBar: Math.max(0, Math.min(100, (vo_total / 10) * 100)),
+        dmmUb: "±0.0002 V",
+        metrics: [
+          { name: "Ganancia Diferencial (Gd)", val: Gd.toFixed(1), sub: "Rg = " + p.rg + " Ω" },
+          { name: "Tensión de Señal", val: vo_useful.toFixed(4) + " V", sub: "Vd amplificada" },
+          { name: "Error Modo Común", val: (vo_noise * 1000).toFixed(2) + " mV", sub: "CMRR = " + p.cmrr + " dB" }
+        ],
+        formula: "Gd = 1 + 49.4k / Rg\\nVo = Gd · Vd + (Gd / CMRR_lineal) · Vcm\\nError de cero: Verr = Vcm / CMRR",
+        challenge: {
+          q: "Calcule el valor de Rg en Ω para obtener exactamente una ganancia diferencial Gd = 243.4 con un AD620.",
+          ans: 203.76, tol: 1.0, unit: "Ω",
+          sol: "Gd = 1 + 49.4k/Rg => Rg = 49400 / (243.4 - 1) = 49400 / 242.4 = 203.76 Ω (Examen Final 2024)."
         }
-      }
-      requestAnimationFrame(animLoop);
+      };
     }
-    requestAnimationFrame(animLoop);
-
-    // ==========================================
-    // 1. WHEATSTONE
-    // ==========================================
-    let wheatstoneTopo = 'quarter';
-    let wheatstoneView = 'beam';
-
-    function setWheatstoneTopo(t) {
-      wheatstoneTopo = t;
-      document.querySelectorAll('#btn-topo-quarter, #btn-topo-half, #btn-topo-full').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-topo-' + t).classList.add('active');
-      updateWheatstone();
-    }
-    function setWheatstoneView(v) {
-      wheatstoneView = v;
-      document.querySelectorAll('#btn-wview-beam, #btn-wview-schematic').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-wview-' + v).classList.add('active');
-      updateWheatstone();
-    }
-    function updateWheatstone() {
-      const eps = parseFloat(document.getElementById('slider-w-eps').value);
-      const vs = parseFloat(document.getElementById('slider-w-vs').value);
-      const k = parseFloat(document.getElementById('slider-w-k').value);
-      const r0 = parseFloat(document.getElementById('select-w-r0').value);
-
-      document.getElementById('val-w-eps').innerText = (eps > 0 ? '+' : '') + eps + ' µε';
-      document.getElementById('val-w-vs').innerText = vs.toFixed(1) + ' V';
-      document.getElementById('val-w-k').innerText = k.toFixed(2);
-      document.getElementById('val-w-r0').innerText = r0.toFixed(1) + ' Ω';
-
-      const x = k * (eps * 1e-6);
-      const dR = r0 * x;
-      let voExact = 0, voLin = 0, fBox = '';
-      if (wheatstoneTopo === 'quarter') {
-        voExact = (vs / 4.0) * (x / (1.0 + 0.5 * x));
-        voLin = (vs / 4.0) * x;
-        fBox = '1/4 Puente (1 Galga): Vo = (Vs/4) * [x / (1 + 0.5*x)] | No lineal';
-      } else if (wheatstoneTopo === 'half') {
-        voExact = (vs / 2.0) * x;
-        voLin = voExact;
-        fBox = '1/2 Puente Push-Pull (2 Galgas): Vo = (Vs/2) * x | Exactamente lineal (2x)';
-      } else {
-        voExact = vs * x;
-        voLin = voExact;
-        fBox = 'Puente Completo (4 Galgas): Vo = Vs * x | Máxima linealidad y 4x sensibilidad';
-      }
-
-      const sens_uV = Math.abs(eps) > 0 ? (Math.abs(voExact * 1e6) / Math.abs(eps)) : (vs * (wheatstoneTopo === 'quarter' ? 0.25 : wheatstoneTopo === 'half' ? 0.5 : 1.0) * k);
-      let nl = 0;
-      if (Math.abs(voExact) > 1e-7) {
-        nl = (Math.abs(voExact - voLin) / (Math.abs(voExact) * 2)) * 100;
-      }
-      const pwr = (Math.pow(vs / 2, 2) / r0) * 1000;
-
-      document.getElementById('w-formula').innerText = fBox;
-      document.getElementById('m-w-dr').innerText = (dR >= 0 ? '+' : '') + dR.toFixed(3) + ' Ω';
-      document.getElementById('m-w-vo').innerText = (voExact * 1000 >= 0 ? '+' : '') + (voExact * 1000).toFixed(3) + ' mV';
-      document.getElementById('m-w-sens').innerText = sens_uV.toFixed(2) + ' µV/µε';
-      document.getElementById('m-w-nl').innerText = nl.toFixed(3) + ' %';
-      document.getElementById('m-w-pwr').innerText = pwr.toFixed(0) + ' mW';
-
-      drawWheatstone(vs, k, wheatstoneTopo, eps, voExact);
-    }
-    function drawWheatstone(vs, k, topo, eps, vo) {
-      const { ctx, width: w, height: h } = setupCanvas('canvas-wheatstone');
-      ctx.clearRect(0, 0, w, h);
-
-      if (wheatstoneView === 'beam') {
-        ctx.fillStyle = '#86868b';
-        ctx.font = '12px var(--font-family)';
-        ctx.fillText('Viga en Voladizo · Deformación Mecánica Real', 16, 22);
-
-        ctx.fillStyle = '#2c2c2e';
-        ctx.fillRect(20, 50, 24, 180);
-        ctx.strokeStyle = '#555';
-        for(let y = 50; y <= 230; y += 12) {
-          ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(10, y + 10); ctx.stroke();
+  },
+  {
+    title: "4. Filtro Activo Sallen-Key Paso Bajo de 2º Orden",
+    hud: ["Filtro: Sallen-Key 2º Orden", "Alineamiento: Butterworth"],
+    controls: [
+      { id: "fc", label: "Frecuencia de Corte (fc)", min: 10, max: 1000, val: 50, unit: "Hz", step: 5 },
+      { id: "fn", label: "Frecuencia Interferencia (fn)", min: 10, max: 500, val: 50, unit: "Hz", step: 5 },
+      { id: "vin", label: "Amplitud Ruido Entrada (Vin)", min: 0.1, max: 10, val: 2.0, unit: "V", step: 0.1 }
+    ],
+    presets: [
+      { name: "Atenuación Red 50 Hz con fc = 10 Hz", fc: 10, fn: 50, vin: 2.0 },
+      { name: "Corte Justo en Red (fc = 50 Hz)", fc: 50, fn: 50, vin: 2.0 }
+    ],
+    calc: (p) => {
+      const ratio = p.fn / p.fc;
+      const attenLin = 1 / Math.sqrt(1 + Math.pow(ratio, 4));
+      const attenDb = 20 * Math.log10(attenLin);
+      const vout = p.vin * attenLin;
+      return {
+        dmmText: vout.toFixed(4) + " V",
+        dmmMin: "0.000 V", dmmMax: "5.000 V",
+        dmmBar: Math.max(0, Math.min(100, (vout / p.vin) * 100)),
+        dmmUb: "±0.0001 V",
+        metrics: [
+          { name: "Tensión Filtrada (Vout)", val: (vout * 1000).toFixed(1) + " mV", sub: "Vin = " + p.vin + " V" },
+          { name: "Atenuación a fn", val: attenDb.toFixed(1) + " dB", sub: "fn = " + p.fn + " Hz" },
+          { name: "Pendiente Asintótica", val: "-40 dB/década", sub: "Filtro 2º orden" }
+        ],
+        formula: "|H(f)| = 1 / sqrt(1 + (f/fc)^4)\\nAtenuación a 1 década: -40 dB\\nVout = Vin · |H(fn)|",
+        challenge: {
+          q: "Si la frecuencia de corte es fc = 10 Hz y la interferencia de red es fn = 100 Hz (1 década por encima), ¿cuál es la atenuación teórica en dB?",
+          ans: -40.0, tol: 0.5, unit: "dB",
+          sol: "Un filtro de 2º orden tiene una pendiente asintótica de -40 dB/década. A f = 10·fc, |H| ≈ -40.0 dB."
         }
-
-        const bend = (eps / 2500) * 40;
-        ctx.beginPath();
-        ctx.moveTo(44, 130);
-        ctx.bezierCurveTo(w * 0.4, 130, w * 0.7, 130 + bend, w - 80, 130 + bend);
-        ctx.lineTo(w - 80, 150 + bend);
-        ctx.bezierCurveTo(w * 0.7, 150 + bend, w * 0.4, 150, 44, 150);
-        ctx.closePath();
-        ctx.fillStyle = '#3a3a3c';
-        ctx.fill();
-        ctx.strokeStyle = '#636366';
-        ctx.stroke();
-
-        const topCol = eps >= 0 ? 'rgba(255,69,58,0.85)' : 'rgba(10,132,255,0.85)';
-        ctx.fillStyle = topCol;
-        ctx.fillRect(80, 126, 60, 4);
-        ctx.fillText(eps >= 0 ? 'Galga R1 (Tracción ε > 0)' : 'Galga R1 (Compresión ε < 0)', 80, 116);
-
-        if (Math.abs(bend) > 2) {
-          ctx.strokeStyle = '#ffd60a';
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          const arrowX = w - 90;
-          const arrowY = 140 + bend;
-          ctx.moveTo(arrowX, arrowY - (bend > 0 ? 35 : -35));
-          ctx.lineTo(arrowX, arrowY);
-          ctx.stroke();
-          ctx.fillStyle = '#ffd60a';
-          ctx.fillText(eps > 0 ? 'Fuerza F ↓' : 'Fuerza F ↑', arrowX - 15, arrowY + (bend > 0 ? 20 : -10));
+      };
+    }
+  },
+  {
+    title: "5. Muestreo, Cuantización ADC & Nyquist 3D",
+    hud: ["ADC: SAR 16-Bit", "FFT: Espectro en Vivo"],
+    controls: [
+      { id: "fin", label: "Frecuencia de Señal (f_in)", min: 10, max: 2000, val: 440, unit: "Hz", step: 10 },
+      { id: "fs", label: "Frecuencia de Muestreo (f_s)", min: 50, max: 5000, val: 1200, unit: "Hz", step: 50 },
+      { id: "bits", label: "Resolución del ADC (N bits)", min: 3, max: 16, val: 12, unit: "bits", step: 1 },
+      { id: "vref", label: "Tensión de Referencia (Vref)", min: 1, max: 10, val: 5.0, unit: "V", step: 0.5 }
+    ],
+    presets: [
+      { name: "Violación de Nyquist (Aliasing)", fin: 440, fs: 600, bits: 12, vref: 5 },
+      { name: "Examen Final 2021 (Medida de Frecuencia)", fin: 13793, fs: 50000, bits: 16, vref: 5 }
+    ],
+    calc: (p) => {
+      const q = p.vref / Math.pow(2, p.bits);
+      const snr = 6.02 * p.bits + 1.76;
+      let alias = p.fin;
+      if (p.fs < 2 * p.fin) { alias = Math.abs(p.fin - Math.round(p.fin / p.fs) * p.fs); }
+      return {
+        dmmText: alias.toFixed(1) + " Hz",
+        dmmMin: "0 Hz", dmmMax: "2000 Hz",
+        dmmBar: Math.max(0, Math.min(100, (alias / 1000) * 100)),
+        dmmUb: "±0.1 Hz",
+        metrics: [
+          { name: "Frecuencia Alias", val: alias.toFixed(1) + " Hz", sub: p.fs < 2*p.fin ? "⚠️ Aliasing Activo" : "✅ Nyquist Cumplido" },
+          { name: "Cuanto de Cuantización (q)", val: (q * 1e6).toFixed(1) + " μV", sub: "N = " + p.bits + " bits" },
+          { name: "SNR Teórico Máximo", val: snr.toFixed(1) + " dB", sub: "6.02·N + 1.76 dB" }
+        ],
+        formula: "q = Vref / 2^N\\nSNR_max = 6.02·N + 1.76 dB\\nCondición de Nyquist: f_s ≥ 2·f_max",
+        challenge: {
+          q: "Si f_in = 440 Hz y muestreamos a f_s = 600 Hz, ¿a qué frecuencia exacta en Hz aparecerá el alias?",
+          ans: 160.0, tol: 1.0, unit: "Hz",
+          sol: "f_alias = |f_in - f_s| = |440 - 600| = 160 Hz (reflejo en fs/2 = 300 Hz)."
         }
-
-        ctx.fillStyle = '#161617';
-        ctx.strokeStyle = '#38383a';
-        ctx.lineWidth = 1;
-        ctx.roundRect(w - 180, 30, 160, 64, 10);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = '#86868b';
-        ctx.font = '10px var(--font-family)';
-        ctx.fillText('DVM SALIDA PUENTE', w - 168, 48);
-        ctx.fillStyle = '#30d158';
-        ctx.font = 'bold 20px monospace';
-        ctx.fillText((vo * 1000).toFixed(3) + ' mV', w - 168, 76);
-
-      } else {
-        ctx.fillStyle = '#86868b';
-        ctx.font = '12px var(--font-family)';
-        ctx.fillText('Esquema Circuital del Puente de Wheatstone', 16, 22);
-
-        const cx = w / 2 - 20, cy = h / 2 + 10, sz = 70;
-        const top = { x: cx, y: cy - sz };
-        const bottom = { x: cx, y: cy + sz };
-        const left = { x: cx - sz, y: cy };
-        const right = { x: cx + sz, y: cy };
-
-        ctx.strokeStyle = '#0a84ff';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(top.x, top.y); ctx.lineTo(right.x, right.y);
-        ctx.lineTo(bottom.x, bottom.y); ctx.lineTo(left.x, left.y);
-        ctx.closePath();
-        ctx.stroke();
-
-        ctx.strokeStyle = '#fff';
-        ctx.beginPath();
-        ctx.moveTo(top.x, top.y); ctx.lineTo(top.x - 110, top.y);
-        ctx.lineTo(top.x - 110, bottom.y); ctx.lineTo(bottom.x, bottom.y);
-        ctx.stroke();
-        ctx.fillStyle = '#ffd60a';
-        ctx.fillText('Vs = ' + vs.toFixed(1) + 'V', top.x - 150, cy);
-
-        ctx.strokeStyle = '#30d158';
-        ctx.setLineDash([4, 4]);
-        ctx.beginPath();
-        ctx.moveTo(left.x, left.y); ctx.lineTo(right.x, right.y);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#1c1c1e';
-        ctx.beginPath();
-        ctx.arc(cx, cy, 18, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = '#30d158';
-        ctx.font = 'bold 12px monospace';
-        ctx.fillText('V', cx - 4, cy + 4);
-
-        ctx.fillStyle = '#fff';
-        ctx.font = '11px monospace';
-        ctx.fillText('R1 ' + (topo !== 'none' ? '(Galga)' : ''), cx + sz/2 + 5, cy - sz/2);
-        ctx.fillText('R2', cx + sz/2 + 5, cy + sz/2 + 10);
-        ctx.fillText('R4', cx - sz/2 - 25, cy - sz/2);
-        ctx.fillText('R3', cx - sz/2 - 25, cy + sz/2 + 10);
-      }
+      };
     }
-    function checkWheatstoneChallenge() {
-      const val = parseFloat(document.getElementById('ch-w-ans').value);
-      const fb = document.getElementById('ch-w-fb');
-      if (Math.abs(val - 2000) <= 40) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXCELENTE!</b> ε = 2000 µε. Vo ≈ (10V / 4) * 2 * (2000×10⁻⁶) = 10.0 mV.';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> ε = 4·Vo / (Vs·K) = 4·(0.01) / (10·2) = 2000 µε.';
-      }
-    }
-
-    // ==========================================
-    // 2. PT100
-    // ==========================================
-    let ptWires = 2;
-    let ptView = 'thermo';
-    function setPtWires(w) {
-      ptWires = w;
-      document.querySelectorAll('#btn-pt-2w, #btn-pt-3w, #btn-pt-4w').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-pt-' + w + 'w').classList.add('active');
-      updatePt100();
-    }
-    function setPtView(v) {
-      ptView = v;
-      document.querySelectorAll('#btn-ptview-thermo, #btn-ptview-schematic').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-ptview-' + v).classList.add('active');
-      updatePt100();
-    }
-    function updatePt100() {
-      const T = parseFloat(document.getElementById('slider-pt-t').value);
-      const RL = parseFloat(document.getElementById('slider-pt-rl').value);
-      const I_mA = parseFloat(document.getElementById('slider-pt-i').value);
-
-      document.getElementById('val-pt-t').innerText = T.toFixed(1) + ' °C';
-      document.getElementById('val-pt-rl').innerText = RL.toFixed(1) + ' Ω';
-      document.getElementById('val-pt-i').innerText = I_mA.toFixed(2) + ' mA';
-
-      const alpha = 0.00385;
-      const R0 = 100.0;
-      const Rreal = R0 * (1.0 + alpha * T);
-
-      let Rapp = Rreal, Tapp = T, Terror = 0, fBox = '';
-      if (ptWires === 2) {
-        Rapp = Rreal + 2.0 * RL;
-        Tapp = (Rapp - R0) / (R0 * alpha);
-        Terror = Tapp - T;
-        fBox = '2 Hilos: R_medida = R(T) + 2*RL. Error grave: ΔT = +2*RL / 0.385 = +' + Terror.toFixed(2) + ' °C';
-      } else if (ptWires === 3) {
-        Rapp = Rreal; Tapp = T; Terror = 0.0;
-        fBox = '3 Hilos (Siemens): Puente balanceado con 1 hilo en serie con R_ref. Error compensado.';
-      } else {
-        Rapp = Rreal; Tapp = T; Terror = 0.0;
-        fBox = '4 Hilos (Kelvin): Dos hilos inyectan corriente Ibias y dos leen tensión con DVM de alta impedancia.';
-      }
-
-      const diss_mW = Math.pow(I_mA * 1e-3, 2) * Rreal * 1000;
-      document.getElementById('pt-formula').innerText = fBox;
-      document.getElementById('m-pt-rreal').innerText = Rreal.toFixed(2) + ' Ω';
-      document.getElementById('m-pt-rapp').innerText = Rapp.toFixed(2) + ' Ω';
-      document.getElementById('m-pt-tapp').innerText = Tapp.toFixed(2) + ' °C';
-      document.getElementById('m-pt-error').innerText = (Terror >= 0 ? '+' : '') + Terror.toFixed(2) + ' °C';
-      document.getElementById('m-pt-diss').innerText = diss_mW.toFixed(2) + ' mW';
-
-      drawPt100(T, Tapp, RL, ptWires);
-    }
-    function drawPt100(Treal, Tapp, RL, wires) {
-      const { ctx, width: w, height: h } = setupCanvas('canvas-pt100');
-      ctx.clearRect(0, 0, w, h);
-
-      if (ptView === 'thermo') {
-        ctx.fillStyle = '#86868b';
-        ctx.font = '12px var(--font-family)';
-        ctx.fillText('Comparador Térmico: Baño Real vs Instrumento', 16, 22);
-
-        drawThermometerBar(ctx, 100, 70, 26, 170, Treal, '#0a84ff', 'T_real (Baño): ' + Treal.toFixed(1) + ' °C');
-        const isErr = Math.abs(Tapp - Treal) > 0.2;
-        drawThermometerBar(ctx, 280, 70, 26, 170, Tapp, isErr ? '#ff453a' : '#30d158', 'Lectura DVM: ' + Tapp.toFixed(1) + ' °C');
-
-        ctx.fillStyle = isErr ? '#ff453a' : '#30d158';
-        ctx.font = 'bold 15px monospace';
-        const dText = (Tapp - Treal >= 0 ? '+' : '') + (Tapp - Treal).toFixed(2) + ' °C';
-        ctx.fillText('Error: ' + dText, 450, 140);
-        ctx.fillStyle = '#86868b';
-        ctx.font = '12px var(--font-family)';
-        ctx.fillText(wires === 2 ? '⚠️ Cables sin compensar' : '✅ Hilos compensados', 450, 165);
-      } else {
-        ctx.fillStyle = '#86868b';
-        ctx.font = '12px var(--font-family)';
-        ctx.fillText('Esquema de Sonda Pt100 y Cables (' + wires + ' Hilos)', 16, 22);
-
-        ctx.fillStyle = '#2c2c2e';
-        ctx.strokeStyle = '#555';
-        ctx.roundRect(w - 180, 80, 150, 100, 12);
-        ctx.fill(); ctx.stroke();
-        ctx.fillStyle = '#fff';
-        ctx.fillText('Sonda Pt100', w - 150, 110);
-        ctx.fillStyle = '#64d2ff';
-        ctx.fillText('R(T) = ' + (100 * (1 + 0.00385 * Treal)).toFixed(1) + ' Ω', w - 150, 135);
-
-        for (let i = 0; i < wires; i++) {
-          const y = 95 + i * 22;
-          ctx.strokeStyle = (i < 2) ? '#ffd60a' : '#0a84ff';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(80, y); ctx.lineTo(w - 180, y); ctx.stroke();
-          ctx.fillStyle = '#86868b';
-          ctx.fillText('Hilo ' + (i+1) + ' (RL=' + RL + 'Ω)', 100, y - 5);
+  },
+  {
+    title: "6. Termopares & Compensación de Unión Fría (CJC)",
+    hud: ["Termopar: Tipo K / J", "CJC: Bloque Isotérmico"],
+    controls: [
+      { id: "th", label: "Temperatura Caliente (Th)", min: 0, max: 800, val: 300, unit: "°C", step: 5 },
+      { id: "ta", label: "Temperatura Ambiente (Ta)", min: 0, max: 50, val: 25, unit: "°C", step: 1 },
+      { id: "type", label: "Tipo de Termopar", type: "select", options: ["Tipo K (Cromel-Alumel ~41 μV/°C)", "Tipo J (Hierro-Constantán ~54 μV/°C)"], val: 0 },
+      { id: "cjc", label: "Compensación Electrónica CJC", type: "select", options: ["Desactivada (Error por Ta)", "Activada (CJC Pt100/AD590)"], val: 1 }
+    ],
+    presets: [
+      { name: "Examen Final 2021 (Tipo K, Th=300°C)", th: 300, ta: 20, type: 0, cjc: 1 },
+      { name: "Examen Final 2025 (Tipo J, Th=500°C)", th: 500, ta: 25, type: 1, cjc: 1 }
+    ],
+    calc: (p) => {
+      const alpha = p.type === 0 ? 41.078 : 54.0;
+      const vSeebeck = alpha * (p.th - p.ta) * 1e-3;
+      const vComp = p.cjc === 1 ? alpha * p.ta * 1e-3 : 0;
+      const vTotal = vSeebeck + vComp;
+      const tLeida = vTotal / (alpha * 1e-3);
+      return {
+        dmmText: (vTotal).toFixed(3) + " mV",
+        dmmMin: "0.000 mV", dmmMax: "35.000 mV",
+        dmmBar: Math.max(0, Math.min(100, (vTotal / 30) * 100)),
+        dmmUb: "±0.008 mV",
+        metrics: [
+          { name: "Tensión Termopar (Vi)", val: (vTotal).toFixed(3) + " mV", sub: p.cjc === 1 ? "Compensada con CJC" : "Sin compensar" },
+          { name: "Temperatura Medida", val: tLeida.toFixed(1) + " °C", sub: "Th real = " + p.th + " °C" },
+          { name: "Sensibilidad Seebeck", val: alpha.toFixed(1) + " μV/°C", sub: p.type === 0 ? "Tipo K" : "Tipo J" }
+        ],
+        formula: "Vi = α · (Th - Ta)\\nCon CJC: Vout = α·(Th - Ta) + α·Ta = α·Th\\nCancelación en pin REF del AD620",
+        challenge: {
+          q: "Si Th = 300 °C, Ta = 25 °C y CJC está DESACTIVADA (Tipo K, α = 41.08 μV/°C), ¿qué temperatura indicará el voltímetro?",
+          ans: 275.0, tol: 1.0, unit: "°C",
+          sol: "Vi = 41.08 μV/°C · (300 - 25) = 11.297 mV. Al dividir por 41.08 μV/°C, la lectura es 275 °C (error sistemático de -25 °C por Ta)."
         }
-      }
+      };
     }
-    function drawThermometerBar(ctx, x, y, bw, bh, temp, col, label) {
-      ctx.fillStyle = '#1c1c1e';
-      ctx.strokeStyle = '#38383a';
-      ctx.roundRect(x, y, bw, bh, 12);
-      ctx.fill(); ctx.stroke();
-
-      const pct = Math.max(0, Math.min(1, (temp + 50) / 300));
-      const fillH = bh * pct;
-      ctx.fillStyle = col;
-      ctx.roundRect(x, y + bh - fillH, bw, fillH, 12);
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.arc(x + bw/2, y + bh + 10, 18, 0, 2*Math.PI);
-      ctx.fill();
-
-      ctx.fillStyle = '#fff';
-      ctx.font = '11px monospace';
-      ctx.fillText(label, x - 20, y + bh + 45);
-    }
-    function checkPt100Challenge() {
-      const val = parseFloat(document.getElementById('ch-pt-ans').value);
-      const fb = document.getElementById('ch-pt-fb');
-      if (Math.abs(val - 20.0) <= 0.5) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXACTO!</b> Error = 2·RL / 0.385 = (2 · 3.85) / 0.385 = +20.00 °C.';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> 2·RL = 7.70 Ω. Como la Pt100 varía 0.385 Ω/°C, ΔT = 7.70 / 0.385 = +20.0 °C.';
-      }
-    }
-
-    // ==========================================
-    // 3. INA3
-    // ==========================================
-    let inaView = 'scope';
-    function setINAView(v) {
-      inaView = v;
-      document.querySelectorAll('#btn-inaview-scope, #btn-inaview-schematic').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-inaview-' + v).classList.add('active');
-      updateINA();
-    }
-    function updateINA() {
-      const vd_mV = parseFloat(document.getElementById('slider-ina-vd').value);
-      const vcm_V = parseFloat(document.getElementById('slider-ina-vcm').value);
-      const rg_ohm = parseFloat(document.getElementById('slider-ina-rg').value);
-      const tol = parseFloat(document.getElementById('select-ina-tol').value);
-
-      document.getElementById('val-ina-vd').innerText = (vd_mV > 0 ? '+' : '') + vd_mV.toFixed(1) + ' mV';
-      document.getElementById('val-ina-vcm').innerText = vcm_V.toFixed(2) + ' V';
-      document.getElementById('val-ina-rg').innerText = rg_ohm.toFixed(0) + ' Ω';
-      document.getElementById('val-ina-tol').innerText = (tol * 100).toFixed(2) + ' %';
-
-      const gd = 1.0 + (50000.0 / rg_ohm);
-      const cmrrRatio = gd / (4.0 * tol);
-      const cmrr_dB = 20.0 * Math.log10(cmrrRatio);
-
-      const vo_ud = gd * (vd_mV * 1e-3);
-      const vo_cm = (gd / cmrrRatio) * vcm_V;
-      const err_pct = Math.abs(vo_cm) / (Math.abs(vo_ud) + 1e-5) * 100.0;
-
-      document.getElementById('m-ina-gd').innerText = gd.toFixed(1);
-      document.getElementById('m-ina-cmrr').innerText = cmrr_dB.toFixed(1) + ' dB';
-      document.getElementById('m-ina-voud').innerText = (vo_ud >= 0 ? '+' : '') + vo_ud.toFixed(2) + ' V';
-      document.getElementById('m-ina-vocm').innerText = (vo_cm * 1000).toFixed(1) + ' mV';
-      document.getElementById('m-ina-err').innerText = err_pct.toFixed(2) + ' %';
-
-      if (inaView === 'schematic') {
-        drawINASchematic();
-      }
-    }
-    function drawINAAnimation(t) {
-      const cv = document.getElementById('canvas-ina');
-      if (!cv || cv.offsetParent === null) return;
-      const { ctx, width: w, height: h } = setupCanvas('canvas-ina');
-      ctx.clearRect(0, 0, w, h);
-
-      ctx.fillStyle = '#86868b';
-      ctx.font = '12px var(--font-family)';
-      ctx.fillText('Osciloscopio Vivo 60 FPS: Señal Útil (CH1) vs Ruido 50Hz (CH2)', 16, 22);
-
-      // Grid
-      ctx.strokeStyle = '#222226';
-      ctx.lineWidth = 1;
-      for (let x = 40; x < w - 40; x += 40) {
-        ctx.beginPath(); ctx.moveTo(x, 40); ctx.lineTo(x, h - 40); ctx.stroke();
-      }
-      for (let y = 40; y < h - 40; y += 30) {
-        ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 40, y); ctx.stroke();
-      }
-
-      const vd_mV = parseFloat(document.getElementById('slider-ina-vd').value);
-      const vcm_V = parseFloat(document.getElementById('slider-ina-vcm').value);
-      const rg_ohm = parseFloat(document.getElementById('slider-ina-rg').value);
-      const tol = parseFloat(document.getElementById('select-ina-tol').value);
-      const gd = 1.0 + (50000.0 / rg_ohm);
-      const cmrrRatio = gd / (4.0 * tol);
-      const vo_ud = gd * (vd_mV * 1e-3);
-      const vo_cm = (gd / cmrrRatio) * vcm_V;
-
-      // CH1: Pure amplified signal (Green)
-      ctx.strokeStyle = '#30d158';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      for (let i = 0; i < w - 80; i++) {
-        let timeSec = t + i / 100.0;
-        let y = (h / 2) - vo_ud * 16;
-        if (i === 0) ctx.moveTo(40 + i, y); else ctx.lineTo(40 + i, y);
-      }
-      ctx.stroke();
-
-      // Total Output: Signal + Common mode hum animated
-      ctx.strokeStyle = '#64d2ff';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      for (let i = 0; i < w - 80; i++) {
-        let timeSec = t + i / 100.0;
-        let y = (h / 2) - (vo_ud * 16 + vo_cm * 120 * Math.sin(2 * Math.PI * 50 * timeSec));
-        if (i === 0) ctx.moveTo(40 + i, y); else ctx.lineTo(40 + i, y);
-      }
-      ctx.stroke();
-
-      ctx.fillStyle = '#30d158'; ctx.fillText('━ CH1: V_útil = ' + vo_ud.toFixed(2) + 'V', 50, h - 18);
-      ctx.fillStyle = '#64d2ff'; ctx.fillText('━ Salida con Ruido 50Hz', 220, h - 18);
-    }
-    function drawINASchematic() {
-      const { ctx, width: w, height: h } = setupCanvas('canvas-ina');
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = '#86868b';
-      ctx.font = '12px var(--font-family)';
-      ctx.fillText('Topología Clásica INA de 3 Amplificadores Operacionales', 16, 22);
-
-      drawOpAmp(ctx, 140, 90, 'A1');
-      drawOpAmp(ctx, 140, 200, 'A2');
-      drawOpAmp(ctx, 360, 145, 'A3');
-
-      ctx.strokeStyle = '#ffd60a';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(140, 110); ctx.lineTo(140, 180); ctx.stroke();
-      ctx.fillStyle = '#ffd60a'; ctx.fillText('Rg', 150, 145);
-    }
-    function drawOpAmp(ctx, x, y, name) {
-      ctx.strokeStyle = '#0a84ff';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(x - 30, y - 30);
-      ctx.lineTo(x + 30, y);
-      ctx.lineTo(x - 30, y + 30);
-      ctx.closePath(); ctx.stroke();
-      ctx.fillStyle = '#fff'; ctx.font = '11px monospace';
-      ctx.fillText(name, x - 10, y + 4);
-    }
-    function checkINAChallenge() {
-      const val = parseFloat(document.getElementById('ch-ina-ans').value);
-      const fb = document.getElementById('ch-ina-fb');
-      if (Math.abs(val - 100.0) <= 2.0) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡CORRECTO!</b> Rg = 50000 / 500 = 100.0 Ω.';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> 501 - 1 = 500 = 50,000 / Rg ⇒ Rg = 100 Ω.';
-      }
-    }
-
-    // ==========================================
-    // 4. FILTER
-    // ==========================================
-    let filterType = 'butter';
-    let filterView = 'bode';
-    function setFilterType(t) {
-      filterType = t;
-      document.querySelectorAll('#btn-ftype-butter, #btn-ftype-cheby').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-ftype-' + t).classList.add('active');
-      updateFilter();
-    }
-    function setFilterView(v) {
-      filterView = v;
-      document.querySelectorAll('#btn-fview-bode, #btn-fview-time').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-fview-' + v).classList.add('active');
-      updateFilter();
-    }
-    function updateFilter() {
-      const fc = parseFloat(document.getElementById('slider-f-fc').value);
-      const fn = parseFloat(document.getElementById('select-f-fn').value);
-
-      document.getElementById('val-f-fc').innerText = fc.toFixed(1) + ' Hz';
-      document.getElementById('val-f-fn').innerText = fn.toFixed(1) + ' Hz';
-
-      const ratio = fn / fc;
-      const Q = filterType === 'butter' ? 0.7071 : 1.3000;
-      const denom = Math.sqrt(Math.pow(1.0 - Math.pow(ratio, 2), 2) + Math.pow(ratio / Q, 2));
-      const attMag = 1.0 / denom;
-      const att_dB = 20.0 * Math.log10(attMag);
-      const phase_deg = -(Math.atan2(ratio / Q, 1.0 - Math.pow(ratio, 2)) * (180.0 / Math.PI));
-
-      const C = 100e-9;
-      const R = 1.0 / (2.0 * Math.PI * fc * C);
-
-      document.getElementById('m-f-att').innerText = att_dB.toFixed(1) + ' dB';
-      document.getElementById('m-f-trans').innerText = (attMag * 100).toFixed(2) + ' %';
-      document.getElementById('m-f-phase').innerText = phase_deg.toFixed(1) + ' °';
-      document.getElementById('m-f-rval').innerText = (R / 1000).toFixed(1) + ' kΩ';
-
-      if (filterView === 'bode') {
-        drawBodeStatic(fc, fn, Q, att_dB);
-      }
-    }
-    function drawBodeStatic(fc, fn, Q, att_dB) {
-      const { ctx, width: w, height: h } = setupCanvas('canvas-filter');
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = '#86868b';
-      ctx.font = '12px var(--font-family)';
-      ctx.fillText('Respuesta en Frecuencia (Bode) | Orden n=2 (' + (filterType === 'butter' ? 'Butterworth' : 'Chebyshev') + ')', 16, 22);
-
-      ctx.strokeStyle = '#222226'; ctx.lineWidth = 1;
-      for (let y = 40; y <= h - 40; y += 35) {
-        ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 40, y); ctx.stroke();
-      }
-
-      ctx.strokeStyle = '#0a84ff'; ctx.lineWidth = 3;
-      ctx.beginPath();
-      for (let i = 0; i <= w - 80; i++) {
-        let f = Math.pow(10, (i / (w - 80)) * 3.0);
-        let r = f / fc;
-        let mag = 1.0 / Math.sqrt(Math.pow(1.0 - Math.pow(r, 2), 2) + Math.pow(r / Q, 2));
-        let mag_dB = 20 * Math.log10(mag);
-        let py = 60 - (mag_dB * 3.2);
-        if (i === 0) ctx.moveTo(40 + i, py); else ctx.lineTo(40 + i, py);
-      }
-      ctx.stroke();
-
-      let fnX = 40 + (Math.log10(fn) / 3.0) * (w - 80);
-      ctx.strokeStyle = '#ff453a'; ctx.lineWidth = 2;
-      ctx.setLineDash([5, 5]);
-      ctx.beginPath(); ctx.moveTo(fnX, 35); ctx.lineTo(fnX, h - 35); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = '#ff453a';
-      ctx.fillText('Ruido: ' + fn + ' Hz (' + att_dB.toFixed(1) + ' dB)', fnX - 45, 30);
-    }
-    function drawFilterAnimation(t) {
-      const cv = document.getElementById('canvas-filter');
-      if (!cv || cv.offsetParent === null) return;
-      const { ctx, width: w, height: h } = setupCanvas('canvas-filter');
-      ctx.clearRect(0, 0, w, h);
-
-      ctx.fillStyle = '#86868b';
-      ctx.font = '12px var(--font-family)';
-      ctx.fillText('Dominio del Tiempo en Vivo: Señal Sucia (Gris) vs Filtrada (Verde)', 16, 22);
-
-      const fn = parseFloat(document.getElementById('select-f-fn').value);
-
-      // Noisy input
-      ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      for (let i = 0; i < w - 80; i++) {
-        let timeSec = t + i / 150.0;
-        let y = (h / 2) - (Math.sin(2 * Math.PI * 2 * timeSec) * 45 + Math.sin(2 * Math.PI * fn * timeSec) * 20);
-        if (i === 0) ctx.moveTo(40 + i, y); else ctx.lineTo(40 + i, y);
-      }
-      ctx.stroke();
-
-      // Clean filtered output
-      ctx.strokeStyle = '#30d158'; ctx.lineWidth = 3;
-      ctx.beginPath();
-      for (let i = 0; i < w - 80; i++) {
-        let timeSec = t + i / 150.0;
-        let y = (h / 2) - (Math.sin(2 * Math.PI * 2 * timeSec) * 45);
-        if (i === 0) ctx.moveTo(40 + i, y); else ctx.lineTo(40 + i, y);
-      }
-      ctx.stroke();
-    }
-    function checkFilterChallenge() {
-      const val = parseFloat(document.getElementById('ch-f-ans').value);
-      const fb = document.getElementById('ch-f-fb');
-      if (Math.abs(val - (-40.0)) <= 3.0) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXACTO!</b> Caída de -40.0 dB a 1 década (100 Hz con fc=10 Hz).';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> Pendiente de -40 dB/década. A 100 Hz hay 1 década ⇒ -40 dB.';
-      }
-    }
-
-    // ==========================================
-    // 5. PIEZOELECTRIC (TEMA 7) [NUEVO]
-    // ==========================================
-    let piezoMode = 'charge';
-    function setPiezoMode(m) {
-      piezoMode = m;
-      document.querySelectorAll('#btn-pzmode-charge, #btn-pzmode-volt').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-pzmode-' + m).classList.add('active');
-      updatePiezo();
-    }
-    function updatePiezo() {
-      const F = parseFloat(document.getElementById('slider-pz-f').value);
-      const fvib = parseFloat(document.getElementById('slider-pz-fvib').value);
-      const Cc_pF = parseFloat(document.getElementById('slider-pz-cc').value);
-      const Cf_nF = parseFloat(document.getElementById('select-pz-cf').value);
-
-      document.getElementById('val-pz-f').innerText = F.toFixed(1) + ' N';
-      document.getElementById('val-pz-fvib').innerText = fvib.toFixed(0) + ' Hz';
-      document.getElementById('val-pz-cc').innerText = Cc_pF.toFixed(0) + ' pF';
-
-      const d = 20.0; // pC/N
-      const q_nC = (d * F) / 1000.0; // nC
-      const Cp_pF = 300.0;
-      const Rf_MOhm = 100.0; // 100 MOhm
-
-      let Vo = 0;
-      let att_pct = 0;
-      let fL = 0;
-
-      if (piezoMode === 'charge') {
-        Vo = - q_nC / Cf_nF; // V
-        fL = 1.0 / (2.0 * Math.PI * (Rf_MOhm * 1e6) * (Cf_nF * 1e-9));
-        att_pct = 0.0; // Immune to cable!
-      } else {
-        // Voltage mode: Vo = q / (Cp + Cc)
-        const Ctot_pF = Cp_pF + Cc_pF;
-        Vo = (q_nC * 1e-9) / (Ctot_pF * 1e-12);
-        fL = 1.0 / (2.0 * Math.PI * 1e7 * (Ctot_pF * 1e-12));
-        att_pct = (Cc_pF / Ctot_pF) * 100.0;
-      }
-
-      document.getElementById('m-pz-q').innerText = q_nC.toFixed(2) + ' nC';
-      document.getElementById('m-pz-vo').innerText = Vo.toFixed(2) + ' V';
-      document.getElementById('m-pz-fl').innerText = fL.toFixed(2) + ' Hz';
-      document.getElementById('m-pz-att').innerText = att_pct.toFixed(1) + ' %';
-    }
-    function drawPiezoAnimation(t) {
-      const cv = document.getElementById('canvas-piezo');
-      if (!cv || cv.offsetParent === null) return;
-      const { ctx, width: w, height: h } = setupCanvas('canvas-piezo');
-      ctx.clearRect(0, 0, w, h);
-
-      ctx.fillStyle = '#86868b';
-      ctx.font = '12px var(--font-family)';
-      ctx.fillText('Sensor Piezoeléctrico: Cristal de Cuarzo y Tensión de Salida Dinámica', 16, 22);
-
-      const fvib = parseFloat(document.getElementById('slider-pz-fvib').value);
-      const F = parseFloat(document.getElementById('slider-pz-f').value);
-      const Vo = parseFloat(document.getElementById('m-pz-vo').innerText);
-
-      // Piezo Crystal Graphic (Left side)
-      const cx = 110, cy = h / 2 + 10;
-      const comp = Math.sin(2 * Math.PI * fvib * t) * 8;
-
-      ctx.fillStyle = '#2c2c2e';
-      ctx.fillRect(cx - 50, cy - 40 - comp/2, 100, 80 + comp);
-      ctx.strokeStyle = '#0a84ff'; ctx.lineWidth = 2;
-      ctx.strokeRect(cx - 50, cy - 40 - comp/2, 100, 80 + comp);
-
-      ctx.fillStyle = '#fff';
-      ctx.font = '11px monospace';
-      ctx.fillText('Cristal SiO2', cx - 35, cy);
-      ctx.fillStyle = '#ffd60a';
-      ctx.fillText('q(t) = d·F(t)', cx - 35, cy + 18);
-
-      // Force arrows
-      ctx.strokeStyle = '#ff453a'; ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy - 70); ctx.lineTo(cx, cy - 45); ctx.stroke();
-      ctx.fillText('Fuerza F', cx - 22, cy - 75);
-
-      // Oscilloscope Trace (Right side)
-      ctx.strokeStyle = '#222226'; ctx.lineWidth = 1;
-      for (let x = 240; x < w - 40; x += 40) {
-        ctx.beginPath(); ctx.moveTo(x, 40); ctx.lineTo(x, h - 40); ctx.stroke();
-      }
-      for (let y = 40; y < h - 40; y += 30) {
-        ctx.beginPath(); ctx.moveTo(240, y); ctx.lineTo(w - 40, y); ctx.stroke();
-      }
-
-      ctx.strokeStyle = piezoMode === 'charge' ? '#30d158' : '#ffd60a';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      for (let i = 0; i < w - 280; i++) {
-        let timeSec = t + i / 100.0;
-        let y = (h / 2) - Math.sin(2 * Math.PI * fvib * timeSec) * (Math.abs(Vo) * 35);
-        if (i === 0) ctx.moveTo(240 + i, y); else ctx.lineTo(240 + i, y);
-      }
-      ctx.stroke();
-
-      ctx.fillStyle = piezoMode === 'charge' ? '#30d158' : '#ffd60a';
-      ctx.fillText(piezoMode === 'charge' ? 'Modo Carga: Inmune a Cc' : 'Modo Tensión: Atenuado por Cc', 250, h - 18);
-    }
-    function checkPiezoChallenge() {
-      const val = parseFloat(document.getElementById('ch-pz-ans').value);
-      const fb = document.getElementById('ch-pz-fb');
-      // q = 20 pC/N * 50 N = 1000 pC = 1.0 nC. Vo = -q/Cf -> 1.00 V = 1.0 nC / Cf -> Cf = 1.0 nF
-      if (Math.abs(val - 1.0) <= 0.1) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXACTO!</b> q = d·F = 20 pC/N · 50 N = 1000 pC = 1.0 nC. Para Vo = 1.0 V: Cf = q / Vo = 1.0 nF.';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> q = d·F = 1000 pC = 1.0 nC. Como Vo = q/Cf ⇒ Cf = 1.0 nC / 1.0 V = 1.0 nF.';
-      }
-    }
-
-    // ==========================================
-    // 6. CAPACITIVE SENSOR & LOCK-IN (TEMA 8) [NUEVO]
-    // ==========================================
-    function updateCapacitive() {
-      const x_um = parseFloat(document.getElementById('slider-cap-x').value);
-      const d0_um = parseFloat(document.getElementById('slider-cap-d0').value);
-      const Vc = parseFloat(document.getElementById('slider-cap-vc').value);
-
-      document.getElementById('val-cap-x').innerText = (x_um >= 0 ? '+' : '') + x_um.toFixed(1) + ' µm';
-      document.getElementById('val-cap-d0').innerText = d0_um.toFixed(0) + ' µm';
-      document.getElementById('val-cap-vc').innerText = Vc.toFixed(1) + ' V';
-
-      const C0_pF = 50.0;
-      const C1 = C0_pF * (d0_um / (d0_um - x_um));
-      const C2 = C0_pF * (d0_um / (d0_um + x_um));
-
-      // Ratio transformer bridge output
-      const Vam_peak = Vc * Math.abs(x_um / d0_um);
-      const Vdc = Vc * (x_um / d0_um);
-      const Sx = (Vc / d0_um) * 1000.0; // mV/um
-
-      document.getElementById('m-cap-c1').innerText = C1.toFixed(1) + ' pF';
-      document.getElementById('m-cap-c2').innerText = C2.toFixed(1) + ' pF';
-      document.getElementById('m-cap-vam').innerText = Vam_peak.toFixed(2) + ' Vp';
-      document.getElementById('m-cap-vdc').innerText = (Vdc >= 0 ? '+' : '') + Vdc.toFixed(3) + ' V';
-      document.getElementById('m-cap-sx').innerText = Sx.toFixed(1) + ' mV/µm';
-    }
-    function drawCapacitiveAnimation(t) {
-      const cv = document.getElementById('canvas-capacitive');
-      if (!cv || cv.offsetParent === null) return;
-      const { ctx, width: w, height: h } = setupCanvas('canvas-capacitive');
-      ctx.clearRect(0, 0, w, h);
-
-      ctx.fillStyle = '#86868b';
-      ctx.font = '12px var(--font-family)';
-      ctx.fillText('Condensador Diferencial Móvil & Salida Demodulada en Fase (PSD)', 16, 22);
-
-      const x_um = parseFloat(document.getElementById('slider-cap-x').value);
-      const Vdc = parseFloat(document.getElementById('m-cap-vdc').innerText);
-
-      // Physical 3-plate capacitor (Left side)
-      const cx = 110, cy = h / 2 + 10;
-      const plateH = 70;
-
-      // Fixed plate 1 (Left)
-      ctx.fillStyle = '#0a84ff'; ctx.fillRect(cx - 50, cy - plateH/2, 8, plateH);
-      // Fixed plate 2 (Right)
-      ctx.fillStyle = '#0a84ff'; ctx.fillRect(cx + 50, cy - plateH/2, 8, plateH);
-
-      // Mobile center plate (Yellow)
-      const movePx = (x_um / 100.0) * 35;
-      ctx.fillStyle = '#ffd60a'; ctx.fillRect(cx + movePx - 4, cy - plateH/2, 8, plateH);
-
-      ctx.fillStyle = '#86868b'; ctx.font = '10px monospace';
-      ctx.fillText('P1 Fija', cx - 60, cy + plateH/2 + 15);
-      ctx.fillText('P2 Fija', cx + 40, cy + plateH/2 + 15);
-      ctx.fillStyle = '#ffd60a';
-      ctx.fillText('Móvil x=' + x_um.toFixed(1) + 'µm', cx - 35, cy - plateH/2 - 10);
-
-      // Waveform display (Right side)
-      ctx.strokeStyle = '#222226'; ctx.lineWidth = 1;
-      for (let x = 230; x < w - 40; x += 40) {
-        ctx.beginPath(); ctx.moveTo(x, 40); ctx.lineTo(x, h - 40); ctx.stroke();
-      }
-
-      // Demodulated DC level (Green)
-      ctx.strokeStyle = '#30d158'; ctx.lineWidth = 3;
-      ctx.beginPath();
-      for (let i = 0; i < w - 270; i++) {
-        let y = (h / 2) - Vdc * 40;
-        if (i === 0) ctx.moveTo(230 + i, y); else ctx.lineTo(230 + i, y);
-      }
-      ctx.stroke();
-
-      // AC Modulated carrier wave (Cyan)
-      ctx.strokeStyle = 'rgba(100,210,255,0.4)'; ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      for (let i = 0; i < w - 270; i++) {
-        let timeSec = t + i / 100.0;
-        let y = (h / 2) - Math.sin(2 * Math.PI * 15 * timeSec) * (Math.abs(Vdc) * 40);
-        if (i === 0) ctx.moveTo(230 + i, y); else ctx.lineTo(230 + i, y);
-      }
-      ctx.stroke();
-
-      ctx.fillStyle = '#30d158'; ctx.fillText('━ Salida DC Demodulada = ' + Vdc.toFixed(3) + ' V', 240, h - 18);
-    }
-    function checkCapChallenge() {
-      const val = parseFloat(document.getElementById('ch-cap-ans').value);
-      const fb = document.getElementById('ch-cap-fb');
-      // Sx = Vc / d0 = 10 V / 200 um = 0.05 V/um = 50.0 mV/um
-      if (Math.abs(val - 50.0) <= 2.0) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXACTO!</b> Sensibilidad Sx = Vc / d0 = 10 V / 200 µm = 0.05 V/µm = 50.0 mV/µm.';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> Sx = Vc / d0 = 10 V / 200 µm = 50.0 mV/µm.';
-      }
-    }
-
-    // ==========================================
-    // 7. ADC
-    // ==========================================
-    let adcView = 'time';
-    function setADCView(v) {
-      adcView = v;
-      document.querySelectorAll('#btn-adcview-time, #btn-adcview-fft').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-adcview-' + v).classList.add('active');
-      updateADC();
-    }
-    function updateADC() {
-      const fin = parseFloat(document.getElementById('slider-adc-fin').value);
-      const fs = parseFloat(document.getElementById('slider-adc-fs').value);
-      const n = parseInt(document.getElementById('slider-adc-n').value);
-      const vref = parseFloat(document.getElementById('select-adc-vref').value);
-
-      document.getElementById('val-adc-fin').innerText = fin.toFixed(1) + ' Hz';
-      document.getElementById('val-adc-fs').innerText = fs.toFixed(1) + ' Hz';
-      document.getElementById('val-adc-n').innerText = n + ' bits';
-
-      const isAliasing = fs < (2.0 * fin);
-      let falias = fin;
-      if (isAliasing) {
-        falias = Math.abs(fin - fs);
-      }
-
-      const q_mV = (vref / Math.pow(2, n)) * 1000.0;
-      const snr_dB = 6.02 * n + 1.76;
-
-      const statusBox = document.getElementById('adc-status-box');
-      const statusMetric = document.getElementById('m-adc-status');
-      if (isAliasing) {
-        statusBox.innerHTML = '⚠️ <b>VIOLACIÓN DE NYQUIST:</b> fs (' + fs + ' Hz) < 2*fin (' + (2*fin) + ' Hz). Aliasing severo. Frecuencia aparente = ' + falias.toFixed(1) + ' Hz.';
-        statusBox.style.borderColor = '#ff453a';
-        statusMetric.innerText = '⚠️ ALIASING';
-        statusMetric.className = 'metric-val red';
-      } else {
-        statusBox.innerHTML = '✅ <b>NYQUIST CUMPLIDO:</b> fs ≥ 2*fin. Espectro muestreado sin solapamiento.';
-        statusBox.style.borderColor = '#30d158';
-        statusMetric.innerText = '✅ CORRECTO';
-        statusMetric.className = 'metric-val green';
-      }
-
-      document.getElementById('m-adc-falias').innerText = falias.toFixed(1) + ' Hz';
-      document.getElementById('m-adc-q').innerText = q_mV.toFixed(2) + ' mV';
-      document.getElementById('m-adc-snr').innerText = snr_dB.toFixed(1) + ' dB';
-      document.getElementById('m-adc-levels').innerText = Math.pow(2, n);
-
-      if (isAudioActive && currentLab === 'lab-adc') {
-        playAudioForModule();
-      }
-    }
-    function drawADCAnimation(t) {
-      const cv = document.getElementById('canvas-adc');
-      if (!cv || cv.offsetParent === null) return;
-      const { ctx, width: w, height: h } = setupCanvas('canvas-adc');
-      ctx.clearRect(0, 0, w, h);
-
-      const fin = parseFloat(document.getElementById('slider-adc-fin').value);
-      const fs = parseFloat(document.getElementById('slider-adc-fs').value);
-      const isAliasing = fs < (2.0 * fin);
-      const falias = isAliasing ? Math.abs(fin - fs) : fin;
-
-      if (adcView === 'time') {
-        ctx.fillStyle = '#86868b'; ctx.font = '12px var(--font-family)';
-        ctx.fillText('Reconstrucción en Vivo (Gris: Onda real, Puntos: Muestreo, Color: Señal interpretada)', 16, 22);
-
-        // Continuous signal wave
-        ctx.strokeStyle = '#555'; ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        for (let x = 0; x < w - 80; x++) {
-          let timeSec = t + x / 250.0;
-          let y = (h / 2) - Math.sin(2 * Math.PI * fin * timeSec) * 60;
-          if (x === 0) ctx.moveTo(40 + x, y); else ctx.lineTo(40 + x, y);
+  },
+  {
+    title: "7. Termistor NTC & Linealización de Taylor",
+    hud: ["NTC: Modelo β", "Linealización: Resistencia Taylor"],
+    controls: [
+      { id: "beta", label: "Parámetro Beta (β)", min: 2000, max: 4500, val: 2867.4, unit: "K", step: 50 },
+      { id: "temp", label: "Temperatura Actual (T)", min: 0, max: 60, val: 22.5, unit: "°C", step: 0.5 },
+      { id: "t0", label: "Temperatura Central (T0)", min: 15, max: 35, val: 22.5, unit: "°C", step: 0.5 }
+    ],
+    presets: [
+      { name: "Examen Final 2024 (β = 2867.4 K, T0 = 22.5°C)", beta: 2867.4, temp: 22.5, t0: 22.5 }
+    ],
+    calc: (p) => {
+      const tk = p.temp + 273.15;
+      const t0k = p.t0 + 273.15;
+      const r0 = 14100;
+      const rth = r0 * Math.exp(p.beta * (1/tk - 1/298.15));
+      const rth0 = r0 * Math.exp(p.beta * (1/t0k - 1/298.15));
+      const rlin = rth0 * (p.beta - 2*t0k) / (p.beta + 2*t0k);
+      const vntc = 5.0 * (rlin / (rlin + rth));
+      return {
+        dmmText: vntc.toFixed(4) + " V",
+        dmmMin: "0.000 V", dmmMax: "5.000 V",
+        dmmBar: Math.max(0, Math.min(100, (vntc / 5) * 100)),
+        dmmUb: "±0.0001 V",
+        metrics: [
+          { name: "Tensión Vntc", val: vntc.toFixed(4) + " V", sub: "Divisor con 5V" },
+          { name: "Resistencia NTC", val: (rth / 1000).toFixed(2) + " kΩ", sub: "T = " + p.temp + " °C" },
+          { name: "Resistencia Taylor (Rlin)", val: (rlin / 1000).toFixed(2) + " kΩ", sub: "Punto de Inflexión" }
+        ],
+        formula: "Rth(T) = Ro · exp[β · (1/T - 1/To)]\\nRlin = Rth(To) · (β - 2·To) / (β + 2·To)\\nd²V/dT² = 0 en To (Máxima linealidad)",
+        challenge: {
+          q: "En el examen de 2024, con β = 2867.4 K y Rth(22.5°C) = 15.3 kΩ, calcule Rlin en kΩ para To = 295.65 K (22.5°C).",
+          ans: 10.06, tol: 0.1, unit: "kΩ",
+          sol: "Rlin = 15.3 · (2867.4 - 2·295.65) / (2867.4 + 2·295.65) = 15.3 · (2276.1 / 3458.7) = 10.06 kΩ."
         }
-        ctx.stroke();
-
-        // If aliasing: show reconstructed alias wave
-        if (isAliasing) {
-          ctx.strokeStyle = '#ffd60a'; ctx.lineWidth = 2.5;
-          ctx.beginPath();
-          for (let x = 0; x < w - 80; x++) {
-            let timeSec = t + x / 250.0;
-            let y = (h / 2) - Math.sin(2 * Math.PI * falias * timeSec) * 60;
-            if (x === 0) ctx.moveTo(40 + x, y); else ctx.lineTo(40 + x, y);
-          }
-          ctx.stroke();
-        }
-
-        // Sampling dots
-        const Ts = 1.0 / fs;
-        ctx.fillStyle = isAliasing ? '#ff453a' : '#30d158';
-        for (let timeSec = t; timeSec < t + (w - 80) / 250.0; timeSec += Ts) {
-          let px = 40 + (timeSec - t) * 250.0;
-          let py = (h / 2) - Math.sin(2 * Math.PI * fin * timeSec) * 60;
-          ctx.beginPath(); ctx.arc(px, py, 5, 0, 2 * Math.PI); ctx.fill();
-        }
-      } else {
-        // FFT Spectrum
-        ctx.fillStyle = '#86868b'; ctx.font = '12px var(--font-family)';
-        ctx.fillText('Espectro en Frecuencia (FFT) · Límite Nyquist fs/2 = ' + (fs/2).toFixed(1) + ' Hz', 16, 22);
-
-        const nyqX = 40 + ((fs / 2) / 60.0) * (w - 80);
-        ctx.strokeStyle = '#0a84ff'; ctx.setLineDash([4, 4]);
-        ctx.beginPath(); ctx.moveTo(nyqX, 40); ctx.lineTo(nyqX, h - 40); ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#0a84ff'; ctx.fillText('Nyquist (' + (fs/2).toFixed(1) + ' Hz)', nyqX - 40, 35);
-
-        const finX = 40 + (fin / 60.0) * (w - 80);
-        ctx.fillStyle = '#30d158'; ctx.fillRect(finX - 6, h - 140, 12, 100);
-        ctx.fillText('fin=' + fin + 'Hz', finX - 15, h - 150);
-
-        if (isAliasing) {
-          const aliasX = 40 + (falias / 60.0) * (w - 80);
-          ctx.fillStyle = '#ff453a'; ctx.fillRect(aliasX - 6, h - 120, 12, 80);
-          ctx.fillText('ALIAS=' + falias.toFixed(1) + 'Hz', aliasX - 25, h - 130);
-        }
-      }
+      };
     }
-    function checkADCChallenge() {
-      const val = parseFloat(document.getElementById('ch-adc-ans').value);
-      const fb = document.getElementById('ch-adc-fb');
-      if (Math.abs(val - 5.0) <= 0.2) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXACTO!</b> Cuanto q = Vref / 2^N = 5.12 V / 1024 = 5.00 mV.';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> 2^10 = 1024 niveles. Por tanto q = 5.12 / 1024 = 5.0 mV.';
-      }
-    }
-
-    // ==========================================
-    // 8. THERMOCOUPLE & CJC
-    // ==========================================
-    let tcType = 'K';
-    let tcCJC = true;
-    let tcView = 'schematic';
-    function setTCType(t) {
-      tcType = t;
-      document.querySelectorAll('#btn-tctype-k, #btn-tctype-j, #btn-tctype-t').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-tctype-' + t.toLowerCase()).classList.add('active');
-      updateTC();
-    }
-    function setTCCJC(c) {
-      tcCJC = c;
-      document.querySelectorAll('#btn-tccjc-on, #btn-tccjc-off').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-tccjc-' + (c ? 'on' : 'off')).classList.add('active');
-      updateTC();
-    }
-    function setTCView(v) {
-      tcView = v;
-      document.querySelectorAll('#btn-tcview-schematic, #btn-tcview-curve').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-tcview-' + v).classList.add('active');
-      updateTC();
-    }
-    function updateTC() {
-      const Th = parseFloat(document.getElementById('slider-tc-th').value);
-      const T0 = parseFloat(document.getElementById('slider-tc-t0').value);
-      document.getElementById('val-tc-th').innerText = Th.toFixed(0) + ' °C';
-      document.getElementById('val-tc-t0').innerText = T0.toFixed(1) + ' °C';
-
-      const S = tcType === 'K' ? 41.27 : tcType === 'J' ? 51.5 : 40.5;
-      const v_th_mV = (S * (Th - T0)) / 1000.0;
-      const v_cjc_mV = tcCJC ? (S * T0) / 1000.0 : 0.0;
-      const v_total_mV = v_th_mV + v_cjc_mV;
-      const T_med = v_total_mV / (S * 1e-3);
-      const err_T = T_med - Th;
-
-      document.getElementById('m-tc-vth').innerText = v_th_mV.toFixed(2) + ' mV';
-      document.getElementById('m-tc-vcjc').innerText = v_cjc_mV.toFixed(2) + ' mV';
-      document.getElementById('m-tc-tmed').innerText = T_med.toFixed(1) + ' °C';
-      document.getElementById('m-tc-err').innerText = (err_T >= 0 ? '+' : '') + err_T.toFixed(1) + ' °C';
-
-      drawTC(Th, T0, S);
-    }
-    function drawTC(Th, T0, S) {
-      const { ctx, width: w, height: h } = setupCanvas('canvas-tc');
-      ctx.clearRect(0, 0, w, h);
-
-      if (tcView === 'schematic') {
-        ctx.fillStyle = '#86868b'; ctx.font = '12px var(--font-family)';
-        ctx.fillText('Circuito Termopar con Bloque Isotérmico y Sensor de Unión Fría (LM35)', 16, 22);
-
-        ctx.fillStyle = '#ff453a'; ctx.beginPath(); ctx.arc(80, h/2, 10, 0, 2*Math.PI); ctx.fill();
-        ctx.fillStyle = '#fff'; ctx.fillText('Unión Caliente Th = ' + Th + '°C', 50, h/2 - 20);
-
-        ctx.strokeStyle = '#ffd60a'; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(80, h/2); ctx.lineTo(w/2, h/2 - 35); ctx.stroke();
-        ctx.fillText('Metal A (Cromel)', w/4, h/2 - 40);
-
-        ctx.strokeStyle = '#0a84ff'; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(80, h/2); ctx.lineTo(w/2, h/2 + 35); ctx.stroke();
-        ctx.fillText('Metal B (Alumel)', w/4, h/2 + 45);
-
-        ctx.fillStyle = '#2c2c2e'; ctx.strokeStyle = '#444';
-        ctx.roundRect(w/2 - 10, h/2 - 55, 120, 110, 10); ctx.fill(); ctx.stroke();
-        ctx.fillStyle = '#64d2ff';
-        ctx.fillText('Bloque T0=' + T0 + '°C', w/2, h/2 - 30);
-        ctx.fillText(tcCJC ? '✅ Sensor LM35' : '❌ Sin CJC', w/2, h/2 + 35);
-      } else {
-        ctx.fillStyle = '#86868b'; ctx.font = '12px var(--font-family)';
-        ctx.fillText('Tensión Termoeléctrica Vth vs Temperatura (°C)', 16, 22);
-
-        ctx.strokeStyle = '#30d158'; ctx.lineWidth = 3;
-        ctx.beginPath();
-        for (let i = 0; i <= w - 80; i++) {
-          let t = (i / (w - 80)) * 1000;
-          let v = (S * t) / 1000.0;
-          let py = (h - 40) - (v / 45.0) * (h - 80);
-          if (i === 0) ctx.moveTo(40 + i, py); else ctx.lineTo(40 + i, py);
-        }
-        ctx.stroke();
-      }
-    }
-    function checkTCChallenge() {
-      const val = parseFloat(document.getElementById('ch-tc-ans').value);
-      const fb = document.getElementById('ch-tc-fb');
-      if (Math.abs(val - 270.0) <= 2.0) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXACTO!</b> Sin CJC: 300 - 30 = 270.0 °C.';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> Proporcional a (Th - Tamb) = 300 - 30 = 270 °C.';
-      }
-    }
-
-    // ==========================================
-    // 9. NTC & TAYLOR
-    // ==========================================
-    let ntcRpMode = 'taylor';
-    function setNTCRp(m) {
-      ntcRpMode = m;
-      document.querySelectorAll('#btn-ntc-taylor, #btn-ntc-none').forEach(b => b.classList.remove('active'));
-      document.getElementById('btn-ntc-' + m).classList.add('active');
-      updateNTC();
-    }
-    function updateNTC() {
-      const beta = parseFloat(document.getElementById('slider-ntc-beta').value);
-      const r25_k = parseFloat(document.getElementById('slider-ntc-r25').value);
-      const t0_c = parseFloat(document.getElementById('slider-ntc-t0').value);
-
-      document.getElementById('val-ntc-beta').innerText = beta.toFixed(0) + ' K';
-      document.getElementById('val-ntc-r25').innerText = r25_k.toFixed(1) + ' kΩ';
-      document.getElementById('val-ntc-t0').innerText = t0_c.toFixed(0) + ' °C';
-
-      const T0_K = t0_c + 273.15;
-      const R0 = r25_k * 1000.0 * Math.exp(beta * (1.0 / T0_K - 1.0 / 298.15));
-      const Rp_opt = R0 * (beta - 2.0 * T0_K) / (beta + 2.0 * T0_K);
-      const Rp = ntcRpMode === 'taylor' ? Rp_opt : 1e9;
-
-      const Req_25 = (R0 * Rp) / (R0 + Rp);
-      const S0 = - (beta / Math.pow(T0_K, 2)) * (Math.pow(Req_25, 2) / R0);
-
-      document.getElementById('m-ntc-rp').innerText = (Rp_opt / 1000).toFixed(2) + ' kΩ';
-      document.getElementById('m-ntc-req').innerText = (Req_25 / 1000).toFixed(2) + ' kΩ';
-      document.getElementById('m-ntc-sens').innerText = S0.toFixed(1) + ' Ω/°C';
-      document.getElementById('m-ntc-nl').innerText = ntcRpMode === 'taylor' ? '0.82 %' : '14.50 %';
-
-      drawNTC(beta, r25_k * 1000, T0_K, Rp);
-    }
-    function drawNTC(beta, r25, T0, Rp) {
-      const { ctx, width: w, height: h } = setupCanvas('canvas-ntc');
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = '#86868b'; ctx.font = '12px var(--font-family)';
-      ctx.fillText('Curva Req(T) con Resistencia de Taylor en Paralelo (0 a 100 °C)', 16, 22);
-
-      ctx.strokeStyle = ntcRpMode === 'taylor' ? '#30d158' : '#ff453a';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      for (let i = 0; i <= w - 80; i++) {
-        let t_c = (i / (w - 80)) * 100;
-        let tk = t_c + 273.15;
-        let rntc = r25 * Math.exp(beta * (1.0 / tk - 1.0 / 298.15));
-        let req = (rntc * Rp) / (rntc + Rp);
-        let py = (h - 40) - (req / (r25 * 1.5)) * (h - 80);
-        if (i === 0) ctx.moveTo(40 + i, py); else ctx.lineTo(40 + i, py);
-      }
-      ctx.stroke();
-
-      let infX = 40 + ((T0 - 273.15) / 100.0) * (w - 80);
-      ctx.fillStyle = '#ffd60a';
-      ctx.beginPath(); ctx.arc(infX, h/2, 6, 0, 2*Math.PI); ctx.fill();
-      ctx.fillText('Punto Inflexión d²R/dT² = 0', infX - 50, h/2 - 12);
-    }
-    function checkNTCChallenge() {
-      const val = parseFloat(document.getElementById('ch-ntc-ans').value);
-      const fb = document.getElementById('ch-ntc-fb');
-      if (Math.abs(val - 7.38) <= 0.2) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXCELENTE!</b> Rp = 7.38 kΩ.';
-      } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> Rp = R0 · (β - 2·T0) / (β + 2·T0) ⇒ Rp ≈ 7.38 kΩ.';
-      }
-    }
-
-    // ==========================================
-    // 10. NOISE & SNR
-    // ==========================================
-    function updateNoise() {
-      const R = parseFloat(document.getElementById('slider-n-r').value) * 1000.0;
-      const bw = parseFloat(document.getElementById('select-n-bw').value);
-      const temp = parseFloat(document.getElementById('slider-n-temp').value);
-      const vs_uV = parseFloat(document.getElementById('slider-n-vs').value);
-
-      document.getElementById('val-n-r').innerText = (R / 1000).toFixed(1) + ' kΩ';
-      document.getElementById('val-n-temp').innerText = temp.toFixed(0) + ' K (' + (temp - 273.15).toFixed(0) + '°C)';
-      document.getElementById('val-n-vs').innerText = vs_uV.toFixed(1) + ' µV';
-
+  },
+  {
+    title: "8. Ruido Térmico Johnson-Nyquist & SNR",
+    hud: ["Ruido: Johnson 4kTRB", "Modelo: Gaussiano Blanco"],
+    controls: [
+      { id: "r", label: "Resistencia de Fuente (R)", min: 100, max: 1000000, val: 10000, unit: "Ω", step: 1000 },
+      { id: "bw", label: "Ancho de Banda (BW)", min: 100, max: 1000000, val: 100000, unit: "Hz", step: 5000 },
+      { id: "tempk", label: "Temperatura Absoluta (T)", min: 77, max: 450, val: 300, unit: "K", step: 5 },
+      { id: "vsig", label: "Tensión Señal Útil (Vs)", min: 1, max: 100, val: 10, unit: "mV", step: 1 }
+    ],
+    presets: [
+      { name: "Ambiente Estándar (10 kΩ, 100 kHz, 300 K)", r: 10000, bw: 100000, tempk: 300, vsig: 10 },
+      { name: "Criogenia Nitrógeno Líquido (77 K)", r: 10000, bw: 100000, tempk: 77, vsig: 10 }
+    ],
+    calc: (p) => {
       const kB = 1.380649e-23;
-      const vn = Math.sqrt(4.0 * kB * temp * R * bw);
-      const den = Math.sqrt(4.0 * kB * temp * R) * 1e9;
-      const snr_dB = 20.0 * Math.log10((vs_uV * 1e-6) / vn);
-      const enob = Math.max(0, (snr_dB - 1.76) / 6.02);
-
-      document.getElementById('m-n-vn').innerText = (vn * 1e6).toFixed(2) + ' µV';
-      document.getElementById('m-n-den').innerText = den.toFixed(1) + ' nV/√Hz';
-      document.getElementById('m-n-snr').innerText = snr_dB.toFixed(1) + ' dB';
-      document.getElementById('m-n-enob').innerText = enob.toFixed(1) + ' bits';
-
-      if (isAudioActive && currentLab === 'lab-noise') {
-        playAudioForModule();
-      }
+      const vn = Math.sqrt(4 * kB * p.tempk * p.r * p.bw);
+      const en = Math.sqrt(4 * kB * p.tempk * p.r);
+      const vs = p.vsig * 1e-3;
+      const snr = 20 * Math.log10(vs / vn);
+      return {
+        dmmText: (vn * 1e6).toFixed(2) + " μV",
+        dmmMin: "0.00 μV", dmmMax: "50.00 μV",
+        dmmBar: Math.max(0, Math.min(100, (vn * 1e6 / 20) * 100)),
+        dmmUb: "±0.05 μV",
+        metrics: [
+          { name: "Tensión de Ruido RMS (Vn)", val: (vn * 1e6).toFixed(2) + " μV", sub: "BW = " + (p.bw/1000) + " kHz" },
+          { name: "Densidad Espectral (en)", val: (en * 1e9).toFixed(2) + " nV/√Hz", sub: "Ruido blanco" },
+          { name: "Relación Señal/Ruido", val: snr.toFixed(1) + " dB", sub: "Vs = " + p.vsig + " mV" }
+        ],
+        formula: "vn = sqrt(4 · kB · T · R · BW)\\nen = sqrt(4 · kB · T · R)\\nRegla mnemotécnica UPC: 1 kΩ a 300 K => 4 nV/√Hz",
+        challenge: {
+          q: "Utilizando la regla mnemotécnica de la UPC (1 kΩ a 300 K genera 4 nV/√Hz), ¿cuál es la densidad espectral de ruido en nV/√Hz para R = 100 kΩ?",
+          ans: 40.0, tol: 1.0, unit: "nV/√Hz",
+          sol: "en es proporcional a √R. Como R se multiplica por 100, en se multiplica por √100 = 10. Por tanto: 4 nV/√Hz · 10 = 40.0 nV/√Hz."
+        }
+      };
     }
-    function drawNoiseAnimation(t) {
-      const cv = document.getElementById('canvas-noise');
-      if (!cv || cv.offsetParent === null) return;
-      const { ctx, width: w, height: h } = setupCanvas('canvas-noise');
-      ctx.clearRect(0, 0, w, h);
-
-      ctx.fillStyle = '#86868b'; ctx.font = '12px var(--font-family)';
-      ctx.fillText('Osciloscopio: Señal Senoidal + Ruido Térmico Johnson Gaussiano Vivo', 16, 22);
-
-      const vs_uV = parseFloat(document.getElementById('slider-n-vs').value);
-      const vn = parseFloat(document.getElementById('m-n-vn').innerText) * 1e-6;
-
-      ctx.strokeStyle = '#64d2ff'; ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      for (let i = 0; i < w - 80; i++) {
-        let timeSec = t + i / 100.0;
-        let s = Math.sin(2 * Math.PI * 2 * timeSec) * (vs_uV * 0.7);
-        let n = (Math.random() - 0.5) * (vn * 1e6 * 2.5);
-        let y = (h / 2) - (s + n);
-        if (i === 0) ctx.moveTo(40 + i, y); else ctx.lineTo(40 + i, y);
-      }
-      ctx.stroke();
+  },
+  {
+    title: "9. Sensor Piezoeléctrico & Amplificador de Carga vs Tensión",
+    hud: ["Cristal: Cuarzo d33", "Acondicionador: Amp. Carga"],
+    controls: [
+      { id: "force", label: "Fuerza Dinámica (F)", min: 1, max: 500, val: 50, unit: "N", step: 5 },
+      { id: "freq", label: "Frecuencia de Excitación (f)", min: 1, max: 2000, val: 100, unit: "Hz", step: 10 },
+      { id: "ccable", label: "Capacidad del Cable (C_cable)", min: 50, max: 2000, val: 200, unit: "pF", step: 50 },
+      { id: "cf", label: "Capacidad Realimentación (Cf)", min: 100, max: 5000, val: 1000, unit: "pF", step: 100 }
+    ],
+    presets: [
+      { name: "Cable Corto (200 pF)", force: 50, freq: 100, ccable: 200, cf: 1000 },
+      { name: "Cable Largo 20m (2000 pF)", force: 50, freq: 100, ccable: 2000, cf: 1000 }
+    ],
+    calc: (p) => {
+      const d33 = 2.3e-12;
+      const Q = d33 * p.force;
+      const vo_charge = (Q / (p.cf * 1e-12));
+      const cp = 100e-12;
+      const vo_voltage = Q / (cp + p.ccable * 1e-12);
+      return {
+        dmmText: (vo_charge * 1000).toFixed(3) + " mV",
+        dmmMin: "0.000 mV", dmmMax: "100.000 mV",
+        dmmBar: Math.max(0, Math.min(100, (vo_charge / 0.1) * 100)),
+        dmmUb: "±0.005 mV",
+        metrics: [
+          { name: "Salida Amp. Carga", val: (vo_charge * 1000).toFixed(2) + " mV", sub: "Inmune a C_cable (" + p.ccable + " pF)" },
+          { name: "Salida Amp. Tensión", val: (vo_voltage * 1000).toFixed(2) + " mV", sub: "Atenuado por capacidad cable" },
+          { name: "Carga Generada (q)", val: (Q * 1e12).toFixed(2) + " pC", sub: "d33 = 2.3 pC/N" }
+        ],
+        formula: "Amp. Carga: Vo = -q / Cf = -(d33·F) / Cf\\nCorte Inferior: f_L = 1 / (2π·Rf·Cf)\\nVentaja: C_cable queda en masa virtual",
+        challenge: {
+          q: "Calcule la capacidad Cf en pF para obtener Vo = 100 mV con una fuerza F = 100 N y d33 = 2.3 pC/N.",
+          ans: 2300.0, tol: 10.0, unit: "pF",
+          sol: "q = d33 · F = 2.3 pC/N · 100 N = 230 pC. Cf = q / Vo = 230 pC / 0.1 V = 2300 pF."
+        }
+      };
     }
-    function checkNoiseChallenge() {
-      const val = parseFloat(document.getElementById('ch-n-ans').value);
-      const fb = document.getElementById('ch-n-fb');
-      if (Math.abs(val - 40.0) <= 2.0) {
-        fb.className = 'challenge-feedback success';
-        fb.innerHTML = '✅ <b>¡EXACTO!</b> en ≈ 4 · √R[kΩ] = 4 · √100 = 40.0 nV/√Hz.';
+  },
+  {
+    title: "10. Sensor Capacitivo Diferencial & Detección Síncrona (Lock-in)",
+    hud: ["Transductor: 3 Placas MEMS", "Demodulador: PSD + LPF"],
+    controls: [
+      { id: "x", label: "Desplazamiento Relativo (x = Δd/d0)", min: -0.9, max: 0.9, val: 0.35, unit: "", step: 0.05 },
+      { id: "f0", label: "Frecuencia Portadora (f0)", min: 5, max: 100, val: 30, unit: "kHz", step: 5 },
+      { id: "vs", label: "Amplitud Portadora (Vs)", min: 0.5, max: 5.0, val: 1.0, unit: "V", step: 0.1 }
+    ],
+    presets: [
+      { name: "Examen Final 2024 (x = 0.9, 30 kHz)", x: 0.9, f0: 30, vs: 1.0 },
+      { name: "Centro de Cero (x = 0)", x: 0.0, f0: 30, vs: 1.0 }
+    ],
+    calc: (p) => {
+      const vo_ac = p.vs * (1 + p.x);
+      const vo_demod = p.vs * p.x;
+      return {
+        dmmText: (vo_demod).toFixed(4) + " V",
+        dmmMin: "-1.000 V", dmmMax: "+1.000 V",
+        dmmBar: Math.max(0, Math.min(100, 50 + (p.x / 1.0) * 50)),
+        dmmUb: "±0.0001 V",
+        metrics: [
+          { name: "Tensión Demodulada (DC)", val: vo_demod.toFixed(4) + " V", sub: "Recupera signo de x" },
+          { name: "Amplitud Pico AC (V6)", val: vo_ac.toFixed(3) + " V", sub: "Desfase 180° (Examen 2024)" },
+          { name: "Desplazamiento x", val: (p.x * 100).toFixed(1) + " %", sub: "d0 = 100 μm" }
+        ],
+        formula: "V6 = -Vs · (1 + x) (Acondicionador Inversor)\\nDemodulación PSD: Vdc = Vs · x\\nCondición polarización: R1 ≥ 100·|Z_C2|",
+        challenge: {
+          q: "En el examen de 2024, con C0 = 100 pF a 30 kHz, ¿cuál es el valor mínimo en MΩ de la resistencia de descarga R1?",
+          ans: 5.31, tol: 0.05, unit: "MΩ",
+          sol: "|Z_C2| = 1/(2π·30kHz·100pF) = 53.05 kΩ. R1 ≥ 100 · 53.05 kΩ = 5.305 MΩ ≈ 5.31 MΩ."
+        }
+      };
+    }
+  }
+];
+
+
+// Inyección de Controles y Paneles
+function loadModuleUI() {
+  const m = MODULE_DATA[currentModule] || MODULE_DATA[0];
+
+  // Actualizar HUD
+  document.getElementById('hud-tag-1').textContent = m.hud[0];
+  document.getElementById('hud-tag-2').textContent = m.hud[1];
+
+  // Panel Izquierdo: Controles
+  const pLeft = document.getElementById('panel-left');
+  let leftHTML = `<div class="section-title"><span>Parámetros Físicos</span><span>${m.title.split('.')[0]}</span></div>`;
+  m.controls.forEach(c => {
+    leftHTML += `
+      <div class="control-group">
+        <div class="control-label">
+          <span>${c.label}</span>
+          <span class="control-val" id="val-${c.id}">${c.val} ${c.unit}</span>
+        </div>`;
+    if (c.type === 'select') {
+      leftHTML += `<select class="select-styled" id="param-${c.id}" onchange="onParamChange()">`;
+      c.options.forEach((opt, idx) => {
+        leftHTML += `<option value="${idx}" ${idx === c.val ? 'selected' : ''}>${opt}</option>`;
+      });
+      leftHTML += `</select>`;
+    } else {
+      leftHTML += `<input type="range" class="slider" id="param-${c.id}" min="${c.min}" max="${c.max}" step="${c.step}" value="${c.val}" oninput="onParamChange()">`;
+    }
+    leftHTML += `</div>`;
+  });
+
+  // Presets
+  if (m.presets && m.presets.length > 0) {
+    leftHTML += `<div class="section-title"><span>Escenarios Industriales / Examen</span></div><div class="presets-box">`;
+    m.presets.forEach((pr, i) => {
+      leftHTML += `<button class="preset-chip" onclick="applyPreset(${i})">⚡ ${pr.name}</button>`;
+    });
+    leftHTML += `</div>`;
+  }
+  pLeft.innerHTML = leftHTML;
+
+  // Actualizar Físicas y Cálculos
+  updateSimulation();
+  build3DGeometry();
+}
+
+function onParamChange() {
+  const m = MODULE_DATA[currentModule];
+  m.controls.forEach(c => {
+    const el = document.getElementById('param-' + c.id);
+    const valEl = document.getElementById('val-' + c.id);
+    if (el && valEl) {
+      if (c.type === 'select') {
+        c.val = parseInt(el.value);
+        valEl.textContent = el.options[el.selectedIndex].text.split('(')[0];
       } else {
-        fb.className = 'challenge-feedback error';
-        fb.innerHTML = '❌ <b>INCORRECTO:</b> en ≈ 4 · √100 = 40 nV/√Hz.';
+        c.val = parseFloat(el.value);
+        valEl.textContent = el.value + " " + c.unit;
       }
     }
+  });
+  updateSimulation();
+  build3DGeometry();
+  updateAudioSynthesis();
+}
 
-    // ==========================================
-    // PRESETS ENGINE
-    // ==========================================
-    function applyPreset(p) {
-      if (p === 'w_scale') {
-        document.getElementById('slider-w-eps').value = 1000;
-        document.getElementById('slider-w-vs').value = 10.0;
-        document.getElementById('slider-w-k').value = 2.00;
-        setWheatstoneTopo('full');
-      } else if (p === 'w_wind') {
-        document.getElementById('slider-w-eps').value = 250;
-        document.getElementById('slider-w-vs').value = 5.0;
-        setWheatstoneTopo('half');
-      } else if (p === 'w_quarter') {
-        document.getElementById('slider-w-eps').value = 800;
-        setWheatstoneTopo('quarter');
-      } else if (p === 'pt_hvac') {
-        document.getElementById('slider-pt-t').value = -20;
-        document.getElementById('slider-pt-rl').value = 1.5;
-        setPtWires(3);
-      } else if (p === 'pt_long') {
-        document.getElementById('slider-pt-t').value = 25;
-        document.getElementById('slider-pt-rl').value = 8.0;
-        setPtWires(2);
-      } else if (p === 'pt_oven') {
-        document.getElementById('slider-pt-t').value = 220;
-        document.getElementById('slider-pt-rl').value = 3.0;
-        setPtWires(4);
-      } else if (p === 'ina_ecg') {
-        document.getElementById('slider-ina-vd').value = 2;
-        document.getElementById('slider-ina-vcm').value = 5.0;
-        document.getElementById('slider-ina-rg').value = 50;
-        document.getElementById('select-ina-tol').value = '0.001';
-        updateINA();
-      } else if (p === 'ina_highgain') {
-        document.getElementById('slider-ina-rg').value = 50;
-        updateINA();
-      } else if (p === 'ina_clean') {
-        document.getElementById('select-ina-tol').value = '0.0001';
-        updateINA();
-      } else if (p === 'f_anti50') {
-        document.getElementById('slider-f-fc').value = 10;
-        document.getElementById('select-f-fn').value = '50';
-        setFilterType('butter');
-      } else if (p === 'f_audio') {
-        document.getElementById('slider-f-fc').value = 250;
-        setFilterType('butter');
-      } else if (p === 'f_cheby') {
-        setFilterType('cheby');
-      } else if (p === 'pz_charge') {
-        setPiezoMode('charge');
-      } else if (p === 'pz_voltage') {
-        setPiezoMode('volt');
-      } else if (p === 'pz_impact') {
-        document.getElementById('slider-pz-f').value = 150;
-        document.getElementById('slider-pz-fvib').value = 80;
-        updatePiezo();
-      } else if (p === 'cap_pos') {
-        document.getElementById('slider-cap-x').value = 50;
-        updateCapacitive();
-      } else if (p === 'cap_neg') {
-        document.getElementById('slider-cap-x').value = -50;
-        updateCapacitive();
-      } else if (p === 'cap_center') {
-        document.getElementById('slider-cap-x').value = 0;
-        updateCapacitive();
-      } else if (p === 'adc_aliasing') {
-        document.getElementById('slider-adc-fin').value = 22;
-        document.getElementById('slider-adc-fs').value = 15;
-        updateADC();
-      } else if (p === 'adc_safe') {
-        document.getElementById('slider-adc-fin').value = 10;
-        document.getElementById('slider-adc-fs').value = 80;
-        updateADC();
-      } else if (p === 'adc_12bit') {
-        document.getElementById('slider-adc-n').value = 12;
-        updateADC();
-      } else if (p === 'tc_typek') {
-        setTCType('K');
-        document.getElementById('slider-tc-th').value = 650;
-        setTCCJC(true);
-      } else if (p === 'tc_typej') {
-        setTCType('J');
-        document.getElementById('slider-tc-th').value = 400;
-      } else if (p === 'tc_nocjc') {
-        setTCCJC(false);
-      } else if (p === 'ntc_opt') {
-        setNTCRp('taylor');
-      } else if (p === 'ntc_none') {
-        setNTCRp('none');
-      } else if (p === 'ntc_highb') {
-        document.getElementById('slider-ntc-beta').value = 4500;
-        updateNTC();
-      } else if (p === 'n_hifi') {
-        document.getElementById('slider-n-r').value = 1.0;
-        document.getElementById('select-n-bw').value = '10000';
-        updateNoise();
-      } else if (p === 'n_rf') {
-        document.getElementById('select-n-bw').value = '1000000';
-        updateNoise();
-      } else if (p === 'n_cryo') {
-        document.getElementById('slider-n-temp').value = 77;
-        updateNoise();
-      }
+function applyPreset(idx) {
+  const m = MODULE_DATA[currentModule];
+  const pr = m.presets[idx];
+  Object.keys(pr).forEach(k => {
+    if (k !== 'name') {
+      const el = document.getElementById('param-' + k);
+      if (el) { el.value = pr[k]; }
     }
+  });
+  onParamChange();
+}
 
-    // ==========================================
-    // MODAL REPORT GENERATOR
-    // ==========================================
-    function openReportModal() {
-      const modal = document.getElementById('report-modal');
-      const txt = document.getElementById('report-text');
-      const now = new Date().toLocaleString();
-      const report = [
-        '# INFORME DE PRÁCTICAS · LABORATORIO VIRTUAL DE SENSORES E INSTRUMENTACIÓN v4.0',
-        '**Universitat Politècnica de Catalunya · Sistemes de Mesura (EEBE · ETSETB)**',
-        'Fecha de generación: ' + now,
-        '',
-        '---',
-        '## 1. Módulo: Puente de Wheatstone & Galgas (Tema 1)',
-        '- Topología: ' + wheatstoneTopo,
-        '- Deformación mecánica (ε): ' + document.getElementById('val-w-eps').innerText,
-        '- Tensión de excitación (Vs): ' + document.getElementById('val-w-vs').innerText,
-        '- Factor de galga (K): ' + document.getElementById('val-w-k').innerText,
-        '- Resistencia nominal (R0): ' + document.getElementById('val-w-r0').innerText,
-        '- Tensión de salida (Vo): ' + document.getElementById('m-w-vo').innerText,
-        '- Sensibilidad: ' + document.getElementById('m-w-sens').innerText,
-        '',
-        '## 2. Módulo: Termorresistencia Pt100 (Tema 2)',
-        '- Conexión: ' + ptWires + ' hilos',
-        '- Temperatura real baño: ' + document.getElementById('val-pt-t').innerText,
-        '- Resistencia cable (RL): ' + document.getElementById('val-pt-rl').innerText,
-        '- Temperatura interpretada: ' + document.getElementById('m-pt-tapp').innerText,
-        '- Error sistemático: ' + document.getElementById('m-pt-error').innerText,
-        '',
-        '## 3. Módulo: Termopares y Compensación CJC (Tema 3)',
-        '- Tipo de termopar: ' + tcType,
-        '- Temp. unión caliente (Th): ' + document.getElementById('val-tc-th').innerText,
-        '- Temp. unión fría (T0): ' + document.getElementById('val-tc-t0').innerText,
-        '- Estado CJC: ' + (tcCJC ? 'ACTIVADA' : 'DESACTIVADA'),
-        '- Tensión neta: ' + document.getElementById('m-tc-vth').innerText,
-        '',
-        '## 4. Módulo: Linealización de Termistor NTC (Tema 4)',
-        '- Parámetro Beta: ' + document.getElementById('val-ntc-beta').innerText,
-        '- Resistencia Taylor Rp: ' + document.getElementById('m-ntc-rp').innerText,
-        '- Error de no linealidad: ' + document.getElementById('m-ntc-nl').innerText,
-        '',
-        '## 5. Módulo: Amplificador de Instrumentación INA3 (Tema 5)',
-        '- Resistencia Rg: ' + document.getElementById('val-ina-rg').innerText,
-        '- Ganancia Gd: ' + document.getElementById('m-ina-gd').innerText,
-        '- CMRR estimado: ' + document.getElementById('m-ina-cmrr').innerText,
-        '- Ruido 50Hz a la salida: ' + document.getElementById('m-ina-vocm').innerText,
-        '',
-        '## 6. Módulo: Filtro Activo Sallen-Key (Tema 6)',
-        '- Frecuencia de corte (fc): ' + document.getElementById('val-f-fc').innerText,
-        '- Atenuación a 50Hz: ' + document.getElementById('m-f-att').innerText,
-        '- Resistencia R calculada: ' + document.getElementById('m-f-rval').innerText,
-        '',
-        '## 7. Módulo: Sensor Piezoeléctrico & Amplificador de Carga (Tema 7)',
-        '- Modo acondicionamiento: ' + piezoMode,
-        '- Fuerza dinámica F: ' + document.getElementById('val-pz-f').innerText,
-        '- Carga neta q: ' + document.getElementById('m-pz-q').innerText,
-        '- Tensión salida Vo: ' + document.getElementById('m-pz-vo').innerText,
-        '',
-        '## 8. Módulo: Sensor Capacitivo Diferencial & PSD (Tema 8)',
-        '- Desplazamiento x: ' + document.getElementById('val-cap-x').innerText,
-        '- Portadora Vc: ' + document.getElementById('val-cap-vc').innerText,
-        '- Tensión DC demodulada: ' + document.getElementById('m-cap-vdc').innerText,
-        '- Sensibilidad Sx: ' + document.getElementById('m-cap-sx').innerText,
-        '',
-        '## 9. Módulo: Muestreo Nyquist y ADC (Tema 9)',
-        '- Frecuencia fin: ' + document.getElementById('val-adc-fin').innerText,
-        '- Frecuencia fs: ' + document.getElementById('val-adc-fs').innerText,
-        '- Criterio Nyquist: ' + document.getElementById('m-adc-status').innerText,
-        '- Cuanto q: ' + document.getElementById('m-adc-q').innerText,
-        '',
-        '## 10. Módulo: Ruido Johnson-Nyquist & SNR (Tema 10)',
-        '- Resistencia fuente: ' + document.getElementById('val-n-r').innerText,
-        '- Tensión de ruido RMS: ' + document.getElementById('m-n-vn').innerText,
-        '- Relación SNR: ' + document.getElementById('m-n-snr').innerText,
-        ''
-      ].join('\n');
+function updateSimulation() {
+  const m = MODULE_DATA[currentModule];
+  const params = {};
+  m.controls.forEach(c => { params[c.id] = c.val; });
+  const res = m.calc(params);
 
-      txt.value = report;
-      modal.classList.add('open');
-    }
-    function closeReportModal() {
-      document.getElementById('report-modal').classList.remove('open');
-    }
-    function copyReportText() {
-      const txt = document.getElementById('report-text');
-      txt.select();
-      navigator.clipboard.writeText(txt.value);
-      alert('✅ ¡Informe de prácticas copiado al portapapeles!');
-    }
-    function downloadReportFile() {
-      const text = document.getElementById('report-text').value;
-      const blob = new Blob([text], { type: 'text/markdown;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'Informe_Practicas_Sistemes_de_Mesura_v4.md';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
+  // Actualizar Keysight DMM
+  document.getElementById('dmm-display').textContent = res.dmmText;
+  document.getElementById('dmm-min').textContent = res.dmmMin;
+  document.getElementById('dmm-max').textContent = res.dmmMax;
+  document.getElementById('dmm-bar-fill').style.width = res.dmmBar + '%';
+  document.getElementById('dmm-ub').textContent = res.dmmUb;
 
-    // Window Init
-    window.addEventListener('load', () => {
-      updateWheatstone();
-      updatePt100();
-      updateTC();
-      updateNTC();
-      updateINA();
-      updateFilter();
-      updatePiezo();
-      updateCapacitive();
-      updateADC();
-      updateNoise();
-    });
-    window.addEventListener('resize', () => {
-      triggerUpdate(currentLab);
-    });
-  </script>
+  // Actualizar Panel Derecho
+  const pRight = document.getElementById('panel-right');
+  let rightHTML = `<div class="section-title"><span>Medidas & Metrología GUM</span></div>`;
+  res.metrics.forEach(met => {
+    rightHTML += `
+      <div class="metric-card">
+        <div class="metric-header">${met.name}</div>
+        <div class="metric-value">${met.val}</div>
+        <div class="metric-sub">${met.sub}</div>
+      </div>`;
+  });
+
+  rightHTML += `
+    <div class="section-title"><span>Ecuaciones del Circuito</span></div>
+    <div class="formula-box">${res.formula.replace(/\n/g, '<br>')}</div>`;
+
+  if (res.challenge) {
+    rightHTML += `
+      <div class="challenge-box">
+        <div class="challenge-title">🎯 Reto Oficial de Examen UPC</div>
+        <div class="challenge-desc">${res.challenge.q}</div>
+        <div class="challenge-input-row">
+          <input type="number" step="any" class="challenge-input" id="ch-input" placeholder="Tu cálculo...">
+          <button class="btn btn-primary" onclick="verifyChallenge()">Comprobar</button>
+        </div>
+        <div class="challenge-res" id="ch-res"></div>
+      </div>`;
+  }
+  pRight.innerHTML = rightHTML;
+}
+
+function verifyChallenge() {
+  const m = MODULE_DATA[currentModule];
+  const params = {};
+  m.controls.forEach(c => { params[c.id] = c.val; });
+  const ch = m.calc(params).challenge;
+  const inputEl = document.getElementById('ch-input');
+  const resEl = document.getElementById('ch-res');
+  const val = parseFloat(inputEl.value);
+
+  if (isNaN(val)) return;
+  resEl.style.display = 'block';
+  if (Math.abs(val - ch.ans) <= ch.tol) {
+    resEl.className = 'challenge-res correct';
+    resEl.innerHTML = `✅ <b>¡Correcto!</b> Exactitud demostrada.<br><small>${ch.sol}</small>`;
+  } else {
+    resEl.className = 'challenge-res incorrect';
+    resEl.innerHTML = `❌ <b>Valor fuera de tolerancia.</b> Valor esperado: ~${ch.ans} ${ch.unit}.<br><small>Pista: ${ch.sol}</small>`;
+  }
+}
+
+function switchModule(idx) {
+  currentModule = idx;
+  const tabs = document.querySelectorAll('.mod-tab');
+  tabs.forEach((t, i) => t.className = i === idx ? 'mod-tab active' : 'mod-tab');
+  loadModuleUI();
+  updateAudioSynthesis();
+}
+
+function setViewMode(mode) {
+  document.getElementById('btn-view-3d').className = mode === '3d' ? 'view-btn active' : 'view-btn';
+  document.getElementById('btn-view-diag').className = mode === 'diag' ? 'view-btn active' : 'view-btn';
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); }
+  else { if (document.exitFullscreen) document.exitFullscreen(); }
+}
+
+// Modal de Informe
+function openReportModal() {
+  let md = `# Informe Experimental de Laboratorio · Sistemes de Mesura (UPC)\n`;
+  md += `**Fecha:** ${new Date().toLocaleDateString()} | **Software:** Laboratorio Virtual v5.0 Enterprise 3D\n\n---\n\n`;
+  MODULE_DATA.forEach((mod, idx) => {
+    const params = {};
+    mod.controls.forEach(c => { params[c.id] = c.val; });
+    const res = mod.calc(params);
+    md += `## Módulo ${idx+1}: ${mod.title}\n`;
+    md += `- **Lectura Instrumento Principal:** ${res.dmmText}\n`;
+    res.metrics.forEach(met => { md += `- **${met.name}:** ${met.val} (${met.sub})\n`; });
+    md += `\n\`\`\`text\n${res.formula}\n\`\`\`\n\n`;
+  });
+  document.getElementById('modal-report-text').innerHTML = md.replace(/\n/g, '<br>');
+  document.getElementById('modal-report').style.display = 'flex';
+}
+function closeReportModal() {
+  document.getElementById('modal-report').style.display = 'none';
+}
+function copyReportToClipboard() {
+  let md = document.getElementById('modal-report-text').innerText;
+  navigator.clipboard.writeText(md).then(() => alert('¡Informe Markdown copiado al portapapeles!'));
+}
+function downloadReportMarkdown() {
+  let md = document.getElementById('modal-report-text').innerText;
+  const blob = new Blob([md], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Informe_Laboratorio_Sistemes_de_Mesura.md';
+  a.click();
+}
+
+// Inicialización al cargar la ventana
+window.onload = () => {
+  loadModuleUI();
+  loop();
+};
+</script>
 </body>
 </html>

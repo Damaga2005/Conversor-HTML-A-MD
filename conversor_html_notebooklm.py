@@ -4894,10 +4894,11 @@ def run_gui():
 
     tk.Label(
         lab_inner,
-        text="Archivo: Laboratorio_Virtual_Sensores.html (v4.0 Ultimate Edition)\n"
-             "Simulador web gráfico e interactivo con estética Apple Dark Mode (HTML5 Canvas Retina + Web Audio API en tiempo real).\n"
-             "Incluye 10 módulos completos (Wheatstone, Pt100/4-hilos, INA3/CMRR, Filtros Activos, ADC/Nyquist, Termopares CJC, NTC Taylor, Ruido Johnson, Sensor Piezoeléctrico/Amp. Carga y Sensor Capacitivo Diferencial/Detección Síncrona Lock-in),\n"
-             "osciloscopio animado a 60 FPS, sintetizador sonoro acústico de magnitudes físicas, 10 retos de examen con autocorrección y generador de informes experimentales en Markdown.",
+        text="Archivo: Laboratorio_Virtual_Sensores.html (v5.0 Enterprise 3D Edition)\n"
+             "Simulador industrial web de física y circuitos estilo Multisim / Keysight BenchVue (Motor WebGL 3D GPU + Web Audio API).\n"
+             "Incluye modelos físicos 3D interactivos (Viga en voladizo deformable con mapa von Mises, Pt100 en baño termostático, cristal piezoeléctrico, etc.),\n"
+             "banco de instrumentos con réplica fidedigna del multímetro Keysight 34465A Truevolt de 6½ dígitos y osciloscopio Tektronix TBS2000B a 60 FPS,\n"
+             "10 módulos completos de la UPC con retos oficiales y exportador de informes experimentales en Markdown.",
         font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, justify="left"
     ).pack(anchor="w", pady=(0, 6))
 
