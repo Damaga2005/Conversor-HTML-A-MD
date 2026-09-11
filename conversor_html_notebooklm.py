@@ -4873,9 +4873,10 @@ def run_gui():
 
     tk.Label(
         lab_inner,
-        text="Archivo: Laboratorio_Virtual_Sensores.html\n"
-             "Simulador web gráfico e interactivo con estética Apple Dark Mode (HTML5 Canvas + JavaScript reactivo).\n"
-             "Incluye 5 simulaciones en tiempo real: Puente de Wheatstone, Pt100 a 2/3/4 hilos, INA con CMRR, Filtro Sallen-Key y Muestreo Nyquist/ADC.",
+        text="Archivo: Laboratorio_Virtual_Sensores.html (v3.2 Ultra Pro)\n"
+             "Simulador web gráfico e interactivo con estética Apple Dark Mode (HTML5 Canvas Retina + JavaScript reactivo).\n"
+             "Incluye 8 simulaciones en tiempo real (Wheatstone, Pt100, INA3/CMRR, Filtro Sallen-Key, Nyquist/ADC, Termopares CJC, NTC Taylor, Ruido Johnson),\n"
+             "retos de examen interactivos con corrección inmediata y generador de informes experimentales en Markdown.",
         font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, justify="left"
     ).pack(anchor="w", pady=(0, 6))
 

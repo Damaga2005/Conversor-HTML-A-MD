@@ -58,14 +58,19 @@
 
 ---
 
-### 🔬 7. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`)
-- **Simulador Web Autónomo:** Sin dependencias externas ni compilación, ejecutable en cualquier navegador web moderno con estética visual Apple Dark Mode (`#000000`, `#1c1c1e`, `#0a84ff`).
-- **5 Módulos de Simulación Gráfica en Tiempo Real (HTML5 Canvas):**
-  1. **Puente de Wheatstone:** Ajuste dinámico de galga extensométrica ($\Delta R$), resistencia $R_0$, tensión $V_{in}$ y cálculo de sensibilidad con voltímetro virtual.
-  2. **Sensor Pt100 (2, 3 y 4 hilos):** Simulación del error sistemático introducido por la resistencia de los cables de conexión ($R_{cable}$) y demostración interactiva de la compensación a 3 y 4 hilos.
-  3. **Amplificador de Instrumentación (INA) & Ruido en Modo Común:** Impacto del CMRR finito ($40 \text{ dB}$ a $120 \text{ dB}$) sobre el rechazo de armónicos parásitos de $50 \text{ Hz}$ de la red eléctrica.
-  4. **Filtro Activo Sallen-Key (Pasa-Bajo Butterworth 2º Orden):** Diagrama de Bode en vivo con respuesta en frecuencia, ganancia y fase según los valores de $R$ y $C$.
-  5. **Muestreo Nyquist & ADC:** Reconstrucción de onda analógica frente a la frecuencia de muestreo $f_s$ y resolución en bits (1 a 12 bits), visualizando en tiempo real la distorsión por *aliasing* y el error de cuantización.
+### 🔬 7. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`) — v3.2 Ultra Pro
+- **Simulador Web Autónomo de Categoría PhET / Apple Studio Display:** Sin dependencias externas ni compilación, ejecutable en cualquier navegador web moderno con estética visual Apple Dark Mode (`#000000`, `#1c1c1e`, `#0a84ff`) y renderizado Retina High-DPI.
+- **8 Módulos de Simulación Física y Circuital en Tiempo Real (HTML5 Canvas):**
+  1. **Puente de Wheatstone & Galgas:** Selector 1/4, 1/2 y puente completo, deformación $\varepsilon$, viga en voladizo animada con zonas de tracción y compresión, esquema en rombo y cálculo de sensibilidad ($\mu\text{V}/\mu\varepsilon$).
+  2. **Sensor Pt100 (2, 3 y 4 hilos):** Sonda industrial, error sistemático por resistencia de cables ($R_{cable}$) y demostración gráfica de compensación con termómetro comparativo.
+  3. **Amplificador de Instrumentación INA3 & CMRR Real:** Arquitectura de 3 amplificadores operacionales ($A_1, A_2$ con $R_g$, y $A_3$ sustractor con tolerancia $\delta$), con osciloscopio dual mostrando el rechazo de armónicos parásitos de $50\text{ Hz}$.
+  4. **Filtro Activo Sallen-Key (Butterworth & Chebyshev):** Diagrama de Bode en vivo con respuesta en frecuencia, ganancia en dB y fase, junto a visualización temporal de filtrado.
+  5. **Muestreo Nyquist & ADC:** Reconstrucción de onda analógica frente a la frecuencia de muestreo $f_s$ y resolución en bits (3 a 16 bits), con analizador de espectro FFT animado que muestra el deslizamiento del *alias*.
+  6. **Termopares & Compensación de Unión Fría (CJC):** Tipos K, J y T con unión caliente $T_h$ y de referencia $T_0$, simulando la corrección electrónica con sensor LM35/Pt100.
+  7. **Linealización de Termistores NTC (Circuito de Taylor):** Curva exponencial $R(T)$ y cálculo de la resistencia en paralelo $R_p = R_0 \frac{\beta - 2T_0}{\beta + 2T_0}$ que anula la segunda derivada en el punto de inflexión.
+  8. **Ruido Térmico Johnson-Nyquist & SNR:** Ruido de tensión $v_n = \sqrt{4 k_B T R \Delta f}$, densidad espectral en $\text{nV}/\sqrt{\text{Hz}}$, relación señal/ruido (SNR) y osciloscopio virtual.
+- **🎯 Retos de Examen Interactivos:** Cada módulo incluye un problema numérico de examen oficial de la UPC con verificación instantánea y resolución matemática paso a paso.
+- **📄 Exportador de Informes de Prácticas:** Genera y descarga en 1 clic un informe experimental completo en formato Markdown con todos los parámetros actuales y deducciones.
 
 ---
 
