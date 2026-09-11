@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# PyInstaller & Build artifacts
+build/
+dist/
+*.manifest
+*.spec.bak
+
+# Test scratch folders
+test_all_10_temas_output/
+test_batch_*/
+test_out_*/
+test_suite_outputs/
+scratch_assets/
+test_all_10_temas_summary.json
+
+# Local environment & IDE
+.venv/
+env/
+venv/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.BIN/
+.DS_Store

@@ -1,0 +1,4 @@
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+mathml2latex>=0.1.0
+pyinstaller>=6.0.0
