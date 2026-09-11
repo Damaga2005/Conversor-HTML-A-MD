@@ -3175,6 +3175,23 @@ def process_all_course_temas(
         all_generated_files.append(flashcards_file)
         course_stats["flashcards"] = str(flashcards_file.name)
 
+    # Sincronizar banco de problemas de examen y laboratorio virtual interactivo
+    for extra_name in ["_Problemas_Examen_Resueltos.md", "Laboratorio_Virtual_Sensores.html"]:
+        src_cand = Path("dist_course_md") / extra_name
+        if not src_cand.exists():
+            src_cand = Path(getattr(sys, "_MEIPASS", ".")) / extra_name
+        dst_extra = out_root / extra_name
+        if src_cand.exists() and dst_extra.resolve() != src_cand.resolve():
+            try:
+                import shutil
+                shutil.copy2(src_cand, dst_extra)
+                nlm_dir = out_root / "Para_Subir_a_NotebookLM"
+                if nlm_dir.exists() and extra_name.endswith(".md"):
+                    shutil.copy2(src_cand, nlm_dir / extra_name)
+                all_generated_files.append(dst_extra)
+            except Exception:
+                pass
+
     return course_stats["total_files"], course_stats, all_generated_files
 
 
@@ -3501,10 +3518,12 @@ def run_gui():
 
     h_right = tk.Frame(header_frame, bg=COLOR_HEADER)
     h_right.pack(side="right")
-    create_btn(h_right, "🔍 Spotlight (Ctrl+K)", lambda: open_spotlight_modal(), bg="#242426", hover_bg="#3a3a3c", font=FONT_SMALL, padx=12, pady=4).pack(side="left", padx=4)
-    create_btn(h_right, "🎯 Examen UPC", lambda: open_exam_simulator_modal(), bg="#112530", hover_bg="#1b3b4d", font=FONT_SMALL, padx=12, pady=4).pack(side="left", padx=4)
-    tk.Label(h_right, text="UPC · EEBE", fg=COLOR_TEXT_MUTED, bg="#242426", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=4)
-    tk.Label(h_right, text="v3.0 Ultra", fg=COLOR_ACCENT_GREEN, bg="#132a19", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=4)
+    create_btn(h_right, "🔍 Spotlight", lambda: open_spotlight_modal(), bg="#242426", hover_bg="#3a3a3c", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=3)
+    create_btn(h_right, "🎯 Examen UPC", lambda: open_exam_simulator_modal(), bg="#112530", hover_bg="#1b3b4d", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=3)
+    create_btn(h_right, "🔬 Lab Virtual", lambda: open_virtual_lab(), bg="#132a19", hover_bg="#1b3d24", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=3)
+    create_btn(h_right, "📝 Problemas", lambda: load_resource_in_viewer("_Problemas_Examen_Resueltos.md"), bg="#251a30", hover_bg="#38274a", font=FONT_SMALL, padx=10, pady=4).pack(side="left", padx=3)
+    tk.Label(h_right, text="UPC · EEBE", fg=COLOR_TEXT_MUTED, bg="#242426", font=FONT_SMALL, padx=8, pady=4).pack(side="left", padx=3)
+    tk.Label(h_right, text="v3.1 Ultra", fg=COLOR_ACCENT_GREEN, bg="#132a19", font=FONT_SMALL, padx=8, pady=4).pack(side="left", padx=3)
 
     # Apple Segmented Tab Navigation Bar
     seg_nav_outer = tk.Frame(root, bg=COLOR_CANVAS, pady=8)
@@ -4185,6 +4204,14 @@ def run_gui():
     def find_resource_file(filename):
         dst = out_var.get().strip()
         candidates = []
+        if hasattr(sys, "_MEIPASS"):
+            candidates.append(Path(sys._MEIPASS) / filename)
+        try:
+            exe_dir = Path(sys.executable).parent
+            candidates.append(exe_dir / filename)
+            candidates.append(exe_dir / "_internal" / filename)
+        except Exception:
+            pass
         if dst:
             d = Path(dst)
             candidates.append(d / filename)
@@ -4291,6 +4318,20 @@ def run_gui():
                 "El paquete Anki '_Flashcards_Examen.apkg' aún no ha sido generado.\n\n"
                 "Ejecuta 'Convertir Todo el Curso' para compilarlo automáticamente con las 500 tarjetas."
             )
+
+    def open_virtual_lab():
+        p = find_resource_file("Laboratorio_Virtual_Sensores.html")
+        if p and p.exists():
+            webbrowser.open(f"file:///{p.resolve().as_posix()}")
+        else:
+            fallback = Path("dist_course_md/Laboratorio_Virtual_Sensores.html")
+            if fallback.exists():
+                webbrowser.open(f"file:///{fallback.resolve().as_posix()}")
+            else:
+                messagebox.showwarning(
+                    "Laboratorio no encontrado",
+                    "No se encontró el archivo 'Laboratorio_Virtual_Sensores.html'. Asegúrate de que existe en dist_course_md."
+                )
 
     def open_spotlight_modal():
         spotlight_win = tk.Toplevel(root)
@@ -4702,11 +4743,15 @@ def run_gui():
         has_index = (target_dir / "_Gran_Indice_Sistemes_de_Mesura.md").exists() or Path("dist_course_md/_Gran_Indice_Sistemes_de_Mesura.md").exists()
         has_glossary = (target_dir / "_Glosario_Conceptos_Clave.md").exists() or Path("dist_course_md/_Glosario_Conceptos_Clave.md").exists()
         has_flashcards = (target_dir / "_Flashcards_Examen.tsv").exists() or Path("dist_course_md/_Flashcards_Examen.tsv").exists()
+        has_problems = (target_dir / "_Problemas_Examen_Resueltos.md").exists() or Path("dist_course_md/_Problemas_Examen_Resueltos.md").exists()
+        has_lab = (target_dir / "Laboratorio_Virtual_Sensores.html").exists() or Path("dist_course_md/Laboratorio_Virtual_Sensores.html").exists()
 
         badges = []
         if has_index: badges.append("✓ Gran Índice")
         if has_glossary: badges.append("✓ Glosario A-Z")
         if has_flashcards: badges.append("✓ 500 Flashcards Anki")
+        if has_problems: badges.append("✓ 10 Problemas Resueltos")
+        if has_lab: badges.append("✓ Lab Virtual")
 
         if badges:
             lbl_res_status.config(
@@ -4799,6 +4844,45 @@ def run_gui():
     create_btn(form_actions, "👁️ Abrir en Visor", lambda: load_resource_in_viewer("_Formulario_Oficial_Examen.md"), bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
     create_btn(form_actions, "📝 Abrir en Editor", lambda: open_resource_in_editor("_Formulario_Oficial_Examen.md"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left", padx=(0, 6))
     create_btn(form_actions, "📋 Copiar Formulario", lambda: copy_resource_to_clipboard("_Formulario_Oficial_Examen.md", "Formulario Oficial"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+
+    # CARD C.2: Banco Maestro de Problemas de Examen Resueltos
+    card_prob = make_card(p3, "📝 Banco Maestro de Problemas de Examen Resueltos")
+    card_prob.pack(fill="x", pady=(0, 8))
+    prob_inner = tk.Frame(card_prob, bg=COLOR_CARD, padx=16, pady=8)
+    prob_inner.pack(fill="x")
+
+    tk.Label(
+        prob_inner,
+        text="Archivo: _Problemas_Examen_Resueltos.md\n"
+             "Colección de 10 problemas numéricos complejos representativos de exámenes oficiales de la UPC.\n"
+             "Incluye planteamiento, deducciones paso a paso en LaTeX, esquemas de circuitos y análisis crítico de ingeniería.",
+        font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, justify="left"
+    ).pack(anchor="w", pady=(0, 6))
+
+    prob_actions = tk.Frame(prob_inner, bg=COLOR_CARD)
+    prob_actions.pack(fill="x")
+    create_btn(prob_actions, "👁️ Abrir en Visor", lambda: load_resource_in_viewer("_Problemas_Examen_Resueltos.md"), bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
+    create_btn(prob_actions, "📝 Abrir en Editor", lambda: open_resource_in_editor("_Problemas_Examen_Resueltos.md"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left", padx=(0, 6))
+    create_btn(prob_actions, "📋 Copiar Contenido", lambda: copy_resource_to_clipboard("_Problemas_Examen_Resueltos.md", "Problemas Resueltos"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+
+    # CARD C.3: Laboratorio Virtual Interactivo de Sensores
+    card_lab = make_card(p3, "🔬 Laboratorio Virtual Interactivo de Sensores")
+    card_lab.pack(fill="x", pady=(0, 8))
+    lab_inner = tk.Frame(card_lab, bg=COLOR_CARD, padx=16, pady=8)
+    lab_inner.pack(fill="x")
+
+    tk.Label(
+        lab_inner,
+        text="Archivo: Laboratorio_Virtual_Sensores.html\n"
+             "Simulador web gráfico e interactivo con estética Apple Dark Mode (HTML5 Canvas + JavaScript reactivo).\n"
+             "Incluye 5 simulaciones en tiempo real: Puente de Wheatstone, Pt100 a 2/3/4 hilos, INA con CMRR, Filtro Sallen-Key y Muestreo Nyquist/ADC.",
+        font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, justify="left"
+    ).pack(anchor="w", pady=(0, 6))
+
+    lab_actions = tk.Frame(lab_inner, bg=COLOR_CARD)
+    lab_actions.pack(fill="x")
+    create_btn(lab_actions, "🔬 Lanzar Laboratorio en Navegador", open_virtual_lab, bg=COLOR_ACCENT_GREEN, hover_bg=COLOR_ACCENT_GREEN_HOVER, font=(FONT_FAMILY, 10, "bold"), padx=16, pady=6).pack(side="left", padx=(0, 6))
+    create_btn(lab_actions, "📂 Abrir Carpeta", lambda: open_resource_folder("Laboratorio_Virtual_Sensores.html"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
 
     # CARD D: Flashcards Anki (Nativo .apkg y .tsv)
     card_fl = make_card(p3, "🃏 Banco de 500 Flashcards de Examen (Anki .apkg / TSV)")

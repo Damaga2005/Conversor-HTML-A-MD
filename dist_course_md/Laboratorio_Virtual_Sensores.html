@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Laboratorio Virtual de Circuitos y Sensores · Sistemes de Mesura (UPC)</title>
+  <style>
+    :root {
+      --bg-canvas: #000000;
+      --bg-card: #1c1c1e;
+      --bg-inset: #2c2c2e;
+      --bg-hover: #3a3a3c;
+      --border-card: #38383a;
+      --text-primary: #ffffff;
+      --text-secondary: #86868b;
+      --accent-blue: #0a84ff;
+      --accent-green: #30d158;
+      --accent-red: #ff453a;
+      --accent-amber: #ffd60a;
+      --accent-cyan: #64d2ff;
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .header {
+      max-width: 1200px;
+      margin: 0 auto 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .header h1 { font-size: 24px; font-weight: 700; color: #fff; }
+    .header p { font-size: 14px; color: var(--text-secondary); }
+    .badge {
+      background: rgba(10, 132, 255, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(100, 210, 255, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tabs-nav {
+      max-width: 1200px;
+      margin: 0 auto 20px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+    .tab-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      color: var(--text-secondary);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { background: var(--bg-inset); color: #fff; }
+    .tab-btn.active {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+    .lab-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: none;
+    }
+    .lab-container.active { display: block; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 860px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 22px;
+    }
+    .card h2 { font-size: 18px; margin-bottom: 16px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .control-group { margin-bottom: 18px; }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .control-label span.val { color: var(--accent-cyan); font-family: monospace; font-size: 14px; }
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--bg-inset);
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+    select, .radio-group {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--bg-inset);
+      border: 1px solid var(--border-card);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+    }
+    .radio-pill-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .pill-btn {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      background: var(--bg-inset);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-secondary);
+    }
+    .pill-btn.active {
+      background: rgba(10, 132, 255, 0.2);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .metric-box {
+      background: var(--bg-inset);
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .metric-title { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; }
+    .metric-val { font-size: 18px; font-weight: 700; color: #fff; font-family: monospace; margin-top: 4px; }
+    .metric-val.green { color: var(--accent-green); }
+    .metric-val.amber { color: var(--accent-amber); }
+    .metric-val.red { color: var(--accent-red); }
+    canvas {
+      width: 100%;
+      height: 240px;
+      background: #111113;
+      border-radius: 12px;
+      border: 1px solid var(--border-card);
+      margin-top: 12px;
+    }
+    .formula-box {
+      background: rgba(10, 132, 255, 0.08);
+      border-left: 3px solid var(--accent-blue);
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #d1d1d6;
+      margin-top: 14px;
+      font-family: "SF Pro Text", -apple-system, monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1>🔬 Laboratorio Virtual de Circuitos y Sensores</h1>
+      <p>Universitat Politècnica de Catalunya · Sistemes de Mesura (EEBE / ETSETB)</p>
+    </div>
+    <div class="badge">Simulación Interactiva en Vivo</div>
+  </div>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchLab('lab-wheatstone')">⚖️ Puente de Wheatstone</button>
+    <button class="tab-btn" onclick="switchLab('lab-pt100')">🌡️ Sonda Pt100 (2/3/4 Hilos)</button>
+    <button class="tab-btn" onclick="switchLab('lab-ina')">⚡ Amplificador INA & CMRR</button>
+    <button class="tab-btn" onclick="switchLab('lab-filter')">〰️ Filtro Butterworth 2º</button>
+    <button class="tab-btn" onclick="switchLab('lab-adc')">📊 Nyquist & ADC Aliasing</button>
+  </div>
+
+  <!-- 1. PUENTE DE WHEATSTONE -->
+  <div id="lab-wheatstone" class="lab-container active">
+    <div class="grid-2">
+      <div class="card">
+        <h2>⚙️ Parámetros del Puente</h2>
+        <label class="control-label">Topología de Montaje:</label>
+        <div class="radio-pill-group">
+          <div id="btn-topo-quarter" class="pill-btn active" onclick="setWheatstoneTopo('quarter')">1/4 Puente (1 galga)</div>
+          <div id="btn-topo-half" class="pill-btn" onclick="setWheatstoneTopo('half')">1/2 Puente Push-Pull</div>
+          <div id="btn-topo-full" class="pill-btn" onclick="setWheatstoneTopo('full')">Puente Completo (4)</div>
+        </div>
+        <div class="control-group">
+          <div class="control-label">Deformación Mecánica (ε): <span class="val" id="val-w-eps">+1000 µε</span></div>
+          <input type="range" id="slider-w-eps" min="-2000" max="2000" step="50" value="1000" oninput="updateWheatstone()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Tensión de Excitación (Vs): <span class="val" id="val-w-vs">10.0 V</span></div>
+          <input type="range" id="slider-w-vs" min="1.0" max="15.0" step="0.5" value="10.0" oninput="updateWheatstone()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Factor de Galga (K): <span class="val" id="val-w-k">2.05</span></div>
+          <input type="range" id="slider-w-k" min="1.50" max="3.50" step="0.05" value="2.05" oninput="updateWheatstone()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Resistencia Nominal (R0): <span class="val" id="val-w-r0">120.0 Ω</span></div>
+          <select id="select-w-r0" onchange="updateWheatstone()">
+            <option value="120">120.0 Ω (Estándar metálica)</option>
+            <option value="350">350.0 Ω (Baja disipación)</option>
+            <option value="1000">1000.0 Ω (Alta impedancia)</option>
+          </select>
+        </div>
+        <div class="formula-box" id="w-formula">Vo = (Vs / 4) * [ (ΔR/R) / (1 + 0.5*(ΔR/R)) ]</div>
+      </div>
+      <div class="card">
+        <h2>📊 Respuesta de Salida</h2>
+        <div class="metrics-grid">
+          <div class="metric-box"><div class="metric-title">ΔR en Galga</div><div class="metric-val" id="m-w-dr">0.246 Ω</div></div>
+          <div class="metric-box"><div class="metric-title">Tensión Salida (Vo)</div><div class="metric-val green" id="m-w-vo">+5.122 mV</div></div>
+          <div class="metric-box"><div class="metric-title">Aproximación Lineal</div><div class="metric-val" id="m-w-volin">+5.125 mV</div></div>
+          <div class="metric-box"><div class="metric-title">Error No-Linealidad</div><div class="metric-val amber" id="m-w-nl">0.051 %</div></div>
+        </div>
+        <canvas id="canvas-wheatstone"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. PT100 Y CABLE -->
+  <div id="lab-pt100" class="lab-container">
+    <div class="grid-2">
+      <div class="card">
+        <h2>⚙️ Parámetros de la Sonda Pt100</h2>
+        <label class="control-label">Modo de Conexión:</label>
+        <div class="radio-pill-group">
+          <div id="btn-pt-2w" class="pill-btn active" onclick="setPtWires(2)">2 Hilos</div>
+          <div id="btn-pt-3w" class="pill-btn" onclick="setPtWires(3)">3 Hilos (Siemens)</div>
+          <div id="btn-pt-4w" class="pill-btn" onclick="setPtWires(4)">4 Hilos (Kelvin)</div>
+        </div>
+        <div class="control-group">
+          <div class="control-label">Temperatura del Medio (T): <span class="val" id="val-pt-t">50.0 °C</span></div>
+          <input type="range" id="slider-pt-t" min="-50" max="250" step="1" value="50" oninput="updatePt100()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Resistencia de Cable por Hilo (RL): <span class="val" id="val-pt-rl">2.5 Ω</span></div>
+          <input type="range" id="slider-pt-rl" min="0.0" max="10.0" step="0.2" value="2.5" oninput="updatePt100()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Corriente de Polarización (Ibias): <span class="val" id="val-pt-i">1.00 mA</span></div>
+          <input type="range" id="slider-pt-i" min="0.2" max="3.0" step="0.1" value="1.0" oninput="updatePt100()">
+        </div>
+        <div class="formula-box" id="pt-formula">2 Hilos: R_aparente = R(T) + 2*RL. Error = +2*RL / 0.385 Ω/°C.</div>
+      </div>
+      <div class="card">
+        <h2>📊 Lectura y Error Térmico</h2>
+        <div class="metrics-grid">
+          <div class="metric-box"><div class="metric-title">Resistencia Real</div><div class="metric-val" id="m-pt-rreal">119.25 Ω</div></div>
+          <div class="metric-box"><div class="metric-title">Resistencia Medida</div><div class="metric-val" id="m-pt-rapp">124.25 Ω</div></div>
+          <div class="metric-box"><div class="metric-title">Temp. Interpretada</div><div class="metric-val amber" id="m-pt-tapp">62.99 °C</div></div>
+          <div class="metric-box"><div class="metric-title">Error Sistemático</div><div class="metric-val red" id="m-pt-error">+12.99 °C</div></div>
+        </div>
+        <canvas id="canvas-pt100"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. INA Y CMRR -->
+  <div id="lab-ina" class="lab-container">
+    <div class="grid-2">
+      <div class="card">
+        <h2>⚙️ Parámetros del INA3</h2>
+        <div class="control-group">
+          <div class="control-label">Tensión Diferencial Entrada (Vd): <span class="val" id="val-ina-vd">20.0 mV</span></div>
+          <input type="range" id="slider-ina-vd" min="-50" max="50" step="1" value="20" oninput="updateINA()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Tensión Modo Común Entrada (Vcm): <span class="val" id="val-ina-vcm">2.50 V</span></div>
+          <input type="range" id="slider-ina-vcm" min="0.0" max="10.0" step="0.2" value="2.5" oninput="updateINA()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Resistencia de Ganancia (Rg): <span class="val" id="val-ina-rg">200 Ω</span></div>
+          <input type="range" id="slider-ina-rg" min="50" max="5000" step="10" value="200" oninput="updateINA()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Tolerancia Resistencias Sustractor (δ): <span class="val" id="val-ina-tol">1.0 %</span></div>
+          <select id="select-ina-tol" onchange="updateINA()">
+            <option value="0.0005">0.05 % (Ultra precisión militar)</option>
+            <option value="0.001">0.1 % (Precisión E96 recomendada)</option>
+            <option value="0.01" selected>1.0 % (Estándar comercial)</option>
+            <option value="0.05">5.0 % (Baja precisión)</option>
+          </select>
+        </div>
+        <div class="formula-box">Gd = 1 + 50kΩ / Rg | CMRR ≈ Gd / (4 * δ) | Vo = Gd * Vd + (Gd / CMRR) * Vcm</div>
+      </div>
+      <div class="card">
+        <h2>📊 Métricas de Amplificación</h2>
+        <div class="metrics-grid">
+          <div class="metric-box"><div class="metric-title">Ganancia Diferencial</div><div class="metric-val green" id="m-ina-gd">251.0</div></div>
+          <div class="metric-box"><div class="metric-title">CMRR Total</div><div class="metric-val" id="m-ina-cmrr">75.9 dB</div></div>
+          <div class="metric-box"><div class="metric-title">Tensión Salida Útil</div><div class="metric-val" id="m-ina-voud">+5.02 V</div></div>
+          <div class="metric-box"><div class="metric-title">Ruido Modo Común</div><div class="metric-val amber" id="m-ina-vocm">100.4 mV</div></div>
+        </div>
+        <canvas id="canvas-ina"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. FILTRO BUTTERWORTH -->
+  <div id="lab-filter" class="lab-container">
+    <div class="grid-2">
+      <div class="card">
+        <h2>⚙️ Filtro Sallen-Key Paso Bajo</h2>
+        <div class="control-group">
+          <div class="control-label">Frecuencia de Corte (fc): <span class="val" id="val-f-fc">15.0 Hz</span></div>
+          <input type="range" id="slider-f-fc" min="5" max="200" step="1" value="15" oninput="updateFilter()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Frecuencia de Interferencia: <span class="val" id="val-f-fn">50.0 Hz</span></div>
+          <select id="select-f-fn" onchange="updateFilter()">
+            <option value="50" selected>50.0 Hz (Red Eléctrica Europa)</option>
+            <option value="60">60.0 Hz (Red Eléctrica USA)</option>
+            <option value="100">100.0 Hz (Segundo armónico)</option>
+          </select>
+        </div>
+        <div class="formula-box">Orden n=2 Butterworth: |H(f)| = 1 / sqrt(1 + (f/fc)^4). Caída: -40 dB/década.</div>
+      </div>
+      <div class="card">
+        <h2>📊 Diagrama de Bode en Tiempo Real</h2>
+        <div class="metrics-grid">
+          <div class="metric-box"><div class="metric-title">Atenuación a Ruido</div><div class="metric-val green" id="m-f-att">-20.9 dB</div></div>
+          <div class="metric-box"><div class="metric-title">Transmisión (%)</div><div class="metric-val" id="m-f-trans">8.96 %</div></div>
+          <div class="metric-box"><div class="metric-title">Desfase a Ruido</div><div class="metric-val" id="m-f-phase">-155.0 °</div></div>
+        </div>
+        <canvas id="canvas-filter"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. NYQUIST Y ALIASING -->
+  <div id="lab-adc" class="lab-container">
+    <div class="grid-2">
+      <div class="card">
+        <h2>⚙️ Muestreador y ADC</h2>
+        <div class="control-group">
+          <div class="control-label">Frecuencia Señal (fin): <span class="val" id="val-adc-fin">12.0 Hz</span></div>
+          <input type="range" id="slider-adc-fin" min="2" max="40" step="1" value="12" oninput="updateADC()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Frecuencia Muestreo (fs): <span class="val" id="val-adc-fs">20.0 Hz</span></div>
+          <input type="range" id="slider-adc-fs" min="5" max="60" step="1" value="20" oninput="updateADC()">
+        </div>
+        <div class="control-group">
+          <div class="control-label">Resolución ADC (N bits): <span class="val" id="val-adc-n">8 bits</span></div>
+          <input type="range" id="slider-adc-n" min="4" max="16" step="1" value="8" oninput="updateADC()">
+        </div>
+        <div class="formula-box" id="adc-status-box">fs < 2*fin -> ¡CUIDADO! Violación de Nyquist. Aliasing aparente: |fin - fs| = 8.0 Hz.</div>
+      </div>
+      <div class="card">
+        <h2>📊 Reconstrucción y Aliasing</h2>
+        <div class="metrics-grid">
+          <div class="metric-box"><div class="metric-title">Criterio Nyquist</div><div class="metric-val red" id="m-adc-status">⚠️ ALIASING</div></div>
+          <div class="metric-box"><div class="metric-title">Frecuencia Aparente</div><div class="metric-val amber" id="m-adc-falias">8.0 Hz</div></div>
+          <div class="metric-box"><div class="metric-title">Niveles (2^N)</div><div class="metric-val" id="m-adc-levels">256</div></div>
+          <div class="metric-box"><div class="metric-title">SNR Teórico</div><div class="metric-val green" id="m-adc-snr">49.9 dB</div></div>
+        </div>
+        <canvas id="canvas-adc"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchLab(id) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.lab-container').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(id).classList.add('active');
+      if (id === 'lab-wheatstone') updateWheatstone();
+      if (id === 'lab-pt100') updatePt100();
+      if (id === 'lab-ina') updateINA();
+      if (id === 'lab-filter') updateFilter();
+      if (id === 'lab-adc') updateADC();
+    }
+
+    // 1. WHEATSTONE
+    let wheatstoneTopo = 'quarter';
+    function setWheatstoneTopo(t) {
+      wheatstoneTopo = t;
+      document.querySelectorAll('#btn-topo-quarter, #btn-topo-half, #btn-topo-full').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-topo-' + t).classList.add('active');
+      updateWheatstone();
+    }
+
+    function updateWheatstone() {
+      const eps = parseFloat(document.getElementById('slider-w-eps').value);
+      const vs = parseFloat(document.getElementById('slider-w-vs').value);
+      const k = parseFloat(document.getElementById('slider-w-k').value);
+      const r0 = parseFloat(document.getElementById('select-w-r0').value);
+
+      document.getElementById('val-w-eps').innerText = (eps > 0 ? '+' : '') + eps + ' µε';
+      document.getElementById('val-w-vs').innerText = vs.toFixed(1) + ' V';
+      document.getElementById('val-w-k').innerText = k.toFixed(2);
+      document.getElementById('val-w-r0').innerText = r0.toFixed(1) + ' Ω';
+
+      const x = k * (eps * 1e-6);
+      const dR = r0 * x;
+
+      let voExact = 0;
+      let voLin = 0;
+      let fBox = '';
+
+      if (wheatstoneTopo === 'quarter') {
+        voExact = (vs / 4.0) * (x / (1.0 + 0.5 * x));
+        voLin = (vs / 4.0) * x;
+        fBox = '1/4 Puente: Vo = (Vs/4) * [x / (1 + 0.5*x)] | No lineal';
+      } else if (wheatstoneTopo === 'half') {
+        voExact = (vs / 2.0) * x;
+        voLin = voExact;
+        fBox = '1/2 Puente Push-Pull: Vo = (Vs/2) * x | Exactamente lineal (2x sensibilidad)';
+      } else {
+        voExact = vs * x;
+        voLin = voExact;
+        fBox = 'Puente Completo: Vo = Vs * x | Máxima sensibilidad y lineal (4x)';
+      }
+
+      document.getElementById('w-formula').innerText = fBox;
+      document.getElementById('m-w-dr').innerText = dR.toFixed(3) + ' Ω';
+      document.getElementById('m-w-vo').innerText = (voExact * 1000).toFixed(3) + ' mV';
+      document.getElementById('m-w-volin').innerText = (voLin * 1000).toFixed(3) + ' mV';
+
+      let nl = 0;
+      if (Math.abs(voExact) > 1e-7) {
+        nl = (Math.abs(voExact - voLin) / (Math.abs(voExact) * 2)) * 100;
+      }
+      document.getElementById('m-w-nl').innerText = nl.toFixed(3) + ' %';
+
+      drawWheatstoneChart(vs, k, wheatstoneTopo, eps);
+    }
+
+    function drawWheatstoneChart(vs, k, topo, currentEps) {
+      const cv = document.getElementById('canvas-wheatstone');
+      const ctx = cv.getContext('2d');
+      const w = cv.width = cv.clientWidth * 2;
+      const h = cv.height = cv.clientHeight * 2;
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = '#38383a';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(40, h / 2); ctx.lineTo(w - 40, h / 2);
+      ctx.moveTo(w / 2, 20); ctx.lineTo(w / 2, h - 20);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#0a84ff';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i <= 200; i++) {
+        let e = -2000 + (4000 * i / 200);
+        let x = k * (e * 1e-6);
+        let v = (topo === 'quarter') ? (vs / 4.0) * (x / (1 + 0.5 * x)) : (topo === 'half') ? (vs / 2.0) * x : vs * x;
+        let px = 40 + (w - 80) * (i / 200);
+        let py = (h / 2) - (v * 1000 * 5);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      let cx = 40 + (w - 80) * ((currentEps + 2000) / 4000);
+      let curX = k * (currentEps * 1e-6);
+      let curV = (topo === 'quarter') ? (vs / 4.0) * (curX / (1 + 0.5 * curX)) : (topo === 'half') ? (vs / 2.0) * curX : vs * curX;
+      let cy = (h / 2) - (curV * 1000 * 5);
+
+      ctx.fillStyle = '#30d158';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 8, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+
+    // 2. PT100
+    let ptWires = 2;
+    function setPtWires(w) {
+      ptWires = w;
+      document.querySelectorAll('#btn-pt-2w, #btn-pt-3w, #btn-pt-4w').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-pt-' + w + 'w').classList.add('active');
+      updatePt100();
+    }
+
+    function updatePt100() {
+      const T = parseFloat(document.getElementById('slider-pt-t').value);
+      const RL = parseFloat(document.getElementById('slider-pt-rl').value);
+      const I_mA = parseFloat(document.getElementById('slider-pt-i').value);
+
+      document.getElementById('val-pt-t').innerText = T.toFixed(1) + ' °C';
+      document.getElementById('val-pt-rl').innerText = RL.toFixed(1) + ' Ω';
+      document.getElementById('val-pt-i').innerText = I_mA.toFixed(2) + ' mA';
+
+      const alpha = 0.00385;
+      const R0 = 100.0;
+      const Rreal = R0 * (1 + alpha * T);
+
+      let Rapp = Rreal;
+      let Tapp = T;
+      let Terror = 0;
+      let fBox = '';
+
+      if (ptWires === 2) {
+        Rapp = Rreal + 2 * RL;
+        Tapp = (Rapp - R0) / (R0 * alpha);
+        Terror = Tapp - T;
+        fBox = '2 Hilos: Error sistemático grave ΔT = +2*RL / 0.385 Ω/°C = +' + Terror.toFixed(2) + ' °C';
+      } else if (ptWires === 3) {
+        Rapp = Rreal;
+        Tapp = T;
+        Terror = 0.0;
+        fBox = '3 Hilos (Siemens): Cero perfectamente compensado; error de línea de 1º orden anulado.';
+      } else {
+        Rapp = Rreal;
+        Tapp = T;
+        Terror = 0.0;
+        fBox = '4 Hilos (Kelvin): Medida potenciométrica pura; error de hilo = 0.000 °C.';
+      }
+
+      document.getElementById('pt-formula').innerText = fBox;
+      document.getElementById('m-pt-rreal').innerText = Rreal.toFixed(2) + ' Ω';
+      document.getElementById('m-pt-rapp').innerText = Rapp.toFixed(2) + ' Ω';
+      document.getElementById('m-pt-tapp').innerText = Tapp.toFixed(2) + ' °C';
+      document.getElementById('m-pt-error').innerText = (Terror >= 0 ? '+' : '') + Terror.toFixed(2) + ' °C';
+
+      drawPt100Chart(T, Tapp);
+    }
+
+    function drawPt100Chart(Treal, Tapp) {
+      const cv = document.getElementById('canvas-pt100');
+      const ctx = cv.getContext('2d');
+      const w = cv.width = cv.clientWidth * 2;
+      const h = cv.height = cv.clientHeight * 2;
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.fillStyle = '#86868b';
+      ctx.font = '22px sans-serif';
+      ctx.fillText('Temperatura Real vs Interpretada', 40, 50);
+
+      ctx.fillStyle = '#0a84ff';
+      ctx.fillRect(100, 90, (Treal + 50) * 3, 30);
+      ctx.fillText('Real: ' + Treal.toFixed(1) + ' °C', 100 + (Treal + 50) * 3 + 20, 112);
+
+      ctx.fillStyle = (Math.abs(Tapp - Treal) > 0.1) ? '#ff453a' : '#30d158';
+      ctx.fillRect(100, 140, Math.max(0, (Tapp + 50) * 3), 30);
+      ctx.fillText('Medida: ' + Tapp.toFixed(1) + ' °C', 100 + Math.max(0, (Tapp + 50) * 3) + 20, 162);
+    }
+
+    // 3. INA
+    function updateINA() {
+      const vd_mV = parseFloat(document.getElementById('slider-ina-vd').value);
+      const vcm_V = parseFloat(document.getElementById('slider-ina-vcm').value);
+      const rg_ohm = parseFloat(document.getElementById('slider-ina-rg').value);
+      const tol = parseFloat(document.getElementById('select-ina-tol').value);
+
+      document.getElementById('val-ina-vd').innerText = (vd_mV > 0 ? '+' : '') + vd_mV.toFixed(1) + ' mV';
+      document.getElementById('val-ina-vcm').innerText = vcm_V.toFixed(2) + ' V';
+      document.getElementById('val-ina-rg').innerText = rg_ohm.toFixed(0) + ' Ω';
+      document.getElementById('val-ina-tol').innerText = (tol * 100).toFixed(2) + ' %';
+
+      const gd = 1.0 + (50000.0 / rg_ohm);
+      const cmrrRatio = gd / (4.0 * tol);
+      const cmrr_dB = 20.0 * Math.log10(cmrrRatio);
+
+      const vo_ud = (gd * (vd_mV * 1e-3));
+      const vo_cm = (gd / cmrrRatio) * vcm_V;
+
+      document.getElementById('m-ina-gd').innerText = gd.toFixed(1);
+      document.getElementById('m-ina-cmrr').innerText = cmrr_dB.toFixed(1) + ' dB';
+      document.getElementById('m-ina-voud').innerText = (vo_ud >= 0 ? '+' : '') + vo_ud.toFixed(2) + ' V';
+      document.getElementById('m-ina-vocm').innerText = (vo_cm * 1000).toFixed(1) + ' mV';
+
+      drawINAChart(vo_ud, vo_cm);
+    }
+
+    function drawINAChart(voud, vocm) {
+      const cv = document.getElementById('canvas-ina');
+      const ctx = cv.getContext('2d');
+      const w = cv.width = cv.clientWidth * 2;
+      const h = cv.height = cv.clientHeight * 2;
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = '#38383a';
+      ctx.beginPath();
+      ctx.moveTo(30, h / 2); ctx.lineTo(w - 30, h / 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#64d2ff';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i < w - 60; i++) {
+        let t = i / 40.0;
+        let y = voud * 30 + vocm * 100 * Math.sin(t * 3);
+        let py = (h / 2) - y;
+        if (i === 0) ctx.moveTo(30 + i, py); else ctx.lineTo(30 + i, py);
+      }
+      ctx.stroke();
+    }
+
+    // 4. FILTER
+    function updateFilter() {
+      const fc = parseFloat(document.getElementById('slider-f-fc').value);
+      const fn = parseFloat(document.getElementById('select-f-fn').value);
+
+      document.getElementById('val-f-fc').innerText = fc.toFixed(1) + ' Hz';
+      document.getElementById('val-f-fn').innerText = fn.toFixed(1) + ' Hz';
+
+      const ratio = fn / fc;
+      const attMag = 1.0 / Math.sqrt(1.0 + Math.pow(ratio, 4));
+      const att_dB = 20.0 * Math.log10(attMag);
+      const phase_deg = -(180.0 - Math.atan2(Math.sqrt(2) * ratio, Math.pow(ratio, 2) - 1.0) * (180.0 / Math.PI));
+
+      document.getElementById('m-f-att').innerText = att_dB.toFixed(1) + ' dB';
+      document.getElementById('m-f-trans').innerText = (attMag * 100).toFixed(2) + ' %';
+      document.getElementById('m-f-phase').innerText = phase_deg.toFixed(1) + ' °';
+
+      drawBodePlot(fc, fn);
+    }
+
+    function drawBodePlot(fc, fn) {
+      const cv = document.getElementById('canvas-filter');
+      const ctx = cv.getContext('2d');
+      const w = cv.width = cv.clientWidth * 2;
+      const h = cv.height = cv.clientHeight * 2;
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = '#2c2c2e';
+      ctx.lineWidth = 1;
+      for (let y = 30; y < h; y += 40) {
+        ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(w - 40, y); ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#0a84ff';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i <= w - 80; i++) {
+        let f = Math.pow(10, (i / (w - 80)) * 3);
+        let r = f / fc;
+        let mag = 1.0 / Math.sqrt(1.0 + Math.pow(r, 4));
+        let mag_dB = 20 * Math.log10(mag);
+        let py = 30 - (mag_dB * 3.5);
+        if (i === 0) ctx.moveTo(40 + i, py); else ctx.lineTo(40 + i, py);
+      }
+      ctx.stroke();
+
+      let fnX = 40 + (Math.log10(fn) / 3.0) * (w - 80);
+      ctx.strokeStyle = '#ff453a';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(fnX, 20); ctx.lineTo(fnX, h - 20);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // 5. ADC
+    function updateADC() {
+      const fin = parseFloat(document.getElementById('slider-adc-fin').value);
+      const fs = parseFloat(document.getElementById('slider-adc-fs').value);
+      const n = parseInt(document.getElementById('slider-adc-n').value);
+
+      document.getElementById('val-adc-fin').innerText = fin.toFixed(1) + ' Hz';
+      document.getElementById('val-adc-fs').innerText = fs.toFixed(1) + ' Hz';
+      document.getElementById('val-adc-n').innerText = n + ' bits';
+
+      const isAliasing = fs < (2.0 * fin);
+      let falias = fin;
+      if (isAliasing) {
+        falias = Math.abs(fin - fs);
+      }
+
+      const statusBox = document.getElementById('adc-status-box');
+      const statusMetric = document.getElementById('m-adc-status');
+      if (isAliasing) {
+        statusBox.innerHTML = '⚠️ <b>VIOLACIÓN DE NYQUIST:</b> fs < 2*fin. <b>Aliasing severo</b>. Frecuencia aparente = ' + falias.toFixed(1) + ' Hz.';
+        statusBox.style.borderColor = '#ff453a';
+        statusMetric.innerText = '⚠️ ALIASING';
+        statusMetric.className = 'metric-val red';
+      } else {
+        statusBox.innerHTML = '✅ <b>NYQUIST CUMPLIDO:</b> fs ≥ 2*fin. Señal muestreada sin solapamiento espectral.';
+        statusBox.style.borderColor = '#30d158';
+        statusMetric.innerText = '✅ CORRECTO';
+        statusMetric.className = 'metric-val green';
+      }
+
+      document.getElementById('m-adc-falias').innerText = falias.toFixed(1) + ' Hz';
+      document.getElementById('m-adc-levels').innerText = Math.pow(2, n);
+      document.getElementById('m-adc-snr').innerText = (6.02 * n + 1.76).toFixed(1) + ' dB';
+
+      drawADCChart(fin, fs, isAliasing);
+    }
+
+    function drawADCChart(fin, fs, isAliasing) {
+      const cv = document.getElementById('canvas-adc');
+      const ctx = cv.getContext('2d');
+      const w = cv.width = cv.clientWidth * 2;
+      const h = cv.height = cv.clientHeight * 2;
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = '#555558';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let x = 0; x < w - 60; x++) {
+        let t = x / 300.0;
+        let y = (h / 2) - Math.sin(2 * Math.PI * fin * t) * 60;
+        if (x === 0) ctx.moveTo(30 + x, y); else ctx.lineTo(30 + x, y);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = isAliasing ? '#ff453a' : '#30d158';
+      let Ts = 1.0 / fs;
+      for (let t = 0; t < (w - 60) / 300.0; t += Ts) {
+        let px = 30 + t * 300.0;
+        let py = (h / 2) - Math.sin(2 * Math.PI * fin * t) * 60;
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.beginPath();
+        ctx.moveTo(px, h / 2);
+        ctx.lineTo(px, py);
+        ctx.stroke();
+      }
+    }
+
+    // Inicio
+    updateWheatstone();
+  </script>
+</body>
+</html>

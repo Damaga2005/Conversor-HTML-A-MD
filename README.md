@@ -1,4 +1,4 @@
-﻿# 🍏 Conversor HTML a Markdown para Google NotebookLM & LLMs
+# 🍏 Conversor HTML a Markdown para Google NotebookLM & LLMs
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -52,13 +52,32 @@
 
 ---
 
-### 📚 6. Documentos Maestros Generados
+### 📝 6. Banco Maestro de Problemas de Examen Resueltos (10 Problemas UPC Paso a Paso)
+- **Desarrollos analíticos exhaustivos en $\LaTeX$:** Resolución completa de 10 problemas numéricos de nivel de examen que cubren la totalidad del temario de la UPC (puente de Wheatstone, linealización de termistores NTC, acondicionamiento de Pt100 a 3 hilos, amplificador de instrumentación INA con CMRR real, filtro activo Sallen-Key, acondicionador para sensor piezoeléctrico de aceleración, balanceo de puentes AC para sensores capacitivos, y cuantización/muestreo ADC con aliasing).
+- **Generador Paramétrico de Problemas (`problem_generator.py`):** Motor de generación de problemas aleatorizados con comprobación matemática de tolerancia numérica para autoevaluación continua del estudiante.
+
+---
+
+### 🔬 7. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`)
+- **Simulador Web Autónomo:** Sin dependencias externas ni compilación, ejecutable en cualquier navegador web moderno con estética visual Apple Dark Mode (`#000000`, `#1c1c1e`, `#0a84ff`).
+- **5 Módulos de Simulación Gráfica en Tiempo Real (HTML5 Canvas):**
+  1. **Puente de Wheatstone:** Ajuste dinámico de galga extensométrica ($\Delta R$), resistencia $R_0$, tensión $V_{in}$ y cálculo de sensibilidad con voltímetro virtual.
+  2. **Sensor Pt100 (2, 3 y 4 hilos):** Simulación del error sistemático introducido por la resistencia de los cables de conexión ($R_{cable}$) y demostración interactiva de la compensación a 3 y 4 hilos.
+  3. **Amplificador de Instrumentación (INA) & Ruido en Modo Común:** Impacto del CMRR finito ($40 \text{ dB}$ a $120 \text{ dB}$) sobre el rechazo de armónicos parásitos de $50 \text{ Hz}$ de la red eléctrica.
+  4. **Filtro Activo Sallen-Key (Pasa-Bajo Butterworth 2º Orden):** Diagrama de Bode en vivo con respuesta en frecuencia, ganancia y fase según los valores de $R$ y $C$.
+  5. **Muestreo Nyquist & ADC:** Reconstrucción de onda analógica frente a la frecuencia de muestreo $f_s$ y resolución en bits (1 a 12 bits), visualizando en tiempo real la distorsión por *aliasing* y el error de cuantización.
+
+---
+
+### 📚 8. Documentos Maestros Generados
 Al procesar el curso completo, la herramienta sintetiza automáticamente:
-1. **`_Cuaderno_Maestro_Tema_XX.md`:** Documento unificado de alta densidad por cada unidad didáctica.
-2. **`_Formulario_Oficial_Examen.md`:** Formulario consolidado con todas las ecuaciones matemáticas del curso (puentes de Wheatstone, amplificadores, incertidumbres GUM, termopares, galgas, etc.).
-3. **`_Glosario_Conceptos_Clave.md`:** Vocabulario técnico y definiciones operativas.
-4. **`_Gran_Indice_Sistemes_de_Mesura.md`:** Índice general jerárquico con enlaces directos.
-5. **`_Instrucciones_Sistema_NotebookLM.md`:** Instrucciones de sistema recomendadas para configurar a Gemini como tutor interactivo en NotebookLM.
+1. **`_Problemas_Examen_Resueltos.md`:** 10 problemas de examen numéricos completamente resueltos y explicados.
+2. **`Laboratorio_Virtual_Sensores.html`:** Simulador interactivo en tiempo real de instrumentación.
+3. **`_Cuaderno_Maestro_Tema_XX.md`:** Documento unificado de alta densidad por cada unidad didáctica.
+4. **`_Formulario_Oficial_Examen.md`:** Formulario consolidado con todas las ecuaciones matemáticas del curso (puentes de Wheatstone, amplificadores, incertidumbres GUM, termopares, galgas, etc.).
+5. **`_Glosario_Conceptos_Clave.md`:** Vocabulario técnico y definiciones operativas.
+6. **`_Gran_Indice_Sistemes_de_Mesura.md`:** Índice general jerárquico con enlaces directos.
+7. **`_Instrucciones_Sistema_NotebookLM.md`:** Instrucciones de sistema recomendadas para configurar a Gemini como tutor interactivo en NotebookLM.
 
 ---
 
@@ -119,6 +138,8 @@ Conversor-HTML-A-MD/
 └── dist_course_md/                  # Material convertido del curso Sistemes de Mesura
     ├── Para_Subir_a_NotebookLM/     # Archivos consolidados listos para subir a NotebookLM
     ├── Tema_01/ a Tema_10/          # Carpetas de cada tema con sus MD individuales y assets
+    ├── _Problemas_Examen_Resueltos.md # 10 problemas numéricos completos con desarrollo en LaTeX
+    ├── Laboratorio_Virtual_Sensores.html # Simulador web interactivo en tiempo real (Apple Dark)
     ├── _Cuaderno_Maestro_Tema_*.md  # 10 cuadernos maestros temáticos
     ├── _Formulario_Oficial_Examen.md# Formulario oficial de fórmulas del curso
     ├── _Glosario_Conceptos_Clave.md # Glosario de términos técnicos

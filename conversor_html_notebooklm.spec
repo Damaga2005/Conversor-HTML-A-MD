@@ -4,9 +4,13 @@
 a = Analysis(
     ['conversor_html_notebooklm.py'],
     pathex=[],
-    binaries=[],
-    datas=[],
-    hiddenimports=[],
+    datas=[
+        ('dist_course_md/_Problemas_Examen_Resueltos.md', '.'),
+        ('dist_course_md/Laboratorio_Virtual_Sensores.html', '.'),
+        ('dist_course_md/_Formulario_Oficial_Examen.md', '.'),
+        ('dist_course_md/_Glosario_Conceptos_Clave.md', '.'),
+        ('dist_course_md/_Gran_Indice_Sistemes_de_Mesura.md', '.'),
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
