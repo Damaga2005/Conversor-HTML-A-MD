@@ -337,6 +337,7 @@
     <!-- 3D Canvas Viewport -->
     <div class="canvas-container">
       <canvas id="webgl-canvas"></canvas>
+      <canvas id="diag-canvas" style="display: none; width: 100%; height: 100%; position: absolute; inset: 0; background: #07090e;"></canvas>
       <div class="hud-3d">
         <div class="hud-tag" id="hud-tag-1">Modelo: Viga en Voladizo 3D</div>
         <div class="hud-tag" id="hud-tag-2">Carga: F = 5.00 N</div>
@@ -490,13 +491,21 @@ function updateAudioSynthesis() {
 }
 
 // ======================================================================
-// 2. MOTOR WEBGL 3D NATIVO (High Performance GPU 60 FPS)
+// 2. MOTOR WEBGL 3D NATIVO PROFESIONAL (High Performance GPU 60 FPS)
 // ======================================================================
 const glCanvas = document.getElementById('webgl-canvas');
-let gl = glCanvas.getContext('webgl') || glCanvas.getContext('experimental-webgl');
+let gl = null;
+let useFallback2D = false;
+
+try {
+  gl = glCanvas.getContext('webgl', { antialias: true, alpha: false, depth: true }) ||
+       glCanvas.getContext('experimental-webgl', { antialias: true, alpha: false, depth: true });
+} catch (e) {
+  console.warn('WebGL initialization error, fallback to 2D:', e);
+}
 
 // Variables de rotación orbital 3D
-let rotX = 25, rotY = -35, zoom = 6.5;
+let rotX = 22, rotY = -35, zoom = 6.8;
 let isDragging = false, lastMouseX = 0, lastMouseY = 0;
 
 glCanvas.addEventListener('mousedown', (e) => {
@@ -507,19 +516,49 @@ window.addEventListener('mousemove', (e) => {
   if (!isDragging) return;
   const dx = e.clientX - lastMouseX;
   const dy = e.clientY - lastMouseY;
-  rotY += dx * 0.5;
-  rotX += dy * 0.5;
+  rotY += dx * 0.45;
+  rotX += dy * 0.45;
   rotX = Math.max(-85, Math.min(85, rotX));
   lastMouseX = e.clientX; lastMouseY = e.clientY;
 });
 glCanvas.addEventListener('wheel', (e) => {
   zoom += e.deltaY * 0.005;
-  zoom = Math.max(2.5, Math.min(15, zoom));
+  zoom = Math.max(2.5, Math.min(16.0, zoom));
   e.preventDefault();
 }, { passive: false });
-glCanvas.addEventListener('dblclick', () => { rotX = 25; rotY = -35; zoom = 6.5; });
+glCanvas.addEventListener('dblclick', () => { rotX = 22; rotY = -35; zoom = 6.8; });
 
-// Shader Sources
+// Touch support para pantallas táctiles y tablets
+let touchStartDist = 0;
+glCanvas.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    isDragging = true;
+    lastMouseX = e.touches[0].clientX;
+    lastMouseY = e.touches[0].clientY;
+  } else if (e.touches.length === 2) {
+    touchStartDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  }
+}, { passive: true });
+window.addEventListener('touchend', () => { isDragging = false; touchStartDist = 0; });
+window.addEventListener('touchmove', (e) => {
+  if (isDragging && e.touches.length === 1) {
+    const dx = e.touches[0].clientX - lastMouseX;
+    const dy = e.touches[0].clientY - lastMouseY;
+    rotY += dx * 0.45;
+    rotX += dy * 0.45;
+    rotX = Math.max(-85, Math.min(85, rotX));
+    lastMouseX = e.touches[0].clientX;
+    lastMouseY = e.touches[0].clientY;
+  } else if (e.touches.length === 2 && touchStartDist > 0) {
+    const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    const diff = touchStartDist - dist;
+    zoom += diff * 0.01;
+    zoom = Math.max(2.5, Math.min(16.0, zoom));
+    touchStartDist = dist;
+  }
+}, { passive: true });
+
+// Shaders GLSL ES 1.0 (Máxima compatibilidad con drivers DirectX ANGLE, Nvidia, AMD, Intel)
 const vsSource = `
   attribute vec3 aPos;
   attribute vec3 aNormal;
@@ -531,7 +570,8 @@ const vsSource = `
   varying vec4 vColor;
   void main(void) {
     gl_Position = uMVP * vec4(aPos, 1.0);
-    vNormal = mat3(uModel) * aNormal;
+    mat3 nMat = mat3(uModel[0].xyz, uModel[1].xyz, uModel[2].xyz);
+    vNormal = nMat * aNormal;
     vWorldPos = (uModel * vec4(aPos, 1.0)).xyz;
     vColor = aColor;
   }
@@ -544,38 +584,59 @@ const fsSource = `
   varying vec4 vColor;
   void main(void) {
     vec3 N = normalize(vNormal);
-    vec3 lightDir = normalize(vec3(0.5, 1.0, 0.8));
-    float diff = max(dot(N, lightDir), 0.0);
+    vec3 light1 = normalize(vec3(0.6, 1.0, 0.8));
+    vec3 light2 = normalize(vec3(-0.6, -0.4, -0.5));
+    float diff1 = max(dot(N, light1), 0.0);
+    float diff2 = max(dot(N, light2), 0.0) * 0.35;
+    
     vec3 viewDir = normalize(vec3(0.0, 0.0, 10.0) - vWorldPos);
-    vec3 reflectDir = reflect(-lightDir, N);
+    vec3 reflectDir = reflect(-light1, N);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
-    vec3 ambient = 0.35 * vColor.rgb;
-    vec3 diffuse = 0.65 * diff * vColor.rgb;
-    vec3 specular = 0.4 * spec * vec3(1.0, 1.0, 1.0);
+    
+    vec3 ambient = 0.42 * vColor.rgb;
+    vec3 diffuse = 0.58 * (diff1 + diff2) * vColor.rgb;
+    vec3 specular = 0.35 * spec * vec3(1.0, 1.0, 1.0);
     gl_FragColor = vec4(ambient + diffuse + specular, vColor.a);
   }
 `;
 
-let shaderProgram, aPosLoc, aNormalLoc, aColorLoc, uMVPLoc, uModelLoc;
+let shaderProgram = null, aPosLoc, aNormalLoc, aColorLoc, uMVPLoc, uModelLoc;
 let vertexBuffer, normalBuffer, colorBuffer, indexBuffer, indexCount = 0;
 
 function initShaders() {
-  if (!gl) return;
-  const vs = gl.createShader(gl.VERTEX_SHADER);
-  gl.shaderSource(vs, vsSource); gl.compileShader(vs);
-  const fs = gl.createShader(gl.FRAGMENT_SHADER);
-  gl.shaderSource(fs, fsSource); gl.compileShader(fs);
+  if (!gl) { useFallback2D = true; return; }
+  
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.error('Shader compile error:', gl.getShaderInfoLog(s));
+      return null;
+    }
+    return s;
+  }
+  
+  const vs = compile(gl.VERTEX_SHADER, vsSource);
+  const fs = compile(gl.FRAGMENT_SHADER, fsSource);
+  if (!vs || !fs) { useFallback2D = true; return; }
 
   shaderProgram = gl.createProgram();
-  gl.attachShader(shaderProgram, vs); gl.attachShader(shaderProgram, fs);
+  gl.attachShader(shaderProgram, vs);
+  gl.attachShader(shaderProgram, fs);
   gl.linkProgram(shaderProgram);
+  if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+    console.error('Shader link error:', gl.getProgramInfoLog(shaderProgram));
+    useFallback2D = true;
+    return;
+  }
   gl.useProgram(shaderProgram);
 
-  aPosLoc = gl.getAttribLocation(shaderProgram, "aPos");
-  aNormalLoc = gl.getAttribLocation(shaderProgram, "aNormal");
-  aColorLoc = gl.getAttribLocation(shaderProgram, "aColor");
-  uMVPLoc = gl.getUniformLocation(shaderProgram, "uMVP");
-  uModelLoc = gl.getUniformLocation(shaderProgram, "uModel");
+  aPosLoc = gl.getAttribLocation(shaderProgram, 'aPos');
+  aNormalLoc = gl.getAttribLocation(shaderProgram, 'aNormal');
+  aColorLoc = gl.getAttribLocation(shaderProgram, 'aColor');
+  uMVPLoc = gl.getUniformLocation(shaderProgram, 'uMVP');
+  uModelLoc = gl.getUniformLocation(shaderProgram, 'uModel');
 
   vertexBuffer = gl.createBuffer();
   normalBuffer = gl.createBuffer();
@@ -584,188 +645,417 @@ function initShaders() {
 }
 initShaders();
 
-// Matemáticas Matriciales 3D
-function mat4Identity() {
-  return [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
-}
-function mat4Multiply(A, B) {
-  const C = new Array(16);
-  for (let i = 0; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
-      C[i*4 + j] = A[i*4 + 0]*B[0*4 + j] + A[i*4 + 1]*B[1*4 + j] + A[i*4 + 2]*B[2*4 + j] + A[i*4 + 3]*B[3*4 + j];
-    }
-  }
-  return C;
-}
-function mat4Perspective(fovRad, aspect, near, far) {
-  const f = 1.0 / Math.tan(fovRad / 2);
-  const d = 1.0 / (near - far);
+// Matemáticas Matriciales 3D Estándar OpenGL / WebGL (Column-Major 100% Preciso)
+function mat4Create() {
   return [
-    f / aspect, 0, 0, 0,
-    0, f, 0, 0,
-    0, 0, (far + near) * d, -1,
-    0, 0, (2 * far * near) * d, 0
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
   ];
 }
-function mat4RotateX(m, rad) {
-  const c = Math.cos(rad), s = Math.sin(rad);
-  const R = [1,0,0,0, 0,c,-s,0, 0,s,c,0, 0,0,0,1];
-  return mat4Multiply(m, R);
+
+function mat4Multiply(out, a, b) {
+  const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
+  const a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
+  const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+  const a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+
+  let b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
+  out[0] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
+  out[1] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
+  out[2] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
+  out[3] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
+
+  b0 = b[4]; b1 = b[5]; b2 = b[6]; b3 = b[7];
+  out[4] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
+  out[5] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
+  out[6] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
+  out[7] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
+
+  b0 = b[8]; b1 = b[9]; b2 = b[10]; b3 = b[11];
+  out[8] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
+  out[9] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
+  out[10] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
+  out[11] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
+
+  b0 = b[12]; b1 = b[13]; b2 = b[14]; b3 = b[15];
+  out[12] = b0*a00 + b1*a10 + b2*a20 + b3*a30;
+  out[13] = b0*a01 + b1*a11 + b2*a21 + b3*a31;
+  out[14] = b0*a02 + b1*a12 + b2*a22 + b3*a32;
+  out[15] = b0*a03 + b1*a13 + b2*a23 + b3*a33;
+  return out;
 }
-function mat4RotateY(m, rad) {
-  const c = Math.cos(rad), s = Math.sin(rad);
-  const R = [c,0,s,0, 0,1,0,0, -s,0,c,0, 0,0,0,1];
-  return mat4Multiply(m, R);
+
+function mat4Perspective(out, fovRad, aspect, near, far) {
+  const f = 1.0 / Math.tan(fovRad / 2);
+  const nf = 1.0 / (near - far);
+  out[0] = f / aspect;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = f;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = (far + near) * nf;
+  out[11] = -1;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = (2 * far * near) * nf;
+  out[15] = 0;
+  return out;
 }
-function mat4Translate(m, tx, ty, tz) {
-  const T = [1,0,0,0, 0,1,0,0, 0,0,1,0, tx,ty,tz,1];
-  return mat4Multiply(m, T);
+
+function mat4Translate(out, a, v) {
+  const x = v[0], y = v[1], z = v[2];
+  out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
+  out[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
+  out[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
+  out[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+  return out;
 }
+
+function mat4RotateX(out, a, rad) {
+  const s = Math.sin(rad), c = Math.cos(rad);
+  const a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
+  const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+  out[4] = a10 * c + a20 * s;
+  out[5] = a11 * c + a21 * s;
+  out[6] = a12 * c + a22 * s;
+  out[7] = a13 * c + a23 * s;
+  out[8] = a20 * c - a10 * s;
+  out[9] = a21 * c - a11 * s;
+  out[10] = a22 * c - a12 * s;
+  out[11] = a23 * c - a13 * s;
+  return out;
+}
+
+function mat4RotateY(out, a, rad) {
+  const s = Math.sin(rad), c = Math.cos(rad);
+  const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
+  const a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+  out[0] = a00 * c - a20 * s;
+  out[1] = a01 * c - a21 * s;
+  out[2] = a02 * c - a22 * s;
+  out[3] = a03 * c - a23 * s;
+  out[8] = a00 * s + a20 * c;
+  out[9] = a01 * s + a21 * c;
+  out[10] = a02 * s + a22 * c;
+  out[11] = a03 * s + a23 * c;
+  return out;
+}
+
+// Estructura de Geometría en memoria
+let currentGeoPositions = [];
+let currentGeoNormals = [];
+let currentGeoColors = [];
+let currentGeoIndices = [];
 
 // Generador de Geometría 3D según el Módulo Actual
 function build3DGeometry() {
-  if (!gl) return;
   const positions = [];
   const normals = [];
   const colors = [];
   const indices = [];
 
-  function addBox(x, y, z, w, h, d, r, g, b) {
+  function addBox(x, y, z, w, h, d, r, g, b, a = 1.0) {
     const startIdx = positions.length / 3;
-    const hw = w/2, hh = h/2, hd = d/2;
+    const hw = w / 2, hh = h / 2, hd = d / 2;
     // 8 vértices
     const v = [
-      [x-hw, y-hh, z+hd], [x+hw, y-hh, z+hd], [x+hw, y+hh, z+hd], [x-hw, y+hh, z+hd], // Front
-      [x-hw, y-hh, z-hd], [x+hw, y-hh, z-hd], [x+hw, y+hh, z-hd], [x-hw, y+hh, z-hd]  // Back
+      [x - hw, y - hh, z + hd], [x + hw, y - hh, z + hd], [x + hw, y + hh, z + hd], [x - hw, y + hh, z + hd], // Front
+      [x - hw, y - hh, z - hd], [x + hw, y - hh, z - hd], [x + hw, y + hh, z - hd], [x - hw, y + hh, z - hd]  // Back
     ];
-    // 6 caras con normales
+    // 6 caras con sus normales
     const faces = [
-      { idx: [0,1,2, 0,2,3], norm: [0,0,1] },   // Front
-      { idx: [5,4,7, 5,7,6], norm: [0,0,-1] },  // Back
-      { idx: [3,2,6, 3,6,7], norm: [0,1,0] },   // Top
-      { idx: [4,5,1, 4,1,0], norm: [0,-1,0] },  // Bottom
-      { idx: [1,5,6, 1,6,2], norm: [1,0,0] },   // Right
-      { idx: [4,0,3, 4,3,7], norm: [-1,0,0] }   // Left
+      { idx: [0, 1, 2, 0, 2, 3], norm: [0, 0, 1] },   // Front
+      { idx: [5, 4, 7, 5, 7, 6], norm: [0, 0, -1] },  // Back
+      { idx: [3, 2, 6, 3, 6, 7], norm: [0, 1, 0] },   // Top
+      { idx: [4, 5, 1, 4, 1, 0], norm: [0, -1, 0] },  // Bottom
+      { idx: [1, 5, 6, 1, 6, 2], norm: [1, 0, 0] },   // Right
+      { idx: [4, 0, 3, 4, 3, 7], norm: [-1, 0, 0] }   // Left
     ];
     faces.forEach(f => {
       f.idx.forEach(vi => {
         positions.push(v[vi][0], v[vi][1], v[vi][2]);
         normals.push(f.norm[0], f.norm[1], f.norm[2]);
-        colors.push(r, g, b, 1.0);
+        colors.push(r, g, b, a);
       });
     });
-    for (let i = 0; i < 36; i++) { indices.push(startIdx + i); }
+    for (let i = 0; i < 36; i++) {
+      indices.push(startIdx + i);
+    }
+  }
+
+  // Plano de la Mesa de Laboratorio (Workbench Grid)
+  addBox(0, -1.8, 0, 8.4, 0.08, 6.4, 0.12, 0.14, 0.18);
+  // Rejilla de banco metálico técnico
+  for (let gx = -3.6; gx <= 3.6; gx += 1.2) {
+    addBox(gx, -1.75, 0, 0.02, 0.02, 6.2, 0.22, 0.25, 0.32);
+  }
+  for (let gz = -2.6; gz <= 2.6; gz += 1.2) {
+    addBox(0, -1.75, gz, 8.2, 0.02, 0.02, 0.22, 0.25, 0.32);
   }
 
   const m = currentModule;
-  if (m === 0) { // Viga en voladizo 3D deformable con galgas
+  if (m === 0) { // 1. Viga en voladizo 3D deformable con galgas
     const eps = parseFloat(document.getElementById('param-eps')?.value || 1000) * 1e-6;
-    const deflection = eps * 1500;
+    const deflection = eps * 1600;
     // Base de fijación (soporte de mordaza gris oscuro)
-    addBox(-2.5, 0, 0, 0.8, 2.0, 1.6, 0.25, 0.25, 0.3);
-    // Viga metálica segmentada en 12 secciones con curvatura elástica
-    const segs = 12, len = 4.0;
+    addBox(-2.5, 0, 0, 0.9, 2.2, 1.8, 0.25, 0.27, 0.32);
+    addBox(-2.5, 1.2, 0, 1.1, 0.3, 2.0, 0.35, 0.38, 0.44); // Perno de apriete
+    
+    // Viga metálica de duraluminio segmentada con curvatura elástica
+    const segs = 14, len = 4.2;
     const dx = len / segs;
     for (let i = 0; i < segs; i++) {
       const u = (i + 0.5) / segs;
-      const curY = -deflection * (3*u*u - u*u*u);
-      // Colormap von Mises: compresión cian/azul, tracción rojo/naranja
-      const stress = u * eps * 3000;
-      const r = Math.max(0.2, Math.min(1.0, 0.5 + stress));
-      const b = Math.max(0.2, Math.min(1.0, 0.5 - stress));
-      addBox(-2.0 + (i + 0.5)*dx, curY, 0, dx*0.96, 0.15, 0.8, r, 0.5, b);
+      const curY = -deflection * (3 * u * u - u * u * u);
+      // Colormap de von Mises en tiempo real: compresión cian/azul, tracción naranja/rojo
+      const stress = u * eps * 3500;
+      const r = Math.max(0.15, Math.min(1.0, 0.45 + stress));
+      const b = Math.max(0.15, Math.min(1.0, 0.55 - stress));
+      addBox(-2.0 + (i + 0.5) * dx, curY, 0, dx * 0.97, 0.18, 0.85, r, 0.50, b);
     }
-    // Galgas extensométricas adheridas (cobre/oro)
-    addBox(-1.2, -deflection*0.1 + 0.08, 0.2, 0.6, 0.02, 0.25, 0.9, 0.6, 0.1);
-    addBox(-1.2, -deflection*0.1 + 0.08, -0.2, 0.6, 0.02, 0.25, 0.9, 0.6, 0.1);
-    // Masa / Carga en el extremo libre
-    addBox(2.0, -deflection, 0, 0.4, 0.6, 0.4, 0.8, 0.1, 0.1);
+    // Galgas extensométricas adheridas (patrón resistivo de Constantán en soporte de poliamida ámbar)
+    addBox(-1.3, -deflection * 0.08 + 0.10, 0.22, 0.65, 0.03, 0.25, 0.95, 0.65, 0.12);
+    addBox(-1.3, -deflection * 0.08 + 0.10, -0.22, 0.65, 0.03, 0.25, 0.95, 0.65, 0.12);
+    // Hilos de conexión de las galgas
+    addBox(-1.7, -deflection * 0.05 + 0.12, 0.22, 0.25, 0.02, 0.04, 0.85, 0.2, 0.2);
+    addBox(-1.7, -deflection * 0.05 + 0.12, -0.22, 0.25, 0.02, 0.04, 0.2, 0.85, 0.2);
+    // Masa / Carga suspendida en el extremo libre
+    const endY = -deflection * 2.0;
+    addBox(2.2, endY - 0.35, 0, 0.55, 0.70, 0.55, 0.85, 0.15, 0.15); // Masa de acero
+    addBox(2.2, endY + 0.05, 0, 0.08, 0.35, 0.08, 0.7, 0.7, 0.75); // Gancho
 
-  } else if (m === 1) { // Sensor Pt100 Industrial 3D y Baño Termostático
-    // Vaina de acero inoxidable cilíndrica (aproximada)
-    addBox(0, 0.5, 0, 0.25, 3.5, 0.25, 0.75, 0.78, 0.82);
-    // Cabezal de conexión DIN forma B (aluminio azul industrial)
-    addBox(0, 2.4, 0, 0.9, 0.8, 0.9, 0.1, 0.4, 0.8);
-    // Baño termostático agitado de líquido (vidrio/fluido traslúcido)
-    addBox(0, -0.8, 0, 2.2, 1.8, 2.2, 0.0, 0.6, 0.9);
-    // 4 Cables de compensación saliendo del cabezal (rojo, blanco, etc.)
-    addBox(-0.15, 2.9, 0, 0.04, 0.6, 0.04, 0.9, 0.1, 0.1);
-    addBox(-0.05, 2.9, 0, 0.04, 0.6, 0.04, 0.9, 0.1, 0.1);
-    addBox(0.05, 2.9, 0, 0.04, 0.6, 0.04, 0.9, 0.9, 0.9);
-    addBox(0.15, 2.9, 0, 0.04, 0.6, 0.04, 0.9, 0.9, 0.9);
+  } else if (m === 1) { // 2. Sensor Pt100 Industrial 3D y Baño Termostático
+    // Vaina de acero inoxidable cilíndrica pulida
+    addBox(0, 0.4, 0, 0.30, 3.4, 0.30, 0.78, 0.82, 0.88);
+    // Cabezal de conexión DIN Forma B (aluminio fundido azul industrial)
+    addBox(0, 2.3, 0, 1.0, 0.85, 1.0, 0.12, 0.42, 0.82);
+    addBox(0.6, 2.3, 0, 0.35, 0.30, 0.35, 0.25, 0.28, 0.32); // Prensaestopas de salida
+    // Baño termostático agitado de vidrio borosilicato
+    addBox(0, -0.85, 0, 2.4, 1.8, 2.4, 0.10, 0.55, 0.85, 0.8);
+    // Líquido térmico
+    addBox(0, -0.9, 0, 2.2, 1.6, 2.2, 0.05, 0.75, 0.95, 0.6);
+    // 4 Cables de compensación (2 Rojos + 2 Blancos según IEC 60751)
+    addBox(-0.18, 2.85, 0, 0.05, 0.7, 0.05, 0.92, 0.15, 0.15);
+    addBox(-0.06, 2.85, 0, 0.05, 0.7, 0.05, 0.92, 0.15, 0.15);
+    addBox(0.06, 2.85, 0, 0.05, 0.7, 0.05, 0.95, 0.95, 0.95);
+    addBox(0.18, 2.85, 0, 0.05, 0.7, 0.05, 0.95, 0.95, 0.95);
 
-  } else if (m === 8) { // Sensor Piezoeléctrico 3D (Acelerómetro)
-    // Base sísmica de fijación (acero pulido)
-    addBox(0, -1.2, 0, 2.4, 0.4, 2.4, 0.6, 0.6, 0.65);
+  } else if (m === 2) { // 3. Amplificador de Instrumentación INA3 & CMRR
+    // Placa de circuito impreso (PCB FR4 verde)
+    addBox(0, -0.2, 0, 4.2, 0.15, 3.2, 0.08, 0.45, 0.20);
+    // Circuito Integrado DIP-8 (INA114 / AD623)
+    addBox(0, 0.0, 0, 1.8, 0.35, 1.1, 0.12, 0.12, 0.15);
+    // Pines metálicos DIP-8 dorados
+    for (let p = -0.6; p <= 0.6; p += 0.4) {
+      addBox(p, -0.05, 0.65, 0.1, 0.15, 0.25, 0.85, 0.75, 0.2);
+      addBox(p, -0.05, -0.65, 0.1, 0.15, 0.25, 0.85, 0.75, 0.2);
+    }
+    // Resistencia de ganancia de precisión Rg (película metálica 0.1%)
+    addBox(-1.2, 0.0, 0, 0.6, 0.2, 0.2, 0.25, 0.55, 0.85);
+    // Conectores BNC de entrada diferencial y salida
+    addBox(-1.8, 0.25, 0.8, 0.4, 0.45, 0.4, 0.75, 0.78, 0.82);
+    addBox(-1.8, 0.25, -0.8, 0.4, 0.45, 0.4, 0.75, 0.78, 0.82);
+    addBox(1.8, 0.25, 0, 0.4, 0.45, 0.4, 0.75, 0.78, 0.82);
+
+  } else if (m === 3) { // 4. Filtro Activo Sallen-Key Paso Bajo
+    // PCB azul oscuro calidad industrial
+    addBox(0, -0.2, 0, 4.4, 0.15, 3.4, 0.10, 0.25, 0.55);
+    // Op-Amp TL082 dual DIP-8
+    addBox(-0.3, 0.0, 0, 1.6, 0.35, 1.0, 0.15, 0.15, 0.18);
+    // Condensadores de película de poliéster C1 y C2 (amarillos / rojos WIMA)
+    addBox(0.9, 0.2, 0.6, 0.6, 0.5, 0.3, 0.95, 0.20, 0.20);
+    addBox(0.9, 0.2, -0.6, 0.6, 0.5, 0.3, 0.95, 0.85, 0.15);
+    // Resistencias R1 y R2
+    addBox(-1.2, 0.05, 0.6, 0.7, 0.18, 0.18, 0.35, 0.65, 0.85);
+    addBox(-1.2, 0.05, -0.6, 0.7, 0.18, 0.18, 0.35, 0.65, 0.85);
+
+  } else if (m === 4) { // 5. Conversor ADC & Red R-2R
+    // Tarjeta electrónica de adquisición
+    addBox(0, -0.2, 0, 4.2, 0.15, 3.0, 0.12, 0.35, 0.25);
+    // Chip ADC SAR 16-bit
+    addBox(-0.5, 0.05, 0, 1.8, 0.3, 1.8, 0.10, 0.10, 0.12);
+    // Banco de LEDs indicadores binarios de 8 bits
+    for (let b = 0; b < 8; b++) {
+      const ledColor = (b % 2 === 0) ? [0.2, 0.95, 0.3] : [0.1, 0.7, 0.95];
+      addBox(1.2, 0.1, -1.2 + b * 0.35, 0.2, 0.2, 0.2, ledColor[0], ledColor[1], ledColor[2]);
+    }
+    // Condensador de muestreo Sample & Hold
+    addBox(-1.6, 0.25, 0, 0.5, 0.6, 0.5, 0.8, 0.8, 0.85);
+
+  } else if (m === 5) { // 6. Termopar Tipo K & Compensación CJC
+    // Sonda con unión caliente soldada (Bead)
+    addBox(-1.8, 0.6, 0, 0.22, 0.22, 0.22, 0.95, 0.45, 0.10); // Soldadura unión de medida
+    // Hilos de Chromel (naranja) y Alumel (amarillo)
+    addBox(-0.6, 0.6, 0.08, 2.2, 0.04, 0.04, 0.92, 0.55, 0.15);
+    addBox(-0.6, 0.6, -0.08, 2.2, 0.04, 0.04, 0.85, 0.85, 0.25);
+    // Aislador cerámico de alúmina
+    addBox(-0.6, 0.6, 0, 2.0, 0.18, 0.30, 0.85, 0.85, 0.80);
+    // Bloque isotermo de conexión fría CJC con sensor Pt1000
+    addBox(1.2, 0.3, 0, 1.4, 0.9, 1.6, 0.30, 0.32, 0.38);
+    addBox(1.2, 0.8, 0, 0.5, 0.2, 0.4, 0.20, 0.60, 0.90); // Sensor CJC
+
+  } else if (m === 6) { // 7. Termistor NTC / PTC & Resistencia Serie
+    // Perla de vidrio del NTC (gota de epoxi negro brillante)
+    addBox(-0.8, 0.4, 0, 0.45, 0.55, 0.45, 0.15, 0.15, 0.18);
+    // Hilos de cobre estañado
+    addBox(-0.8, -0.2, 0.1, 0.04, 0.8, 0.04, 0.85, 0.75, 0.4);
+    addBox(-0.8, -0.2, -0.1, 0.04, 0.8, 0.04, 0.85, 0.75, 0.4);
+    // Resistencia de linealización Rp / Rs
+    addBox(0.8, 0.1, 0, 0.7, 0.25, 0.25, 0.25, 0.55, 0.85);
+    // Cámara térmica controlada
+    addBox(-0.8, 0.4, 0, 1.5, 1.8, 1.5, 0.9, 0.2, 0.1, 0.3);
+
+  } else if (m === 7) { // 8. Ruido Johnson & Blindaje Faraday
+    // Caja metálica apantallada de aluminio pulido (Jaula de Faraday)
+    addBox(0, 0.0, 0, 3.2, 1.6, 2.6, 0.75, 0.78, 0.82);
+    // Cavidad interna con la resistencia bajo ensayo
+    addBox(0, 0.0, 0, 1.0, 0.35, 0.35, 0.35, 0.65, 0.95);
+    // Preamplificador de bajo ruido acoplado
+    addBox(2.1, 0.0, 0, 1.0, 1.2, 1.4, 0.20, 0.22, 0.28);
+
+  } else if (m === 8) { // 9. Sensor Piezoeléctrico 3D (Acelerómetro)
+    // Base sísmica de fijación con perno M5 (acero inoxidable)
+    addBox(0, -1.2, 0, 2.6, 0.45, 2.6, 0.62, 0.64, 0.70);
     // Electrodo inferior (oro)
-    addBox(0, -0.9, 0, 1.6, 0.1, 1.6, 0.9, 0.75, 0.1);
-    // Cristal de cuarzo / PZT piezoeléctrico deformable
-    addBox(0, -0.3, 0, 1.4, 1.1, 1.4, 0.3, 0.7, 0.9);
+    addBox(0, -0.9, 0, 1.8, 0.08, 1.8, 0.95, 0.80, 0.15);
+    // Disco cerámico piezoeléctrico de PZT (Titanato Zirconato de Plomo)
+    addBox(0, -0.35, 0, 1.6, 1.0, 1.6, 0.35, 0.75, 0.95);
     // Electrodo superior (oro)
-    addBox(0, 0.3, 0, 1.6, 0.1, 1.6, 0.9, 0.75, 0.1);
-    // Masa sísmica inercial de tungsteno
-    addBox(0, 0.9, 0, 2.0, 0.9, 2.0, 0.4, 0.45, 0.5);
-    // Conector coaxial microdot / BNC lateral
-    addBox(1.3, -0.3, 0, 0.6, 0.3, 0.3, 0.7, 0.7, 0.2);
+    addBox(0, 0.2, 0, 1.8, 0.08, 1.8, 0.95, 0.80, 0.15);
+    // Masa sísmica inercial de aleación pesada de tungsteno
+    addBox(0, 0.85, 0, 2.2, 1.1, 2.2, 0.42, 0.45, 0.52);
+    // Muelle de precarga helicoidal central
+    addBox(0, 1.45, 0, 0.4, 0.3, 0.4, 0.8, 0.8, 0.85);
+    // Conector coaxial miniatura Microdot 10-32
+    addBox(1.4, -0.35, 0, 0.7, 0.35, 0.35, 0.85, 0.85, 0.30);
 
-  } else if (m === 9) { // Sensor Capacitivo Diferencial 3D (3 Placas)
+  } else if (m === 9) { // 10. Sensor Capacitivo Diferencial 3D (3 Placas)
     const xPos = parseFloat(document.getElementById('param-x')?.value || 0.0) * 0.8;
-    // Placa fija superior A (fija en Y = +1.0)
-    addBox(0, 1.0, 0, 2.5, 0.12, 1.8, 0.85, 0.6, 0.2);
-    // Placa móvil central (desplazable en Y según xPos)
-    addBox(0, xPos, 0, 2.8, 0.12, 1.8, 0.2, 0.7, 0.9);
-    // Placa fija inferior B (fija en Y = -1.0)
-    addBox(0, -1.0, 0, 2.5, 0.12, 1.8, 0.85, 0.6, 0.2);
-    // Postes cerámicos de aislamiento lateral
-    addBox(-1.4, 0, 0, 0.2, 2.4, 0.2, 0.3, 0.3, 0.35);
-    addBox(1.4, 0, 0, 0.2, 2.4, 0.2, 0.3, 0.3, 0.35);
-
-  } else { // Circuito / Chip Integrado / Instrumento General
-    // PCB verde mate con pistas doradas
-    addBox(0, -0.3, 0, 4.0, 0.1, 3.0, 0.05, 0.4, 0.15);
-    // Circuito integrado DIP-8 (AD623 / OPA134 / LM35)
-    addBox(0, -0.1, 0, 1.6, 0.3, 1.0, 0.1, 0.1, 0.12);
-    // Conectores BNC
-    addBox(-1.6, 0.2, 0, 0.4, 0.4, 0.4, 0.7, 0.7, 0.75);
-    addBox(1.6, 0.2, 0, 0.4, 0.4, 0.4, 0.7, 0.7, 0.75);
+    // Armadura fija superior A (fija en Y = +1.1)
+    addBox(0, 1.1, 0, 2.8, 0.14, 2.0, 0.88, 0.65, 0.25);
+    // Armadura móvil central (desplazable en Y según xPos con tornillo micrométrico)
+    addBox(0, xPos, 0, 3.1, 0.14, 2.0, 0.20, 0.75, 0.95);
+    // Armadura fija inferior B (fija en Y = -1.1)
+    addBox(0, -1.1, 0, 2.8, 0.14, 2.0, 0.88, 0.65, 0.25);
+    // Columnas cerámicas de aislamiento y guiado de precisión
+    addBox(-1.6, 0, 0, 0.25, 2.6, 0.25, 0.32, 0.35, 0.42);
+    addBox(1.6, 0, 0, 0.25, 2.6, 0.25, 0.32, 0.35, 0.42);
+    // Vástago micrométrico conectado a la placa central
+    addBox(0, xPos + 1.2, 0, 0.15, 1.6, 0.15, 0.75, 0.78, 0.85);
   }
 
+  currentGeoPositions = positions;
+  currentGeoNormals = normals;
+  currentGeoColors = colors;
+  currentGeoIndices = indices;
   indexCount = indices.length;
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW);
-  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.DYNAMIC_DRAW);
-  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.DYNAMIC_DRAW);
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.DYNAMIC_DRAW);
+
+  if (gl && shaderProgram && !useFallback2D) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.DYNAMIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.DYNAMIC_DRAW);
+  }
+}
+
+// Fallback Canvas 2D en caso de que WebGL esté deshabilitado por el navegador
+function renderFallback2D(ctx, w, h) {
+  ctx.fillStyle = '#080a0e';
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.save();
+  ctx.translate(w / 2, h / 2);
+  
+  // Dibujar cuadrícula isométrica de banco
+  ctx.strokeStyle = '#1e2430';
+  ctx.lineWidth = 1;
+  for (let r = -240; r <= 240; r += 40) {
+    ctx.beginPath();
+    ctx.moveTo(-320 + r, 120 + r * 0.35);
+    ctx.lineTo(320 + r, 120 - r * 0.35);
+    ctx.stroke();
+  }
+
+  ctx.font = 'bold 13px "SF Mono", monospace';
+  ctx.fillStyle = '#38bdf8';
+  ctx.textAlign = 'center';
+  ctx.fillText('MODO RENDERING 2D TÉCNICO (WebGL no disponible)', 0, -130);
+
+  ctx.font = '12px system-ui, sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('Módulo Activo: ' + (MODULE_DATA[currentModule]?.title || ''), 0, -105);
+
+  // Proyectar silueta del sensor en vista técnica
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.fillStyle = 'rgba(56, 189, 248, 0.12)';
+  ctx.beginPath();
+  if (ctx.roundRect) {
+    ctx.roundRect(-140, -50, 280, 100, 8);
+  } else {
+    ctx.rect(-140, -50, 280, 100);
+  }
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = '#f8fafc';
+  ctx.font = '11px "SF Mono", monospace';
+  ctx.fillText('Simulación Física Activa · Interactúa con los controles', 0, 5);
+  ctx.restore();
 }
 
 function render3D() {
-  if (!gl || !shaderProgram) return;
-
-  // Adaptar viewport a resolución retina
-  const dpr = window.devicePixelRatio || 1;
-  const w = glCanvas.clientWidth * dpr;
-  const h = glCanvas.clientHeight * dpr;
-  if (glCanvas.width !== w || glCanvas.height !== h) {
-    glCanvas.width = w; glCanvas.height = h;
-    gl.viewport(0, 0, w, h);
+  if (useFallback2D || !gl || !shaderProgram) {
+    const ctx = glCanvas.getContext('2d');
+    if (ctx) {
+      renderFallback2D(ctx, glCanvas.width, glCanvas.height);
+    }
+    return;
   }
 
-  gl.clearColor(0.03, 0.03, 0.04, 1.0);
+  // Dimensionamiento seguro y resolución retina adaptable
+  const clientW = glCanvas.clientWidth || glCanvas.parentElement?.clientWidth || 800;
+  const clientH = glCanvas.clientHeight || glCanvas.parentElement?.clientHeight || 450;
+  if (clientW <= 0 || clientH <= 0) return;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = Math.floor(clientW * dpr);
+  const h = Math.floor(clientH * dpr);
+
+  if (glCanvas.width !== w || glCanvas.height !== h) {
+    glCanvas.width = w;
+    glCanvas.height = h;
+  }
+  gl.viewport(0, 0, w, h);
+
+  // Fondo azul noche técnico espacial de laboratorio
+  gl.clearColor(0.04, 0.05, 0.07, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.enable(gl.DEPTH_TEST);
+  gl.depthFunc(gl.LEQUAL);
 
   const aspect = w / h;
-  const pMatrix = mat4Perspective(45 * Math.PI / 180, aspect, 0.1, 100.0);
-  
-  let mvMatrix = mat4Identity();
-  mvMatrix = mat4Translate(mvMatrix, 0, 0, -zoom);
-  mvMatrix = mat4RotateX(mvMatrix, rotX * Math.PI / 180);
-  mvMatrix = mat4RotateY(mvMatrix, rotY * Math.PI / 180);
+  const pMatrix = mat4Create();
+  mat4Perspective(pMatrix, 45 * Math.PI / 180, aspect, 0.1, 100.0);
 
-  const mvp = mat4Multiply(pMatrix, mvMatrix);
+  const mvMatrix = mat4Create();
+  mat4Translate(mvMatrix, mvMatrix, [0, 0, -zoom]);
+  mat4RotateX(mvMatrix, mvMatrix, rotX * Math.PI / 180);
+  mat4RotateY(mvMatrix, mvMatrix, rotY * Math.PI / 180);
+
+  const mvp = mat4Create();
+  mat4Multiply(mvp, pMatrix, mvMatrix);
 
   gl.useProgram(shaderProgram);
   gl.uniformMatrix4fv(uMVPLoc, false, new Float32Array(mvp));
@@ -784,7 +1074,9 @@ function render3D() {
   gl.enableVertexAttribArray(aColorLoc);
 
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  gl.drawElements(gl.TRIANGLES, indexCount, gl.UNSIGNED_SHORT, 0);
+  if (indexCount > 0) {
+    gl.drawElements(gl.TRIANGLES, indexCount, gl.UNSIGNED_SHORT, 0);
+  }
 }
 
 // ======================================================================
@@ -1546,9 +1838,177 @@ function switchModule(idx) {
   updateAudioSynthesis();
 }
 
+let currentViewMode = '3d';
+
 function setViewMode(mode) {
+  currentViewMode = mode;
   document.getElementById('btn-view-3d').className = mode === '3d' ? 'view-btn active' : 'view-btn';
   document.getElementById('btn-view-diag').className = mode === 'diag' ? 'view-btn active' : 'view-btn';
+  const glC = document.getElementById('webgl-canvas');
+  const diagC = document.getElementById('diag-canvas');
+  const hud = document.querySelector('.hud-controls-hint');
+  if (mode === '3d') {
+    glC.style.display = 'block';
+    diagC.style.display = 'none';
+    if (hud) hud.style.display = 'flex';
+  } else {
+    glC.style.display = 'none';
+    diagC.style.display = 'block';
+    if (hud) hud.style.display = 'none';
+    renderCircuitSchematic();
+  }
+}
+
+function renderCircuitSchematic() {
+  const c = document.getElementById('diag-canvas');
+  if (!c || currentViewMode !== 'diag') return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = c.clientWidth || 800;
+  const h = c.clientHeight || 450;
+  if (c.width !== w * dpr || c.height !== h * dpr) {
+    c.width = w * dpr; c.height = h * dpr;
+  }
+  const ctx = c.getContext('2d');
+  ctx.save();
+  ctx.scale(dpr, dpr);
+
+  ctx.fillStyle = '#06080e';
+  ctx.fillRect(0, 0, w, h);
+
+  // Technical blueprint grid
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+  for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+
+  const m = currentModule;
+  const modData = MODULE_DATA[m];
+  const params = {};
+  modData.controls.forEach(ctrl => { params[ctrl.id] = ctrl.val; });
+  const res = modData.calc(params);
+
+  // Header
+  ctx.fillStyle = '#38bdf8';
+  ctx.font = 'bold 14px "SF Mono", monospace';
+  ctx.fillText('📐 ESQUEMÁTICO CIRCUITAL DE INSTRUMENTACIÓN (UPC)', 30, 36);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '12px system-ui, sans-serif';
+  ctx.fillText('Topología: ' + modData.title, 30, 56);
+
+  const cx = w / 2, cy = h / 2 + 15;
+
+  if (m === 0) { // Puente de Wheatstone para Galgas
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - 90); ctx.lineTo(cx + 90, cy);
+    ctx.lineTo(cx, cy + 90); ctx.lineTo(cx - 90, cy);
+    ctx.closePath(); ctx.stroke();
+
+    function drawNode(x, y, label, color) {
+      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 11px "SF Mono", monospace'; ctx.fillText(label, x + 10, y - 6);
+    }
+    drawNode(cx, cy - 90, '+Vexc (' + params.vexc + ' V)', '#38bdf8');
+    drawNode(cx, cy + 90, 'GND (0 V)', '#64748b');
+    drawNode(cx - 90, cy, 'V-', '#fbbf24');
+    drawNode(cx + 90, cy, 'V+', '#34d399');
+
+    ctx.fillStyle = '#f8fafc'; ctx.font = '11px "SF Mono", monospace';
+    ctx.fillText('R1: ' + params.r1 + ' Ω', cx - 110, cy - 50);
+    ctx.fillText('R2: ' + params.r2 + ' Ω', cx + 45, cy - 50);
+    ctx.fillText('R3 (Galga): ' + params.r3 + ' Ω', cx + 45, cy + 50);
+    ctx.fillText('R4: ' + params.r4 + ' Ω', cx - 110, cy + 50);
+
+    ctx.strokeStyle = '#ec4899'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(cx - 90, cy); ctx.lineTo(cx + 90, cy); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#ec4899'; ctx.font = 'bold 13px "SF Mono", monospace';
+    ctx.fillText('ΔV_out = ' + res.dmmText, cx - 40, cy - 8);
+
+  } else if (m === 1) { // Pt100 4 hilos
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 180, cy - 60, 60, 120);
+    ctx.fillStyle = '#38bdf8'; ctx.font = '11px "SF Mono", monospace';
+    ctx.fillText('I_exc', cx - 170, cy - 10);
+    ctx.fillText(params.iexc + ' mA', cx - 175, cy + 10);
+
+    ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
+    ctx.strokeRect(cx + 80, cy - 25, 80, 50);
+    ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px "SF Mono", monospace';
+    ctx.fillText('Pt100', cx + 100, cy + 5);
+
+    ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx - 120, cy - 40); ctx.lineTo(cx + 80, cy - 15); ctx.stroke();
+    ctx.moveTo(cx - 120, cy + 40); ctx.lineTo(cx + 80, cy + 15); ctx.stroke();
+    ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2;
+    ctx.moveTo(cx + 80, cy - 10); ctx.lineTo(cx + 20, cy - 80); ctx.stroke();
+    ctx.moveTo(cx + 80, cy + 10); ctx.lineTo(cx + 20, cy + 80); ctx.stroke();
+
+    ctx.fillStyle = '#fbbf24'; ctx.font = '11px "SF Mono", monospace';
+    ctx.fillText('V+ (Alta Z)', cx - 50, cy - 85);
+    ctx.fillText('V- (Alta Z)', cx - 50, cy + 90);
+    ctx.fillStyle = '#e2e8f0'; ctx.fillText('r_cable = ' + params.rcable + ' Ω (Inmune 4 Hilos)', cx - 50, cy);
+
+  } else if (m === 3) { // Filtro Sallen-Key
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + 60, cy - 50);
+    ctx.lineTo(cx + 60, cy + 50);
+    ctx.lineTo(cx + 140, cy);
+    ctx.closePath(); ctx.stroke();
+
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 14px monospace';
+    ctx.fillText('-', cx + 70, cy - 20);
+    ctx.fillText('+', cx + 70, cy + 25);
+
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 160, cy + 15, 60, 20);
+    ctx.strokeRect(cx - 60, cy + 15, 60, 20);
+    ctx.fillStyle = '#e2e8f0'; ctx.font = '11px monospace';
+    ctx.fillText('R1 ' + params.r + ' kΩ', cx - 160, cy + 10);
+    ctx.fillText('R2 ' + params.r + ' kΩ', cx - 60, cy + 10);
+
+    ctx.beginPath();
+    ctx.moveTo(cx - 200, cy + 25); ctx.lineTo(cx - 160, cy + 25);
+    ctx.moveTo(cx - 100, cy + 25); ctx.lineTo(cx - 60, cy + 25);
+    ctx.moveTo(cx, cy + 25); ctx.lineTo(cx + 60, cy + 25);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#34d399';
+    ctx.strokeRect(cx - 80, cy - 50, 20, 30);
+    ctx.strokeRect(cx + 10, cy + 60, 20, 30);
+    ctx.fillStyle = '#34d399';
+    ctx.fillText('C1 ' + params.c1 + ' nF', cx - 90, cy - 60);
+    ctx.fillText('C2 ' + params.c2 + ' nF', cx, cy + 105);
+
+    ctx.strokeStyle = '#38bdf8';
+    ctx.beginPath(); ctx.moveTo(cx + 140, cy); ctx.lineTo(cx + 200, cy); ctx.stroke();
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px monospace';
+    ctx.fillText('V_out', cx + 205, cy + 4);
+
+  } else {
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 140, cy - 60, 280, 120);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px "SF Mono", monospace';
+    ctx.fillText('ETAPA DE ACONDICIONAMIENTO ANALÓGICO', cx - 120, cy - 20);
+    ctx.fillStyle = '#94a3b8'; ctx.font = '12px system-ui, sans-serif';
+    ctx.fillText('Salida Medida: ' + res.dmmText, cx - 120, cy + 10);
+    const firstLine = (res.formula || '').split(String.fromCharCode(10))[0];
+    ctx.fillText('Ecuación: ' + firstLine, cx - 120, cy + 35);
+  }
+
+  // Box inferior con fórmulas
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(30, h - 70, w - 60, 50);
+  ctx.strokeStyle = '#1e293b'; ctx.strokeRect(30, h - 70, w - 60, 50);
+  ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px "SF Mono", monospace';
+  ctx.fillText('ECUACIÓN CARACTERÍSTICA:', 45, h - 50);
+  ctx.fillStyle = '#f8fafc'; ctx.font = '11px "SF Mono", monospace';
+  ctx.fillText((res.formula || '').replace(new RegExp(String.fromCharCode(10), 'g'), '  |  '), 45, h - 30);
+
+  ctx.restore();
 }
 
 function toggleFullscreen() {
