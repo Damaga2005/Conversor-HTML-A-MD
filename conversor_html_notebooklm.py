@@ -2276,11 +2276,124 @@ def generate_course_glossary(output_dir: Path) -> Path:
     target.write_text("\n".join(out), encoding="utf-8")
     return target
 
-def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_id=1600000000000, model_id=1600000000001) -> bool:
+def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_id=2059400110, model_id=1607392319) -> bool:
     """
-    Genera un paquete .apkg de Anki 100% nativo sin dependencias externas usando sqlite3 y zipfile.
-    Incluye plantilla CSS estilo Apple Dark Mode y soporte MathJax para LaTeX.
+    Genera un paquete .apkg de Anki 100% compatible con Anki 2.1+, Anki 23/24 (Rust backend) y AnkiMobile.
+    Utiliza genanki si está disponible, o un generador SQLite3 de alta compatibilidad con el esquema completo de Anki.
     """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Intento 1: genanki (el estándar de facto para Anki)
+    try:
+        import genanki
+
+        css_style = """
+        .card {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 18px;
+            text-align: left;
+            color: #f5f5f7;
+            background-color: #161617;
+            padding: 26px;
+            border-radius: 14px;
+            line-height: 1.6;
+        }
+        .tema-tag {
+            display: inline-block;
+            background: #0071e3;
+            color: #ffffff;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+        .question {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+        .divider {
+            border-top: 1px solid #2c2c2e;
+            margin: 22px 0;
+        }
+        .answer-v {
+            color: #30d158;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .answer-f {
+            color: #ff453a;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .justification {
+            background-color: #1c1c1e;
+            border-left: 3px solid #0071e3;
+            padding: 16px 20px;
+            border-radius: 8px;
+            color: #d1d1d6;
+            font-size: 16px;
+        }
+        """
+
+        model = genanki.Model(
+            model_id,
+            "Sistemes de Mesura Apple Pro",
+            fields=[
+                {"name": "Question"},
+                {"name": "Answer"},
+                {"name": "AnswerClass"},
+                {"name": "Justification"},
+                {"name": "Tags"},
+            ],
+            templates=[
+                {
+                    "name": "Card 1",
+                    "qfmt": "<div class='tema-tag'>{{Tags}}</div><div class='question'>{{Question}}</div>",
+                    "afmt": "{{FrontSide}}<div class='divider'></div><div class='{{AnswerClass}}'>{{Answer}}</div><div class='justification'>{{Justification}}</div>",
+                },
+            ],
+            css=css_style
+        )
+
+        deck = genanki.Deck(deck_id, deck_name)
+
+        def sanitize_html(s: str) -> str:
+            return re.sub(r'<(?!\/?(?:b|i|br|span|small|div|hr|code|p)\b)', '&lt;', s)
+
+        for c in cards_data:
+            q_raw = c.get("question", "")
+            a_raw = c.get("answer", "")
+            j_raw = c.get("justification", "")
+            tags_list = c.get("tags", ["Sistemes_de_Mesura"])
+            tag_str = " ".join(tags_list)
+
+            is_v = "VERTADER" in a_raw.upper()
+            ans = "✅ VERTADER (V)" if is_v else "❌ FALS (F)"
+            ans_class = "answer-v" if is_v else "answer-f"
+
+            q_clean = sanitize_html(q_raw)
+            j_clean = sanitize_html(j_raw)
+
+            note = genanki.Note(
+                model=model,
+                fields=[q_clean, ans, ans_class, j_clean, tag_str],
+                tags=tags_list
+            )
+            deck.add_note(note)
+
+        pkg = genanki.Package(deck)
+        pkg.write_to_file(str(output_path))
+        return True
+    except Exception:
+        pass
+
+    # Intento 2: Generador SQLite nativo con esquema Rust-compatible
     now = int(time.time())
     now_ms = int(time.time() * 1000)
 
@@ -2323,7 +2436,7 @@ def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_i
         css_style = """
         .card {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
-            font-size: 19px;
+            font-size: 18px;
             text-align: left;
             color: #f5f5f7;
             background-color: #161617;
@@ -2340,39 +2453,12 @@ def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_i
             font-size: 13px;
             font-weight: 600;
             margin-bottom: 14px;
-            letter-spacing: 0.5px;
         }
-        .question {
-            font-size: 20px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 16px;
-        }
-        .divider {
-            border-top: 1px solid #2c2c2e;
-            margin: 20px 0;
-        }
-        .answer {
-            color: #30d158;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        .justification {
-            background-color: #1c1c1e;
-            border-left: 3px solid #0071e3;
-            padding: 12px 16px;
-            border-radius: 6px;
-            color: #d1d1d6;
-            font-size: 16px;
-        }
-        code {
-            background-color: #2c2c2e;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: "Consolas", monospace;
-            color: #64d2ff;
-        }
+        .question { font-size: 20px; font-weight: 600; color: #ffffff; margin-bottom: 16px; }
+        .divider { border-top: 1px solid #2c2c2e; margin: 20px 0; }
+        .answer-v { color: #30d158; font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+        .answer-f { color: #ff453a; font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+        .justification { background-color: #1c1c1e; border-left: 3px solid #0071e3; padding: 12px 16px; border-radius: 6px; color: #d1d1d6; font-size: 16px; }
         """
 
         model = {
@@ -2389,7 +2475,7 @@ def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_i
                         "name": "Card 1",
                         "ord": 0,
                         "qfmt": "<div class='tema-tag'>{{Tags}}</div><div class='question'>{{Question}}</div>",
-                        "afmt": "{{FrontSide}}\n<div class='divider'></div>\n<div class='answer'>{{Answer}}</div>\n<div class='justification'>{{Justification}}</div>",
+                        "afmt": "{{FrontSide}}\n<div class='divider'></div>\n<div class='{{AnswerClass}}'>{{Answer}}</div>\n<div class='justification'>{{Justification}}</div>",
                         "bqfmt": "",
                         "bafmt": "",
                         "did": None
@@ -2398,8 +2484,9 @@ def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_i
                 "flds": [
                     {"name": "Question", "ord": 0, "sticky": False, "rtl": False, "font": "Arial", "size": 20, "media": []},
                     {"name": "Answer", "ord": 1, "sticky": False, "rtl": False, "font": "Arial", "size": 20, "media": []},
-                    {"name": "Justification", "ord": 2, "sticky": False, "rtl": False, "font": "Arial", "size": 16, "media": []},
-                    {"name": "Tags", "ord": 3, "sticky": False, "rtl": False, "font": "Arial", "size": 14, "media": []}
+                    {"name": "AnswerClass", "ord": 2, "sticky": False, "rtl": False, "font": "Arial", "size": 16, "media": []},
+                    {"name": "Justification", "ord": 3, "sticky": False, "rtl": False, "font": "Arial", "size": 16, "media": []},
+                    {"name": "Tags", "ord": 4, "sticky": False, "rtl": False, "font": "Arial", "size": 14, "media": []}
                 ],
                 "css": css_style,
                 "latexPre": "\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n",
@@ -2409,6 +2496,24 @@ def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_i
         }
 
         decks = {
+            "1": {
+                "id": 1,
+                "mod": now,
+                "name": "Default",
+                "usn": 0,
+                "maxTaken": 60,
+                "collapsed": False,
+                "browserCollapsed": False,
+                "desc": "",
+                "dyn": 0,
+                "conf": 1,
+                "extendNew": 10,
+                "extendRev": 50,
+                "lrnToday": [0, 0],
+                "newToday": [0, 0],
+                "revToday": [0, 0],
+                "timeToday": [0, 0]
+            },
             str(deck_id): {
                 "id": deck_id,
                 "mod": now,
@@ -2421,7 +2526,11 @@ def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_i
                 "dyn": 0,
                 "conf": 1,
                 "extendNew": 10,
-                "extendRev": 50
+                "extendRev": 50,
+                "lrnToday": [0, 0],
+                "newToday": [0, 0],
+                "revToday": [0, 0],
+                "timeToday": [0, 0]
             }
         }
 
@@ -2444,7 +2553,7 @@ def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_i
         conf = {
             "nextPos": 1,
             "estTimes": True,
-            "activeDecks": [deck_id],
+            "activeDecks": [1, deck_id],
             "sortType": "noteFld",
             "timeLim": 0,
             "sortBackwards": False,
@@ -2469,16 +2578,19 @@ def create_anki_apkg(output_path: Path, deck_name: str, cards_data: list, deck_i
             tags_list = c.get("tags", ["Sistemes_de_Mesura"])
             tag_str = " ".join(tags_list)
 
+            is_v = "VERTADER" in answer.upper()
+            ans_str = "✅ VERTADER (V)" if is_v else "❌ FALS (F)"
+            ans_class = "answer-v" if is_v else "answer-f"
+
             def to_mathjax(text):
                 text = re.sub(r'\$\$(.+?)\$\$', r'\[\1\]', text, flags=re.DOTALL)
                 text = re.sub(r'\$([^\$\n]+?)\$', r'\(\1\)', text)
                 return text.replace("\n", "<br>")
 
             q_fmt = to_mathjax(question)
-            a_fmt = to_mathjax(answer)
             j_fmt = to_mathjax(justification)
 
-            flds = f"{q_fmt}\x1f{a_fmt}\x1f{j_fmt}\x1f{tag_str}"
+            flds = f"{q_fmt}\x1f{ans_str}\x1f{ans_class}\x1f{j_fmt}\x1f{tag_str}"
             sfld = question[:50]
             csum = int(hashlib.sha1(sfld.encode('utf-8')).hexdigest()[:8], 16)
             guid = hashlib.md5(f"{deck_id}_{idx}_{sfld}".encode('utf-8')).hexdigest()[:10]
