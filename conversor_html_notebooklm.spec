@@ -6,6 +6,7 @@ a = Analysis(
     pathex=[],
     datas=[
         ('dist_course_md/_Problemas_Examen_Resueltos.md', '.'),
+        ('dist_course_md/_Examenes_Finales_Oficiales_UPC.md', '.'),
         ('dist_course_md/Laboratorio_Virtual_Sensores.html', '.'),
         ('dist_course_md/_Formulario_Oficial_Examen.md', '.'),
         ('dist_course_md/_Glosario_Conceptos_Clave.md', '.'),

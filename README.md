@@ -58,6 +58,23 @@
 
 ---
 
+### 🎓 6b. Colección Oficial de Exámenes Finales Reales UPC (`_Examenes_Finales_Oficiales_UPC.md`)
+- **3 Convocatorias Oficiales Íntegras con Soluciones Oficiales en $\LaTeX$:**
+  1. **Convocatoria 8 de enero de 2021 (Prof. Miguel Ángel García González):**
+     - *Problema 1:* Tiempo de subida con osciloscopio ($R_{osc} = 1\text{ M}\Omega \parallel 13\text{ pF}$, cable coaxial $1.5\text{ m}$) y diseño de compensación de sonda pasiva $10\times$ ($C_p = 15.33\text{ pF}$) para elevar el ancho de banda a $230.7\text{ MHz}$ y reducir $t_{r,\min}$ de $30.04\text{ ns}$ a $3.3\text{ ns}$.
+     - *Problema 2:* Termopar tipo K con compensación electrónica de unión fría (Pt100 con $I = 100\,\mu\text{A}$) y amplificador AD623 con balanceo de ganancia para sensibilidad de $10\text{ mV/}^\circ\text{C}$ e insensibilidad total a $T_a$.
+     - *Problema 3:* Oscilador de relajación para sensor capacitivo $C(x) = \frac{330\text{ pF}}{1+x}$ con operacional rail-to-rail, e incertidumbre GUM con multímetro Keysight 34465A.
+  2. **Convocatoria 16 de enero de 2024 (Profs. M. Á. García González y J. Ramos Castro):**
+     - *Problema 1:* Tratamiento estadístico con 25 lecturas de multímetro: Criterio de Chauvenet ($D_{\max} = 3$) para descarte de outliers, función de autocorrelación ($r_1$) para independencia al $99.9\%$, e incertidumbres Tipo A ($97.6\,\mu\text{V}$), Tipo B ($94.6\,\mu\text{V}$) y combinada ($136\,\mu\text{V}$).
+     - *Problema 2:* Acondicionador lineal capacitivo con OPA134 ($30\text{ kHz}$), verificación de Slew-Rate, inmunidad por CMRR y análisis riguroso de interferencias por PSRR ($41\text{ mV}$) y acoplo capacitivo parásito de red de $230\text{ V}$ a $50\text{ Hz}$ ($0.84\text{ V}$).
+     - *Problema 3:* Termopar tipo K con NTC linealizada por Taylor ($R_{lin} = 10.06\text{ k}\Omega$), inyección de compensación en pin REF del AD620, e integración de ruido blanco + flicker $1/f$ ($0.01\text{ Hz} - 10\text{ Hz}$) resultando en $u(T_h) = 0.0014^\circ\text{C}$.
+  3. **Convocatoria 14 de enero de 2025 (Profs. M. Á. García González y J. Ramos Castro):**
+     - *Ejercicios Cortos (30%):* Impedancia y capacidad de aislamiento de multímetro a partir de CMRR ($1\text{ G}\Omega, 100.7\text{ pF}$), saturación por offset en TIA con red T ($V_{os} < 980.2\,\mu\text{V}$), CMRR mínimo para célula de carga ($89.9\text{ dB}$), y transmisión por lazo de corriente 4-20 mA.
+     - *Problema 1 (35%):* Sensor AD590 ($1\,\mu\text{A/K}$) con presupuesto de incertidumbres GUM completo: matriz de 5 coeficientes de sensibilidad analíticos $\partial V_o / \partial x_i$ e incertidumbre expandida $U(T)_{95\%} = 0.46^\circ\text{C}$.
+     - *Problema 2 (35%):* Termómetro termopar tipo J con Pt100 ($10\text{ mA}$), ajuste de ganancias y cálculo de ruido $1/f$ + banda ancha.
+
+---
+
 ### 🔬 7. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`) — v4.0 Ultimate Edition
 - **Simulador Web Autónomo de Categoría PhET / Apple Studio Display:** Sin dependencias externas, sin CDNs ni compilación. Ejecutable en local en cualquier navegador web moderno con estética visual Apple Dark Mode (`#000000`, `#1c1c1e`, `#0a84ff`, `#30d158`) y renderizado Retina High-DPI.
 - **🔊 Síntesis Acústica en Tiempo Real con Web Audio API:** Permite *escuchar* la física de los sensores directamente en el navegador:
@@ -84,13 +101,15 @@
 
 ### 📚 8. Documentos Maestros Generados
 Al procesar el curso completo, la herramienta sintetiza automáticamente:
-1. **`_Problemas_Examen_Resueltos.md`:** 10 problemas de examen numéricos completamente resueltos y explicados.
-2. **`Laboratorio_Virtual_Sensores.html`:** Simulador interactivo en tiempo real de instrumentación.
-3. **`_Cuaderno_Maestro_Tema_XX.md`:** Documento unificado de alta densidad por cada unidad didáctica.
-4. **`_Formulario_Oficial_Examen.md`:** Formulario consolidado con todas las ecuaciones matemáticas del curso (puentes de Wheatstone, amplificadores, incertidumbres GUM, termopares, galgas, etc.).
-5. **`_Glosario_Conceptos_Clave.md`:** Vocabulario técnico y definiciones operativas.
-6. **`_Gran_Indice_Sistemes_de_Mesura.md`:** Índice general jerárquico con enlaces directos.
-7. **`_Instrucciones_Sistema_NotebookLM.md`:** Instrucciones de sistema recomendadas para configurar a Gemini como tutor interactivo en NotebookLM.
+1. **`_Examenes_Finales_Oficiales_UPC.md`:** 3 exámenes finales oficiales completos (2021, 2024, 2025) resueltos con 100% rigor analítico en LaTeX.
+2. **`_Problemas_Examen_Resueltos.md`:** 10 problemas numéricos de nivel de examen completamente resueltos y explicados.
+3. **`Laboratorio_Virtual_Sensores.html`:** Simulador interactivo en tiempo real de instrumentación (v4.0 Ultimate Edition).
+4. **`_Cuaderno_Maestro_Tema_XX.md`:** 10 cuadernos maestros temáticos de alta densidad.
+5. **`_Formulario_Oficial_Examen.md`:** Formulario consolidado con todas las ecuaciones matemáticas del curso.
+6. **`_Glosario_Conceptos_Clave.md`:** Vocabulario técnico y definiciones operativas.
+7. **`_Gran_Indice_Sistemes_de_Mesura.md`:** Índice general jerárquico con enlaces directos.
+8. **`_Flashcards_Examen.apkg` y `.tsv`:** Mazo de 550 tarjetas didácticas para Anki (autoevaluación + preguntas de finales oficiales).
+9. **`_Instrucciones_Sistema_NotebookLM.md`:** Instrucciones de sistema recomendadas para tutor interactivo en NotebookLM.
 
 ---
 

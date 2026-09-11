@@ -3175,8 +3175,8 @@ def process_all_course_temas(
         all_generated_files.append(flashcards_file)
         course_stats["flashcards"] = str(flashcards_file.name)
 
-    # Sincronizar banco de problemas de examen y laboratorio virtual interactivo
-    for extra_name in ["_Problemas_Examen_Resueltos.md", "Laboratorio_Virtual_Sensores.html"]:
+    # Sincronizar banco de problemas, exámenes oficiales y laboratorio virtual interactivo
+    for extra_name in ["_Problemas_Examen_Resueltos.md", "_Examenes_Finales_Oficiales_UPC.md", "Laboratorio_Virtual_Sensores.html"]:
         src_cand = Path("dist_course_md") / extra_name
         if not src_cand.exists():
             src_cand = Path(getattr(sys, "_MEIPASS", ".")) / extra_name
@@ -4865,6 +4865,27 @@ def run_gui():
     create_btn(prob_actions, "📝 Abrir en Editor", lambda: open_resource_in_editor("_Problemas_Examen_Resueltos.md"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left", padx=(0, 6))
     create_btn(prob_actions, "📋 Copiar Contenido", lambda: copy_resource_to_clipboard("_Problemas_Examen_Resueltos.md", "Problemas Resueltos"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
 
+    # CARD C.2b: 3 Exámenes Finales Oficiales Reales UPC (2021, 2024, 2025)
+    card_final_exams = make_card(p3, "🎓 3 Exámenes Finales Oficiales Reales UPC (2021, 2024, 2025)")
+    card_final_exams.pack(fill="x", pady=(0, 8))
+    fe_inner = tk.Frame(card_final_exams, bg=COLOR_CARD, padx=16, pady=8)
+    fe_inner.pack(fill="x")
+
+    tk.Label(
+        fe_inner,
+        text="Archivo: _Examenes_Finales_Oficiales_UPC.md\n"
+             "Enunciados íntegros y resoluciones paso a paso con máxima fidelidad en LaTeX de los 3 exámenes finales oficiales del curso\n"
+             "(Convocatorias Enero 2021, Enero 2024 y Enero 2025 · Profesores M. Á. García González y J. Ramos Castro).\n"
+             "Cubre: Sonda 10x y tr, Aislamiento y CMRR, AD590 y presupuesto GUM completo, Chauvenet y Autocorrelación, Termopares K/J con CJC (Pt100/NTC Taylor) y Ruido 1/f.",
+        font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, justify="left"
+    ).pack(anchor="w", pady=(0, 6))
+
+    fe_actions = tk.Frame(fe_inner, bg=COLOR_CARD)
+    fe_actions.pack(fill="x")
+    create_btn(fe_actions, "👁️ Abrir en Visor", lambda: load_resource_in_viewer("_Examenes_Finales_Oficiales_UPC.md"), bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
+    create_btn(fe_actions, "📝 Abrir en Editor", lambda: open_resource_in_editor("_Examenes_Finales_Oficiales_UPC.md"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left", padx=(0, 6))
+    create_btn(fe_actions, "📋 Copiar Contenido", lambda: copy_resource_to_clipboard("_Examenes_Finales_Oficiales_UPC.md", "Exámenes Finales Oficiales"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+
     # CARD C.3: Laboratorio Virtual Interactivo de Sensores
     card_lab = make_card(p3, "🔬 Laboratorio Virtual Interactivo de Sensores")
     card_lab.pack(fill="x", pady=(0, 8))
@@ -4886,7 +4907,7 @@ def run_gui():
     create_btn(lab_actions, "📂 Abrir Carpeta", lambda: open_resource_folder("Laboratorio_Virtual_Sensores.html"), bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
 
     # CARD D: Flashcards Anki (Nativo .apkg y .tsv)
-    card_fl = make_card(p3, "🃏 Banco de 500 Flashcards de Examen (Anki .apkg / TSV)")
+    card_fl = make_card(p3, "🃏 Banco de 550 Flashcards de Examen (Anki .apkg / TSV)")
     card_fl.pack(fill="x", pady=(0, 8))
     fl_inner = tk.Frame(card_fl, bg=COLOR_CARD, padx=16, pady=8)
     fl_inner.pack(fill="x")
@@ -4894,7 +4915,7 @@ def run_gui():
     tk.Label(
         fl_inner,
         text="Archivos: _Flashcards_Examen.apkg (1-Clic Anki con Dark Mode y MathJax) y _Flashcards_Examen.tsv\n"
-             "500 tarjetas con las preguntas de autoevaluación y cuestionarios oficiales de Moodle. "
+             "550 tarjetas con las preguntas de autoevaluación, cuestionarios oficiales de Moodle y preguntas de los Exámenes Finales 2021, 2024 y 2025.\n"
              "Formato interactivo con anverso (pregunta) y reverso (respuesta correcta + justificación física).",
         font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, justify="left"
     ).pack(anchor="w", pady=(0, 6))
