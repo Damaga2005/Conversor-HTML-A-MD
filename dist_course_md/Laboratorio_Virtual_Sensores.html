@@ -296,6 +296,7 @@
       <span id="audio-icon">🔊</span> <span id="audio-text">Audio Físico: ON</span>
     </button>
     <button class="btn" onclick="toggleFullscreen()">🖥️ Pantalla Completa</button>
+    <button class="btn" onclick="openColorCodeModal()">🎨 Código de Colores</button>
     <button class="btn btn-primary" onclick="openReportModal()">📄 Exportar Informe</button>
   </div>
 </header>
@@ -403,6 +404,101 @@
 </div>
 
 <!-- Modal Report -->
+
+<!-- Modal Resistor Color Code Calculator -->
+<div class="modal-overlay" id="modal-color-code">
+  <div class="modal-box" style="max-width: 680px;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span>🎨 Decodificador Interactivo de Código de Colores de Resistencias</span>
+        <span style="font-size: 10px; background: rgba(10,132,255,0.2); color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-family: monospace;">E12 / E24 / E96</span>
+      </div>
+      <button class="btn" onclick="closeColorCodeModal()">✕ Cerrar</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px;">
+      <!-- Vector Resistor Graphic -->
+      <div style="background: #06080e; border: 1px solid #1e2430; border-radius: 12px; padding: 18px; display: flex; justify-content: center; align-items: center;">
+        <svg id="svg-resistor" width="360" height="100" viewBox="0 0 360 100">
+          <line x1="10" y1="50" x2="80" y2="50" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+          <line x1="280" y1="50" x2="350" y2="50" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+          <!-- Resistor Body -->
+          <path d="M 80 25 C 105 25, 105 35, 120 35 L 240 35 C 255 35, 255 25, 280 25 C 285 25, 285 75, 280 75 C 255 75, 255 65, 240 65 L 120 65 C 105 65, 105 75, 80 75 C 75 75, 75 25, 80 25 Z" fill="#d2b48c" stroke="#b89758" stroke-width="2"/>
+          <!-- Bands -->
+          <rect id="band-svg-1" x="105" y="33" width="14" height="34" fill="#78350f" rx="2"/>
+          <rect id="band-svg-2" x="145" y="35" width="14" height="30" fill="#000000" rx="2"/>
+          <rect id="band-svg-3" x="185" y="35" width="14" height="30" fill="#ea580c" rx="2"/>
+          <rect id="band-svg-4" x="245" y="31" width="14" height="38" fill="#d97706" rx="2"/>
+        </svg>
+      </div>
+
+      <!-- Result Card -->
+      <div style="background: #101018; border: 1px solid #2e2e3e; border-radius: 10px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 11px; color: #888; font-family: monospace;">VALOR NOMINAL DECODIFICADO:</div>
+          <div id="cc-nominal-display" style="font-size: 26px; font-weight: 800; color: #00e5ff; font-family: monospace;">10.0 kΩ ±5%</div>
+          <div id="cc-range-display" style="font-size: 11px; color: #94a3b8; font-family: monospace; margin-top: 2px;">Rango admitido: 9.50 kΩ - 10.50 kΩ</div>
+        </div>
+        <button class="btn btn-green" onclick="applyColorCodeToLab()" style="font-size: 11px;">⚡ Cargar en Banco R1</button>
+      </div>
+
+      <!-- Band Selectors -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 6px;">1ª BANDA (D1)</label>
+          <select id="sel-band-1" class="select-styled" onchange="updateColorCodeCalc()">
+            <option value="1" selected>1 Marrón</option>
+            <option value="2">2 Rojo</option>
+            <option value="3">3 Naranja</option>
+            <option value="4">4 Amarillo</option>
+            <option value="5">5 Verde</option>
+            <option value="6">6 Azul</option>
+            <option value="7">7 Violeta</option>
+            <option value="8">8 Gris</option>
+            <option value="9">9 Blanco</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 6px;">2ª BANDA (D2)</label>
+          <select id="sel-band-2" class="select-styled" onchange="updateColorCodeCalc()">
+            <option value="0" selected>0 Negro</option>
+            <option value="1">1 Marrón</option>
+            <option value="2">2 Rojo</option>
+            <option value="3">3 Naranja</option>
+            <option value="4">4 Amarillo</option>
+            <option value="5">5 Verde</option>
+            <option value="6">6 Azul</option>
+            <option value="7">7 Violeta</option>
+            <option value="8">8 Gris</option>
+            <option value="9">9 Blanco</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 6px;">MULTIPLICADOR</label>
+          <select id="sel-band-3" class="select-styled" onchange="updateColorCodeCalc()">
+            <option value="0">x1 (Negro)</option>
+            <option value="1">x10 (Marrón)</option>
+            <option value="2">x100 (Rojo)</option>
+            <option value="3" selected>x1 k (Naranja)</option>
+            <option value="4">x10 k (Amarillo)</option>
+            <option value="5">x100 k (Verde)</option>
+            <option value="6">x1 M (Azul)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 11px; font-weight: 700; color: #94a3b8; display: block; margin-bottom: 6px;">TOLERANCIA</label>
+          <select id="sel-band-4" class="select-styled" onchange="updateColorCodeCalc()">
+            <option value="0.05" selected>±5% (Oro)</option>
+            <option value="0.10">±10% (Plata)</option>
+            <option value="0.01">±1% (Marrón)</option>
+            <option value="0.02">±2% (Rojo)</option>
+            <option value="0.005">±0.5% (Verde)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-report">
   <div class="modal-box">
     <div class="modal-header">
@@ -1769,11 +1865,17 @@ const MODULE_DATA = [
     ],
     presets: [
       { name: "Divisor 5V -> 3.3V ADC (ESP32 / MCU)", topo: 0, r1: 10000, r2: 20000, c1: 100, l1: 1000, vin: 5.0 },
+      { name: "Divisor LiPo 4.2V -> 1.0V (Low-Power)", topo: 0, r1: 1000000, r2: 312500, c1: 100, l1: 1000, vin: 4.2 },
+      { name: "Resistencias Serie 10k + 20k (Req = 30k)", topo: 1, r1: 10000, r2: 20000, c1: 100, l1: 1000, vin: 5.0 },
+      { name: "Resistencias Paralelo 10k || 10k (Req = 5k)", topo: 1, r1: 10000, r2: 10000, c1: 100, l1: 1000, vin: 5.0 },
       { name: "Desacoplo Digital 100nF + 10µF (3.3V Rail)", topo: 2, r1: 10, r2: 100, c1: 100, l1: 100, vin: 3.3 },
-      { name: "Temporizador 555 a 1.0 kHz (Duty ~60%)", topo: 4, r1: 4700, r2: 4700, c1: 100, l1: 1000, vin: 5.0 },
       { name: "Filtro RC Anti-Aliasing (fc = 1.59 kHz)", topo: 3, r1: 1000, r2: 1000, c1: 100, l1: 1000, vin: 3.3 },
+      { name: "Filtro RC Pasa-Altos (fc = 159 Hz)", topo: 3, r1: 10000, r2: 1000, c1: 100, l1: 1000, vin: 5.0 },
+      { name: "Temporizador 555 a 1.0 kHz (Duty ~60%)", topo: 4, r1: 4700, r2: 4700, c1: 100, l1: 1000, vin: 5.0 },
+      { name: "Temporizador 555 Monoestable 10 ms", topo: 4, r1: 91000, r2: 1000, c1: 100, l1: 1000, vin: 5.0 },
       { name: "Driver Relé 12V con 2N2222 + 1N4007", topo: 5, r1: 1000, r2: 120, c1: 100, l1: 10000, vin: 12.0 },
       { name: "LED Azul 3.2V / 20mA desde 5V", topo: 6, r1: 91, r2: 1000, c1: 100, l1: 1000, vin: 5.0 },
+      { name: "LED Rojo 2.0V / 15mA desde 5V", topo: 6, r1: 200, r2: 1000, c1: 100, l1: 1000, vin: 5.0 },
       { name: "Resonador LC 455 kHz (IF Radio)", topo: 7, r1: 100, r2: 100, c1: 10, l1: 12000, vin: 5.0 }
     ],
     calc: (p) => {
@@ -2331,6 +2433,66 @@ function renderCircuitSchematic() {
   ctx.fillText((res.formula || '').replace(new RegExp(String.fromCharCode(10), 'g'), '  |  '), 45, h - 30);
 
   ctx.restore();
+}
+
+
+// ======================================================================
+// COLOR CODE MODAL & DECODER ENGINE
+// ======================================================================
+const CC_COLORS = [
+  '#000000', '#78350f', '#dc2626', '#ea580c', '#eab308',
+  '#16a34a', '#2563eb', '#9333ea', '#64748b', '#ffffff'
+];
+const CC_TOL_MAP = {
+  '0.05': '#d97706', '0.10': '#94a3b8', '0.01': '#78350f', '0.02': '#dc2626', '0.005': '#16a34a'
+};
+
+function openColorCodeModal() {
+  document.getElementById('modal-color-code').style.display = 'flex';
+  updateColorCodeCalc();
+}
+function closeColorCodeModal() {
+  document.getElementById('modal-color-code').style.display = 'none';
+}
+let currentDecodedResistance = 10000;
+
+function updateColorCodeCalc() {
+  const d1 = parseInt(document.getElementById('sel-band-1').value);
+  const d2 = parseInt(document.getElementById('sel-band-2').value);
+  const m = parseInt(document.getElementById('sel-band-3').value);
+  const tol = parseFloat(document.getElementById('sel-band-4').value);
+
+  const rawVal = (d1 * 10 + d2) * Math.pow(10, m);
+  currentDecodedResistance = rawVal;
+  const tolPercent = (tol * 100).toFixed(0);
+  const minVal = rawVal * (1 - tol);
+  const maxVal = rawVal * (1 + tol);
+
+  let nomStr = rawVal + " Ω";
+  if (rawVal >= 1000000) nomStr = (rawVal / 1000000).toFixed(2) + " MΩ";
+  else if (rawVal >= 1000) nomStr = (rawVal / 1000).toFixed(2) + " kΩ";
+
+  const minStr = (minVal < 1000 ? minVal.toFixed(1) + " Ω" : (minVal/1000).toFixed(2) + " kΩ");
+  const maxStr = (maxVal < 1000 ? maxVal.toFixed(1) + " Ω" : (maxVal/1000).toFixed(2) + " kΩ");
+
+  document.getElementById('cc-nominal-display').innerText = `${nomStr} ±${tolPercent}%`;
+  document.getElementById('cc-range-display').innerText = `Rango admisible: ${minStr} - ${maxStr}`;
+
+  // Update SVG band fills
+  document.getElementById('band-svg-1').setAttribute('fill', CC_COLORS[d1]);
+  document.getElementById('band-svg-2').setAttribute('fill', CC_COLORS[d2]);
+  document.getElementById('band-svg-3').setAttribute('fill', CC_COLORS[m]);
+  document.getElementById('band-svg-4').setAttribute('fill', CC_TOL_MAP[tol.toString()] || '#d97706');
+}
+
+function applyColorCodeToLab() {
+  switchModule(10);
+  const r1El = document.getElementById('param-r1');
+  if (r1El) {
+    r1El.value = currentDecodedResistance;
+    onParamChange();
+  }
+  closeColorCodeModal();
 }
 
 function toggleFullscreen() {

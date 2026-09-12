@@ -6613,11 +6613,14 @@ def run_gui():
 
         presets_list = [
             ("Divisor 5V->3.3V", "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)", 10000, 20000, 100, 1000, 5.0),
+            ("LiPo 4.2V->1.0V", "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)", 1000000, 312500, 100, 1000, 4.2),
+            ("R Serie 10k+20k", "Resistencias Serie / Paralelo & Normalización E12/E24", 10000, 20000, 100, 1000, 5.0),
+            ("R Paralelo 10k||10k", "Resistencias Serie / Paralelo & Normalización E12/E24", 10000, 10000, 100, 1000, 5.0),
             ("Desacoplo 100nF+10µF", "Condensadores Serie / Paralelo & Red Desacoplo Digital", 10, 100, 100, 100, 3.3),
             ("555 a 1 kHz", "Temporizador 555 Astable (Oscilador Reloj / PWM)", 4700, 4700, 100, 1000, 5.0),
-            ("Filtro RC 1.59kHz", "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)", 1000, 1000, 100, 1000, 3.3),
             ("Driver Relé 12V", "Driver NPN (2N2222) + Diodo Flyback (1N4007) para Relé", 1000, 120, 100, 10000, 12.0),
             ("LED Azul 20mA", "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)", 91, 1000, 100, 1000, 5.0),
+            ("LED Rojo 15mA", "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)", 200, 1000, 100, 1000, 5.0),
             ("LC 455 kHz", "Inductores Serie / Paralelo & Resonancia LC", 100, 100, 10, 12000, 5.0)
         ]
 
