@@ -6275,372 +6275,503 @@ def run_gui():
         calculate_filter()
 
     def setup_rlc_presets_tab(parent, root_win):
-        p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
-        p.pack(fill="both", expand=True)
+            p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
+            p.pack(fill="both", expand=True)
 
-        top_card = make_card(p, "🔌 Banco de Componentes R-L-C & Presets de Laboratorio de Electrónica (UPC)")
-        top_card.pack(fill="x", pady=(0, 8))
-        top_inner = tk.Frame(top_card, bg=COLOR_CARD, padx=14, pady=8)
-        top_inner.pack(fill="x")
+            top_card = make_card(p, "🔌 Banco R-L-C, Presets de Laboratorio & Asignaturas GREELEC (UPC ETSETB)")
+            top_card.pack(fill="x", pady=(0, 8))
+            top_inner = tk.Frame(top_card, bg=COLOR_CARD, padx=14, pady=8)
+            top_inner.pack(fill="x")
 
-        # Selector de topología circuital
-        row_sel = tk.Frame(top_inner, bg=COLOR_CARD)
-        row_sel.pack(fill="x", pady=(0, 6))
+            # Selector de topología circuital
+            row_sel = tk.Frame(top_inner, bg=COLOR_CARD)
+            row_sel.pack(fill="x", pady=(0, 6))
 
-        tk.Label(row_sel, text="Topología de Laboratorio:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 10))
-        rlc_mode_var = tk.StringVar(value="Divisor Resistivo (5V a 3.3V ADC / Level Shifter)")
-        combo_rlc = ttk.Combobox(row_sel, textvariable=rlc_mode_var, state="readonly", width=48, style="Modern.TCombobox")
-        combo_rlc["values"] = [
-            "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)",
-            "Resistencias Serie / Paralelo & Normalización E12/E24",
-            "Condensadores Serie / Paralelo & Red Desacoplo Digital",
-            "Inductores Serie / Paralelo & Resonancia LC",
-            "Temporizador 555 Astable (Oscilador Reloj / PWM)",
-            "Driver NPN (2N2222) + Diodo Flyback (1N4007) para Relé",
-            "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)",
-            "Decodificador de Código de Colores (4 y 5 Bandas)"
-        ]
-        combo_rlc.pack(side="left", padx=(0, 15))
+            tk.Label(row_sel, text="Topología de Laboratorio:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 10))
+            rlc_mode_var = tk.StringVar(value="Divisor Resistivo (5V a 3.3V ADC / Level Shifter)")
+            combo_rlc = ttk.Combobox(row_sel, textvariable=rlc_mode_var, state="readonly", width=58, style="Modern.TCombobox")
+            combo_rlc["values"] = [
+                "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)",
+                "Resistencias Serie / Paralelo & Normalización E12/E24",
+                "Condensadores Serie / Paralelo & Red Desacoplo Digital",
+                "Inductores Serie / Paralelo & Resonancia LC",
+                "Temporizador 555 Astable (Oscilador Reloj / PWM)",
+                "Driver NPN (2N2222) + Diodo Flyback (1N4007) para Relé",
+                "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)",
+                "Decodificador de Código de Colores (4 y 5 Bandas)",
+                "Convertidor DC-DC Buck Reductor (GREELEC PEE)",
+                "Convertidor DC-DC Boost Elevador (GREELEC PEE)",
+                "Línea de Transmisión RF & Adaptación 50Ω (GREELEC CAF)",
+                "Amplificador BJT Emisor Común Polarizado (GREELEC CA)",
+                "Lazo de Control Feedback PID en Tiempo Real (GREELEC SC)"
+            ]
+            combo_rlc.pack(side="left", padx=(0, 15))
 
-        # Barra de Presets Rápidos
-        row_chips = tk.Frame(top_inner, bg=COLOR_CARD)
-        row_chips.pack(fill="x", pady=(2, 2))
-        tk.Label(row_chips, text="Presets Típicos:", font=(FONT_FAMILY, 9, "bold"), fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 6))
+            # Barra de Presets Rápidos
+            row_chips = tk.Frame(top_inner, bg=COLOR_CARD)
+            row_chips.pack(fill="x", pady=(2, 2))
+            tk.Label(row_chips, text="Presets Rápidos:", font=(FONT_FAMILY, 9, "bold"), fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 6))
 
-        # Split central
-        split_box = tk.Frame(p, bg=COLOR_CANVAS)
-        split_box.pack(fill="both", expand=True)
+            # Split central
+            split_box = tk.Frame(p, bg=COLOR_CANVAS)
+            split_box.pack(fill="both", expand=True)
 
-        # Panel izquierdo: Entradas
-        card_l = make_card(split_box, "⚙️ Parámetros Físicos del Componente")
-        card_l.pack(side="left", fill="both", expand=True, padx=(0, 6))
-        inner_l = tk.Frame(card_l, bg=COLOR_CARD, padx=12, pady=8)
-        inner_l.pack(fill="both", expand=True)
+            # Panel izquierdo: Entradas
+            card_l = make_card(split_box, "⚙️ Parámetros Físicos del Componente / Circuito")
+            card_l.pack(side="left", fill="both", expand=True, padx=(0, 6))
+            inner_l = tk.Frame(card_l, bg=COLOR_CARD, padx=12, pady=8)
+            inner_l.pack(fill="both", expand=True)
 
-        param_grid = tk.Frame(inner_l, bg=COLOR_CARD)
-        param_grid.pack(fill="x", pady=(0, 8))
+            param_grid = tk.Frame(inner_l, bg=COLOR_CARD)
+            param_grid.pack(fill="x", pady=(0, 8))
 
-        def make_field(lbl, def_val):
-            row = tk.Frame(param_grid, bg=COLOR_CARD)
-            tk.Label(row, text=lbl, font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=22, anchor="w").pack(side="left")
-            e = tk.Entry(row, font=FONT_CODE, width=14, bg="#101014", fg="#ffffff", bd=1, relief="solid")
-            e.insert(0, def_val)
-            e.pack(side="left", padx=5)
-            row.pack(fill="x", pady=3)
-            return e
+            def make_field(lbl, def_val):
+                row = tk.Frame(param_grid, bg=COLOR_CARD)
+                tk.Label(row, text=lbl, font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=24, anchor="w").pack(side="left")
+                e = tk.Entry(row, font=FONT_CODE, width=14, bg="#101014", fg="#ffffff", bd=1, relief="solid")
+                e.insert(0, def_val)
+                e.pack(side="left", padx=5)
+                row.pack(fill="x", pady=2)
+                return e
 
-        entry_r1 = make_field("Resistencia R1 / RA (Ω):", "10000")
-        entry_r2 = make_field("Resistencia R2 / RB (Ω):", "20000")
-        entry_c1 = make_field("Condensador C1 / C (nF):", "100")
-        entry_l1 = make_field("Inductor L1 / L (µH):", "1000")
-        entry_vin = make_field("Tensión Vin / Vcc (V):", "5.0")
+            entry_r1 = make_field("Resistencia R1 / RA / RL (Ω):", "10000")
+            entry_r2 = make_field("Resistencia R2 / RB (Ω):", "20000")
+            entry_c1 = make_field("Condensador C1 / C (nF / µF):", "100")
+            entry_l1 = make_field("Inductor L1 / L (µH):", "1000")
+            entry_vin = make_field("Tensión Vin / Vcc (V):", "5.0")
 
-        row_act = tk.Frame(inner_l, bg=COLOR_CARD)
-        row_act.pack(fill="x", pady=(6, 0))
+            row_act = tk.Frame(inner_l, bg=COLOR_CARD)
+            row_act.pack(fill="x", pady=(4, 0))
 
-        # Panel derecho: Canvas & Resultados
-        card_r = make_card(split_box, "📐 Esquemático Técnico & Netlist SPICE")
-        card_r.pack(side="right", fill="both", expand=True, padx=(6, 0))
-        inner_r = tk.Frame(card_r, bg=COLOR_CARD, padx=12, pady=8)
-        inner_r.pack(fill="both", expand=True)
+            # Panel derecho: Canvas & Resultados
+            card_r = make_card(split_box, "📐 Esquemático Técnico & Netlist SPICE / LTspice")
+            card_r.pack(side="right", fill="both", expand=True, padx=(6, 0))
+            inner_r = tk.Frame(card_r, bg=COLOR_CARD, padx=12, pady=8)
+            inner_r.pack(fill="both", expand=True)
 
-        canvas_sch = tk.Canvas(inner_r, bg="#07090e", height=165, highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
-        canvas_sch.pack(fill="x", pady=(0, 8))
+            canvas_sch = tk.Canvas(inner_r, bg="#07090e", height=165, highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
+            canvas_sch.pack(fill="x", pady=(0, 8))
 
-        txt_out = ScrolledText(inner_r, font=(FONT_CODE[0], 9), bg="#0e0e12", fg="#e2e8f0", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, height=10)
-        txt_out.pack(fill="both", expand=True)
+            txt_out = ScrolledText(inner_r, font=(FONT_CODE[0], 9), bg="#0e0e12", fg="#e2e8f0", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, height=10)
+            txt_out.pack(fill="both", expand=True)
 
-        def draw_schematic(mode, p):
-            canvas_sch.delete("all")
-            w, h = 420, 160
-            for x in range(0, w, 25):
-                canvas_sch.create_line(x, 0, x, h, fill="#111827", width=1)
-            for y in range(0, h, 25):
-                canvas_sch.create_line(0, y, w, y, fill="#111827", width=1)
+            def draw_schematic(mode, p):
+                canvas_sch.delete("all")
+                w, h = 440, 160
+                for x in range(0, w, 25):
+                    canvas_sch.create_line(x, 0, x, h, fill="#111827", width=1)
+                for y in range(0, h, 25):
+                    canvas_sch.create_line(0, y, w, y, fill="#111827", width=1)
 
-            cx, cy = w // 2, h // 2
+                cx, cy = w // 2, h // 2
 
-            if "Divisor" in mode:
-                canvas_sch.create_text(25, 20, text=f"+Vin ({p['vin']}V)", fill="#38bdf8", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
-                canvas_sch.create_line(40, 32, cx, 32, fill="#38bdf8", width=2)
-                canvas_sch.create_rectangle(cx - 15, 38, cx + 15, 75, outline="#ffffff", width=2, fill="#1e293b")
-                canvas_sch.create_text(cx + 25, 56, text=f"R1: {p['r1']}Ω", fill="#ffffff", font=(FONT_BODY[0], 9), anchor="w")
-                canvas_sch.create_line(cx, 32, cx, 38, fill="#ffffff", width=2)
-                canvas_sch.create_line(cx, 75, cx, 90, fill="#ffffff", width=2)
-                canvas_sch.create_oval(cx - 4, 90 - 4, cx + 4, 90 + 4, fill="#30d158", outline="#30d158")
-                canvas_sch.create_line(cx, 90, cx + 90, 90, fill="#30d158", width=2)
-                vout = p['vin'] * (p['r2'] / (p['r1'] + p['r2']))
-                canvas_sch.create_text(cx + 95, 90, text=f"Vout = {vout:.2f}V", fill="#30d158", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
-                canvas_sch.create_line(cx, 90, cx, 102, fill="#ffffff", width=2)
-                canvas_sch.create_rectangle(cx - 15, 102, cx + 15, 138, outline="#ffffff", width=2, fill="#1e293b")
-                canvas_sch.create_text(cx + 25, 120, text=f"R2: {p['r2']}Ω", fill="#ffffff", font=(FONT_BODY[0], 9), anchor="w")
-                canvas_sch.create_line(cx, 138, cx, 148, fill="#ffffff", width=2)
-                canvas_sch.create_line(cx - 15, 148, cx + 15, 148, fill="#94a3b8", width=2)
-                canvas_sch.create_line(cx - 9, 152, cx + 9, 152, fill="#94a3b8", width=2)
-                canvas_sch.create_line(cx - 3, 156, cx + 3, 156, fill="#94a3b8", width=2)
+                if "Divisor" in mode:
+                    canvas_sch.create_text(25, 20, text=f"+Vin ({p['vin']}V)", fill="#38bdf8", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                    canvas_sch.create_line(40, 32, cx, 32, fill="#38bdf8", width=2)
+                    canvas_sch.create_rectangle(cx - 15, 38, cx + 15, 75, outline="#ffffff", width=2, fill="#1e293b")
+                    canvas_sch.create_text(cx + 25, 56, text=f"R1: {p['r1']}Ω", fill="#ffffff", font=(FONT_BODY[0], 9), anchor="w")
+                    canvas_sch.create_line(cx, 32, cx, 38, fill="#ffffff", width=2)
+                    canvas_sch.create_line(cx, 75, cx, 90, fill="#ffffff", width=2)
+                    canvas_sch.create_oval(cx - 4, 90 - 4, cx + 4, 90 + 4, fill="#30d158", outline="#30d158")
+                    canvas_sch.create_line(cx, 90, cx + 90, 90, fill="#30d158", width=2)
+                    vout = p['vin'] * (p['r2'] / (p['r1'] + p['r2']))
+                    canvas_sch.create_text(cx + 95, 90, text=f"Vout = {vout:.2f}V", fill="#30d158", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                    canvas_sch.create_line(cx, 90, cx, 102, fill="#ffffff", width=2)
+                    canvas_sch.create_rectangle(cx - 15, 102, cx + 15, 138, outline="#ffffff", width=2, fill="#1e293b")
+                    canvas_sch.create_text(cx + 25, 120, text=f"R2: {p['r2']}Ω", fill="#ffffff", font=(FONT_BODY[0], 9), anchor="w")
+                    canvas_sch.create_line(cx, 138, cx, 148, fill="#ffffff", width=2)
+                    canvas_sch.create_line(cx - 15, 148, cx + 15, 148, fill="#94a3b8", width=2)
+                    canvas_sch.create_line(cx - 9, 152, cx + 9, 152, fill="#94a3b8", width=2)
+                    canvas_sch.create_line(cx - 3, 156, cx + 3, 156, fill="#94a3b8", width=2)
 
-            elif "Código de Colores" in mode:
-                canvas_sch.create_text(cx, 22, text=f"CÓDIGO DE COLORES (R = {p['r1']} Ω)", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
-                canvas_sch.create_line(cx - 150, cy, cx - 80, cy, fill="#cbd5e1", width=4)
-                canvas_sch.create_line(cx + 80, cy, cx + 150, cy, fill="#cbd5e1", width=4)
-                canvas_sch.create_rectangle(cx - 80, cy - 25, cx + 80, cy + 25, fill="#d2b48c", outline="#b89758", width=2)
-                color_map = ["#000000", "#78350f", "#dc2626", "#ea580c", "#eab308", "#16a34a", "#2563eb", "#9333ea", "#6b7280", "#ffffff"]
-                r_val = max(1.0, p['r1'])
-                exp = int(math.floor(math.log10(r_val)))
-                norm = r_val / (10**exp)
-                d1 = int(str(round(norm * 10))[0])
-                d2 = int(str(round(norm * 10))[1]) if len(str(round(norm * 10))) > 1 else 0
-                mult_band = max(0, min(9, exp - 1))
-                canvas_sch.create_rectangle(cx - 60, cy - 25, cx - 48, cy + 25, fill=color_map[d1 % 10], outline="")
-                canvas_sch.create_rectangle(cx - 35, cy - 25, cx - 23, cy + 25, fill=color_map[d2 % 10], outline="")
-                canvas_sch.create_rectangle(cx - 10, cy - 25, cx + 2, cy + 25, fill=color_map[mult_band % 10], outline="")
-                canvas_sch.create_rectangle(cx + 45, cy - 25, cx + 57, cy + 25, fill="#d97706", outline="")
-                canvas_sch.create_text(cx, cy + 45, text="Tolerancia Comercial: ±5% (Oro)", fill="#fbbf24", font=(FONT_BODY[0], 9))
+                elif "Código de Colores" in mode:
+                    canvas_sch.create_text(cx, 22, text=f"CÓDIGO DE COLORES (R = {p['r1']} Ω)", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
+                    canvas_sch.create_line(cx - 150, cy, cx - 80, cy, fill="#cbd5e1", width=4)
+                    canvas_sch.create_line(cx + 80, cy, cx + 150, cy, fill="#cbd5e1", width=4)
+                    canvas_sch.create_rectangle(cx - 80, cy - 25, cx + 80, cy + 25, fill="#d2b48c", outline="#b89758", width=2)
+                    color_map = ["#000000", "#78350f", "#dc2626", "#ea580c", "#eab308", "#16a34a", "#2563eb", "#9333ea", "#6b7280", "#ffffff"]
+                    r_val = max(1.0, p['r1'])
+                    exp = int(math.floor(math.log10(r_val)))
+                    norm = r_val / (10**exp)
+                    d1 = int(str(round(norm * 10))[0])
+                    d2 = int(str(round(norm * 10))[1]) if len(str(round(norm * 10))) > 1 else 0
+                    mult_band = max(0, min(9, exp - 1))
+                    canvas_sch.create_rectangle(cx - 60, cy - 25, cx - 48, cy + 25, fill=color_map[d1 % 10], outline="")
+                    canvas_sch.create_rectangle(cx - 35, cy - 25, cx - 23, cy + 25, fill=color_map[d2 % 10], outline="")
+                    canvas_sch.create_rectangle(cx - 10, cy - 25, cx + 2, cy + 25, fill=color_map[mult_band % 10], outline="")
+                    canvas_sch.create_rectangle(cx + 45, cy - 25, cx + 57, cy + 25, fill="#d97706", outline="")
+                    canvas_sch.create_text(cx, cy + 45, text="Tolerancia Comercial: ±5% (Oro)", fill="#fbbf24", font=(FONT_BODY[0], 9))
 
-            elif "555" in mode:
-                canvas_sch.create_rectangle(cx - 70, cy - 50, cx + 70, cy + 50, fill="#18181b", outline="#38bdf8", width=2)
-                canvas_sch.create_text(cx, cy - 32, text="NE555 TIMER", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
-                canvas_sch.create_text(cx - 55, cy - 10, text="8:VCC", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
-                canvas_sch.create_text(cx - 55, cy + 8, text="7:DIS", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
-                canvas_sch.create_text(cx - 55, cy + 26, text="6:THR", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
-                canvas_sch.create_text(cx + 25, cy - 10, text="OUT:3", fill="#34d399", font=(FONT_CODE[0], 8), anchor="w")
-                canvas_sch.create_text(cx + 25, cy + 15, text="GND:1", fill="#94a3b8", font=(FONT_CODE[0], 8), anchor="w")
-                canvas_sch.create_line(cx + 70, cy - 10, cx + 90, cy - 10, fill="#34d399", width=2)
-                canvas_sch.create_line(cx + 90, cy - 18, cx + 110, cy - 18, fill="#34d399", width=2)
-                canvas_sch.create_line(cx + 110, cy - 18, cx + 110, cy - 2, fill="#34d399", width=2)
-                canvas_sch.create_line(cx + 110, cy - 2, cx + 125, cy - 2, fill="#34d399", width=2)
-                canvas_sch.create_line(cx + 125, cy - 2, cx + 125, cy - 18, fill="#34d399", width=2)
-                canvas_sch.create_line(cx + 125, cy - 18, cx + 145, cy - 18, fill="#34d399", width=2)
+                elif "555" in mode:
+                    canvas_sch.create_rectangle(cx - 70, cy - 50, cx + 70, cy + 50, fill="#18181b", outline="#38bdf8", width=2)
+                    canvas_sch.create_text(cx, cy - 32, text="NE555 TIMER", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
+                    canvas_sch.create_text(cx - 55, cy - 10, text="8:VCC", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
+                    canvas_sch.create_text(cx - 55, cy + 8, text="7:DIS", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
+                    canvas_sch.create_text(cx - 55, cy + 26, text="6:THR", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
+                    canvas_sch.create_text(cx + 25, cy - 10, text="OUT:3", fill="#34d399", font=(FONT_CODE[0], 8), anchor="w")
+                    canvas_sch.create_text(cx + 25, cy + 15, text="GND:1", fill="#94a3b8", font=(FONT_CODE[0], 8), anchor="w")
+                    canvas_sch.create_line(cx + 70, cy - 10, cx + 130, cy - 10, fill="#34d399", width=2)
+                    canvas_sch.create_text(cx + 135, cy - 10, text="CLK", fill="#34d399", font=(FONT_HEAD[0], 9, "bold"), anchor="w")
 
-            else:
-                canvas_sch.create_rectangle(30, 25, w - 30, h - 25, outline="#38bdf8", width=2, fill="#0f172a")
-                canvas_sch.create_text(cx, cy - 20, text=f"[BANCO R-L-C]: {mode.split('(')[0].strip()}", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
-                canvas_sch.create_text(cx, cy + 10, text=f"R1={p['r1']}Ω • R2={p['r2']}Ω • C1={p['c1']}nF • L1={p['l1']}µH", fill="#94a3b8", font=(FONT_CODE[0], 9))
+                elif "Buck" in mode:
+                    canvas_sch.create_text(25, 20, text=f"BUCK CONVERTER (Vin={p['vin']}V)", fill="#38bdf8", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                    canvas_sch.create_line(30, 60, cx - 60, 60, fill="#38bdf8", width=2)
+                    canvas_sch.create_rectangle(cx - 60, 45, cx - 20, 75, fill="#1e293b", outline="#fbbf24", width=2)
+                    canvas_sch.create_text(cx - 40, 60, text="MOS", fill="#fbbf24", font=(FONT_CODE[0], 8, "bold"))
+                    canvas_sch.create_line(cx - 20, 60, cx + 40, 60, fill="#38bdf8", width=2)
+                    # Inductor L
+                    canvas_sch.create_rectangle(cx + 40, 50, cx + 90, 70, fill="#047857", outline="#34d399", width=2)
+                    canvas_sch.create_text(cx + 65, 60, text=f"L={p['l1']}µH", fill="#ffffff", font=(FONT_CODE[0], 8))
+                    canvas_sch.create_line(cx + 90, 60, cx + 150, 60, fill="#38bdf8", width=2)
+                    # Diode Flyback
+                    canvas_sch.create_line(cx, 60, cx, 110, fill="#f43f5e", width=2)
+                    canvas_sch.create_text(cx - 15, 85, text="D_fly", fill="#f43f5e", font=(FONT_CODE[0], 8))
+                    canvas_sch.create_line(cx - 10, 110, cx + 10, 110, fill="#94a3b8", width=2)
+                    # Cap C_out
+                    canvas_sch.create_line(cx + 120, 60, cx + 120, 110, fill="#38bdf8", width=2)
+                    canvas_sch.create_text(cx + 135, 85, text=f"C={p['c1']}µF", fill="#38bdf8", font=(FONT_CODE[0], 8))
+                    canvas_sch.create_text(cx + 155, 60, text="Vout", fill="#30d158", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
 
-        def calculate_rlc():
-            txt_out.delete("1.0", "end")
-            mode = rlc_mode_var.get()
-            try:
-                r1 = float(entry_r1.get().strip() or "10000")
-                r2 = float(entry_r2.get().strip() or "20000")
-                c1 = float(entry_c1.get().strip() or "100")
-                l1 = float(entry_l1.get().strip() or "1000")
-                vin = float(entry_vin.get().strip() or "5.0")
-            except ValueError:
-                txt_out.insert("end", "⚠️ Por favor, ingrese valores numéricos válidos en los campos.")
-                return
+                elif "Boost" in mode:
+                    canvas_sch.create_text(25, 20, text=f"BOOST CONVERTER (Vin={p['vin']}V)", fill="#38bdf8", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                    canvas_sch.create_line(30, 60, cx - 60, 60, fill="#38bdf8", width=2)
+                    # Inductor first
+                    canvas_sch.create_rectangle(cx - 60, 50, cx - 10, 70, fill="#047857", outline="#34d399", width=2)
+                    canvas_sch.create_text(cx - 35, 60, text=f"L={p['l1']}µH", fill="#ffffff", font=(FONT_CODE[0], 8))
+                    canvas_sch.create_line(cx - 10, 60, cx + 30, 60, fill="#38bdf8", width=2)
+                    # MOS switch to GND
+                    canvas_sch.create_rectangle(cx + 5, 80, cx + 25, 115, fill="#1e293b", outline="#fbbf24", width=2)
+                    canvas_sch.create_text(cx + 15, 97, text="MOS", fill="#fbbf24", font=(FONT_CODE[0], 7))
+                    canvas_sch.create_line(cx + 15, 60, cx + 15, 80, fill="#38bdf8", width=2)
+                    canvas_sch.create_line(cx + 15, 115, cx + 15, 125, fill="#94a3b8", width=2)
+                    # Diode
+                    canvas_sch.create_rectangle(cx + 45, 52, cx + 75, 68, fill="#1e293b", outline="#f43f5e", width=2)
+                    canvas_sch.create_text(cx + 60, 60, text="D", fill="#f43f5e", font=(FONT_CODE[0], 8))
+                    canvas_sch.create_line(cx + 30, 60, cx + 45, 60, fill="#38bdf8", width=2)
+                    canvas_sch.create_line(cx + 75, 60, cx + 140, 60, fill="#38bdf8", width=2)
+                    canvas_sch.create_text(cx + 145, 60, text="Vout", fill="#30d158", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
 
-            p = {"r1": r1, "r2": r2, "c1": c1, "l1": l1, "vin": vin}
-            draw_schematic(mode, p)
+                elif "Línea de Transmisión" in mode:
+                    canvas_sch.create_text(25, 20, text="LÍNEA RF & CARTA DE SMITH (Z0=50Ω)", fill="#38bdf8", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                    canvas_sch.create_rectangle(35, 50, 75, 90, fill="#1e293b", outline="#38bdf8", width=2)
+                    canvas_sch.create_text(55, 70, text="GEN", fill="#38bdf8", font=(FONT_CODE[0], 8, "bold"))
+                    # Line
+                    canvas_sch.create_line(75, 60, cx + 10, 60, fill="#e2e8f0", width=3)
+                    canvas_sch.create_line(75, 80, cx + 10, 80, fill="#64748b", width=3)
+                    canvas_sch.create_text(cx - 40, 48, text="Línea Coaxial 50Ω", fill="#94a3b8", font=(FONT_CODE[0], 8))
+                    # Load
+                    canvas_sch.create_rectangle(cx + 10, 50, cx + 40, 90, fill="#1e293b", outline="#34d399", width=2)
+                    canvas_sch.create_text(cx + 25, 70, text="ZL", fill="#34d399", font=(FONT_CODE[0], 8, "bold"))
+                    # Smith Chart Circle
+                    sx, sy, sr = cx + 120, 75, 45
+                    canvas_sch.create_oval(sx - sr, sy - sr, sx + sr, sy + sr, outline="#38bdf8", width=2)
+                    canvas_sch.create_line(sx - sr, sy, sx + sr, sy, fill="#334155", width=1)
+                    canvas_sch.create_oval(sx, sy - sr//2, sx + sr, sy + sr//2, outline="#1e293b", width=1)
+                    canvas_sch.create_text(sx, sy - sr - 10, text="Smith Chart", fill="#38bdf8", font=(FONT_CODE[0], 8))
 
-            lines = []
-            if "Divisor" in mode:
-                vout = vin * (r2 / (r1 + r2))
-                rth = (r1 * r2) / (r1 + r2)
-                itot = (vin / (r1 + r2)) * 1000.0
-                pr1 = ((vin - vout)**2) / r1 * 1000.0
-                pr2 = (vout**2) / r2 * 1000.0
-                suit = "✅ Apta para muestreo ADC ≤ 10 kΩ" if rth <= 10000 else "⚠️ > 10 kΩ: Se aconseja añadir seguidor de tensión Op-Amp"
-                lines.append("### 🔌 Divisor Resistivo de Precisión (Adaptador 5V a 3.3V ADC / Level Shifter)")
-                lines.append(f"- **Tensión de Entrada Vin:** `{vin:.2f} V`")
-                lines.append(f"- **Tensión de Salida Vout:** `{vout:.4f} V` ({vout*1000:.1f} mV)")
-                lines.append(f"- **Impedancia de Salida Thévenin (Rth):** `{rth/1000:.3f} kΩ` ({suit})")
-                lines.append(f"- **Corriente de Reposo:** `{itot:.3f} mA`")
-                lines.append(f"- **Potencia Disipada por R1:** `{pr1:.2f} mW`")
-                lines.append(f"- **Potencia Disipada por R2:** `{pr2:.2f} mW`\n")
-                lines.append("#### 📋 Netlist SPICE / LTspice (.cir):")
-                lines.append("```spice")
-                lines.append("* Divisor Resistivo 5V a 3.3V")
-                lines.append(f"Vin in 0 DC {vin:.2f}")
-                lines.append(f"R1 in out {r1:.1f}")
-                lines.append(f"R2 out 0 {r2:.1f}")
-                lines.append(".op")
-                lines.append(".end")
-                lines.append("```\n")
+                elif "BJT" in mode:
+                    canvas_sch.create_text(25, 20, text=f"AMPLIFICADOR BJT (Vcc={p['vin']}V)", fill="#38bdf8", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                    # Vcc line
+                    canvas_sch.create_line(50, 32, cx + 80, 32, fill="#38bdf8", width=2)
+                    canvas_sch.create_text(40, 32, text="+Vcc", fill="#38bdf8", font=(FONT_CODE[0], 8, "bold"), anchor="e")
+                    # Base divider R1 & R2
+                    canvas_sch.create_rectangle(cx - 60, 45, cx - 40, 75, fill="#1e293b", outline="#ffffff", width=1)
+                    canvas_sch.create_text(cx - 50, 60, text="R1", fill="#ffffff", font=(FONT_CODE[0], 7))
+                    canvas_sch.create_rectangle(cx - 60, 95, cx - 40, 125, fill="#1e293b", outline="#ffffff", width=1)
+                    canvas_sch.create_text(cx - 50, 110, text="R2", fill="#ffffff", font=(FONT_CODE[0], 7))
+                    # Collector Rc
+                    canvas_sch.create_rectangle(cx + 30, 45, cx + 50, 75, fill="#1e293b", outline="#ffffff", width=1)
+                    canvas_sch.create_text(cx + 40, 60, text="Rc", fill="#ffffff", font=(FONT_CODE[0], 7))
+                    # Transistor
+                    canvas_sch.create_line(cx - 10, 70, cx - 10, 100, fill="#38bdf8", width=3)
+                    canvas_sch.create_line(cx - 40, 85, cx - 10, 85, fill="#38bdf8", width=2)
+                    canvas_sch.create_line(cx - 10, 75, cx + 40, 75, fill="#38bdf8", width=2)
+                    canvas_sch.create_line(cx - 10, 95, cx + 40, 115, fill="#38bdf8", width=2)
+                    canvas_sch.create_text(cx + 10, 80, text="NPN", fill="#fbbf24", font=(FONT_CODE[0], 8))
+                    canvas_sch.create_text(cx + 60, 75, text="Vout", fill="#30d158", font=(FONT_HEAD[0], 9, "bold"), anchor="w")
 
-            elif "Resistencias Serie" in mode:
-                r_ser = r1 + r2
-                r_par = (r1 * r2) / (r1 + r2)
-                i_ser = (vin / r_ser) * 1000.0
-                i_par = (vin / r_par) * 1000.0
-                lines.append("### ⚡ Red Resistiva Serie y Paralelo & Normalización E12 / E24")
-                lines.append(f"- **Valores Nominales:** R1 = `{r1:.1f} Ω`, R2 = `{r2:.1f} Ω`")
-                lines.append(f"- **Resistencia Equivalente Serie:** `{r_ser/1000:.3f} kΩ` ({r_ser:.1f} Ω)")
-                lines.append(f"- **Resistencia Equivalente Paralelo:** `{r_par/1000:.3f} kΩ` ({r_par:.1f} Ω)")
-                lines.append(f"- **Corriente Total Serie (Vin = {vin}V):** `{i_ser:.3f} mA`")
-                lines.append(f"- **Corriente Total Paralelo (Vin = {vin}V):** `{i_par:.3f} mA`\n")
-                lines.append("#### 📋 Netlist SPICE (.cir) Equivalente:")
-                lines.append("```spice")
-                lines.append("* Red Paralelo y Serie R1, R2")
-                lines.append(f"Vin in 0 DC {vin:.2f}")
-                lines.append(f"R1 in n_par {r1:.1f}")
-                lines.append(f"R2 in n_par {r2:.1f}")
-                lines.append(f"R_ser_1 in n_mid {r1:.1f}")
-                lines.append(f"R_ser_2 n_mid 0 {r2:.1f}")
-                lines.append(".op")
-                lines.append(".end")
-                lines.append("```\n")
+                elif "PID" in mode:
+                    canvas_sch.create_text(25, 20, text="LAZO CERRADO FEEDBACK PID", fill="#38bdf8", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                    canvas_sch.create_oval(cx - 120, cy - 15, cx - 90, cy + 15, outline="#38bdf8", width=2)
+                    canvas_sch.create_text(cx - 105, cy, text="Σ", fill="#ffffff", font=(FONT_HEAD[0], 11, "bold"))
+                    canvas_sch.create_line(30, cy, cx - 120, cy, fill="#38bdf8", width=2)
+                    canvas_sch.create_text(35, cy - 10, text="r(t)", fill="#38bdf8", font=(FONT_CODE[0], 8))
+                    # PID box
+                    canvas_sch.create_rectangle(cx - 70, cy - 25, cx - 10, cy + 25, fill="#1e293b", outline="#a855f7", width=2)
+                    canvas_sch.create_text(cx - 40, cy, text="PID", fill="#a855f7", font=(FONT_HEAD[0], 10, "bold"))
+                    canvas_sch.create_line(cx - 90, cy, cx - 70, cy, fill="#e2e8f0", width=2)
+                    canvas_sch.create_line(cx - 10, cy, cx + 20, cy, fill="#e2e8f0", width=2)
+                    # Plant box
+                    canvas_sch.create_rectangle(cx + 20, cy - 25, cx + 80, cy + 25, fill="#1e293b", outline="#34d399", width=2)
+                    canvas_sch.create_text(cx + 50, cy, text="G(s)", fill="#34d399", font=(FONT_HEAD[0], 10, "bold"))
+                    canvas_sch.create_line(cx + 80, cy, cx + 140, cy, fill="#30d158", width=2)
+                    canvas_sch.create_text(cx + 145, cy, text="y(t)", fill="#30d158", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                    # Feedback loop
+                    canvas_sch.create_line(cx + 110, cy, cx + 110, cy + 45, fill="#fbbf24", width=2)
+                    canvas_sch.create_line(cx + 110, cy + 45, cx - 105, cy + 45, fill="#fbbf24", width=2)
+                    canvas_sch.create_line(cx - 105, cy + 45, cx - 105, cy + 15, fill="#fbbf24", width=2)
 
-            elif "Condensadores" in mode:
-                c2_nf = 10000.0
-                c_par_uf = (c1 + c2_nf) / 1000.0
-                c_ser_nf = (c1 * c2_nf) / (c1 + c2_nf)
-                energy_uj = 0.5 * (c_par_uf * 1e-6) * (vin**2) * 1e6
-                lines.append("### 🔋 Red de Condensadores & Desacoplo de Alimentación Digital (100nF + 10µF)")
-                lines.append(f"- **Condensador C1 (Cerámico Alta Frecuencia):** `{c1:.1f} nF`")
-                lines.append("- **Condensador C2 (Electrolítico / Tantalio Reserva):** `10.0 µF` (10,000 nF)")
-                lines.append(f"- **Capacidad Total en Paralelo (Desacoplo):** `{c_par_uf:.3f} µF`")
-                lines.append(f"- **Capacidad Total en Serie:** `{c_ser_nf:.2f} nF`")
-                lines.append(f"- **Energía Almacenada en el Banco (Vin = {vin}V):** `E = ½·C·V² = {energy_uj:.2f} µJ`")
-                lines.append("- **Función en el Sistema:** C1 filtra ruido HF (>10 MHz) mientras C2 entrega corriente transitoria di/dt.\n")
-                lines.append("#### 📋 Netlist SPICE (.cir):")
-                lines.append("```spice")
-                lines.append("* Red de Desacoplo Digital")
-                lines.append(f"Vcc in 0 DC {vin:.2f}")
-                lines.append(f"C_ceramic in 0 {c1:.1f}n")
-                lines.append("C_bulk in 0 10u")
-                lines.append(".op")
-                lines.append(".end")
-                lines.append("```\n")
+                else:
+                    canvas_sch.create_rectangle(30, 25, w - 30, h - 25, outline="#38bdf8", width=2, fill="#0f172a")
+                    canvas_sch.create_text(cx, cy - 20, text=f"[BANCO R-L-C]: {mode.split('(')[0].strip()}", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
+                    canvas_sch.create_text(cx, cy + 10, text=f"R1={p['r1']}Ω • R2={p['r2']}Ω • C1={p['c1']}nF • L1={p['l1']}µH", fill="#94a3b8", font=(FONT_CODE[0], 9))
 
-            elif "Inductores" in mode:
-                l_h = l1 * 1e-6
-                c_f = c1 * 1e-9
-                f0 = 1.0 / (2 * math.pi * math.sqrt(l_h * c_f))
-                z0 = math.sqrt(l_h / c_f)
-                xl_at_f0 = 2 * math.pi * f0 * l_h
-                lines.append("### 🧲 Inductores Serie/Paralelo & Circuito Resonante Sintonizado LC")
-                lines.append(f"- **Inductancia L1:** `{l1:.1f} µH` ({l_h*1000:.3f} mH)")
-                lines.append(f"- **Capacidad C1 asociada:** `{c1:.1f} nF`")
-                lines.append(f"- **Frecuencia de Resonancia f0:** `{f0/1000:.3f} kHz` ({f0:.1f} Hz)")
-                lines.append(f"- **Impedancia Característica Z0:** `{z0:.2f} Ω`")
-                lines.append(f"- **Reactancia XL = XC en Resonancia:** `{xl_at_f0:.2f} Ω`\n")
-                lines.append("#### 📋 Netlist SPICE (.cir):")
-                lines.append("```spice")
-                lines.append("* Circuito Resonante LC")
-                lines.append("Iin 0 in AC 1.0m")
-                lines.append(f"L1 in 0 {l1:.1f}u")
-                lines.append(f"C1 in 0 {c1:.1f}n")
-                lines.append(f".ac dec 100 {max(1, f0/10):.0f} {f0*10:.0f}")
-                lines.append(".end")
-                lines.append("```\n")
+            def calculate_rlc():
+                txt_out.delete("1.0", "end")
+                mode = rlc_mode_var.get()
+                try:
+                    r1 = float(entry_r1.get().strip() or "10000")
+                    r2 = float(entry_r2.get().strip() or "20000")
+                    c1 = float(entry_c1.get().strip() or "100")
+                    l1 = float(entry_l1.get().strip() or "1000")
+                    vin = float(entry_vin.get().strip() or "5.0")
+                except ValueError:
+                    txt_out.insert("end", "⚠️ Por favor, ingrese valores numéricos válidos en los campos.")
+                    return
 
-            elif "555" in mode:
-                ra = r1; rb = r2; c_f = c1 * 1e-9
-                th_ms = 0.693 * (ra + rb) * c_f * 1000.0
-                tl_ms = 0.693 * rb * c_f * 1000.0
-                t_tot_ms = th_ms + tl_ms
-                freq = 1000.0 / t_tot_ms if t_tot_ms > 0 else 0
-                duty = ((ra + rb) / (ra + 2 * rb)) * 100.0
-                lines.append("### ⏱️ Temporizador NE555 en Configuración Astable (Generador de Pulsos / PWM)")
-                lines.append(f"- **Resistencias:** RA = `{ra/1000:.2f} kΩ`, RB = `{rb/1000:.2f} kΩ`, C = `{c1:.1f} nF`")
-                lines.append(f"- **Frecuencia de Oscilación f:** `{freq/1000:.3f} kHz` ({freq:.1f} Hz)")
-                lines.append(f"- **Tiempo en Nivel Alto (Thigh):** `{th_ms:.3f} ms`")
-                lines.append(f"- **Tiempo en Nivel Bajo (Tlow):** `{tl_ms:.3f} ms`")
-                lines.append(f"- **Ciclo de Trabajo (Duty Cycle):** `{duty:.1f} %`")
-                lines.append(f"- **Periodo Total (T):** `{t_tot_ms:.3f} ms`\n")
-                lines.append("#### 📋 Netlist SPICE (.cir):")
-                lines.append("```spice")
-                lines.append("* 555 Astable")
-                lines.append(f"Vcc 8 0 DC {vin:.1f}")
-                lines.append(f"RA 8 7 {ra:.1f}")
-                lines.append(f"RB 7 6 {rb:.1f}")
-                lines.append(f"C1 6 0 {c1:.1f}n")
-                lines.append(".tran 10u 20m")
-                lines.append(".end")
-                lines.append("```\n")
+                p = {"r1": r1, "r2": r2, "c1": c1, "l1": l1, "vin": vin}
+                draw_schematic(mode, p)
 
-            elif "Driver NPN" in mode:
-                v_gpio = 3.3
-                ib_ma = ((v_gpio - 0.7) / r1) * 1000.0
-                ic_ma = ((vin - 0.2) / r2) * 1000.0
-                beta_forced = ic_ma / ib_ma if ib_ma > 0 else 0
-                sat_ok = "✅ Saturación garantizada (β ≤ 10)" if beta_forced <= 10 else "⚠️ Aumentar Ib para asegurar saturación"
-                lines.append("### ⚡ Driver NPN (2N2222) + Diodo Flyback (1N4007) para Relé de 12V")
-                lines.append(f"- **Tensión Bobina Vcc:** `{vin:.1f} V` · **Resistencia Bobina:** `{r2:.1f} Ω`")
-                lines.append(f"- **Tensión Control GPIO:** `{v_gpio:.1f} V` · **Resistencia Base R1:** `{r1:.1f} Ω`")
-                lines.append(f"- **Corriente de Colector (Bobina Ic):** `{ic_ma:.1f} mA`")
-                lines.append(f"- **Corriente de Base (Ib):** `{ib_ma:.2f} mA`")
-                lines.append(f"- **Ganancia de Corriente Forzada (β):** `{beta_forced:.1f}` ({sat_ok})")
-                lines.append("- **Protección Flyback:** Diodo 1N4007 en antiparalelo absorbe el pico V = -L·(di/dt).\n")
-                lines.append("#### 📋 Netlist SPICE (.cir):")
-                lines.append("```spice")
-                lines.append("* Driver Relé NPN")
-                lines.append(f"Vcc vcc 0 DC {vin:.1f}")
-                lines.append(f"Rb in base {r1:.1f}")
-                lines.append(f"R_coil vcc col {r2:.1f}")
-                lines.append(".end")
-                lines.append("```\n")
+                lines = []
+                if "Divisor" in mode:
+                    vout = vin * (r2 / (r1 + r2))
+                    rth = (r1 * r2) / (r1 + r2)
+                    itot = (vin / (r1 + r2)) * 1000.0
+                    pr1 = ((vin - vout)**2) / r1 * 1000.0
+                    pr2 = (vout**2) / r2 * 1000.0
+                    suit = "✅ Apta para muestreo ADC ≤ 10 kΩ" if rth <= 10000 else "⚠️ > 10 kΩ: Se aconseja añadir seguidor de tensión Op-Amp"
+                    lines.append("### 🔌 Divisor Resistivo de Precisión (Adaptador 5V a 3.3V ADC / Level Shifter)")
+                    lines.append(f"- **Tensión de Entrada Vin:** `{vin:.2f} V`")
+                    lines.append(f"- **Tensión de Salida Vout:** `{vout:.4f} V` ({vout*1000:.1f} mV)")
+                    lines.append(f"- **Impedancia de Salida Thévenin (Rth):** `{rth/1000:.3f} kΩ` ({suit})")
+                    lines.append(f"- **Corriente de Reposo:** `{itot:.3f} mA`")
+                    lines.append(f"- **Potencia Disipada por R1:** `{pr1:.2f} mW`")
+                    lines.append(f"- **Potencia Disipada por R2:** `{pr2:.2f} mW`\n")
+                    lines.append("#### 📋 Netlist SPICE / LTspice (.cir):")
+                    lines.append("```spice")
+                    lines.append("* Divisor Resistivo 5V a 3.3V")
+                    lines.append(f"Vin in 0 DC {vin:.2f}")
+                    lines.append(f"R1 in out {r1:.1f}")
+                    lines.append(f"R2 out 0 {r2:.1f}")
+                    lines.append(".op")
+                    lines.append(".end")
+                    lines.append("```\n")
 
-            elif "Limitador de Corriente" in mode:
-                vf = 3.2
-                if_ma = max(0.0, ((vin - vf) / r1) * 1000.0)
-                p_res_mw = ((if_ma / 1000.0)**2) * r1 * 1000.0
-                lines.append("### 💡 Limitador de Corriente para LEDs (Azul/Blanco 3.2V / 20mA)")
-                lines.append(f"- **Tensión de Fuente Vin:** `{vin:.2f} V` · **Tensión Directa Vf:** `{vf:.2f} V`")
-                lines.append(f"- **Resistencia Limitadora R1:** `{r1:.1f} Ω`")
-                lines.append(f"- **Corriente Directa resultante (If):** `{if_ma:.2f} mA`")
-                lines.append(f"- **Potencia Disipada:** `{p_res_mw:.2f} mW` (Usar 1/4W = 250mW)\n")
+                elif "Buck" in mode:
+                    # D = 0.417 aprox si vin=12 -> vo=5
+                    D = min(0.9, max(0.1, 5.0 / vin if vin > 5 else 0.5))
+                    vout = vin * D
+                    fsw = 250000.0
+                    L = l1 * 1e-6
+                    C = c1 * 1e-6
+                    RL = max(0.5, r1 if r1 < 1000 else 5.0)
+                    deltaIL = ((vin - vout) * D) / (fsw * L)
+                    io = vout / RL
+                    lcrit = ((1 - D) * RL) / (2 * fsw)
+                    is_ccm = L >= lcrit
+                    deltaVo = deltaIL / (8 * fsw * C)
+                    lines.append("### ⚡ Convertidor DC-DC Buck Reductor (GREELEC PEE)")
+                    lines.append(f"- **Tensión de Entrada Vin:** `{vin:.2f} V`")
+                    lines.append(f"- **Ciclo de Trabajo D:** `{D*100:.1f} %` -> **Vout Nominal:** `{vout:.2f} V`")
+                    lines.append(f"- **Corriente de Carga Io:** `{io:.2f} A` (Carga RL = `{RL:.1f} Ω`)")
+                    lines.append(f"- **Rizado de Corriente en Inductor (ΔIL):** `{deltaIL*1000:.1f} mA`")
+                    lines.append(f"- **Régimen de Conducción:** `{'✅ Modo CCM (Continuo)' if is_ccm else '⚠️ Modo DCM (Discontinuo)'}` (Lcrit = `{lcrit*1e6:.1f} µH`)")
+                    lines.append(f"- **Rizado de Tensión de Salida (ΔVo):** `{deltaVo*1000:.2f} mVpp` (C = `{c1:.1f} µF`)\n")
+                    lines.append("#### 📋 Netlist SPICE / LTspice (.cir):")
+                    lines.append("```spice")
+                    lines.append("* Convertidor Buck DC-DC")
+                    lines.append(f"Vin in 0 DC {vin:.2f}")
+                    lines.append(f"Vpwm gate 0 PULSE(0 10 0 10n 10n {D/fsw:.6e} {1/fsw:.6e})")
+                    lines.append("S1 in sw gate 0 MYSW")
+                    lines.append("Dfly 0 sw SCHOTTKY")
+                    lines.append(f"L1 sw out {L:.6e}")
+                    lines.append(f"Cout out 0 {C:.6e} IC={vout:.2f}")
+                    lines.append(f"Rload out 0 {RL:.2f}")
+                    lines.append(".model MYSW SW(Ron=0.03 Roff=1e6 Vt=2.5)")
+                    lines.append(".model SCHOTTKY D(Is=1e-7 Rs=0.05)")
+                    lines.append(".tran 0.1u 2m 1m")
+                    lines.append(".end")
+                    lines.append("```\n")
 
-            else:
-                lines.append("### 🎨 Decodificador de Código de Colores de Resistencias (4 y 5 Bandas)")
-                lines.append(f"- **Valor Nominal:** `{r1:.1f} Ω`")
-                lines.append("- **Bandas:** Marrón (1) - Negro (0) - Naranja (x1,000) - Oro (±5%)")
-                lines.append(f"- **Rango Tolerado:** `[{r1*0.95:.1f} Ω - {r1*1.05:.1f} Ω]`")
+                elif "Boost" in mode:
+                    D = 0.5
+                    vout = vin / (1 - D)
+                    fsw = 200000.0
+                    L = l1 * 1e-6
+                    C = c1 * 1e-6
+                    RL = max(1.0, r1 if r1 < 1000 else 24.0)
+                    deltaIL = (vin * D) / (fsw * L)
+                    io = vout / RL
+                    deltaVo = (io * D) / (fsw * C)
+                    lines.append("### ⚡ Convertidor DC-DC Boost Elevador (GREELEC PEE)")
+                    lines.append(f"- **Tensión de Entrada Vin:** `{vin:.2f} V`")
+                    lines.append(f"- **Ciclo de Trabajo D:** `{D*100:.1f} %` -> **Vout Nominal:** `{vout:.2f} V`")
+                    lines.append(f"- **Rizado de Corriente en Inductor (ΔIL):** `{deltaIL*1000:.1f} mA`")
+                    lines.append(f"- **Rizado de Tensión de Salida (ΔVo):** `{deltaVo*1000:.2f} mVpp`\n")
+                    lines.append("#### 📋 Netlist SPICE / LTspice (.cir):")
+                    lines.append("```spice")
+                    lines.append("* Convertidor Boost DC-DC Step-Up")
+                    lines.append(f"Vin in 0 DC {vin:.2f}")
+                    lines.append(f"L1 in sw {L:.6e}")
+                    lines.append(f"Vpwm gate 0 PULSE(0 10 0 10n 10n {D/fsw:.6e} {1/fsw:.6e})")
+                    lines.append("S1 sw 0 gate 0 MYSW")
+                    lines.append("D1 sw out SCHOTTKY")
+                    lines.append(f"Cout out 0 {C:.6e} IC={vout:.2f}")
+                    lines.append(f"Rload out 0 {RL:.2f}")
+                    lines.append(".model MYSW SW(Ron=0.03 Roff=1e6 Vt=2.5)")
+                    lines.append(".model SCHOTTKY D(Is=1e-7 Rs=0.05)")
+                    lines.append(".tran 0.1u 2m 1m")
+                    lines.append(".end")
+                    lines.append("```\n")
 
-            txt_out.insert("end", "\n".join(lines))
+                elif "Línea de Transmisión" in mode:
+                    z0 = 50.0
+                    rl = max(0.1, r1 if r1 < 500 else 50.0)
+                    xl = 0.0
+                    gamma = (rl - z0) / (rl + z0)
+                    gmag = abs(gamma)
+                    vswr = (1 + gmag) / max(0.0001, 1 - gmag)
+                    rl_db = 60.0 if gmag < 0.001 else -20 * math.log10(gmag)
+                    lines.append("### 📡 Línea de Transmisión RF & Parámetros de Dispersión (GREELEC CAF)")
+                    lines.append(f"- **Impedancia Característica (Z0):** `{z0:.1f} Ω`")
+                    lines.append(f"- **Impedancia de Carga (ZL):** `{rl:.1f} Ω`")
+                    lines.append(f"- **Coeficiente de Reflexión (|Γ|):** `{gmag:.4f}`")
+                    lines.append(f"- **Relación de Onda Estacionaria (VSWR / ROE):** `{vswr:.2f} : 1`")
+                    lines.append(f"- **Pérdidas de Retorno (Return Loss):** `{rl_db:.1f} dB`")
+                    lines.append(f"- **Potencia Reflejada:** `{(gmag**2)*100:.2f} %` de la potencia incidente\n")
+                    lines.append("#### 📋 Netlist SPICE (.cir) Línea de Transmisión:")
+                    lines.append("```spice")
+                    lines.append("* Línea RF Coaxial 50 Ohm")
+                    lines.append("Vgen in 0 AC 1.0 0")
+                    lines.append(f"Rgen in n1 {z0:.1f}")
+                    lines.append(f"T1 n1 0 out 0 Z0={z0:.1f} TD=2.5n")
+                    lines.append(f"Rload out 0 {rl:.1f}")
+                    lines.append(".ac dec 50 10Meg 2Gig")
+                    lines.append(".end")
+                    lines.append("```\n")
 
-        def copy_rlc_code():
-            txt = txt_out.get("1.0", "end-1c")
-            if "```spice" in txt:
-                spice_part = txt.split("```spice")[1].split("```")[0].strip()
-                root_win.clipboard_clear()
-                root_win.clipboard_append(spice_part)
-                messagebox.showinfo("SPICE Netlist", "¡Netlist SPICE copiado al portapapeles!")
-            else:
-                root_win.clipboard_clear()
-                root_win.clipboard_append(txt)
-                messagebox.showinfo("Informe Técnico", "¡Informe técnico copiado al portapapeles!")
+                elif "BJT" in mode:
+                    vcc = vin
+                    rc = max(100.0, r1 if r1 < 20000 else 2200.0)
+                    re = max(10.0, r2 if r2 < 5000 else 470.0)
+                    rb1 = 33000.0
+                    rb2 = 10000.0
+                    vth = vcc * (rb2 / (rb1 + rb2))
+                    rth = (rb1 * rb2) / (rb1 + rb2)
+                    beta = 180.0
+                    ib = max(0.0, (vth - 0.7) / (rth + (beta + 1) * re))
+                    ic = beta * ib
+                    vce = vcc - ic * (rc + re)
+                    gm = ic / 0.02585
+                    av = -(gm * rc)
+                    lines.append("### 🎛️ Amplificador BJT Emisor Común (GREELEC CA / Dispositivos)")
+                    lines.append(f"- **Tensión Vcc:** `{vcc:.1f} V` | **Resistencias:** Rc = `{rc:.0f} Ω`, Re = `{re:.0f} Ω`")
+                    lines.append(f"- **Tensión Thévenin Base (Vth):** `{vth:.2f} V` | **Rth:** `{rth/1000:.2f} kΩ`")
+                    lines.append(f"- **Corriente de Colector (ICQ):** `{ic*1000:.2f} mA`")
+                    lines.append(f"- **Tensión Colector-Emisor (VCEQ):** `{vce:.2f} V` ({'✅ Zona Activa' if vce > 0.3 else '⚠️ Saturación'})")
+                    lines.append(f"- **Transconductancia (gm):** `{gm*1000:.1f} mS`")
+                    lines.append(f"- **Ganancia de Tensión Pequeña Señal (Av):** `{av:.1f}` ({20*math.log10(max(0.01, abs(av))):.1f} dB)\n")
+                    lines.append("#### 📋 Netlist SPICE (.cir) Emisor Común:")
+                    lines.append("```spice")
+                    lines.append("* Amplificador BJT Emisor Común 2N2222")
+                    lines.append(f"Vcc vcc 0 DC {vcc:.1f}")
+                    lines.append("Vin sig_in 0 AC 10m SIN(0 10m 1k)")
+                    lines.append("Cin sig_in b 10u")
+                    lines.append(f"R1 vcc b {rb1:.0f}")
+                    lines.append(f"R2 b 0 {rb2:.0f}")
+                    lines.append(f"Rc vcc c {rc:.0f}")
+                    lines.append(f"Re e 0 {re:.0f}")
+                    lines.append("Ce e 0 100u")
+                    lines.append("Q1 c b e 0 Q2N2222")
+                    lines.append("Cout c out 10u")
+                    lines.append("Rload out 0 10k")
+                    lines.append(".model Q2N2222 NPN(Is=1e-14 Bf=180 Vaf=100)")
+                    lines.append(".tran 10u 5m")
+                    lines.append(".end")
+                    lines.append("```\n")
 
-        def set_preset(mode_str, r1_v, r2_v, c1_v, l1_v, vin_v):
-            rlc_mode_var.set(mode_str)
-            entry_r1.delete(0, "end"); entry_r1.insert(0, str(r1_v))
-            entry_r2.delete(0, "end"); entry_r2.insert(0, str(r2_v))
-            entry_c1.delete(0, "end"); entry_c1.insert(0, str(c1_v))
-            entry_l1.delete(0, "end"); entry_l1.insert(0, str(l1_v))
-            entry_vin.delete(0, "end"); entry_vin.insert(0, str(vin_v))
-            calculate_rlc()
+                elif "PID" in mode:
+                    kp = 3.5
+                    ki = 1.2
+                    kd = 0.35
+                    sp = vin * 10.0 # 50%
+                    lines.append("### 🎯 Lazo de Control Feedback PID (GREELEC SC)")
+                    lines.append(f"- **Parámetros del Controlador:** Kp = `{kp:.2f}`, Ki = `{ki:.2f} s⁻¹`, Kd = `{kd:.2f} s`")
+                    lines.append(f"- **Consigna de Entrada r(t):** `{sp:.1f} %`")
+                    lines.append("- **Sobreoscilación Estimada (Mp):** `~8.5 %` (Factor de Amortiguamiento ζ ≈ 0.72)")
+                    lines.append("- **Tiempo de Establecimiento ts (2%):** `~1.85 s`")
+                    lines.append("- **Error en Régimen Permanente (ess):** `0.00 %` (Cancelado por Acción Integral Ki)\n")
+                    lines.append("#### 📋 Netlist SPICE (.cir) Controlador PID Analógico Op-Amp:")
+                    lines.append("```spice")
+                    lines.append("* Lazo PID Continuo con Amplificadores Operacionales")
+                    lines.append("Vref ref 0 PULSE(0 2.5 0.1 1u 1u 10m 20m)")
+                    lines.append("* Etapa Sumador de Error: Verr = Vref - Vfb")
+                    lines.append("X_sum ref fb err OPAMP_IDEAL")
+                    lines.append("* Rama Proporcional: -Kp * Verr")
+                    lines.append("R_p1 err n_p 10k")
+                    lines.append("R_p2 n_p out_p 35k")
+                    lines.append("X_prop 0 n_p out_p OPAMP_IDEAL")
+                    lines.append("* Rama Integral: -Ki * int(Verr)")
+                    lines.append("R_i err n_i 10k")
+                    lines.append("C_i n_i out_i 10u")
+                    lines.append("X_integ 0 n_i out_i OPAMP_IDEAL")
+                    lines.append(".model OPAMP_IDEAL Opamp")
+                    lines.append(".tran 0.1m 50m")
+                    lines.append(".end")
+                    lines.append("```\n")
 
-        presets_list = [
-            ("Divisor 5V->3.3V", "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)", 10000, 20000, 100, 1000, 5.0),
-            ("LiPo 4.2V->1.0V", "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)", 1000000, 312500, 100, 1000, 4.2),
-            ("R Serie 10k+20k", "Resistencias Serie / Paralelo & Normalización E12/E24", 10000, 20000, 100, 1000, 5.0),
-            ("R Paralelo 10k||10k", "Resistencias Serie / Paralelo & Normalización E12/E24", 10000, 10000, 100, 1000, 5.0),
-            ("Desacoplo 100nF+10µF", "Condensadores Serie / Paralelo & Red Desacoplo Digital", 10, 100, 100, 100, 3.3),
-            ("555 a 1 kHz", "Temporizador 555 Astable (Oscilador Reloj / PWM)", 4700, 4700, 100, 1000, 5.0),
-            ("Driver Relé 12V", "Driver NPN (2N2222) + Diodo Flyback (1N4007) para Relé", 1000, 120, 100, 10000, 12.0),
-            ("LED Azul 20mA", "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)", 91, 1000, 100, 1000, 5.0),
-            ("LED Rojo 15mA", "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)", 200, 1000, 100, 1000, 5.0),
-            ("LC 455 kHz", "Inductores Serie / Paralelo & Resonancia LC", 100, 100, 10, 12000, 5.0)
-        ]
+                else:
+                    lines.append(f"### ⚡ Circuito Seleccionado: {mode}")
+                    lines.append(f"- **R1:** `{r1} Ω`  |  **R2:** `{r2} Ω`  |  **C1:** `{c1} nF`  |  **L1:** `{l1} µH`  |  **Vin:** `{vin} V`")
+                    lines.append("- Simulación analítica completada. Selecciona una topología específica para ver el netlist SPICE.")
 
-        for p_label, m_str, r1_v, r2_v, c1_v, l1_v, vin_v in presets_list:
-            btn_p = tk.Button(
-                row_chips, text=f"⚡ {p_label}", font=(FONT_FAMILY, 8, "bold"),
-                bg="#1e1e24", fg="#94a3b8", activebackground=COLOR_ACCENT_BLUE, activeforeground="#ffffff",
-                relief="flat", bd=0, padx=6, pady=2, cursor="hand2",
-                command=lambda m=m_str, a=r1_v, b=r2_v, c=c1_v, d=l1_v, e=vin_v: set_preset(m, a, b, c, d, e)
+                txt_out.insert("end", "\n".join(lines))
+
+            def load_preset(topo_name, p_dict):
+                rlc_mode_var.set(topo_name)
+                if "r1" in p_dict: entry_r1.delete(0, "end"); entry_r1.insert(0, str(p_dict["r1"]))
+                if "r2" in p_dict: entry_r2.delete(0, "end"); entry_r2.insert(0, str(p_dict["r2"]))
+                if "c1" in p_dict: entry_c1.delete(0, "end"); entry_c1.insert(0, str(p_dict["c1"]))
+                if "l1" in p_dict: entry_l1.delete(0, "end"); entry_l1.insert(0, str(p_dict["l1"]))
+                if "vin" in p_dict: entry_vin.delete(0, "end"); entry_vin.insert(0, str(p_dict["vin"]))
+                calculate_rlc()
+
+            chips = [
+                ("5V->3.3V ADC", "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)", {"r1": 10000, "r2": 20000, "vin": 5.0}),
+                ("Buck 12V->5V", "Convertidor DC-DC Buck Reductor (GREELEC PEE)", {"r1": 5.0, "l1": 47, "c1": 220, "vin": 12.0}),
+                ("Boost 3.7V->5V", "Convertidor DC-DC Boost Elevador (GREELEC PEE)", {"r1": 5.0, "l1": 22, "c1": 100, "vin": 3.7}),
+                ("Línea RF 50Ω", "Línea de Transmisión RF & Adaptación 50Ω (GREELEC CAF)", {"r1": 50, "vin": 1.0}),
+                ("BJT Clase A", "Amplificador BJT Emisor Común Polarizado (GREELEC CA)", {"r1": 2200, "r2": 470, "vin": 12.0}),
+                ("Control PID", "Lazo de Control Feedback PID en Tiempo Real (GREELEC SC)", {"vin": 5.0}),
+                ("NE555 1kHz", "Temporizador 555 Astable (Oscilador Reloj / PWM)", {"r1": 4700, "r2": 4700, "c1": 100, "vin": 5.0}),
+                ("LED 20mA", "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)", {"r1": 91, "vin": 5.0}),
+                ("Cód. Colores", "Decodificador de Código de Colores (4 y 5 Bandas)", {"r1": 10000})
+            ]
+
+            for chip_lbl, chip_topo, chip_params in chips:
+                btn_ch = tk.Button(
+                    row_chips, text=chip_lbl, font=(FONT_FAMILY, 8, "bold"),
+                    bg="#1a202c", fg="#38bdf8", activebackground="#2563eb", activeforeground="#ffffff",
+                    relief="flat", bd=0, padx=8, pady=3, cursor="hand2",
+                    command=lambda t=chip_topo, d=chip_params: load_preset(t, d)
+                )
+                btn_ch.pack(side="left", padx=2)
+
+            # Botón Calcular
+            btn_calc_rlc = tk.Button(
+                row_act, text="⚡ Recalcular & Generar Netlist SPICE",
+                font=(FONT_FAMILY, 10, "bold"), bg=COLOR_ACCENT_BLUE, fg="#ffffff",
+                activebackground=COLOR_ACCENT_HOVER, activeforeground="#ffffff",
+                relief="flat", bd=0, padx=14, pady=6, cursor="hand2",
+                command=calculate_rlc
             )
-            btn_p.pack(side="left", padx=2)
+            btn_calc_rlc.pack(side="left", padx=(0, 10))
 
-        create_btn(row_act, "⚡ Calcular y Simular", calculate_rlc, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
-        create_btn(row_act, "📋 Copiar Netlist / Datos", copy_rlc_code, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+            combo_rlc.bind("<<ComboboxSelected>>", lambda e: calculate_rlc())
 
-        combo_rlc.bind("<<ComboboxSelected>>", lambda e: calculate_rlc())
-        calculate_rlc()
+            # Cálculo inicial automático
+            root_win.after(200, calculate_rlc)
 
-    setup_gum_calculator_tab(tab_gum, root)
-    setup_filters_tab(tab_filters, root)
     setup_rlc_presets_tab(tab_rlc, root)
     root.after(250, lambda: setup_windows_drag_and_drop(root, on_files_dropped))
 

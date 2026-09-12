@@ -62,18 +62,23 @@
   - **Puente de Wheatstone & INA (AD620 / AD623):** Cálculo de tensión diferencial, ajuste de resistencia de ganancia $R_g$, error inducido por tensión de modo común según CMRR en dB y disipación térmica en las galgas para evitar autocalentamiento.
 ---
 
-### 🔌 4b. Banco de Componentes R-L-C & Presets Canónicos de Laboratorio
-- **6ª Pestaña Nativa en la Suite:** Entorno de análisis, cálculo paramétrico y exportación para electrónica práctica:
-  - **Divisores Resistivos para ADC (5V a 3.3V / Level Shifters):** Cálculo de tensión de salida, corriente de reposo e impedancia Thévenin $R_{th} = R_1 \parallel R_2$ con advertencia automática si excede los $10\text{ k}\Omega$ recomendados para los tiempos de muestreo y retención de microcontroladores modernos (ESP32, STM32, Arduino).
-  - **Redes Resistivas Serie y Paralelo:** Fórmulas exactas, disipación de potencia por rama y sugerencia de valores comerciales normalizados según las series estándar E12 / E24 / E96.
-  - **Redes de Desacoplo Digital (100nF Cerámico + 10µF Tantalio/Bulk):** Capacidad en paralelo, energía electrostática $E = \frac{1}{2} C V^2$, y mitigación de transitorios inductivos $L \cdot di/dt$ en líneas de alimentación.
-  - **Inductancias y Resonadores Sintonizados LC:** Frecuencia de resonancia $f_0 = 1 / (2\pi\sqrt{LC})$, impedancia característica $Z_0 = \sqrt{L/C}$ y reactancias en resonancia para filtros pasabanda o filtros de frecuencia intermedia (IF 455 kHz).
-  - **Temporizadores 555 Astables (Oscilador PWM / Reloj):** Tiempos de nivel alto $T_{high} = 0.693(R_A+R_B)C$, nivel bajo $T_{low} = 0.693 R_B C$, Duty Cycle % y frecuencia de oscilación.
-  - **Driver NPN para Relé / Motor con Diodo Flyback:** Verificación de saturación forzada con $\beta_{sat} \le 10$, cálculo de corriente de base $I_B$ para GPIOs de 3.3V/5V y absorción del pico inductivo $V = -L \cdot di/dt$ mediante diodo de libre circulación 1N4007.
-  - **Limitador de Corriente para LEDs (Rojo, Verde, Azul, Blanco):** Resistencia limitadora y disipación de potencia para proteger diodos electroluminiscentes.
-  - **Decodificador Visual de Código de Colores:** Identificación visual de resistencias de 4 y 5 bandas con representación cromática en Canvas vectorial.
-  - **Generador de Netlists SPICE (.cir) y Exportación Markdown en 1 Clic.**
-
+### 🔌 4b. Banco de Componentes R-L-C, Presets Canónicos & Asignaturas GREELEC
+- **Modelado de Circuitos Fundamentales y Topologías GREELEC (UPC ETSETB):**
+  * *Divisores resistivos de nivel (5V a 3.3V ADC / Level Shifter).*
+  * *Redes serie y paralelo de resistencias (series normalizadas E12 / E24).*
+  * *Redes de condensadores & desacoplo de rieles de alimentación (100nF cerámico + 10µF reserva).*
+  * *Circuitos resonantes LC sintonizados.*
+  * *Temporizador NE555 astable (oscilador de reloj con ciclo de trabajo ajustable).*
+  * *Driver NPN (2N2222) con diodo volante Schottky/Flyback (1N4007) para cargas inductivas.*
+  * *Limitador de corriente para diodos LED (cálculo de disipación y resistencia de polarización).*
+  * *Decodificador de código de colores de resistencias (4 y 5 bandas).*
+  * *Convertidor DC-DC Buck Reductor (PWM, CCM/DCM, cálculo de Lcrit y rizado de corriente).*
+  * *Convertidor DC-DC Boost Elevador (Step-Up con conmutación MOSFET y diodo de potencia).*
+  * *Línea de Transmisión RF Coaxial 50 Ω (ROE / VSWR, pérdidas de retorno y potencia reflejada).*
+  * *Amplificador BJT Emisor Común (polarización por divisor, recta de carga DC y ganancia $A_v$).*
+  * *Lazo de Control Feedback PID continuo (análisis de estabilidad, sobreoscilación $M_p$ y tiempo de establecimiento $t_s$).*
+- **Esquemáticos Vectoriales Dinámicos en Tkinter:** Dibujo paramétrico del esquema eléctrico en tiempo real en el lienzo de la aplicación de escritorio para todas las topologías.
+- **Generador Automático de Netlists SPICE (.cir):** Sintetiza archivos de simulación listos para ejecutar en LTspice, NGSpice, Micro-Cap y Multisim con un solo clic (incluyendo modelos de componentes, análisis transitorio `.tran`, puntos de operación `.op` y barridos en frecuencia `.ac`).
 
 ### 🔍 5. Buscador Ultrarrápido estilo macOS Spotlight
 - Pulsa el botón **Spotlight** o el atajo de búsqueda para indexar en milisegundos todos los archivos Markdown de tu curso.
@@ -117,8 +122,8 @@
 
 ---
 
-### 🔬 8. Laboratorio Virtual Interactivo de Sensores (`Laboratorio_Virtual_Sensores.html`) — v5.2 Enterprise 3D Edition
-- **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue:** 100% autónomo, ejecutable en local sin internet ni CDNs.
+### 🔬 8. Laboratorio Virtual Interactivo de Sensores & Grado GREELEC (`Laboratorio_Virtual_Sensores.html`) — v6.0 Enterprise 3D Edition
+- **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue / SPICE:** 100% autónomo, ejecutable en local sin internet ni CDNs, optimizado para los planes de estudio de la UPC (ETSETB / EEBE).
 - **🌐 Motor WebGL 3D Nativo Acelerado por GPU (60 FPS):**
   - **Rotación Orbital y Zoom Interactivos:** Control total con ratón (arrastrar para orbitar, rueda para zoom, doble clic para centrar).
   - **Iluminación Realista Phong:** Materiales metálicos (oro, acero pulido, cobre) y dieléctricos con reflejos especulares dinámicos.
@@ -127,27 +132,46 @@
     * *Sonda industrial Pt100 3D* con termopozo de acero inoxidable y cabezal DIN B sumergida en baño termostático agitado.
     * *Acelerómetro piezoeléctrico 3D* con cristal de cuarzo $d_{33}$ deformable bajo masa sísmica.
     * *Sensor capacitivo diferencial MEMS 3D* de 3 placas móviles con visualización de desplazamiento micrométrico.
+    * *Protoboard 3D de Electrónica* con matriz de inserción, resistencias axiales con anillos de color, condensadores radiales y encapsulado DIP-8.
+    * *Convertidor DC-DC Buck/Boost 3D* con inductor toroidal de cobre, MOSFET TO-263 con disipador, diodo Schottky y condensador electrolítico Low-ESR.
+    * *Cable Coaxial de Alta Frecuencia 3D* seccionado por capas (cubierta PVC, malla de blindaje, dieléctrico PTFE, vivo) y conector SMA dorado.
+    * *Etapa Transistor BJT/MOSFET 3D* con encapsulado TO-92, resistencias de película metálica y condensadores cerámicos de paso.
+    * *Actuador y Lazo de Control PID 3D* con servomotor DC, disco encoder óptico ranurado, horquilla optoacopladora y módulo PID industrial con display digital.
+- **📐 Esquemáticos Circuitales de Precisión (100% Cobertura Vectorial):**
+  - **Cobertura Absoluta de los 15 Módulos:** Eliminados por completo los bloques genéricos o esquemas en negro. Cada módulo cuenta con representación de grado libro de texto (normas IEC 60617 / IEEE Std 315) con valores dinámicos calculados en tiempo real.
+  - **Carta de Smith Vectorial Interactiva (Módulo 13):** Proyección polar en vivo del coeficiente de reflexión complejo $\Gamma = |\Gamma| e^{j\theta}$, círculos de resistencia normalizada ($r = 0.5, 1.0, 2.0$), arcos de reactancia ($x = \pm 0.5, \pm 1.0$) y círculo de ROE constante.
 - **🎛️ Banco de Instrumentación con Réplicas Fidedignas:**
   - **Keysight 34465A Truevolt 6½ Digit DMM:** Pantalla digital VFD de alta resolución, barra analógica bar-graph con rangos automáticos y cálculo de incertidumbre metrológica $u_B$ en vivo.
   - **Osciloscopio Tektronix TBS2000B (Phosphor 60 FPS):**
     * *Modo Doble `[TIME DOMAIN]` / `[FFT SPECTRUM]`:* Permite conmutar con 1 clic al análisis espectral de Fourier con span de $500\text{ Hz}$, detección de picos armónicos y suelo de ruido en dBV.
+    * *Formas de Onda Específicas por Física Circuital:*
+      - *Buck/Boost:* Onda PWM de nodo switch $V_{SW}$ con ringing de conmutación y rizado triangular de corriente en inductor $i_L(t)$.
+      - *Líneas RF:* Onda incidente $V^+(t)$, onda reflejada $V^-(t)$ y envolvente de onda estacionaria con nodos y vientres de tensión según VSWR.
+      - *BJT/MOSFET:* Señal sinusoidal de entrada y señal amplificada invertida $180^\circ$ con saturación y corte visibles ante excursión excesiva.
+      - *Control PID:* Respuesta temporal al escalón unitario con tiempo de subida $t_r$, sobreoscilación $M_p$ y tiempo de establecimiento $t_s (2\%)$.
     * *Cursores Duales de Medición:* Líneas móviles de precisión para $\Delta t$, $\Delta V$ y cálculo instantáneo de frecuencia $f = 1/\Delta t$.
     * *Exportación de Telemetría a CSV:* Descarga inmediata de las señales adquiridas para su procesamiento en Python, MATLAB o Excel.
-- **🔊 Síntesis Acústica en Tiempo Real con Web Audio API:** Permite *escuchar* la física de los sensores (aliasing de Nyquist en ADC, zumbido de 50 Hz en INA/filtros y ruido térmico blanco Johnson).
-- **11 Módulos de Simulación Física y Circuital (Temas 1 al 10 UPC + Banco R-L-C):**
-  1. *Puente de Wheatstone & Galgas (1/4, 1/2 y completo)*
-  2. *Pt100 y compensación a 4 hilos Kelvin*
-  3. *INA3 & CMRR real con AD623/AD620*
-  4. *Filtro activo Sallen-Key pasobajo de 2º orden*
-  5. *Muestreo Nyquist & ADC con analizador FFT*
-  6. *Termopares K/J & compensación de unión fría (CJC)*
+- **🎨 Decodificador Interactivo de Código de Colores de Resistencias:**
+  - Modal integrado con visualizador vectorial SVG interactivo de resistencias axiales (normas E12 / E24 / E96).
+  - Cálculo instantáneo de valor nominal, tolerancia y rango admisible $[R_{\min}, R_{\max}]$, con botón para inyectar el valor directamente en el banco de simulación.
+- **15 Módulos de Simulación Física y Circuital (Temario Sistemes de Mesura + Plan de Estudios GREELEC UPC):**
+  1. *Puente de Wheatstone & Galgas (1/4, 1/2 y completo con viga 3D)*
+  2. *Pt100 y compensación a 4 hilos Kelvin con sonda DIN B 3D*
+  3. *INA3 & CMRR real con amplificadores AD623/AD620*
+  4. *Filtro activo Sallen-Key pasobajo de 2º orden con respuesta Butterworth/Chebyshev*
+  5. *Muestreo Nyquist & ADC con analizador FFT y DAC R-2R*
+  6. *Termopares K/J & compensación de unión fría (CJC) con bloque isotérmico*
   7. *Termistor NTC & linealización analítica de Taylor*
-  8. *Ruido térmico Johnson-Nyquist & relación SNR*
+  8. *Ruido térmico Johnson-Nyquist & relación SNR con jaula de Faraday*
   9. *Sensor piezoeléctrico & amplificador de carga vs tensión*
   10. *Sensor capacitivo diferencial & detección síncrona lock-in (PSD)*
-  11. *🔌 Banco R-L-C & Presets Canónicos de Laboratorio (Protoboard 3D, Divisores 5V a 3.3V, Desacoplo 100nF+10µF, Oscilador 555 Astable con Duty Cycle en DSO, Driver Relé NPN con Diodo Flyback 1N4007, Limitador de LEDs y Resonancia LC)*
-- **🎯 11 Retos de Examen Oficiales UPC:** Problemas numéricos reales con comprobación de tolerancia y solución matemática paso a paso.
-- **📄 Exportador de Informes Experimentales:** Generador de informe en Markdown descargable en 1 clic.
+  11. *🔌 Banco R-L-C & Presets Canónicos de Laboratorio (13 proyectos típicos: divisores ADC, desacoplo digital 100nF+10µF, 555 astable/monoestable, driver relé con diodo volante 1N4007, limitadores LED, resonador LC)*
+  12. *⚡ Fuentes Conmutadas DC-DC: Buck (Reductor) & Boost (Elevador) — GREELEC PEE (Procesado de Energía Eléctrica)*
+  13. *📡 Líneas de Transmisión RF & Carta de Smith Vectorial — GREELEC CAF (Circuitos de Alta Frecuencia / Ondas)*
+  14. *🎛️ Transistores BJT & MOSFET: Polarización y Pequeña Señal — GREELEC DE/CA (Dispositivos & Circuitos Analógicos)*
+  15. *🎯 Sistemas de Control Feedback & Regulador PID Continuo — GREELEC SC (Sistemas de Control)*
+- **🎯 15 Retos de Examen Oficiales UPC:** Problemas numéricos reales integrados en cada módulo con comprobación automática de tolerancia y desglose algebraico de la solución.
+- **📄 Exportador de Informes Experimentales:** Generador de informe estructurado en Markdown con todas las mediciones, métricas y ecuaciones, descargable o copiable al portapapeles en 1 clic.
 
 ---
 

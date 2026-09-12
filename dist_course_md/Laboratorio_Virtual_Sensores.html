@@ -314,6 +314,10 @@
   <button class="mod-tab" onclick="switchModule(8)">💎 9. Piezoeléctrico 3D</button>
   <button class="mod-tab" onclick="switchModule(9)">⚡ 10. Capacitivo Diferencial</button>
   <button class="mod-tab" onclick="switchModule(10)">🔌 11. Banco R-L-C & Presets</button>
+  <button class="mod-tab" onclick="switchModule(11)">⚡ 12. Fuentes Buck/Boost</button>
+  <button class="mod-tab" onclick="switchModule(12)">📡 13. Líneas RF & Carta Smith</button>
+  <button class="mod-tab" onclick="switchModule(13)">🎛️ 14. BJT & MOSFET Polarización</button>
+  <button class="mod-tab" onclick="switchModule(14)">🎯 15. Lazo Feedback & PID</button>
 </nav>
 
 <!-- Main Workspace -->
@@ -1087,6 +1091,64 @@ function build3DGeometry() {
     // Cables Jumpers flexibles
     addBox(-0.5, 0.15, 0.6, 1.2, 0.06, 0.06, 0.95, 0.15, 0.15);
     addBox(0.8, 0.18, -0.7, 0.9, 0.06, 0.06, 0.2, 0.85, 0.25);
+
+  } else if (m === 11) { // 12. Fuentes Conmutadas Buck / Boost 3D
+    // Placa PCB FR4 azul oscuro
+    addBox(0, -0.4, 0, 4.4, 0.15, 3.2, 0.05, 0.28, 0.18);
+    // Inductor Toroidal con bobinado de cobre esmaltado
+    addBox(-1.1, 0.3, 0, 1.2, 0.7, 1.2, 0.22, 0.22, 0.26);
+    addBox(-1.1, 0.3, 0, 1.35, 0.55, 0.4, 0.85, 0.45, 0.15);
+    // Transistor MOSFET de potencia con disipador de aluminio
+    addBox(0.4, 0.25, -0.7, 0.8, 0.6, 0.3, 0.12, 0.12, 0.14);
+    addBox(0.4, 0.58, -0.7, 0.9, 0.4, 0.12, 0.75, 0.78, 0.82);
+    // Diodo Schottky de potencia con banda catódica
+    addBox(0.4, 0.1, 0.5, 0.55, 0.3, 0.3, 0.18, 0.18, 0.20);
+    addBox(0.58, 0.1, 0.5, 0.12, 0.31, 0.31, 0.85, 0.85, 0.9);
+    // Condensador electrolítico Low-ESR cilíndrico
+    addBox(1.5, 0.5, 0, 0.75, 1.3, 0.75, 0.12, 0.38, 0.80);
+    addBox(1.5, 1.18, 0, 0.65, 0.06, 0.65, 0.75, 0.78, 0.82);
+    addBox(1.88, 0.5, 0, 0.05, 1.2, 0.32, 0.95, 0.95, 0.95);
+
+  } else if (m === 12) { // 13. Líneas de Transmisión RF & Carta de Smith 3D
+    // Conector SMA / BNC bañado en oro
+    addBox(-2.2, 0, 0, 0.85, 0.85, 0.85, 0.85, 0.70, 0.18);
+    addBox(-1.7, 0, 0, 0.4, 0.7, 0.7, 0.80, 0.65, 0.15);
+    addBox(-2.55, 0, 0, 0.5, 0.12, 0.12, 0.95, 0.82, 0.22);
+    // Cable coaxial RG-58 pelado por capas
+    addBox(-0.9, 0, 0, 1.35, 0.55, 0.55, 0.15, 0.15, 0.18); // Cubierta PVC
+    addBox(-0.15, 0, 0, 0.5, 0.46, 0.46, 0.78, 0.52, 0.28); // Malla de cobre
+    addBox(0.35, 0, 0, 0.5, 0.36, 0.36, 0.92, 0.92, 0.96); // Dieléctrico PTFE
+    addBox(0.85, 0, 0, 0.6, 0.16, 0.16, 0.88, 0.65, 0.25); // Vivo de cobre
+    // Carga de terminación RF 50Ω con aletas de refrigeración
+    addBox(1.85, 0, 0, 1.15, 1.25, 1.15, 0.22, 0.35, 0.45);
+
+  } else if (m === 13) { // 14. Transistores BJT & MOSFET 3D
+    // Placa protoboard blanca
+    addBox(0, -0.4, 0, 4.6, 0.2, 2.8, 0.88, 0.88, 0.90);
+    addBox(0, -0.28, 0, 4.2, 0.05, 2.4, 0.20, 0.20, 0.25);
+    // Encapsulado TO-92 BJT
+    addBox(-1.0, 0.35, 0, 0.5, 0.65, 0.35, 0.12, 0.12, 0.15);
+    addBox(-1.15, -0.05, 0, 0.05, 0.4, 0.05, 0.8, 0.8, 0.85);
+    addBox(-1.0, -0.05, 0, 0.05, 0.4, 0.05, 0.8, 0.8, 0.85);
+    addBox(-0.85, -0.05, 0, 0.05, 0.4, 0.05, 0.8, 0.8, 0.85);
+    // Resistencias axiales de película metálica con anillos
+    addBox(0.2, 0.15, -0.6, 0.75, 0.22, 0.22, 0.25, 0.55, 0.85);
+    addBox(0.2, 0.15, 0.6, 0.75, 0.22, 0.22, 0.25, 0.55, 0.85);
+    // Condensador cerámico de lenteja
+    addBox(-1.8, 0.2, 0, 0.12, 0.45, 0.45, 0.88, 0.55, 0.22);
+
+  } else if (m === 14) { // 15. Servomotor & Regulador PID 3D
+    // Riel base de aluminio
+    addBox(0, -0.4, 0, 4.8, 0.18, 2.2, 0.45, 0.48, 0.52);
+    // Servomotor DC cilíndrico
+    addBox(-1.4, 0.2, 0, 1.4, 1.0, 1.0, 0.15, 0.18, 0.22);
+    addBox(-0.4, 0.2, 0, 0.7, 0.18, 0.18, 0.85, 0.88, 0.92);
+    // Disco encoder óptico ranurado
+    addBox(0.1, 0.2, 0, 0.08, 1.3, 1.3, 0.85, 0.75, 0.20);
+    addBox(0.1, 0.7, 0, 0.35, 0.4, 0.35, 0.10, 0.10, 0.12);
+    // Módulo controlador PID industrial
+    addBox(1.7, 0.35, 0, 1.3, 1.2, 1.0, 0.18, 0.22, 0.30);
+    addBox(1.7, 0.55, 0.52, 0.9, 0.35, 0.05, 0.85, 0.15, 0.15);
   }
 
   currentGeoPositions = positions;
@@ -1388,6 +1450,70 @@ function renderTekScope() {
       } else { // DC levels (Divisor, LED, Relé)
         yVal = 0.40 + (Math.random() - 0.5) * 0.02;
       }
+    } else if (m === 11) { // 12. Buck / Boost DC-DC Switch Waveforms
+      const topoEl = document.getElementById('param-topo');
+      const topo = topoEl ? parseInt(topoEl.value) : 0;
+      const dutyEl = document.getElementById('param-duty');
+      const D = dutyEl ? parseFloat(dutyEl.value) / 100.0 : 0.417;
+      const cycle = (t * 3.5 + animPhase * 4) % (Math.PI * 2);
+      const isSwitchOn = cycle < Math.PI * 2 * D;
+      // V_SW square wave with switching ringing
+      if (isSwitchOn) {
+        const ring = Math.sin(cycle * 30) * Math.exp(-cycle * 4) * 0.15;
+        yVal = 0.70 + ring;
+      } else {
+        const ring = Math.sin((cycle - Math.PI * 2 * D) * 30) * Math.exp(-(cycle - Math.PI * 2 * D) * 4) * 0.15;
+        yVal = -0.70 + ring;
+      }
+    } else if (m === 12) { // 13. Líneas RF & Ondas Estacionarias
+      const z0El = document.getElementById('param-z0');
+      const rlEl = document.getElementById('param-rl');
+      const xlEl = document.getElementById('param-xl');
+      const z0 = (z0El && parseInt(z0El.value) === 1) ? 75.0 : 50.0;
+      const rl = rlEl ? parseFloat(rlEl.value) : 50.0;
+      const xl = xlEl ? parseFloat(xlEl.value) : 0.0;
+      const den = (rl + z0)*(rl + z0) + xl*xl;
+      const gr = ((rl - z0)*(rl + z0) + xl*xl) / den;
+      const gi = (xl*(rl + z0) - (rl - z0)*xl) / den;
+      const gmag = Math.min(1.0, Math.sqrt(gr*gr + gi*gi));
+      const gphi = Math.atan2(gi, gr);
+      // Dual wave interference: Forward V+ and Reflected V-
+      const fwd = Math.sin(t * 3.0 + animPhase * 2);
+      const refl = gmag * Math.sin(t * 3.0 - animPhase * 2 + gphi);
+      yVal = (fwd + refl) * 0.48;
+    } else if (m === 13) { // 14. Transistores BJT / MOSFET Amplificación
+      const devEl = document.getElementById('param-device');
+      const dev = devEl ? parseInt(devEl.value) : 0;
+      const inSignal = Math.sin(t * 2.5 + animPhase * 2);
+      if (dev === 3) { // Conmutador digital
+        yVal = inSignal > 0.1 ? -0.80 : 0.80;
+      } else if (dev === 1) { // Seguidor emisor (en fase)
+        yVal = inSignal * 0.70;
+      } else { // Emisor Común (Inversión 180° y amplificación con clipping)
+        let amplified = -inSignal * 1.6;
+        if (amplified > 0.85) amplified = 0.85; // Saturación
+        if (amplified < -0.85) amplified = -0.85; // Corte
+        yVal = amplified * 0.8;
+      }
+    } else if (m === 14) { // 15. Control Feedback & PID Step Response
+      const kpEl = document.getElementById('param-kp');
+      const kiEl = document.getElementById('param-ki');
+      const kdEl = document.getElementById('param-kd');
+      const kp = kpEl ? parseFloat(kpEl.value) : 3.5;
+      const ki = kiEl ? parseFloat(kiEl.value) : 1.2;
+      const kd = kdEl ? parseFloat(kdEl.value) : 0.35;
+      const zeta = Math.max(0.05, Math.min(1.5, (1.0 + 2.0*(kp + kd)) / (2 * 5.0 * Math.sqrt(0.4*ki + 0.4*kp + 0.1))));
+      const wn = Math.sqrt(2.0*kp + 1.0);
+      const tau = (t * 0.6 + (animPhase * 0.2)) % (Math.PI * 2);
+      // Step response curve y(t)
+      let stepResp = 0;
+      if (zeta < 1.0) {
+        const wd = wn * Math.sqrt(1 - zeta*zeta);
+        stepResp = 1.0 - Math.exp(-zeta * wn * tau * 0.5) * (Math.cos(wd * tau * 0.5) + (zeta / Math.sqrt(1 - zeta*zeta)) * Math.sin(wd * tau * 0.5));
+      } else {
+        stepResp = 1.0 - Math.exp(-wn * tau * 0.5);
+      }
+      yVal = (stepResp - 0.5) * 1.3;
     } else {
       yVal = Math.sin(t*3 + animPhase) * 0.65;
     }
@@ -2039,7 +2165,392 @@ const MODULE_DATA = [
         metrics, formula, challenge
       };
     }
+  },
+  {
+    title: "12. Fuentes Conmutadas DC-DC: Buck & Boost (GREELEC PEE)",
+    hud: ["Convertidor: DC-DC Switched Mode", "Topología: PWM Alta Eficiencia"],
+    controls: [
+      { id: "topo", label: "Topología del Convertidor", type: "select", options: [
+        "Buck Reductor (Step-Down: Vo = D · Vin)",
+        "Boost Elevador (Step-Up: Vo = Vin / (1 - D))"
+      ], val: 0 },
+      { id: "vin", label: "Tensión de Entrada (Vin)", min: 3.0, max: 48.0, val: 12.0, unit: "V", step: 0.5 },
+      { id: "duty", label: "Ciclo de Trabajo PWM (D)", min: 10, max: 90, val: 41.7, unit: "%", step: 0.5 },
+      { id: "fsw", label: "Frecuencia Conmutación (f_sw)", min: 20, max: 1000, val: 250, unit: "kHz", step: 10 },
+      { id: "l", label: "Inductancia de Potencia (L)", min: 2, max: 500, val: 47, unit: "µH", step: 1 },
+      { id: "c", label: "Condensador Filtro (C_out)", min: 10, max: 2200, val: 220, unit: "µF", step: 10 },
+      { id: "rload", label: "Resistencia de Carga (R_L)", min: 1.0, max: 100.0, val: 5.0, unit: "Ω", step: 0.5 }
+    ],
+    presets: [
+      { name: "Buck 12V -> 5.0V / 1A (Alimentación USB)", topo: 0, vin: 12.0, duty: 41.7, fsw: 250, l: 47, c: 220, rload: 5.0 },
+      { name: "Buck 24V -> 3.3V / 2A (Bus Industrial a MCU)", topo: 0, vin: 24.0, duty: 13.8, fsw: 400, l: 33, c: 330, rload: 1.65 },
+      { name: "Buck 5V -> 1.2V / 4A (Core SoC / FPGA)", topo: 0, vin: 5.0, duty: 24.0, fsw: 500, l: 15, c: 470, rload: 0.3 },
+      { name: "Boost 3.7V Li-Ion -> 5.0V (PowerBank Step-Up)", topo: 1, vin: 3.7, duty: 26.0, fsw: 300, l: 22, c: 100, rload: 5.0 },
+      { name: "Boost 12V -> 24V (Bucle Sensores 4-20mA)", topo: 1, vin: 12.0, duty: 50.0, fsw: 200, l: 68, c: 220, rload: 48.0 },
+      { name: "Boost 5V -> 15V (Rail Analógico Op-Amp Dual)", topo: 1, vin: 5.0, duty: 66.7, fsw: 350, l: 33, c: 150, rload: 50.0 }
+    ],
+    calc: (p) => {
+      const topo = p.topo || 0;
+      const D = p.duty / 100.0;
+      const fsw = p.fsw * 1000.0;
+      const L = p.l * 1e-6;
+      const C = p.c * 1e-6;
+      const RL = Math.max(0.1, p.rload);
+      const vin = p.vin;
+
+      let vout = 0;
+      let deltaIL = 0;
+      let il_avg = 0;
+      let deltaVout = 0;
+      let isCCM = true;
+      let l_crit = 0;
+
+      if (topo === 0) { // Buck
+        vout = vin * D;
+        deltaIL = ((vin - vout) * D) / (fsw * L);
+        const io = vout / RL;
+        il_avg = io;
+        l_crit = ((1 - D) * RL) / (2 * fsw);
+        isCCM = L >= l_crit;
+        deltaVout = (deltaIL) / (8 * fsw * C);
+      } else { // Boost
+        vout = vin / (1 - D);
+        deltaIL = (vin * D) / (fsw * L);
+        const io = vout / RL;
+        il_avg = io / (1 - D);
+        l_crit = (D * Math.pow(1 - D, 2) * RL) / (2 * fsw);
+        isCCM = L >= l_crit;
+        deltaVout = (io * D) / (fsw * C);
+      }
+
+      const p_out = (vout * vout) / RL;
+      // Estimación de rendimiento considerando Rds_on MOSFET (25mΩ) y VF Schottky (0.45V)
+      const rds_on = 0.025, vf = 0.45;
+      const p_loss = (il_avg * il_avg * rds_on) + (il_avg * vf * (1 - D)) + 0.05 * p_out;
+      const eta = Math.min(98.5, Math.max(70.0, (p_out / (p_out + p_loss)) * 100.0));
+
+      const dmmText = vout.toFixed(3) + " V";
+      const dmmMin = "0.000 V", dmmMax = (vin * 2.5).toFixed(1) + " V";
+      const dmmBar = Math.min(100, (vout / (vin * 2.5)) * 100);
+      const dmmUb = "±0.002 V";
+
+      const metrics = [
+        { name: "Tensión de Salida (Vout)", val: vout.toFixed(3) + " V", sub: topo === 0 ? `D = ${(D*100).toFixed(1)}% (Reductor)` : `D = ${(D*100).toFixed(1)}% (Elevador)` },
+        { name: "Rizado de Corriente en Bobina (ΔIL)", val: (deltaIL * 1000).toFixed(1) + " mA", sub: isCCM ? `✅ Modo CCM (L > Lcrit ${(l_crit*1e6).toFixed(1)} µH)` : `⚠️ Modo DCM (L < Lcrit ${(l_crit*1e6).toFixed(1)} µH)` },
+        { name: "Rizado de Tensión de Salida (ΔVo)", val: (deltaVout * 1000).toFixed(2) + " mVpp", sub: `C = ${p.c} µF · f_sw = ${p.fsw} kHz` },
+        { name: "Potencia & Rendimiento Estimado", val: `${p_out.toFixed(2)} W · η ≈ ${eta.toFixed(1)}%`, sub: `Io = ${(vout/RL).toFixed(2)} A · I_peak = ${(il_avg + deltaIL/2).toFixed(2)} A` }
+      ];
+
+      const formula = topo === 0 ?
+        `Buck Reductor (CCM):
+Vo = D · Vin = ${D.toFixed(3)} · ${vin.toFixed(1)} V = ${vout.toFixed(2)} V
+ΔIL = [(Vin - Vo) · D] / (f_sw · L) = ${(deltaIL*1000).toFixed(1)} mA
+ΔVo = ΔIL / (8 · f_sw · C) = ${(deltaVout*1000).toFixed(2)} mV` :
+        `Boost Elevador (CCM):
+Vo = Vin / (1 - D) = ${vin.toFixed(1)} V / (1 - ${D.toFixed(3)}) = ${vout.toFixed(2)} V
+ΔIL = (Vin · D) / (f_sw · L) = ${(deltaIL*1000).toFixed(1)} mA
+ΔVo = (Io · D) / (f_sw · C) = ${(deltaVout*1000).toFixed(2)} mV`;
+
+      const challenge = {
+        question: `¿Qué ciclo de trabajo D (%) se requiere para obtener exactamente Vo = ${(topo===0?5.0:24.0).toFixed(1)} V con Vin = ${vin.toFixed(1)} V?`,
+        ans: topo === 0 ? parseFloat(((5.0 / vin) * 100).toFixed(1)) : parseFloat(((1.0 - (vin / 24.0)) * 100).toFixed(1)),
+        tol: 1.5,
+        unit: "%",
+        sol: topo === 0 ? `D = Vo / Vin = 5.0 / ${vin.toFixed(1)} = ${((5.0/vin)*100).toFixed(1)}%` : `D = 1 - (Vin / Vo) = 1 - (${vin.toFixed(1)} / 24.0) = ${((1 - vin/24.0)*100).toFixed(1)}%`
+      };
+
+      return { dmmText, dmmMin, dmmMax, dmmBar, dmmUb, metrics, formula, challenge };
+    }
+  },
+  {
+    title: "13. Líneas de Transmisión & Carta de Smith (GREELEC CAF)",
+    hud: ["Línea RF: Cable Coaxial 50Ω", "Dominio: Alta Frecuencia & ROE"],
+    controls: [
+      { id: "z0", label: "Impedancia Característica (Z0)", type: "select", options: [
+        "50 Ω (Línea Estándar RF / SMA / BNC)",
+        "75 Ω (Distribución TV / Vídeo Coaxial RG-59)"
+      ], val: 0 },
+      { id: "rl", label: "Resistencia de Carga (R_L)", min: 0, max: 300, val: 50, unit: "Ω", step: 5 },
+      { id: "xl", label: "Reactancia de Carga (X_L)", min: -200, max: 200, val: 0, unit: "Ω", step: 5 },
+      { id: "freq", label: "Frecuencia de Operación (f)", min: 10, max: 2500, val: 433, unit: "MHz", step: 10 },
+      { id: "len", label: "Longitud Física del Cable (l)", min: 0.05, max: 5.0, val: 0.50, unit: "m", step: 0.05 },
+      { id: "vf", label: "Factor de Velocidad (VF)", min: 0.50, max: 1.0, val: 0.66, unit: "", step: 0.02 }
+    ],
+    presets: [
+      { name: "Línea 50 Ω Perfectamente Adaptada (ZL = 50 Ω, ROE = 1.00)", z0: 0, rl: 50, xl: 0, freq: 433, len: 0.50, vf: 0.66 },
+      { name: "Cortocircuito en Carga (ZL = 0 Ω, ROE = ∞)", z0: 0, rl: 0, xl: 0, freq: 433, len: 0.25, vf: 0.66 },
+      { name: "Circuito Abierto en Carga (ZL = ∞ / 300 Ω)", z0: 0, rl: 300, xl: 0, freq: 433, len: 0.25, vf: 0.66 },
+      { name: "Antena ISM 433 MHz con Desadaptación (ZL = 35 + j15 Ω)", z0: 0, rl: 35, xl: 15, freq: 433, len: 0.35, vf: 0.66 },
+      { name: "Antena Wi-Fi 2.4 GHz Capacitiva (ZL = 25 - j30 Ω)", z0: 0, rl: 25, xl: -30, freq: 2400, len: 0.12, vf: 0.66 },
+      { name: "Cable TV 75 Ω con Carga 50 Ω (Desadaptación Típica)", z0: 1, rl: 50, xl: 0, freq: 800, len: 1.0, vf: 0.66 }
+    ],
+    calc: (p) => {
+      const z0 = p.z0 === 1 ? 75.0 : 50.0;
+      const RL = Math.max(0.001, p.rl);
+      const XL = p.xl;
+      const f_hz = p.freq * 1e6;
+      const c = 2.99792458e8;
+      const vp = c * p.vf;
+      const lambda = vp / f_hz;
+      const beta = (2 * Math.PI) / lambda;
+      const l_m = p.len;
+      const beta_l_rad = beta * l_m;
+      const beta_l_deg = ((beta_l_rad * 180 / Math.PI) % 360).toFixed(1);
+
+      // Coeficiente de reflexión complejo Gamma = (ZL - Z0) / (ZL + Z0)
+      const num_r = RL - z0;
+      const num_i = XL;
+      const den_r = RL + z0;
+      const den_i = XL;
+      const den_mag_sq = den_r * den_r + den_i * den_i;
+      const gamma_r = (num_r * den_r + num_i * den_i) / den_mag_sq;
+      const gamma_i = (num_i * den_r - num_r * den_i) / den_mag_sq;
+      const gamma_mag = Math.min(1.0, Math.sqrt(gamma_r * gamma_r + gamma_i * gamma_i));
+      let gamma_phase_deg = Math.atan2(gamma_i, gamma_r) * 180 / Math.PI;
+
+      // Relación de Onda Estacionaria (VSWR / ROE)
+      let vswr = (1 + gamma_mag) / Math.max(0.0001, 1 - gamma_mag);
+      if (vswr > 99.9) vswr = 99.9;
+
+      // Pérdidas de Retorno (Return Loss)
+      const return_loss_db = gamma_mag < 0.001 ? 60.0 : -20 * Math.log10(gamma_mag);
+
+      // Potencia reflejada %
+      const p_refl_pct = (gamma_mag * gamma_mag) * 100.0;
+
+      const dmmText = vswr.toFixed(2) + " ROE";
+      const dmmMin = "1.00", dmmMax = "10.00";
+      const dmmBar = Math.min(100, Math.max(0, (vswr - 1.0) / 9.0 * 100));
+      const dmmUb = "±0.02";
+
+      const metrics = [
+        { name: "Coeficiente de Reflexión (|Γ| ∠θ)", val: `${gamma_mag.toFixed(3)} ∠${gamma_phase_deg.toFixed(1)}°`, sub: `Γ_norm = ${gamma_r.toFixed(3)} + j${gamma_i.toFixed(3)}` },
+        { name: "Relación de Onda Estacionaria (VSWR)", val: `${vswr.toFixed(2)} : 1`, sub: vswr <= 1.25 ? "✅ Excelente adaptación (VSWR < 1.25)" : (vswr <= 1.5 ? "⚠️ Aceptable (VSWR < 1.5)" : "❌ Desadaptación Severa (Reflexión Alta)") },
+        { name: "Pérdidas de Retorno (Return Loss)", val: `${return_loss_db.toFixed(1)} dB`, sub: `Potencia Reflejada = ${p_refl_pct.toFixed(1)}% de P_incidente` },
+        { name: "Longitud Eléctrica & Long. de Onda", val: `β·l = ${beta_l_deg}° (${(l_m / lambda).toFixed(2)} λ)`, sub: `λ = ${(lambda*100).toFixed(1)} cm · vp = ${(vp/1e6).toFixed(1)} Mm/s` }
+      ];
+
+      const formula = `Coeficiente de Reflexión Complejo:
+Γ = (ZL - Z0) / (ZL + Z0) = ${gamma_mag.toFixed(3)} ∠ ${gamma_phase_deg.toFixed(1)}°
+Relación de Onda Estacionaria (ROE):
+VSWR = (1 + |Γ|) / (1 - |Γ|) = ${vswr.toFixed(2)}
+Return Loss: RL = -20·log10(|Γ|) = ${return_loss_db.toFixed(1)} dB`;
+
+      const challenge = {
+        question: `Con Z0 = ${z0} Ω y RL = ${RL} Ω (XL=0), ¿cuál es el módulo exacto del coeficiente de reflexión |Γ|?`,
+        ans: parseFloat((Math.abs(RL - z0) / (RL + z0)).toFixed(3)),
+        tol: 0.02,
+        unit: "",
+        sol: `|Γ| = |${RL} - ${z0}| / (${RL} + ${z0}) = ${Math.abs(RL - z0)} / ${RL + z0} = ${(Math.abs(RL - z0)/(RL + z0)).toFixed(3)}`
+      };
+
+      return { dmmText, dmmMin, dmmMax, dmmBar, dmmUb, metrics, formula, challenge, gamma_r, gamma_i, gamma_mag, vswr };
+    }
+  },
+  {
+    title: "14. Transistores BJT & MOSFET: Polarización y Pequeña Señal (GREELEC DE/CA)",
+    hud: ["Dispositivo: Semiconductor Activo", "Modo: Recta de Carga & Amplificación"],
+    controls: [
+      { id: "device", label: "Dispositivo & Topología", type: "select", options: [
+        "BJT NPN (Emisor Común con RE desacoplada)",
+        "BJT NPN (Seguidor de Emisor / Colector Común)",
+        "MOSFET NMOS Canal N (Fuente Común)",
+        "BJT NPN Conmutador Lógico Saturado"
+      ], val: 0 },
+      { id: "vcc", label: "Tensión de Fuente (Vcc / Vdd)", min: 3.0, max: 24.0, val: 12.0, unit: "V", step: 0.5 },
+      { id: "rc", label: "Resistencia Colector/Drenador (RC/RD)", min: 100, max: 22000, val: 2200, unit: "Ω", step: 100 },
+      { id: "re", label: "Resistencia Emisor/Fuente (RE/RS)", min: 10, max: 4700, val: 470, unit: "Ω", step: 20 },
+      { id: "r1", label: "Resistencia Divisor Superior (R1/RG1)", min: 1000, max: 220000, val: 33000, unit: "Ω", step: 1000 },
+      { id: "r2", label: "Resistencia Divisor Inferior (R2/RG2)", min: 1000, max: 100000, val: 10000, unit: "Ω", step: 500 },
+      { id: "beta", label: "Ganancia de Corriente (hfe / β)", min: 50, max: 500, val: 180, unit: "", step: 10 }
+    ],
+    presets: [
+      { name: "BJT Emisor Común Polarizado en Clase A (VCE = 6.0V, Av ≈ -45)", device: 0, vcc: 12.0, rc: 2200, re: 470, r1: 33000, r2: 10000, beta: 180 },
+      { name: "BJT Seguidor Emisor / Buffer Audio (Av ≈ 0.98, Zin alta)", device: 1, vcc: 12.0, rc: 0, re: 1500, r1: 47000, r2: 47000, beta: 200 },
+      { name: "BJT Saturado (Interruptor Digital ON, VCE ≈ 0.15V)", device: 3, vcc: 5.0, rc: 470, re: 0, r1: 4700, r2: 100000, beta: 150 },
+      { name: "MOSFET NMOS 2N7000 Fuente Común (VDS = 6V)", device: 2, vcc: 12.0, rc: 2200, re: 330, r1: 100000, r2: 68000, beta: 150 }
+    ],
+    calc: (p) => {
+      const vcc = p.vcc;
+      const rc = Math.max(1, p.rc);
+      const re = Math.max(0, p.re);
+      const r1 = p.r1, r2 = p.r2;
+      const beta = p.beta;
+      const device = p.device || 0;
+
+      let vth = vcc * (r2 / (r1 + r2));
+      let rth = (r1 * r2) / (r1 + r2);
+      let vbe = 0.70;
+      let ib = 0, ic = 0, vce = 0, gm = 0, rpi = 0, av = 0;
+      let state = "Zona Activa Directa (ZAD)";
+
+      if (device === 2) { // MOSFET NMOS
+        const vth_mos = 2.0; // Vth = 2.0V
+        const kn = 0.05; // 50 mA/V^2
+        const vgs = vth;
+        if (vgs <= vth_mos) {
+          state = "Corte (VGS < Vth)";
+          ic = 0;
+          vce = vcc;
+          av = 0;
+        } else {
+          const id_sat = 0.5 * kn * Math.pow(vgs - vth_mos, 2);
+          ic = id_sat;
+          vce = vcc - ic * (rc + re);
+          if (vce < (vgs - vth_mos)) {
+            state = "Zona Óhmica / Triodo";
+            vce = 0.2;
+          } else {
+            state = "Zona Saturación (Amplificación)";
+          }
+          gm = kn * (vgs - vth_mos);
+          av = -gm * rc;
+        }
+      } else { // BJT
+        ib = Math.max(0, (vth - vbe) / (rth + (beta + 1) * re));
+        ic = beta * ib;
+        vce = vcc - ic * (rc + re);
+
+        const ic_sat = vcc / (rc + re);
+        if (vce <= 0.20 || ic >= ic_sat) {
+          state = "Saturación Profunda (VCE(sat) ≈ 0.2V)";
+          vce = 0.20;
+          ic = ic_sat;
+          av = 0;
+        } else if (ib <= 0) {
+          state = "Corte (VBE < 0.7V)";
+          vce = vcc;
+          ic = 0;
+          av = 0;
+        } else {
+          state = "Zona Activa Directa (ZAD)";
+          const vt = 0.02585; // 25.85 mV a 300K
+          gm = ic / vt;
+          rpi = beta / gm;
+          av = device === 1 ? (gm * re) / (1 + gm * re) : -(gm * rc);
+        }
+      }
+
+      const dmmText = vce.toFixed(2) + " V";
+      const dmmMin = "0.00 V", dmmMax = vcc.toFixed(1) + " V";
+      const dmmBar = Math.min(100, Math.max(0, (vce / vcc) * 100));
+      const dmmUb = "±0.01 V";
+
+      const metrics = [
+        { name: "Punto de Reposo Q (VCEQ, ICQ)", val: `VCEQ = ${vce.toFixed(2)} V · ICQ = ${(ic * 1000).toFixed(2)} mA`, sub: `Estado: ${state}` },
+        { name: "Ganancia de Tensión en Banda Media (Av)", val: `${av.toFixed(1)} (${(20 * Math.log10(Math.max(0.01, Math.abs(av)))).toFixed(1)} dB)`, sub: device === 1 ? "Seguidor Emisor (No inversor, Av < 1)" : "Emisor Común (Inversor 180° desfase)" },
+        { name: "Parámetros Pequeña Señal (gm, rπ)", val: `gm = ${(gm * 1000).toFixed(1)} mS · rπ = ${(rpi / 1000).toFixed(2)} kΩ`, sub: `Tensión Thévenin Vth = ${vth.toFixed(2)} V · Rth = ${(rth/1000).toFixed(1)} kΩ` },
+        { name: "Potencia Disipada por Transistor", val: `${(vce * ic * 1000).toFixed(1)} mW`, sub: `P_máx admisible TO-92 = 625 mW (Margen OK)` }
+      ];
+
+      const formula = `Punto de Operación Q:
+Vth = Vcc · [R2 / (R1+R2)] = ${vth.toFixed(2)} V | Rth = R1||R2 = ${(rth/1000).toFixed(1)} kΩ
+IBQ = (Vth - 0.7V) / [Rth + (β+1)·RE] = ${(ib*1e6).toFixed(1)} µA
+ICQ = β · IB = ${(ic*1000).toFixed(2)} mA | VCEQ = Vcc - IC·(RC+RE) = ${vce.toFixed(2)} V
+Av = -gm · RC = -[IC/Vt] · RC = ${av.toFixed(1)}`;
+
+      const challenge = {
+        question: `Para polarizar el transistor a VCEQ = ${(vcc/2).toFixed(1)} V (mitad de Vcc) con ICQ = ${(ic*1000).toFixed(1)} mA, ¿cuál debe ser la suma (RC + RE) en Ω?`,
+        ans: parseFloat(((vcc / 2) / Math.max(1e-5, ic)).toFixed(0)),
+        tol: 50,
+        unit: "Ω",
+        sol: `(RC + RE) = (Vcc - VCEQ) / ICQ = ${(vcc/2).toFixed(1)} V / ${(ic*1000).toFixed(2)} mA = ${(((vcc/2)/ic)).toFixed(0)} Ω.`
+      };
+
+      return { dmmText, dmmMin, dmmMax, dmmBar, dmmUb, metrics, formula, challenge };
+    }
+  },
+  {
+    title: "15. Sistemas de Control & Regulador PID Feedback (GREELEC SC)",
+    hud: ["Lazo de Control: Feedback Negativo", "Algoritmo: PID Continuo Paralelo"],
+    controls: [
+      { id: "plant", label: "Modelo de Planta G(s)", type: "select", options: [
+        "Planta Térmica 1er Orden (Horno: G(s) = 2.0 / (5s + 1))",
+        "Servomotor Posición 2º Orden (G(s) = 10 / (s² + 2s + 10))",
+        "Proceso Hidráulico Nivel (G(s) = 1.5 / (8s + 1))",
+        "Sistema Rápido Subamortiguado (G(s) = 25 / (s² + 0.8s + 25))"
+      ], val: 0 },
+      { id: "kp", label: "Ganancia Proporcional (Kp)", min: 0.1, max: 25.0, val: 3.5, unit: "", step: 0.1 },
+      { id: "ki", label: "Ganancia Integral (Ki)", min: 0.0, max: 10.0, val: 1.2, unit: "s⁻¹", step: 0.1 },
+      { id: "kd", label: "Ganancia Derivativa (Kd)", min: 0.0, max: 5.0, val: 0.35, unit: "s", step: 0.05 },
+      { id: "sp", label: "Consigna / Setpoint (r)", min: 5.0, max: 100.0, val: 50.0, unit: "% / °C", step: 5.0 },
+      { id: "dist", label: "Perturbación de Carga (d)", min: -30, max: 30, val: 0, unit: "%", step: 5.0 }
+    ],
+    presets: [
+      { name: "PID Balanceado Ziegler-Nichols (Mp < 10%, ts rápido)", plant: 0, kp: 3.5, ki: 1.2, kd: 0.35, sp: 50.0, dist: 0 },
+      { name: "Controlador P Puro (Offset estacionario ess > 0)", plant: 0, kp: 2.5, ki: 0.0, kd: 0.0, sp: 50.0, dist: 0 },
+      { name: "Controlador PI Clásico (Eliminación total de error)", plant: 0, kp: 2.0, ki: 0.8, kd: 0.0, sp: 50.0, dist: 0 },
+      { name: "Control Sobreamortiguado Crítico (Mp = 0%, Sin oscilación)", plant: 1, kp: 1.5, ki: 0.4, kd: 0.8, sp: 50.0, dist: 0 },
+      { name: "Ganancia Excesiva / Borde de Inestabilidad (Oscilatorio)", plant: 1, kp: 12.0, ki: 6.0, kd: 0.05, sp: 50.0, dist: 0 }
+    ],
+    calc: (p) => {
+      const kp = p.kp, ki = p.ki, kd = p.kd;
+      const sp = p.sp;
+      const plant = p.plant || 0;
+
+      // Cálculo de parámetros de respuesta temporal aproximada
+      let wn = 1.0, zeta = 0.8, k_dc = 1.0;
+      if (plant === 0) { // 1er orden termico 2/(5s+1)
+        wn = Math.sqrt((2.0 * ki + 1e-4) / 5.0 + (2.0 * kp) / 5.0);
+        zeta = (1.0 + 2.0 * (kp + kd)) / (2 * 5.0 * Math.max(0.1, wn));
+        k_dc = 2.0;
+      } else if (plant === 1) { // Servo 10 / (s^2 + 2s + 10)
+        wn = Math.sqrt(10.0 * (1.0 + kp));
+        zeta = (2.0 + 10.0 * kd) / (2 * Math.max(0.1, wn));
+        k_dc = 1.0;
+      } else {
+        wn = Math.sqrt(25.0 * (1.0 + kp));
+        zeta = (0.8 + 25.0 * kd) / (2 * Math.max(0.1, wn));
+        k_dc = 1.0;
+      }
+
+      // Sobreoscilación Mp (%)
+      let mp = 0;
+      if (zeta < 1.0 && zeta > 0) {
+        mp = Math.exp(-Math.PI * zeta / Math.sqrt(1 - zeta * zeta)) * 100.0;
+      }
+
+      // Tiempo de establecimiento al 2% (ts ≈ 4 / (zeta * wn))
+      const ts = Math.min(25.0, 4.0 / Math.max(0.05, zeta * wn));
+      const tr = (1.8 / Math.max(0.1, wn)); // Tiempo de subida
+
+      // Error estacionario (ess): Si Ki > 0, ess = 0 (integrador elimina error en escalón)
+      const ess = ki > 0.01 ? 0.0 : (sp / (1 + kp * k_dc));
+      const y_ss = sp - ess;
+
+      const isStable = zeta > 0 && wn > 0 && mp < 95.0;
+
+      const dmmText = y_ss.toFixed(2) + " %";
+      const dmmMin = "0.00 %", dmmMax = (sp * 1.5).toFixed(1) + " %";
+      const dmmBar = Math.min(100, (y_ss / (sp * 1.5)) * 100);
+      const dmmUb = "±0.05 %";
+
+      const metrics = [
+        { name: "Salida en Régimen Permanente (y_ss)", val: `${y_ss.toFixed(2)} % (Consigna: ${sp.toFixed(1)} %)`, sub: ess < 0.01 ? "✅ Error Estacionario e_ss = 0.00% (Acción Integral)" : `⚠️ Error Estacionario e_ss = ${ess.toFixed(2)}% (Puro P)` },
+        { name: "Sobreoscilación Máxima (Mp)", val: `${mp.toFixed(1)} %`, sub: mp <= 15 ? "✅ Respuesta Óptima (Mp ≤ 15%)" : (mp <= 35 ? "⚠️ Respuesta Muy Oscilatoria" : "❌ Margen de Estabilidad Crítico") },
+        { name: "Tiempo de Establecimiento (ts 2%)", val: `${ts.toFixed(2)} s`, sub: `Tiempo de Subida tr = ${tr.toFixed(2)} s · Frec. Natural ωn = ${wn.toFixed(2)} rad/s` },
+        { name: "Factor de Amortiguamiento (ζ)", val: `ζ = ${zeta.toFixed(3)}`, sub: zeta >= 1.0 ? "Sobreamortiguado (Sin oscilaciones)" : (zeta >= 0.6 ? "Amortiguamiento Óptimo (0.6 ≤ ζ ≤ 0.8)" : "Subamortiguado (Ringing pronunciado)") }
+      ];
+
+      const formula = `Algoritmo PID Continuo:
+u(t) = Kp · e(t) + Ki · ∫ e(τ)dτ + Kd · [de(t)/dt]
+Función de Transferencia Lazo Cerrado:
+T(s) = [C(s)·G(s)] / [1 + C(s)·G(s)]
+Amortiguamiento: ζ = ${zeta.toFixed(3)} | Frec. Natural: ωn = ${wn.toFixed(2)} rad/s
+Sobreoscilación: Mp = exp(-π·ζ / √(1-ζ²)) = ${mp.toFixed(1)}%`;
+
+      const challenge = {
+        question: `Si se anula la acción integral (Ki = 0) con Kp = ${kp.toFixed(1)} y ganancia DC K_plant = ${k_dc.toFixed(1)}, ¿cuál es el error en régimen permanente ess (%) para consigna r = ${sp.toFixed(1)}%?`,
+        ans: parseFloat((sp / (1 + kp * k_dc)).toFixed(1)),
+        tol: 1.0,
+        unit: "%",
+        sol: `e_ss = r / (1 + Kp·K_plant) = ${sp.toFixed(1)} / (1 + ${kp.toFixed(1)}·${k_dc.toFixed(1)}) = ${(sp / (1 + kp * k_dc)).toFixed(1)}%`
+      };
+
+      return { dmmText, dmmMin, dmmMax, dmmBar, dmmUb, metrics, formula, challenge, mp, ts, zeta, wn, sp, ess };
+    }
   }
+
 ];
 
 
@@ -2226,226 +2737,680 @@ function renderCircuitSchematic() {
   ctx.save();
   ctx.scale(dpr, dpr);
 
+  // Fondo técnico de ingeniería
   ctx.fillStyle = '#06080e';
   ctx.fillRect(0, 0, w, h);
 
-  // Technical blueprint grid
+  // Cuadrícula milimétrica azulada de esquema CAD
   ctx.strokeStyle = '#0f172a';
   ctx.lineWidth = 1;
-  for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-  for (let y = 0; y < h; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+  for (let x = 0; x < w; x += 25) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+  for (let y = 0; y < h; y += 25) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+
+  const cx = w / 2;
+  const cy = h / 2 - 20;
 
   const m = currentModule;
   const modData = MODULE_DATA[m];
   const params = {};
-  modData.controls.forEach(ctrl => { params[ctrl.id] = ctrl.val; });
-  const res = modData.calc(params);
+  if (modData && modData.controls) {
+    modData.controls.forEach(ctrl => {
+      const el = document.getElementById('param-' + ctrl.id);
+      params[ctrl.id] = el ? (ctrl.type === 'select' ? parseInt(el.value) : parseFloat(el.value)) : ctrl.val;
+    });
+  }
+  const res = (modData && modData.calc) ? modData.calc(params) : { dmmText: '---', formula: '' };
 
-  // Header
+  // Encabezado técnico del esquemático
   ctx.fillStyle = '#38bdf8';
-  ctx.font = 'bold 14px "SF Mono", monospace';
-  ctx.fillText('📐 ESQUEMÁTICO CIRCUITAL DE INSTRUMENTACIÓN (UPC)', 30, 36);
+  ctx.font = 'bold 13px "SF Mono", monospace';
+  ctx.fillText(`ESQUEMÁTICO CIRCUITAL DE ALTA FIDELIDAD · ${modData ? modData.title : ''}`, 25, 25);
+  ctx.fillStyle = '#64748b';
+  ctx.font = '11px "SF Mono", monospace';
+  ctx.fillText('Norma IEC 60617 / IEEE Std 315 · Parámetros y Nodos Dinámicos', 25, 42);
 
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = '12px system-ui, sans-serif';
-  ctx.fillText('Topología: ' + modData.title, 30, 56);
+  function drawNode(x, y, label, color) {
+    ctx.fillStyle = color || '#38bdf8';
+    ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 11px "SF Mono", monospace';
+    ctx.fillText(label, x + 8, y - 6);
+  }
 
-  const cx = w / 2, cy = h / 2 + 15;
-
-  if (m === 0) { // Puente de Wheatstone para Galgas
-    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2.5;
+  function drawGnd(x, y) {
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(cx, cy - 90); ctx.lineTo(cx + 90, cy);
-    ctx.lineTo(cx, cy + 90); ctx.lineTo(cx - 90, cy);
-    ctx.closePath(); ctx.stroke();
+    ctx.moveTo(x, y); ctx.lineTo(x, y + 10);
+    ctx.moveTo(x - 14, y + 10); ctx.lineTo(x + 14, y + 10);
+    ctx.moveTo(x - 9, y + 15); ctx.lineTo(x + 9, y + 15);
+    ctx.moveTo(x - 4, y + 20); ctx.lineTo(x + 4, y + 20);
+    ctx.stroke();
+  }
 
-    function drawNode(x, y, label, color) {
-      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.font = 'bold 11px "SF Mono", monospace'; ctx.fillText(label, x + 10, y - 6);
+  function drawOpAmp(x, y, label) {
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y - 35);
+    ctx.lineTo(x, y + 35);
+    ctx.lineTo(x + 55, y);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 12px monospace';
+    ctx.fillText('-', x + 8, y - 14);
+    ctx.fillText('+', x + 8, y + 20);
+    if (label) {
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 10px monospace';
+      ctx.fillText(label, x + 18, y + 4);
     }
-    drawNode(cx, cy - 90, '+Vexc (' + params.vexc + ' V)', '#38bdf8');
+  }
+
+  // ====================================================================
+  // DISPATCHER DE ESQUEMÁTICOS PARA CADA UNO DE LOS 15 MÓDULOS
+  // ====================================================================
+
+  if (m === 0) { // 1. Puente de Wheatstone & Galgas
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - 90); ctx.lineTo(cx - 90, cy); ctx.lineTo(cx, cy + 90);
+    ctx.lineTo(cx + 90, cy); ctx.lineTo(cx, cy - 90); ctx.stroke();
+
+    drawNode(cx, cy - 90, `+Vexc (${params.vexc || 10} V)`, '#38bdf8');
     drawNode(cx, cy + 90, 'GND (0 V)', '#64748b');
+    drawGnd(cx, cy + 95);
     drawNode(cx - 90, cy, 'V-', '#fbbf24');
     drawNode(cx + 90, cy, 'V+', '#34d399');
 
     ctx.fillStyle = '#f8fafc'; ctx.font = '11px "SF Mono", monospace';
-    ctx.fillText('R1: ' + params.r1 + ' Ω', cx - 110, cy - 50);
-    ctx.fillText('R2: ' + params.r2 + ' Ω', cx + 45, cy - 50);
-    ctx.fillText('R3 (Galga): ' + params.r3 + ' Ω', cx + 45, cy + 50);
-    ctx.fillText('R4: ' + params.r4 + ' Ω', cx - 110, cy + 50);
+    ctx.fillText(`R1: ${params.r1 || 120} Ω`, cx - 115, cy - 50);
+    ctx.fillText(`R2: ${params.r2 || 120} Ω`, cx + 60, cy - 50);
+    ctx.fillText(`R3: ${params.r3 || 120} Ω`, cx - 115, cy + 55);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px "SF Mono", monospace';
+    ctx.fillText(`Rg (Galga): ${res.dmmText || '120.00 Ω'}`, cx + 55, cy + 55);
 
-    ctx.strokeStyle = '#ec4899'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
-    ctx.beginPath(); ctx.moveTo(cx - 90, cy); ctx.lineTo(cx + 90, cy); ctx.stroke();
+    // Instrumentación DMM
+    ctx.strokeStyle = '#38bdf8'; ctx.setLineDash([4, 3]);
+    ctx.strokeRect(cx - 50, cy - 25, 100, 50);
     ctx.setLineDash([]);
-    ctx.fillStyle = '#ec4899'; ctx.font = 'bold 13px "SF Mono", monospace';
-    ctx.fillText('ΔV_out = ' + res.dmmText, cx - 40, cy - 8);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px monospace';
+    ctx.fillText('DMM Truevolt', cx - 40, cy - 5);
+    ctx.fillStyle = '#34d399'; ctx.fillText(`ΔV = ${res.dmmText}`, cx - 40, cy + 15);
 
-  } else if (m === 1) { // Pt100 4 hilos
+  } else if (m === 1) { // 2. Pt100 a 4 Hilos
     ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
-    ctx.strokeRect(cx - 180, cy - 60, 60, 120);
-    ctx.fillStyle = '#38bdf8'; ctx.font = '11px "SF Mono", monospace';
-    ctx.fillText('I_exc', cx - 170, cy - 10);
-    ctx.fillText(params.iexc + ' mA', cx - 175, cy + 10);
+    ctx.strokeRect(cx - 200, cy - 60, 70, 120);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px monospace';
+    ctx.fillText('FUENTE I', cx - 195, cy - 20);
+    ctx.fillText(`${params.iexc || 1.0} mA`, cx - 195, cy + 5);
 
     ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
-    ctx.strokeRect(cx + 80, cy - 25, 80, 50);
-    ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px "SF Mono", monospace';
-    ctx.fillText('Pt100', cx + 100, cy + 5);
+    ctx.strokeRect(cx + 100, cy - 30, 80, 60);
+    ctx.fillStyle = '#34d399'; ctx.font = 'bold 13px monospace';
+    ctx.fillText('Pt100', cx + 115, cy + 5);
 
     ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1.5;
+    // Corriente excitación
     ctx.beginPath();
-    ctx.moveTo(cx - 120, cy - 40); ctx.lineTo(cx + 80, cy - 15); ctx.stroke();
-    ctx.moveTo(cx - 120, cy + 40); ctx.lineTo(cx + 80, cy + 15); ctx.stroke();
+    ctx.moveTo(cx - 130, cy - 40); ctx.lineTo(cx + 100, cy - 20); ctx.stroke();
+    ctx.moveTo(cx - 130, cy + 40); ctx.lineTo(cx + 100, cy + 20); ctx.stroke();
+    // Medida de tensión a 4 hilos (Kelvin sensing)
     ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2;
-    ctx.moveTo(cx + 80, cy - 10); ctx.lineTo(cx + 20, cy - 80); ctx.stroke();
-    ctx.moveTo(cx + 80, cy + 10); ctx.lineTo(cx + 20, cy + 80); ctx.stroke();
-
-    ctx.fillStyle = '#fbbf24'; ctx.font = '11px "SF Mono", monospace';
-    ctx.fillText('V+ (Alta Z)', cx - 50, cy - 85);
-    ctx.fillText('V- (Alta Z)', cx - 50, cy + 90);
-    ctx.fillStyle = '#e2e8f0'; ctx.fillText('r_cable = ' + params.rcable + ' Ω (Inmune 4 Hilos)', cx - 50, cy);
-
-  } else if (m === 3) { // Filtro Sallen-Key
-    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(cx + 60, cy - 50);
-    ctx.lineTo(cx + 60, cy + 50);
-    ctx.lineTo(cx + 140, cy);
-    ctx.closePath(); ctx.stroke();
+    ctx.moveTo(cx + 100, cy - 10); ctx.lineTo(cx, cy - 70); ctx.stroke();
+    ctx.moveTo(cx + 100, cy + 10); ctx.lineTo(cx, cy + 70); ctx.stroke();
 
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 14px monospace';
-    ctx.fillText('-', cx + 70, cy - 20);
-    ctx.fillText('+', cx + 70, cy + 25);
-
-    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2;
-    ctx.strokeRect(cx - 160, cy + 15, 60, 20);
-    ctx.strokeRect(cx - 60, cy + 15, 60, 20);
+    drawNode(cx, cy - 70, 'Sense V+ (Alta Z)', '#fbbf24');
+    drawNode(cx, cy + 70, 'Sense V- (Alta Z)', '#fbbf24');
     ctx.fillStyle = '#e2e8f0'; ctx.font = '11px monospace';
-    ctx.fillText('R1 ' + params.r + ' kΩ', cx - 160, cy + 10);
-    ctx.fillText('R2 ' + params.r + ' kΩ', cx - 60, cy + 10);
+    ctx.fillText(`Rcable = ${params.rcable || 2.5} Ω (Cancelada por conexión Kelvin)`, cx - 110, cy);
+
+  } else if (m === 2) { // 3. Amplificador de Instrumentación INA3
+    // OA1 y OA2 (Buffers con Rg)
+    drawOpAmp(cx - 120, cy - 70, 'OA1');
+    drawOpAmp(cx - 120, cy + 70, 'OA2');
+    // OA3 (Etapa diferencial de salida)
+    drawOpAmp(cx + 40, cy, 'OA3');
+
+    // Resistencia de ganancia Rg entre OA1 y OA2
+    ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 150, cy - 20, 20, 40);
+    ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 11px monospace';
+    ctx.fillText(`Rg = ${params.rg || 1000} Ω`, cx - 210, cy + 5);
 
     ctx.beginPath();
-    ctx.moveTo(cx - 200, cy + 25); ctx.lineTo(cx - 160, cy + 25);
-    ctx.moveTo(cx - 100, cy + 25); ctx.lineTo(cx - 60, cy + 25);
-    ctx.moveTo(cx, cy + 25); ctx.lineTo(cx + 60, cy + 25);
+    ctx.moveTo(cx - 140, cy - 56); ctx.lineTo(cx - 140, cy - 20);
+    ctx.moveTo(cx - 140, cy + 20); ctx.lineTo(cx - 140, cy + 84);
     ctx.stroke();
 
+    // Conexión a OA3
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.beginPath();
+    ctx.moveTo(cx - 65, cy - 70); ctx.lineTo(cx - 10, cy - 70); ctx.lineTo(cx - 10, cy - 14); ctx.lineTo(cx + 40, cy - 14);
+    ctx.moveTo(cx - 65, cy + 70); ctx.lineTo(cx - 10, cy + 70); ctx.lineTo(cx - 10, cy + 20); ctx.lineTo(cx + 40, cy + 20);
+    ctx.moveTo(cx + 95, cy); ctx.lineTo(cx + 170, cy);
+    ctx.stroke();
+
+    drawNode(cx - 180, cy - 84, 'Vin+ (Diferencial)', '#38bdf8');
+    drawNode(cx - 180, cy + 56, 'Vin- (Diferencial)', '#38bdf8');
+    drawNode(cx + 170, cy, `Vout = ${res.dmmText}`, '#34d399');
+
+  } else if (m === 3) { // 4. Filtro Sallen-Key
+    drawOpAmp(cx + 50, cy, 'OP-AMP');
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 170, cy + 12, 50, 18);
+    ctx.strokeRect(cx - 80, cy + 12, 50, 18);
+    ctx.fillStyle = '#e2e8f0'; ctx.font = '11px monospace';
+    ctx.fillText(`R1 ${params.r || 10}k`, cx - 165, cy + 8);
+    ctx.fillText(`R2 ${params.r || 10}k`, cx - 75, cy + 8);
+
+    ctx.beginPath();
+    ctx.moveTo(cx - 210, cy + 20); ctx.lineTo(cx - 170, cy + 20);
+    ctx.moveTo(cx - 120, cy + 20); ctx.lineTo(cx - 80, cy + 20);
+    ctx.moveTo(cx - 30, cy + 20); ctx.lineTo(cx + 50, cy + 20);
+    ctx.stroke();
+
+    // Condensador C1 feedback
     ctx.strokeStyle = '#34d399';
-    ctx.strokeRect(cx - 80, cy - 50, 20, 30);
-    ctx.strokeRect(cx + 10, cy + 60, 20, 30);
-    ctx.fillStyle = '#34d399';
-    ctx.fillText('C1 ' + params.c1 + ' nF', cx - 90, cy - 60);
-    ctx.fillText('C2 ' + params.c2 + ' nF', cx, cy + 105);
+    ctx.strokeRect(cx - 100, cy - 45, 18, 25);
+    ctx.fillStyle = '#34d399'; ctx.fillText(`C1 ${params.c1 || 10}nF`, cx - 110, cy - 55);
+    ctx.beginPath();
+    ctx.moveTo(cx - 91, cy + 20); ctx.lineTo(cx - 91, cy - 20); ctx.lineTo(cx - 100, cy - 20);
+    ctx.moveTo(cx - 82, cy - 32); ctx.lineTo(cx + 130, cy - 32); ctx.lineTo(cx + 130, cy);
+    ctx.stroke();
 
+    // Salida
     ctx.strokeStyle = '#38bdf8';
-    ctx.beginPath(); ctx.moveTo(cx + 140, cy); ctx.lineTo(cx + 200, cy); ctx.stroke();
-    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px monospace';
-    ctx.fillText('V_out', cx + 205, cy + 4);
+    ctx.beginPath(); ctx.moveTo(cx + 105, cy); ctx.lineTo(cx + 180, cy); ctx.stroke();
+    drawNode(cx + 180, cy, `Vout (fc = ${res.dmmText})`, '#38bdf8');
 
-  } else if (m === 10) { // Banco R-L-C & Presets
+  } else if (m === 4) { // 5. ADC & Nyquist
+    // Sample & Hold + SAR Converter Box
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 180, cy - 60, 100, 120);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px monospace';
+    ctx.fillText('SAMPLE & HOLD', cx - 175, cy - 35);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText('fs = ' + (params.fs || 10) + ' kHz', cx - 175, cy - 10);
+    ctx.fillText('Hold Cap CH', cx - 175, cy + 15);
+
+    // Comparador / SAR ADC
+    ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 40, cy - 60, 120, 120);
+    ctx.fillStyle = '#a855f7'; ctx.font = 'bold 12px monospace';
+    ctx.fillText('ADC SAR N-BIT', cx - 30, cy - 35);
+    ctx.fillStyle = '#f8fafc'; ctx.font = '11px monospace';
+    ctx.fillText(`Bits: ${params.bits || 12} bits`, cx - 30, cy - 10);
+    ctx.fillText(`Niveles: ${Math.pow(2, params.bits || 12)}`, cx - 30, cy + 12);
+    ctx.fillText(`q = ${res.dmmText}`, cx - 30, cy + 32);
+
+    // Buses digitales de salida
+    ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
+    for (let b = 0; b < 4; b++) {
+      const by = cy - 30 + b * 20;
+      ctx.beginPath(); ctx.moveTo(cx + 80, by); ctx.lineTo(cx + 160, by); ctx.stroke();
+      ctx.fillStyle = '#34d399'; ctx.font = 'bold 10px monospace';
+      ctx.fillText(`D${b}`, cx + 165, by + 4);
+    }
+
+  } else if (m === 5) { // 6. Termopar Tipo K con CJC
+    // Hilos de Cromel (+) y Alumel (-)
+    ctx.strokeStyle = '#eab308'; ctx.lineWidth = 3; // Cromel
+    ctx.beginPath(); ctx.moveTo(cx - 180, cy - 25); ctx.lineTo(cx - 40, cy - 25); ctx.stroke();
+    ctx.fillStyle = '#eab308'; ctx.font = 'bold 11px monospace';
+    ctx.fillText('Cromel (+)', cx - 170, cy - 35);
+
+    ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 3; // Alumel
+    ctx.beginPath(); ctx.moveTo(cx - 180, cy + 25); ctx.lineTo(cx - 40, cy + 25); ctx.stroke();
+    ctx.fillStyle = '#dc2626'; ctx.fillText('Alumel (-)', cx - 170, cy + 45);
+
+    // Unión caliente
+    drawNode(cx - 180, cy, `Unión Caliente Tj (${params.t || 150} °C)`, '#ff453a');
+
+    // Bloque isotérmico de unión fría
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+    ctx.strokeRect(cx - 40, cy - 50, 110, 100);
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 10px monospace';
+    ctx.fillText('BLOQUE ISOTÉRMICO', cx - 35, cy - 32);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(`Sensor CJC: ${params.tcjc || 25}°C`, cx - 35, cy + 25);
+
+    // Salida compensada
+    drawNode(cx + 140, cy, `V_comp = ${res.dmmText}`, '#34d399');
+    ctx.strokeStyle = '#34d399'; ctx.beginPath(); ctx.moveTo(cx + 70, cy); ctx.lineTo(cx + 140, cy); ctx.stroke();
+
+  } else if (m === 6) { // 7. Termistor NTC & Linealización Taylor
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    // Vin rail
+    ctx.beginPath(); ctx.moveTo(cx - 80, cy - 80); ctx.lineTo(cx + 60, cy - 80); ctx.stroke();
+    drawNode(cx - 80, cy - 80, '+Vcc (5.0 V)', '#38bdf8');
+
+    // Resistencia NTC
+    ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2.5;
+    ctx.strokeRect(cx - 15, cy - 60, 30, 45);
+    ctx.fillStyle = '#f59e0b'; ctx.font = 'bold 10px monospace';
+    ctx.fillText(`NTC R_T(${params.t || 25}°C)`, cx + 25, cy - 35);
+
+    // Resistencia Taylor en paralelo / divisor
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 15, cy + 15, 30, 45);
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillText(`R_serie / Rp (${params.rs || 10}k)`, cx + 25, cy + 40);
+
+    // Nodo intermedio Vout
+    drawNode(cx, cy, `Vout = ${res.dmmText}`, '#34d399');
+    ctx.strokeStyle = '#e2e8f0'; ctx.beginPath();
+    ctx.moveTo(cx, cy - 80); ctx.lineTo(cx, cy - 60);
+    ctx.moveTo(cx, cy - 15); ctx.lineTo(cx, cy + 15);
+    ctx.moveTo(cx, cy + 60); ctx.lineTo(cx, cy + 80);
+    ctx.stroke();
+    drawGnd(cx, cy + 80);
+
+  } else if (m === 7) { // 8. Ruido Johnson & Blindaje
+    // Jaula de Faraday blindada
+    ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+    ctx.strokeRect(cx - 170, cy - 65, 180, 130);
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 11px monospace';
+    ctx.fillText('BLINDAJE JAULA DE FARADAY', cx - 160, cy - 45);
+
+    // Resistencia noiseless R
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 140, cy - 15, 40, 25);
+    ctx.fillStyle = '#e2e8f0'; ctx.font = '10px monospace';
+    ctx.fillText(`R: ${params.r || 10000} Ω`, cx - 140, cy - 22);
+
+    // Generador en serie de ruido térmico en(t)
+    ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx - 40, cy - 3, 14, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#f43f5e'; ctx.font = 'bold 11px monospace';
+    ctx.fillText('~ en', cx - 46, cy + 1);
+
+    // Salida hacia amplificador de bajo ruido
+    drawNode(cx + 90, cy - 3, `V_noise = ${res.dmmText}`, '#f43f5e');
+    ctx.strokeStyle = '#38bdf8'; ctx.beginPath();
+    ctx.moveTo(cx - 26, cy - 3); ctx.lineTo(cx + 90, cy - 3); ctx.stroke();
+
+  } else if (m === 8) { // 9. Sensor Piezoeléctrico & Amplificador de Carga
+    // Sensor Piezo q_in
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 180, cy - 30, 45, 60);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px monospace';
+    ctx.fillText('PZT', cx - 172, cy + 5);
+    ctx.fillText('q(t)', cx - 172, cy + 20);
+
+    // Amplificador operacional con realimentación capacitiva Cf
+    drawOpAmp(cx, cy, 'OP-AMP');
+    ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx + 10, cy - 55, 25, 20);
+    ctx.fillStyle = '#34d399'; ctx.font = '10px monospace';
+    ctx.fillText(`Cf: ${params.cf || 10} nF`, cx + 45, cy - 42);
+
+    ctx.beginPath();
+    ctx.moveTo(cx - 135, cy - 14); ctx.lineTo(cx, cy - 14);
+    ctx.moveTo(cx - 10, cy - 14); ctx.lineTo(cx - 10, cy - 45); ctx.lineTo(cx + 10, cy - 45);
+    ctx.moveTo(cx + 35, cy - 45); ctx.lineTo(cx + 70, cy - 45); ctx.lineTo(cx + 70, cy);
+    ctx.stroke();
+
+    drawNode(cx + 130, cy, `Vout = ${res.dmmText}`, '#38bdf8');
+    ctx.beginPath(); ctx.moveTo(cx + 55, cy); ctx.lineTo(cx + 130, cy); ctx.stroke();
+
+  } else if (m === 9) { // 10. Sensor Capacitivo Diferencial & Lock-in
+    // 3 Placas diferenciales
+    ctx.fillStyle = '#38bdf8'; ctx.fillRect(cx - 180, cy - 45, 8, 90); // Placa +
+    ctx.fillStyle = '#f43f5e'; ctx.fillRect(cx - 120, cy - 45, 8, 90); // Placa -
+    ctx.fillStyle = '#34d399'; ctx.fillRect(cx - 154, cy - 40, 6, 80); // Placa móvil x
+
+    ctx.fillStyle = '#38bdf8'; ctx.font = '10px monospace';
+    ctx.fillText('+V carrier', cx - 215, cy - 30);
+    ctx.fillStyle = '#f43f5e';
+    ctx.fillText('-V carrier', cx - 105, cy - 30);
+    ctx.fillStyle = '#34d399'; ctx.font = 'bold 10px monospace';
+    ctx.fillText(`Móvil x=${params.x || 0}mm`, cx - 180, cy + 60);
+
+    // Demodulador síncrono Lock-in
+    ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 40, cy - 35, 80, 70);
+    ctx.fillStyle = '#a855f7'; ctx.font = 'bold 11px monospace';
+    ctx.fillText('LOCK-IN', cx - 30, cy - 10);
+    ctx.fillText('DEMOD', cx - 28, cy + 8);
+
+    drawNode(cx + 120, cy, `V_dc = ${res.dmmText}`, '#34d399');
+    ctx.strokeStyle = '#34d399'; ctx.beginPath();
+    ctx.moveTo(cx + 40, cy); ctx.lineTo(cx + 120, cy); ctx.stroke();
+
+  } else if (m === 10) { // 11. Banco R-L-C & Presets
     const topo = params.topo || 0;
     if (topo === 0) { // Divisor 5V a 3.3V
       ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5;
-      // Rail Vin
       ctx.beginPath(); ctx.moveTo(cx - 120, cy - 90); ctx.lineTo(cx + 40, cy - 90); ctx.stroke();
-      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px "SF Mono", monospace';
-      ctx.fillText('+Vin (' + params.vin + ' V)', cx - 120, cy - 100);
+      drawNode(cx - 120, cy - 90, `+Vin (${params.vin || 5.0} V)`, '#38bdf8');
 
-      // Resistencia R1 (rectángulo)
       ctx.strokeStyle = '#e2e8f0'; ctx.strokeRect(cx + 25, cy - 70, 30, 60);
-      ctx.fillStyle = '#e2e8f0'; ctx.fillText('R1: ' + (params.r1 >= 1000 ? (params.r1/1000) + ' kΩ' : params.r1 + ' Ω'), cx + 65, cy - 35);
+      ctx.fillStyle = '#e2e8f0'; ctx.fillText(`R1: ${params.r1 || 10000} Ω`, cx + 65, cy - 35);
 
-      // Nodo Vout
-      ctx.fillStyle = '#34d399'; ctx.beginPath(); ctx.arc(cx + 40, cy + 5, 6, 0, Math.PI*2); ctx.fill();
-      ctx.fillText('Vout = ' + res.dmmText, cx + 55, cy + 10);
+      drawNode(cx + 40, cy + 5, `Vout = ${res.dmmText}`, '#34d399');
       ctx.strokeStyle = '#34d399'; ctx.beginPath(); ctx.moveTo(cx + 40, cy + 5); ctx.lineTo(cx + 140, cy + 5); ctx.stroke();
 
-      // Resistencia R2
       ctx.strokeStyle = '#e2e8f0'; ctx.strokeRect(cx + 25, cy + 25, 30, 60);
-      ctx.fillStyle = '#e2e8f0'; ctx.fillText('R2: ' + (params.r2 >= 1000 ? (params.r2/1000) + ' kΩ' : params.r2 + ' Ω'), cx + 65, cy + 60);
+      ctx.fillStyle = '#e2e8f0'; ctx.fillText(`R2: ${params.r2 || 20000} Ω`, cx + 65, cy + 60);
 
-      // Conexiones verticales
       ctx.strokeStyle = '#e2e8f0'; ctx.beginPath();
       ctx.moveTo(cx + 40, cy - 90); ctx.lineTo(cx + 40, cy - 70);
       ctx.moveTo(cx + 40, cy - 10); ctx.lineTo(cx + 40, cy + 25);
       ctx.moveTo(cx + 40, cy + 85); ctx.lineTo(cx + 40, cy + 115);
       ctx.stroke();
+      drawGnd(cx + 40, cy + 115);
 
-      // Símbolo GND
-      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2; ctx.beginPath();
-      ctx.moveTo(cx + 20, cy + 115); ctx.lineTo(cx + 60, cy + 115);
-      ctx.moveTo(cx + 28, cy + 121); ctx.lineTo(cx + 52, cy + 121);
-      ctx.moveTo(cx + 34, cy + 127); ctx.lineTo(cx + 46, cy + 127);
-      ctx.stroke();
-      ctx.fillStyle = '#94a3b8'; ctx.fillText('GND', cx + 65, cy + 120);
-
-    } else if (topo === 4) { // Temporizador 555
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5;
+    } else if (topo === 4) { // 555 Astable
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
       ctx.strokeRect(cx - 70, cy - 70, 140, 140);
-      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px "SF Mono", monospace';
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px monospace';
       ctx.fillText('NE555 TIMER', cx - 45, cy - 45);
-
-      ctx.font = '11px "SF Mono", monospace'; ctx.fillStyle = '#e2e8f0';
-      ctx.fillText('8: VCC', cx - 60, cy - 20);
-      ctx.fillText('4: RST', cx - 60, cy - 2);
-      ctx.fillText('7: DIS', cx - 60, cy + 18);
-      ctx.fillText('2: TRG', cx - 60, cy + 38);
-      ctx.fillText('6: THR', cx - 60, cy + 55);
-
-      ctx.fillText('OUT: 3', cx + 15, cy - 5);
-      ctx.fillText('GND: 1', cx + 15, cy + 45);
-
-      // Traza salida
-      ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2.5;
-      ctx.beginPath(); ctx.moveTo(cx + 70, cy - 5); ctx.lineTo(cx + 150, cy - 5); ctx.stroke();
-      ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px "SF Mono", monospace';
-      ctx.fillText('CLK OUT (' + res.dmmText + ')', cx + 80, cy - 15);
+      ctx.font = '11px monospace'; ctx.fillStyle = '#e2e8f0';
+      ctx.fillText('8: VCC   4: RST', cx - 55, cy - 15);
+      ctx.fillText('7: DIS   6: THR', cx - 55, cy + 10);
+      ctx.fillText('2: TRG   1: GND', cx - 55, cy + 35);
+      drawNode(cx + 70, cy, `CLK OUT (${res.dmmText})`, '#34d399');
 
     } else {
       ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
       ctx.strokeRect(cx - 150, cy - 65, 300, 130);
-      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px "SF Mono", monospace';
-      ctx.fillText('CIRCUITO DE LABORATORIO: ' + modData.controls[0].options[topo].split('(')[0], cx - 130, cy - 30);
-      ctx.fillStyle = '#94a3b8'; ctx.font = '12px system-ui, sans-serif';
-      ctx.fillText('Valor Medido / Frecuencia: ' + res.dmmText, cx - 130, cy);
-      const firstLine = (res.formula || '').split(String.fromCharCode(10))[0];
-      ctx.fillText('Ecuación: ' + firstLine, cx - 130, cy + 25);
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px monospace';
+      ctx.fillText(`CIRCUITO R-L-C: ${modData.controls[0].options[topo].split('(')[0]}`, cx - 130, cy - 30);
+      ctx.fillStyle = '#94a3b8'; ctx.font = '12px system-ui';
+      ctx.fillText(`Lectura Instrumental: ${res.dmmText}`, cx - 130, cy);
+      ctx.fillText(`R1 = ${params.r1} Ω  |  R2 = ${params.r2} Ω  |  C = ${params.c1} nF`, cx - 130, cy + 25);
     }
 
+  } else if (m === 11) { // 12. Fuentes Conmutadas Buck & Boost DC-DC
+    const topo = params.topo || 0;
+    const isBuck = topo === 0;
+
+    // Rail Vin
+    drawNode(cx - 180, cy - 60, `+Vin (${params.vin || 12} V)`, '#38bdf8');
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(cx - 180, cy - 60); ctx.lineTo(cx - 120, cy - 60); ctx.stroke();
+
+    if (isBuck) {
+      // MOSFET conmutador en rama superior
+      ctx.strokeStyle = '#fbbf24'; ctx.strokeRect(cx - 120, cy - 75, 45, 30);
+      ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 10px monospace';
+      ctx.fillText('MOSFET', cx - 118, cy - 60);
+      ctx.fillText(`D=${params.duty || 41.7}%`, cx - 118, cy - 48);
+
+      // Nodo de conmutación V_SW
+      drawNode(cx - 40, cy - 60, 'Nodo SW', '#f59e0b');
+
+      // Diodo volante Schottky hacia masa
+      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2;
+      ctx.strokeRect(cx - 50, cy - 20, 20, 40);
+      ctx.fillStyle = '#f43f5e'; ctx.fillText('D_fly', cx - 85, cy);
+      drawGnd(cx - 40, cy + 25);
+
+      // Bobina L en serie hacia salida
+      ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
+      ctx.strokeRect(cx - 10, cy - 70, 60, 20);
+      ctx.fillStyle = '#34d399'; ctx.font = 'bold 11px monospace';
+      ctx.fillText(`L = ${params.l || 47} µH`, cx - 5, cy - 78);
+
+      // Condensador C_out en paralelo
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+      ctx.strokeRect(cx + 80, cy - 20, 20, 40);
+      ctx.fillStyle = '#38bdf8'; ctx.fillText(`C = ${params.c || 220} µF`, cx + 60, cy - 28);
+      drawGnd(cx + 90, cy + 25);
+
+      // Conexiones de salida y carga
+      ctx.strokeStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.moveTo(cx + 50, cy - 60); ctx.lineTo(cx + 160, cy - 60);
+      ctx.moveTo(cx - 40, cy - 60); ctx.lineTo(cx - 40, cy - 20);
+      ctx.moveTo(cx + 90, cy - 60); ctx.lineTo(cx + 90, cy - 20);
+      ctx.stroke();
+
+      drawNode(cx + 160, cy - 60, `+Vout = ${res.dmmText}`, '#30d158');
+
+    } else { // Boost
+      // Inductor L en la entrada
+      ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
+      ctx.strokeRect(cx - 110, cy - 70, 60, 20);
+      ctx.fillStyle = '#34d399'; ctx.font = 'bold 11px monospace';
+      ctx.fillText(`L = ${params.l || 47} µH`, cx - 105, cy - 78);
+
+      // MOSFET hacia masa
+      ctx.strokeStyle = '#fbbf24'; ctx.strokeRect(cx - 20, cy - 20, 30, 45);
+      ctx.fillStyle = '#fbbf24'; ctx.font = 'bold 10px monospace';
+      ctx.fillText('MOS', cx - 15, cy + 5);
+      drawGnd(cx - 5, cy + 30);
+
+      // Diodo Schottky en serie hacia salida
+      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2.5;
+      ctx.strokeRect(cx + 40, cy - 70, 40, 20);
+      ctx.fillStyle = '#f43f5e'; ctx.fillText('Schottky', cx + 35, cy - 76);
+
+      // Condensador C_out
+      ctx.strokeStyle = '#38bdf8'; ctx.strokeRect(cx + 110, cy - 20, 20, 40);
+      ctx.fillStyle = '#38bdf8'; ctx.fillText(`C = ${params.c || 220} µF`, cx + 90, cy - 28);
+      drawGnd(cx + 120, cy + 25);
+
+      ctx.strokeStyle = '#38bdf8'; ctx.beginPath();
+      ctx.moveTo(cx - 120, cy - 60); ctx.lineTo(cx - 110, cy - 60);
+      ctx.moveTo(cx - 50, cy - 60); ctx.lineTo(cx + 40, cy - 60);
+      ctx.moveTo(cx - 5, cy - 60); ctx.lineTo(cx - 5, cy - 20);
+      ctx.moveTo(cx + 80, cy - 60); ctx.lineTo(cx + 170, cy - 60);
+      ctx.moveTo(cx + 120, cy - 60); ctx.lineTo(cx + 120, cy - 20);
+      ctx.stroke();
+
+      drawNode(cx + 170, cy - 60, `+Vout = ${res.dmmText}`, '#30d158');
+    }
+
+  } else if (m === 12) { // 13. Líneas de Transmisión RF & Carta de Smith Vectorial
+    // Esquema de línea a la izquierda
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 220, cy - 50, 70, 100);
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px monospace';
+    ctx.fillText('GEN RF', cx - 210, cy - 20);
+    ctx.fillText(`f = ${params.freq || 433}M`, cx - 210, cy + 5);
+    ctx.fillText(`Z0 = ${params.z0 === 1 ? '75' : '50'}Ω`, cx - 210, cy + 25);
+
+    // Cable Coaxial (Vivo y Malla)
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(cx - 150, cy - 25); ctx.lineTo(cx - 60, cy - 25);
+    ctx.moveTo(cx - 150, cy + 25); ctx.lineTo(cx - 60, cy + 25);
+    ctx.stroke();
+    ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace';
+    ctx.fillText(`Coax l = ${params.len || 0.5}m`, cx - 145, cy);
+
+    // Carga de terminación ZL = RL + jXL
+    ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2.5;
+    ctx.strokeRect(cx - 60, cy - 35, 40, 70);
+    ctx.fillStyle = '#34d399'; ctx.font = 'bold 10px monospace';
+    ctx.fillText('Z_L', cx - 50, cy - 10);
+    ctx.fillText(`${params.rl || 50}Ω`, cx - 55, cy + 10);
+    ctx.fillText(`${(params.xl || 0) >= 0 ? '+' : ''}${params.xl || 0}j`, cx - 55, cy + 25);
+
+    // PROYECCIÓN VECTORIAL DE LA CARTA DE SMITH A LA DERECHA
+    const sx = cx + 110;
+    const sy = cy;
+    const sRadius = 65;
+
+    // Círculo exterior (|Γ| = 1)
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(sx, sy, sRadius, 0, Math.PI * 2); ctx.stroke();
+
+    // Eje horizontal de resistencias puras (X = 0)
+    ctx.strokeStyle = '#334155'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(sx - sRadius, sy); ctx.lineTo(sx + sRadius, sy); ctx.stroke();
+
+    // Círculos de resistencia constante r = 1.0 (centro de carta) y r = 0.5
+    // En carta de Smith: centro en (r/(1+r), 0) y radio 1/(1+r)
+    // Para r = 1.0 -> centro (0.5, 0), radio 0.5
+    ctx.strokeStyle = '#1e293b';
+    ctx.beginPath(); ctx.arc(sx + sRadius * 0.5, sy, sRadius * 0.5, 0, Math.PI * 2); ctx.stroke();
+    // Para r = 0.5 -> centro (0.33, 0), radio 0.67
+    ctx.beginPath(); ctx.arc(sx + sRadius * 0.333, sy, sRadius * 0.667, 0, Math.PI * 2); ctx.stroke();
+
+    // Proyectar punto Gamma del módulo
+    const gr = res.gamma_r !== undefined ? res.gamma_r : 0.0;
+    const gi = res.gamma_i !== undefined ? res.gamma_i : 0.0;
+    const gmag = res.gamma_mag !== undefined ? res.gamma_mag : 0.0;
+    const px = sx + gr * sRadius;
+    const py = sy - gi * sRadius; // Invertir Y para plano complejo estándar
+
+    // Círculo de ROE constante
+    ctx.strokeStyle = 'rgba(244, 63, 94, 0.4)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.arc(sx, sy, gmag * sRadius, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Punto de carga Gamma en rojo/verde brillante
+    ctx.fillStyle = gmag < 0.15 ? '#30d158' : '#f43f5e';
+    ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+
+    // Etiquetas de la Carta
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 10px monospace';
+    ctx.fillText('CARTA DE SMITH', sx - 42, sy - sRadius - 8);
+    ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace';
+    ctx.fillText(`|Γ| = ${gmag.toFixed(3)}`, sx - 30, sy + sRadius + 16);
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillText(`ROE = ${res.dmmText}`, sx - 35, sy + sRadius + 30);
+
+  } else if (m === 13) { // 14. Transistores BJT & MOSFET: Polarización y Pequeña Señal
+    // Símbolo Transistor BJT NPN / MOSFET
+    const isBjt = (params.device || 0) !== 2;
+    const vcc = params.vcc || 12.0;
+
+    // Rail Vcc
+    drawNode(cx, cy - 85, `+Vcc (${vcc.toFixed(1)} V)`, '#38bdf8');
+
+    // Resistencia R1 (divisor superior) y R2 (divisor inferior)
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 100, cy - 75, 25, 45); // R1
+    ctx.fillStyle = '#e2e8f0'; ctx.font = '10px monospace';
+    ctx.fillText(`R1: ${params.r1 || 33000}Ω`, cx - 165, cy - 50);
+
+    ctx.strokeRect(cx - 100, cy + 15, 25, 45); // R2
+    ctx.fillText(`R2: ${params.r2 || 10000}Ω`, cx - 165, cy + 40);
+    drawGnd(cx - 87, cy + 70);
+
+    // Resistencia Rc (colector)
+    ctx.strokeRect(cx + 35, cy - 75, 25, 45); // Rc
+    ctx.fillText(`RC: ${params.rc || 2200}Ω`, cx + 65, cy - 50);
+
+    // Resistencia Re (emisor)
+    ctx.strokeRect(cx + 35, cy + 25, 25, 45); // Re
+    ctx.fillText(`RE: ${params.re || 470}Ω`, cx + 65, cy + 50);
+    drawGnd(cx + 47, cy + 80);
+
+    // Dibujo del BJT (Base, Colector, Emisor)
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5;
+    // Barra de base
+    ctx.beginPath(); ctx.moveTo(cx, cy - 20); ctx.lineTo(cx, cy + 20); ctx.stroke();
+    // Terminal de base
+    ctx.beginPath(); ctx.moveTo(cx - 87, cy); ctx.lineTo(cx, cy); ctx.stroke();
+    // Colector y Emisor
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - 10); ctx.lineTo(cx + 47, cy - 30);
+    ctx.moveTo(cx, cy + 10); ctx.lineTo(cx + 47, cy + 25);
+    ctx.stroke();
+
+    // Flecha de emisor NPN
+    ctx.fillStyle = '#38bdf8';
+    ctx.beginPath();
+    ctx.moveTo(cx + 47, cy + 25);
+    ctx.lineTo(cx + 35, cy + 18);
+    ctx.lineTo(cx + 41, cy + 12);
+    ctx.closePath(); ctx.fill();
+
+    // Conexiones verticales a Rc y Re
+    ctx.strokeStyle = '#e2e8f0'; ctx.beginPath();
+    ctx.moveTo(cx, cy - 85); ctx.lineTo(cx - 87, cy - 85); ctx.lineTo(cx - 87, cy - 75);
+    ctx.moveTo(cx - 87, cy - 30); ctx.lineTo(cx - 87, cy + 15);
+    ctx.moveTo(cx, cy - 85); ctx.lineTo(cx + 47, cy - 85); ctx.lineTo(cx + 47, cy - 75);
+    ctx.moveTo(cx + 47, cy - 30); ctx.lineTo(cx + 47, cy - 15);
+    ctx.stroke();
+
+    // Salida VCEQ
+    drawNode(cx + 47, cy - 15, `Q: VCE = ${res.dmmText}`, '#30d158');
+
+  } else if (m === 14) { // 15. Sistemas de Control & Regulador PID Feedback
+    // Bloque Sumador / Comparador de error (r - y)
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(cx - 150, cy, 18, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 13px monospace';
+    ctx.fillText('Σ', cx - 155, cy + 5);
+    ctx.font = 'bold 11px monospace';
+    ctx.fillText('+', cx - 175, cy - 8);
+    ctx.fillText('-', cx - 155, cy + 28);
+
+    drawNode(cx - 220, cy, `Consigna r (${params.sp || 50}%)`, '#38bdf8');
+    ctx.strokeStyle = '#38bdf8'; ctx.beginPath(); ctx.moveTo(cx - 220, cy); ctx.lineTo(cx - 168, cy); ctx.stroke();
+
+    // Bloque Controlador PID
+    ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx - 100, cy - 40, 90, 80);
+    ctx.fillStyle = '#a855f7'; ctx.font = 'bold 12px monospace';
+    ctx.fillText('PID CTRL', cx - 88, cy - 18);
+    ctx.fillStyle = '#e2e8f0'; ctx.font = '10px monospace';
+    ctx.fillText(`Kp = ${params.kp || 3.5}`, cx - 88, cy);
+    ctx.fillText(`Ki = ${params.ki || 1.2}`, cx - 88, cy + 15);
+    ctx.fillText(`Kd = ${params.kd || 0.35}`, cx - 88, cy + 30);
+
+    // Conexión error e(t)
+    ctx.strokeStyle = '#e2e8f0'; ctx.beginPath(); ctx.moveTo(cx - 132, cy); ctx.lineTo(cx - 100, cy); ctx.stroke();
+
+    // Bloque Planta G(s)
+    ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2;
+    ctx.strokeRect(cx + 30, cy - 35, 95, 70);
+    ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px monospace';
+    ctx.fillText('PLANTA G(s)', cx + 40, cy - 10);
+    ctx.fillStyle = '#94a3b8'; ctx.font = '10px monospace';
+    ctx.fillText('Proceso Físico', cx + 40, cy + 12);
+
+    // Conexión señal de control u(t)
+    ctx.strokeStyle = '#e2e8f0'; ctx.beginPath(); ctx.moveTo(cx - 10, cy); ctx.lineTo(cx + 30, cy); ctx.stroke();
+    ctx.fillStyle = '#38bdf8'; ctx.font = '10px monospace'; ctx.fillText('u(t)', cx + 5, cy - 8);
+
+    // Salida del sistema y(t)
+    drawNode(cx + 175, cy, `Salida y(t) = ${res.dmmText}`, '#30d158');
+    ctx.strokeStyle = '#30d158'; ctx.beginPath(); ctx.moveTo(cx + 125, cy); ctx.lineTo(cx + 175, cy); ctx.stroke();
+
+    // Lazo de Realimentación Feedback H(s) hacia el sumador
+    ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2; ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(cx + 150, cy); ctx.lineTo(cx + 150, cy + 65);
+    ctx.lineTo(cx - 150, cy + 65); ctx.lineTo(cx - 150, cy + 18);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#fbbf24'; ctx.font = '10px monospace';
+    ctx.fillText('Sensor Feedback H(s) = 1.0', cx - 40, cy + 80);
+
   } else {
+    // Fallback de seguridad estilizado
     ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
     ctx.strokeRect(cx - 140, cy - 60, 280, 120);
     ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px "SF Mono", monospace';
-    ctx.fillText('ETAPA DE ACONDICIONAMIENTO ANALÓGICO', cx - 120, cy - 20);
-    ctx.fillStyle = '#94a3b8'; ctx.font = '12px system-ui, sans-serif';
-    ctx.fillText('Salida Medida: ' + res.dmmText, cx - 120, cy + 10);
+    ctx.fillText('CIRCUITO DE LABORATORIO ACTIVO', cx - 120, cy - 20);
+    ctx.fillStyle = '#94a3b8'; ctx.font = '12px system-ui';
+    ctx.fillText(`Medida Principal: ${res.dmmText}`, cx - 120, cy + 10);
     const firstLine = (res.formula || '').split(String.fromCharCode(10))[0];
-    ctx.fillText('Ecuación: ' + firstLine, cx - 120, cy + 35);
+    ctx.fillText(`Ecuación: ${firstLine}`, cx - 120, cy + 35);
   }
 
-  // Box inferior con fórmulas
+  // Box inferior con fórmulas analíticas del circuito
   ctx.fillStyle = '#0f172a';
-  ctx.fillRect(30, h - 70, w - 60, 50);
-  ctx.strokeStyle = '#1e293b'; ctx.strokeRect(30, h - 70, w - 60, 50);
+  ctx.fillRect(25, h - 70, w - 50, 52);
+  ctx.strokeStyle = '#1e293b'; ctx.strokeRect(25, h - 70, w - 50, 52);
   ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px "SF Mono", monospace';
-  ctx.fillText('ECUACIÓN CARACTERÍSTICA:', 45, h - 50);
+  ctx.fillText('ECUACIÓN CARACTERÍSTICA & MODELO:', 40, h - 50);
   ctx.fillStyle = '#f8fafc'; ctx.font = '11px "SF Mono", monospace';
-  ctx.fillText((res.formula || '').replace(new RegExp(String.fromCharCode(10), 'g'), '  |  '), 45, h - 30);
+  ctx.fillText((res.formula || '').replace(new RegExp(String.fromCharCode(10), 'g'), '   |   '), 40, h - 30);
 
   ctx.restore();
 }
-
-
-// ======================================================================
-// COLOR CODE MODAL & DECODER ENGINE
-// ======================================================================
-const CC_COLORS = [
-  '#000000', '#78350f', '#dc2626', '#ea580c', '#eab308',
-  '#16a34a', '#2563eb', '#9333ea', '#64748b', '#ffffff'
-];
-const CC_TOL_MAP = {
-  '0.05': '#d97706', '0.10': '#94a3b8', '0.01': '#78350f', '0.02': '#dc2626', '0.005': '#16a34a'
-};
 
 function openColorCodeModal() {
   document.getElementById('modal-color-code').style.display = 'flex';
