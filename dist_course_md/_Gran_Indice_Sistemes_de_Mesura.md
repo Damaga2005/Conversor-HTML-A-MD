@@ -62,9 +62,14 @@ Cada tema dispone de un **Cuaderno Maestro Unificado** (`_Cuaderno_Maestro_*.md`
 
 ---
 
-## 🔬 4. Laboratorio Virtual de Sensores & Electrónica 3D (v7.5 Enterprise)
+## 🔬 4. Laboratorio Virtual de Sensores & Electrónica 3D (v8.0 Enterprise Workbench Edition)
 
 Acceso directo al simulador web autónomo: [`Laboratorio_Virtual_Sensores.html`](Laboratorio_Virtual_Sensores.html)
+
+### 🔀 3 Modos de Visualización en Tiempo Real (60 FPS)
+- **🌐 Vista 3D WebGL:** Renderizado volumétrico acelerado por GPU con control orbital 360°, iluminación Phong, materiales realistas y reconstrucción geométrica según la topología.
+- **📐 Esquemático 2D CAD:** Trazado circuital vectorial de alta precisión según normas internacionales **IEC 60617 / IEEE Std 315**, con nodos activos, caídas de tensión y flechas de corriente en tiempo real.
+- **🔀 Vista Dividida (3D + Esquemático):** Visualización dual simultánea (50% WebGL / 50% CAD) interactiva y sincronizada a 60 FPS.
 
 ### 🎛️ Instrumentación Triple de Grado Industrial
 1. **Multímetro Digital Keysight 34465A Truevolt (6½ Dígitos):** Pantalla VFD, barra analógica en tiempo real, medición True-RMS y cálculo de incertidumbre metrológica $u_B$ según la GUM.
@@ -90,9 +95,18 @@ Acceso directo al simulador web autónomo: [`Laboratorio_Virtual_Sensores.html`]
 - **Módulo 13:** 📡 Líneas de Transmisión RF & Carta de Smith Vectorial — *GREELEC CAF*.
 - **Módulo 14:** 🎛️ Transistores BJT & MOSFET: Polarización y Pequeña Señal — *GREELEC DE/CA*.
 - **Módulo 15:** 🎯 Sistemas de Control Feedback & Regulador PID Continuo — *GREELEC SC*.
-- **Módulo 16:** 🛠️ **Taller Libre CAD & Editor de Circuitos Manual (MNA Solver & SPICE):**
-  - Editor interactivo de netlists SPICE (`.cir`) con botones de inserción rápida (`+ R`, `+ C`, `+ L`, `+ D`, `+ OpAmp`).
-  - Motor de simulación nodal modificado (MNA) con resolución matricial en tiempo real.
-  - Esquemático CAD vectorial dinámico con normas IEC/IEEE y etiquetas de tensión nodales.
-  - Protoboard 3D viva con regeneración física de componentes y jumpers.
-  - Descarga de archivos `.cir` listos para importar en LTspice y Ngspice.
+- **Módulo 16:** 🛠️ **Taller Libre CAD & Simulador de Circuitos Manual (MNA Solver & Equivalentes de Thévenin/Norton):**
+  - **Motor MNA Nodal Modificado con Eliminación Gaussiana:** Resolución matricial rigurosa en tiempo real para redes lineales y activas de hasta 7 nodos.
+  - **Puntas de Prueba Móviles (Sondas de Test):** Selectores para la Sonda Roja A (+) y Sonda Azul B (-), calculando la diferencia de potencial $V_A - V_B$ y el circuito equivalente de Thévenin entre cualquier par de nodos de la red.
+  - **Cálculo Automático de Parámetros de Red:**
+    * *Tensión de Thévenin:* $V_{th} = V_A - V_B$ (tensión a circuito abierto).
+    * *Resistencia de Thévenin:* $R_{th} = (V_A^{\text{pas}} - V_B^{\text{pas}})/I_{\text{test}}$ mediante pasivación universal de fuentes independientes e inyección de corriente de prueba de $1.0\text{ A}$.
+    * *Corriente de Norton:* $I_N = V_{th} / R_{th}$ (corriente en cortocircuito).
+    * *Máxima Transferencia de Potencia:* $R_{L,\text{opt}} = R_{th} \implies P_{L,\max} = V_{th}^2 / (4 R_{th})$.
+    * *Ganancia y Cuadripolo:* Ganancia de tensión $A_v = V_o / V_i$ lineal y en dB, impedancia de entrada $Z_{in}$ e impedancia de salida $Z_{out}$.
+    * *Teorema de Tellegen:* Comprobación en tiempo real del balance de potencias $\sum P_{\text{generada}} = \sum P_{\text{disipada}}$ con exactitud analítica.
+  - **Editor Manual Interactivo:** Formulario para agregar resistencias ($R$), condensadores ($C$), bobinas ($L$), fuentes de tensión continua ($V_{DC}$), fuentes de alterna ($V_{AC}$) y cables de puente directo ($WIRE$, $0\,\Omega$).
+  - **Gestor de Ramas y Componentes:** Lista en vivo de todas las ramas con botón de eliminación instantánea `[✕]`.
+  - **6 Presets Canónicos UPC:** Divisor Thévenin clásico ($12\text{V}, 1\text{k}\Omega, 2.2\text{k}\Omega$), Puente de Wheatstone desequilibrado, Red Atenuadora en T ($Z_0 = 50\,\Omega$), Escalera DAC R-2R de 3 bits, Filtro RLC sintonizado de 2º Orden y Demostración de Máxima Transferencia de Potencia con $R_L = R_{th}$.
+  - **Reconstrucción Tridimensional Protoboard 3D:** Los componentes manuales y jumpers flexibles de colores se colocan dinámicamente sobre la placa de pruebas virtual junto a las sondas de test roja y azul.
+  - **Exportación e Importación SPICE:** Generación automática de código `.cir` estándar para LTspice y Ngspice con un clic.

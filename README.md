@@ -122,37 +122,39 @@
 
 ---
 
-### 🔬 8. Laboratorio Virtual Interactivo de Sensores & Grado GREELEC (`Laboratorio_Virtual_Sensores.html`) — v7.5 Enterprise 3D Edition
+#### 🔬 8. Laboratorio Virtual Interactivo de Sensores & Grado GREELEC (`Laboratorio_Virtual_Sensores.html`) — v8.0 Enterprise Workbench Edition
 - **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue / SPICE:** 100% autónomo, ejecutable en local sin internet ni CDNs, optimizado para los planes de estudio de la UPC (ETSETB / EEBE) y las asignaturas del Grado en Ingeniería Electrónica de Telecomunicación (GREELEC).
+- **🔀 3 Modos de Visualización en Tiempo Real (60 FPS):**
+  - **🌐 Vista 3D WebGL:** Renderizado volumétrico acelerado por GPU con control orbital 360°, iluminación Phong, materiales realistas y reconstrucción geométrica según la topología.
+  - **📐 Esquemático 2D CAD:** Trazado circuital vectorial de alta precisión según normas internacionales **IEC 60617 / IEEE Std 315**, con nodos activos, caídas de tensión y flechas de corriente en tiempo real.
+  - **🔀 Vista Dividida (3D + Esquemático):** Visualización dual simultánea (50% WebGL / 50% CAD) interactiva y sincronizada a 60 FPS, permitiendo manipular controles físicos y ver el esquema eléctrico responder al unísono.
+
 - **🌐 Motor WebGL 3D Nativo con Reconstrucción Dinámica por Topología (GPU 60 FPS):**
   - **Rotación Orbital y Zoom Interactivos:** Control táctil y con ratón (arrastrar para orbitar, rueda para zoom, doble clic para centrar la cámara).
   - **Iluminación Realista Phong:** Materiales metálicos (oro, cobre esmaltado, aluminio mecanizado, acero pulido) y dieléctricos con reflejos dinámicos y sombras.
   - **Reconstrucción Geométrica 3D Dinámica por Topología Física:**
-    * *Módulo 11 (Banco RLC):* La protoboard 3D se reconstruye físicamente según la topología activa:
-      - **Divisor de Tensión:** 2 resistencias axiales con anillos de colores reales calculados dinámicamente según su valor nominal, jumpers de alimentación VCC/GND y clip de prueba de osciloscopio amarillo en el nodo central.
-      - **Red Serie/Paralelo:** 3 resistencias en red mixta con puentes de inserción y bananas de prueba.
-      - **Filtro de Desacoplo:** Condensador electrolítico radial de 10 µF azul con banda de polaridad (-) y tapa con cruz de seguridad + condensador cerámico de lenteja de 100 nF directamente sobre los rieles de alimentación.
-      - **Filtro RC Pasa-Bajos:** Resistencia axial + condensador de película tipo Mylar rectangular amarillo + sonda de osciloscopio BNC con pinza de masa.
-      - **Temporizador 555 Astable:** Encapsulado DIP-8 sobre el canal central con muesca y punto pin 1, resistencias $R_A/R_B$, condensador $C_T$ y **LED rojo de 5 mm pulsando en tiempo real**.
-      - **Driver de Relé Inductivo:** Relé azul cúbico electromagnético (Songle), transistor NPN TO-92 (2N2222), diodo flyback 1N4007 de vidrio y bornera de tornillo.
-      - **Limitador de Corriente con LED:** Resistencia limitadora + LED de 5 mm con bisel y ánodo/cátodo, brillando en función de la corriente directa.
-      - **Resonador LC Tanque:** Bobina toroidal con espiras de cobre esmaltado visibles sobre núcleo de ferrita + condensador WIMA de poliéster.
-    * *Módulo 12 (Fuentes Conmutadas Buck vs Boost):*
-      - **Buck (Reductor):** MOSFET High-Side con disipador, diodo Schottky shunt a masa, inductor toroidal de potencia de salida y condensador Low-ESR.
-      - **Boost (Elevador):** Inductor de choque a la entrada, MOSFET Low-Side con aletas disipadoras, diodo Schottky en serie y condensador electrolítico de alta tensión.
-    * *Módulo 13 (Líneas de Transmisión RF):* Cable coaxial RG-58 pelado por capas (PVC, malla de blindaje, dieléctrico PTFE, vivo de cobre) con conector SMA dorado y terminaciones intercambiables: carga adaptada de 50 $\Omega$ con aletas de refrigeración, tapón de cortocircuito de latón dorado, circuito abierto o antena helicoidal de cobre.
-    * *Módulo 14 (Semiconductores BJT vs MOSFET):* Encapsulado plástico TO-92 de 3 pines (2N2222) vs encapsulado TO-220 de potencia (IRF540) atornillado a disipador de aluminio extruido con tornillo y mica aislante.
-    * *Módulo 15 (Control PID):* Servomotor DC con disco encoder ranurado y horquilla optoacopladora vs horno térmico de aluminio con cartucho calefactor y vaina RTD vs depósito hidráulico acrílico transparente con nivel de agua dinámico y flotador.
-    * *Módulo 16 (Taller Libre CAD):* Gran protoboard de desarrollo libre donde se renderizan físicamente en 3D todos los componentes activos del netlist SPICE (resistencias, condensadores, inductores, diodos, integrados DIP-8 y cables jumpers flexibles de interconexión).
+    * *Módulo 11 (Banco RLC):* La protoboard 3D se reconstruye físicamente según la topología activa (Divisores resistivos con resistencias axiales y anillos de color calculados dinámicamente, Red serie/paralelo, Filtros de desacoplo de rieles con condensadores electrolíticos radiales de 10 µF y lentejas cerámicas de 100 nF, Filtros RC, Temporizador 555 astable en DIP-8 con LED pulsante, Driver de relé electromagnético con diodo volante 1N4007 y transistor 2N2222, y Resonador LC en toroide).
+    * *Módulo 12 (Fuentes Conmutadas Buck vs Boost):* MOSFET High-Side vs Low-Side con aletas disipadoras, diodos Schottky y bobinas de choque toroidales.
+    * *Módulo 13 (Líneas de Transmisión RF):* Cable coaxial RG-58 pelado por capas (PVC, malla, dieléctrico PTFE, vivo de cobre) con conector SMA y terminaciones intercambiables ($50\,\Omega$, cortocircuito, abierto, antena).
+    * *Módulo 14 (Semiconductores BJT vs MOSFET):* Encapsulados TO-92 vs TO-220 montados sobre disipadores de calor extruidos con mica aislante.
+    * *Módulo 15 (Control PID):* Servomotor DC con disco encoder ranurado, horno térmico de aluminio con vaina RTD y depósito hidráulico con flotador y nivel fluido animado.
+    * *Módulo 16 (Taller Libre CAD):* Gran protoboard de desarrollo libre donde se renderizan físicamente en 3D todos los componentes activos creados manualmente (resistencias, condensadores, bobinas, fuentes DC/AC y jumpers flexibles de interconexión con clips de prueba rojo y azul).
 
-- **🛠️ Módulo 16: Taller Libre CAD & Editor de Circuitos Manual (MNA Solver & SPICE):**
-  - **Entorno de Diseño Circuital Abierto:** Permite diseñar, analizar y testear cualquier circuito analógico personalizado o seleccionar topologías predefinidas (Filtro RLC Butterworth de 2º orden con factor $Q=0.707$, Rectificador de media onda con filtro capacitivo y cálculo de rizado $V_r$, Amplificador Operacional no inversor LM358 con límite de ganancia-ancho de banda GBW y saturación a $\pm 14	ext{ V}$, Atenuador en Pi coaxial RF 50 $\Omega$ adaptado a $-6	ext{ dB}$, y Filtro Notch doble T para rechazo de zumbido de red de $50	ext{ Hz}$).
-  - **Editor Interactivo de Netlist SPICE (.cir):**
-    * Caja de texto interactiva con resaltado para código SPICE estándar (`VIN 1 0 AC ...`, `R1 1 2 1k`, `C1 2 0 100n`, etc.).
-    * Botones de inserción rápida de componentes: `+ R`, `+ C`, `+ L`, `+ D`, `+ OpAmp`.
-    * Botón de simulación matricial instantánea (**`⚡ Simular Netlist`**) mediante análisis nodal modificado (MNA).
-    * Botones para descargar el archivo de circuito listo para simular (**`💾 .cir`**) o copiarlo al portapapeles (**`📋 Copiar`**).
-  - **Esquemático CAD Vectorial de Alta Precisión:** Dibujo en tiempo real sobre lienzo Canvas con normas IEC/IEEE, nodos de circuito claramente numerados (Node 1 IN, Node 2 OUT, GND 0), valores de componentes en unidades ingenieriles normalizadas (k$\Omega$, nF, mH), etiquetas de tensión en vivo y flechas de flujo de corriente.
+- **🛠️ Módulo 16: Taller de Análisis de Circuitos & Equivalentes de Thévenin / Norton (MNA Solver & CAD):**
+  - **Motor MNA Nodal Modificado con Eliminación Gaussiana:** Resolución matricial rigurosa en tiempo real para redes lineales y activas de hasta 7 nodos.
+  - **Puntas de Prueba Móviles (Sondas de Test):** Selectores para la Sonda Roja A (+) y Sonda Azul B (-), calculando la diferencia de potencial $V_A - V_B$ y el circuito equivalente de Thévenin entre cualquier par de nodos de la red.
+  - **Cálculo Automático de Parámetros de Red:**
+    * *Tensión de Thévenin:* $V_{th} = V_A - V_B$ (tensión a circuito abierto).
+    * *Resistencia de Thévenin:* $R_{th} = (V_A^{\text{pas}} - V_B^{\text{pas}})/I_{\text{test}}$ mediante pasivación universal de fuentes independientes e inyección de corriente de prueba de $1.0\text{ A}$.
+    * *Corriente de Norton:* $I_N = V_{th} / R_{th}$ (corriente en cortocircuito).
+    * *Máxima Transferencia de Potencia:* $R_{L,\text{opt}} = R_{th} \implies P_{L,\max} = V_{th}^2 / (4 R_{th})$.
+    * *Ganancia y Cuadripolo:* Ganancia de tensión $A_v = V_o / V_i$ lineal y en dB, impedancia de entrada $Z_{in}$ e impedancia de salida $Z_{out}$.
+    * *Teorema de Tellegen:* Comprobación en tiempo real del balance de potencias $\sum P_{\text{generada}} = \sum P_{\text{disipada}}$ con exactitud analítica.
+  - **Editor Manual Interactivo:** Formulario para agregar resistencias ($R$), condensadores ($C$), bobinas ($L$), fuentes de tensión continua ($V_{DC}$), fuentes de alterna ($V_{AC}$) y cables de puente directo ($WIRE$, $0\,\Omega$).
+  - **Gestor de Ramas y Componentes:** Lista en vivo de todas las ramas con botón de eliminación instantánea `[✕]`.
+  - **6 Presets Canónicos UPC:** Divisor Thévenin clásico ($12\text{V}, 1\text{k}\Omega, 2.2\text{k}\Omega$), Puente de Wheatstone desequilibrado, Red Atenuadora en T ($Z_0 = 50\,\Omega$), Escalera DAC R-2R de 3 bits, Filtro RLC sintonizado de 2º Orden y Demostración de Máxima Transferencia de Potencia con $R_L = R_{th}$.
+  - **Reconstrucción Tridimensional Protoboard 3D:** Los componentes manuales y jumpers flexibles de colores se colocan dinámicamente sobre la placa de pruebas virtual junto a las sondas de test roja y azul.
+  - **Exportación e Importación SPICE:** Generación automática de código `.cir` estándar para LTspice y Ngspice con un clic.
 
 - **🎛️ Rack de Instrumentación Triple de Laboratorio (Keysight + Rigol + Tektronix):**
   - **1. Multímetro Digital Keysight 34465A Truevolt (6½ Dígitos):** Pantalla VFD de alta resolución, barra analógica bar-graph con rangos automáticos, conmutación DC/AC RMS y cálculo de incertidumbre metrológica $u_B$ en tiempo real según la guía GUM.
@@ -188,7 +190,7 @@
   13. *📡 Líneas de Transmisión RF & Carta de Smith Vectorial — GREELEC CAF (Circuitos de Alta Frecuencia / Ondas)*
   14. *🎛️ Transistores BJT & MOSFET: Polarización y Pequeña Señal — GREELEC DE/CA (Dispositivos & Circuitos Analógicos)*
   15. *🎯 Sistemas de Control Feedback & Regulador PID Continuo — GREELEC SC (Sistemas de Control)*
-  16. *🛠️ Taller Libre CAD & Editor de Circuitos Manual con Motor Matricial MNA y Editor SPICE en vivo*
+  16. *🛠️ Taller Libre CAD & Editor de Circuitos Manual con Motor Matricial MNA, Equivalente de Thévenin/Norton y Editor SPICE en vivo*
 
 - **🎯 16 Retos de Examen Oficiales UPC:** Problemas numéricos reales integrados en cada módulo con comprobación automática de tolerancia y desglose algebraico de la solución.
 - **📄 Exportador de Informes Experimentales:** Generador de informe estructurado en Markdown con todas las mediciones, métricas y ecuaciones, descargable o copiable al portapapeles en 1 clic.

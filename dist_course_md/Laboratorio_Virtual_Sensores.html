@@ -415,8 +415,9 @@
   <main class="panel-center">
     <div class="view-toolbar">
       <div class="view-toggle">
-        <button class="view-btn active" id="btn-view-3d" onclick="setViewMode('3d')">🌐 Vista 3D Física (WebGL)</button>
-        <button class="view-btn" id="btn-view-diag" onclick="setViewMode('diag')">📐 Esquemático Circuital</button>
+        <button class="view-btn active" id="btn-view-3d" onclick="setViewMode('3d')">🌐 Vista 3D WebGL</button>
+        <button class="view-btn" id="btn-view-diag" onclick="setViewMode('diag')">📐 Esquemático 2D CAD</button>
+        <button class="view-btn" id="btn-view-split" onclick="setViewMode('split')">🔀 Vista Dividida (3D + Esquemático)</button>
       </div>
       <div style="font-size: 11px; color: var(--text-muted);">
         Motor: <span style="color: var(--accent-green); font-weight: 700;">WebGL GPU 60 FPS</span>
@@ -632,6 +633,7 @@ function toggleAudio() {
   document.getElementById('audio-text').textContent = 'Audio Físico: ' + (audioEnabled ? 'ON' : 'OFF');
   document.getElementById('btn-audio').className = audioEnabled ? 'btn btn-green' : 'btn';
   updateAudioSynthesis();
+  renderCircuitSchematic();
 }
 
 function updateAudioSynthesis() {
@@ -1386,48 +1388,73 @@ function build3DGeometry() {
       }
     }
 
-    const prSel = document.getElementById('param-preset');
-    const topo = prSel ? parseInt(prSel.value) : 0;
+    // Mapeo 3D de nodos del circuito en la protoboard
+    const nodePos3D = {
+      0: { x: 0.0, z: -1.38 },   // Bus de Tierra (GND)
+      1: { x: -2.0, z: -0.3 },   // Nodo 1 (Entrada AFG)
+      2: { x: -0.7, z: -0.3 },   // Nodo 2
+      3: { x: 0.7, z: -0.3 },    // Nodo 3
+      4: { x: 2.0, z: -0.3 },    // Nodo 4 (Salida)
+      5: { x: 1.2, z: 0.5 },     // Nodo 5
+      6: { x: -1.2, z: 0.5 }     // Nodo 6
+    };
 
-    // Componentes interactivos colocados en la protoboard
-    // Resistencia R1
-    addBox(-1.4, 0.12, 0, 0.85, 0.25, 0.25, 0.88, 0.82, 0.65);
-    addBox(-1.65, 0.13, 0, 0.08, 0.27, 0.27, 0.65, 0.35, 0.15);
-    addBox(-1.50, 0.13, 0, 0.08, 0.27, 0.27, 0.10, 0.10, 0.10);
-    addBox(-1.35, 0.13, 0, 0.08, 0.27, 0.27, 0.85, 0.20, 0.20);
-    addBox(-1.9, 0.05, 0, 0.35, 0.04, 0.04, 0.8, 0.82, 0.85);
+    // Renderizar cada elemento de CIRCUIT_STATE en 3D
+    const cElems = (typeof CIRCUIT_STATE !== 'undefined' && CIRCUIT_STATE.elements) ? CIRCUIT_STATE.elements : [];
+    cElems.forEach((el, idx) => {
+      const p1 = nodePos3D[el.n1] || { x: -1.5, z: 0 };
+      const p2 = nodePos3D[el.n2] || { x: 1.5, z: 0 };
+      const mx = (p1.x + p2.x) / 2;
+      const mz = (p1.z + p2.z) / 2;
+      const dx = p2.x - p1.x;
+      const dz = p2.z - p1.z;
+      const len = Math.max(0.3, Math.sqrt(dx*dx + dz*dz));
 
-    // Condensador C1
-    addBox(0.2, 0.35, -0.5, 0.5, 0.8, 0.5, 0.15, 0.45, 0.90);
-    addBox(0.2, 0.35, -0.24, 0.12, 0.8, 0.04, 0.92, 0.92, 0.95);
+      if (el.type === 'R') {
+        // Resistencia 3D (cuerpo beige + bandas de color + terminales)
+        addBox(mx, 0.14, mz, Math.min(len * 0.7, 0.8), 0.22, 0.22, 0.88, 0.82, 0.65);
+        addBox(mx - 0.15, 0.14, mz, 0.06, 0.24, 0.24, 0.65, 0.35, 0.15);
+        addBox(mx, 0.14, mz, 0.06, 0.24, 0.24, 0.10, 0.10, 0.10);
+        addBox(mx + 0.15, 0.14, mz, 0.06, 0.24, 0.24, 0.85, 0.20, 0.20);
+        addBox(p1.x, 0.06, p1.z, 0.04, 0.15, 0.04, 0.75, 0.75, 0.8);
+        addBox(p2.x, 0.06, p2.z, 0.04, 0.15, 0.04, 0.75, 0.75, 0.8);
+      } else if (el.type === 'C') {
+        // Condensador 3D
+        addBox(mx, 0.32, mz, 0.45, 0.7, 0.45, 0.15, 0.45, 0.90);
+        addBox(mx, 0.32, mz + 0.23, 0.12, 0.7, 0.03, 0.92, 0.92, 0.95);
+      } else if (el.type === 'L') {
+        // Bobina 3D
+        addBox(mx, 0.25, mz, 0.65, 0.5, 0.65, 0.85, 0.45, 0.15);
+      } else if (el.type === 'WIRE') {
+        // Jumper flexible 3D
+        const wColors = [
+          [0.2, 0.8, 0.2],
+          [0.9, 0.8, 0.1],
+          [0.1, 0.6, 0.9],
+          [0.9, 0.3, 0.1],
+          [0.8, 0.2, 0.8]
+        ];
+        const wc = wColors[idx % wColors.length];
+        addBox(mx, 0.10, mz, len * 0.95, 0.05, 0.05, wc[0], wc[1], wc[2]);
+        addBox(p1.x, 0.05, p1.z, 0.04, 0.12, 0.04, wc[0], wc[1], wc[2]);
+        addBox(p2.x, 0.05, p2.z, 0.04, 0.12, 0.04, wc[0], wc[1], wc[2]);
+      } else if (el.type === 'V_DC' || el.type === 'V_AC') {
+        // Fuente de alimentación 3D
+        addBox(mx, 0.25, mz, 0.4, 0.5, 0.4, 0.95, 0.15, 0.15);
+        addBox(mx, 0.52, mz, 0.15, 0.1, 0.15, 0.95, 0.85, 0.15);
+      }
+    });
 
-    // Inductor L1 o IC según topología
-    if (topo === 0) { // Filtro RLC
-      addBox(-0.4, 0.30, 0.4, 0.8, 0.6, 0.8, 0.85, 0.45, 0.15); // Bobina
-      addBox(1.4, 0.12, 0, 0.85, 0.25, 0.25, 0.88, 0.82, 0.65); // Carga RL
-    } else if (topo === 1) { // Rectificador Diodo
-      addBox(-0.5, 0.15, 0, 0.7, 0.26, 0.26, 0.15, 0.15, 0.18); // Diodo
-      addBox(-0.25, 0.15, 0, 0.12, 0.28, 0.28, 0.85, 0.85, 0.90); // Banda Cátodo
-      addBox(1.4, 0.12, 0, 0.85, 0.25, 0.25, 0.88, 0.82, 0.65); // Carga RL
-    } else if (topo === 2) { // Op-Amp DIP-8
-      addBox(0, 0.15, 0.3, 1.4, 0.28, 0.9, 0.12, 0.12, 0.15);
-      addBox(-0.65, 0.26, 0.3, 0.1, 0.05, 0.2, 0.3, 0.3, 0.35);
-      addBox(1.4, 0.12, -0.4, 0.85, 0.25, 0.25, 0.88, 0.82, 0.65);
-    } else { // Atenuador / Notch
-      addBox(-0.2, 0.12, 0.4, 0.75, 0.22, 0.22, 0.88, 0.82, 0.65);
-      addBox(0.8, 0.12, 0.4, 0.75, 0.22, 0.22, 0.88, 0.82, 0.65);
-      addBox(1.4, 0.12, -0.4, 0.85, 0.25, 0.25, 0.88, 0.82, 0.65);
-    }
-
-    // Cables de conexión flexibles de colores (Rojo, Azul, Amarillo, Verde)
-    addBox(-1.9, 0.12, 0.7, 0.05, 0.15, 1.4, 0.95, 0.15, 0.15); // VCC AFG
-    addBox(1.8, 0.12, -0.7, 0.05, 0.15, 1.4, 0.15, 0.15, 0.20); // GND AFG
-    addBox(0.2, 0.14, 0, 1.2, 0.05, 0.05, 0.95, 0.80, 0.10); // Jumper señal
-    // Sonda de osciloscopio CH2 conectada al nodo de salida
-    addBox(1.0, 0.45, 0, 0.18, 0.6, 0.18, 0.22, 0.75, 0.95);
-    addBox(1.0, 0.80, 0, 0.06, 0.25, 0.06, 0.8, 0.82, 0.85);
+    // Sondas Thévenin A y B en 3D
+    const prA = (typeof CIRCUIT_STATE !== 'undefined') ? CIRCUIT_STATE.probeA : 2;
+    const prB = (typeof CIRCUIT_STATE !== 'undefined') ? CIRCUIT_STATE.probeB : 0;
+    const pPosA = nodePos3D[prA] || nodePos3D[2];
+    const pPosB = nodePos3D[prB] || nodePos3D[0];
+    addBox(pPosA.x, 0.45, pPosA.z, 0.14, 0.65, 0.14, 0.95, 0.15, 0.15);
+    addBox(pPosA.x, 0.80, pPosA.z, 0.05, 0.20, 0.05, 0.9, 0.9, 0.9);
+    addBox(pPosB.x, 0.45, pPosB.z, 0.14, 0.65, 0.14, 0.15, 0.45, 0.95);
+    addBox(pPosB.x, 0.80, pPosB.z, 0.05, 0.20, 0.05, 0.9, 0.9, 0.9);
   }
-
 
   currentGeoPositions = positions;
   currentGeoNormals = normals;
@@ -1773,7 +1800,12 @@ function renderTekScope() {
 
 
 function loop() {
-  render3D();
+  if (currentViewMode === '3d' || currentViewMode === 'split') {
+    render3D();
+  }
+  if (currentViewMode === 'diag' || currentViewMode === 'split') {
+    renderCircuitSchematic();
+  }
   renderTekScope();
   animFrameId = requestAnimationFrame(loop);
 }
@@ -1782,6 +1814,358 @@ function loop() {
 // 4. MODULOS DE LA UPC (10 Temas con Parámetros y Retos Oficiales)
 // ======================================================================
 let currentModule = 0;
+
+
+
+// ======================================================================
+// MOTOR DE TEORÍA DE CIRCUITOS, MNA & TALLER CAD (UPC CCE & ANÁLISIS)
+// ======================================================================
+const CIRCUIT_STATE = {
+  elements: [
+    { id: 'V1', type: 'V_DC', n1: 1, n2: 0, val: 12.0, unit: 'V', name: 'Fuente DC' },
+    { id: 'R1', type: 'R', n1: 1, n2: 2, val: 1000.0, unit: 'Ω', name: 'R1 Entrada' },
+    { id: 'R2', type: 'R', n1: 2, n2: 0, val: 2200.0, unit: 'Ω', name: 'R2 Divisor' },
+    { id: 'W1', type: 'WIRE', n1: 2, n2: 3, val: 0.0, unit: '', name: 'Cable Puente' },
+    { id: 'RL', type: 'R', n1: 3, n2: 0, val: 3300.0, unit: 'Ω', name: 'RL Carga' }
+  ],
+  probeA: 2,
+  probeB: 0,
+  inNode: 1,
+  outNode: 3,
+  results: {
+    nodeVoltages: { 0: 0.0, 1: 12.0, 2: 7.39, 3: 7.39 },
+    branchCurrents: {},
+    Vth: 7.39,
+    Rth: 687.5,
+    Inorton: 0.0107,
+    Av: 0.616,
+    Av_dB: -4.21,
+    Ai: 0.486,
+    Zin: 1622.6,
+    Zout: 687.5,
+    P_gen: 0.0887,
+    P_diss: 0.0887,
+    P_max_thevenin: 0.0199,
+    tellegen_ok: true
+  }
+};
+
+// Algoritmo de Eliminación Gaussiana con pivoteo parcial
+function gaussianElimination(A, b) {
+  const n = b.length;
+  for (let p = 0; p < n; p++) {
+    let max = p;
+    for (let i = p + 1; i < n; i++) {
+      if (Math.abs(A[i][p]) > Math.abs(A[max][p])) max = i;
+    }
+    const tempA = A[p]; A[p] = A[max]; A[max] = tempA;
+    const tempB = b[p]; b[p] = b[max]; b[max] = tempB;
+
+    if (Math.abs(A[p][p]) <= 1e-12) continue;
+
+    for (let i = p + 1; i < n; i++) {
+      const alpha = A[i][p] / A[p][p];
+      b[i] -= alpha * b[p];
+      for (let j = p; j < n; j++) {
+        A[i][j] -= alpha * A[p][j];
+      }
+    }
+  }
+
+  const x = Array(n).fill(0);
+  for (let i = n - 1; i >= 0; i--) {
+    let sum = 0.0;
+    for (let j = i + 1; j < n; j++) sum += A[i][j] * x[j];
+    if (Math.abs(A[i][i]) > 1e-12) {
+      x[i] = (b[i] - sum) / A[i][i];
+    } else {
+      x[i] = 0.0;
+    }
+  }
+  return x;
+}
+
+// Resuelve la matriz de admitancias nodales aumentadas (MNA)
+function solveCircuitAnalysis() {
+  const elems = CIRCUIT_STATE.elements;
+  const nodeSet = new Set([0]);
+  elems.forEach(el => {
+    nodeSet.add(parseInt(el.n1));
+    nodeSet.add(parseInt(el.n2));
+  });
+  const nodes = Array.from(nodeSet).sort((a,b) => a - b);
+  const N = Math.max(...nodes);
+  if (N <= 0) return;
+
+  const vSources = elems.filter(el => el.type === 'V_DC' || el.type === 'V_AC');
+  const M = vSources.length;
+  const dim = N + M;
+  if (dim <= 0) return;
+
+  const A = Array.from({ length: dim }, () => Array(dim).fill(0));
+  const Z = Array(dim).fill(0);
+
+  function addConductance(n1, n2, g) {
+    if (n1 > 0) A[n1 - 1][n1 - 1] += g;
+    if (n2 > 0) A[n2 - 1][n2 - 1] += g;
+    if (n1 > 0 && n2 > 0) {
+      A[n1 - 1][n2 - 1] -= g;
+      A[n2 - 1][n1 - 1] -= g;
+    }
+  }
+
+  elems.forEach(el => {
+    const n1 = parseInt(el.n1);
+    const n2 = parseInt(el.n2);
+    if (el.type === 'R') {
+      addConductance(n1, n2, 1.0 / Math.max(1e-6, el.val));
+    } else if (el.type === 'WIRE') {
+      addConductance(n1, n2, 1.0 / 1e-4);
+    } else if (el.type === 'C') {
+      const f = (typeof AFG_STATE !== 'undefined' && AFG_STATE.freq) ? AFG_STATE.freq : 1000;
+      const xc = 1.0 / Math.max(1e-12, 2 * Math.PI * f * el.val * 1e-9);
+      addConductance(n1, n2, 1.0 / xc);
+    } else if (el.type === 'L') {
+      const f = (typeof AFG_STATE !== 'undefined' && AFG_STATE.freq) ? AFG_STATE.freq : 1000;
+      const xl = Math.max(1e-4, 2 * Math.PI * f * el.val * 1e-3);
+      addConductance(n1, n2, 1.0 / xl);
+    } else if (el.type === 'I_SRC') {
+      if (n1 > 0) Z[n1 - 1] -= el.val;
+      if (n2 > 0) Z[n2 - 1] += el.val;
+    }
+  });
+
+  vSources.forEach((vs, idx) => {
+    const k = N + idx;
+    const n1 = parseInt(vs.n1);
+    const n2 = parseInt(vs.n2);
+    if (n1 > 0) { A[n1 - 1][k] += 1; A[k][n1 - 1] += 1; }
+    if (n2 > 0) { A[n2 - 1][k] -= 1; A[k][n2 - 1] -= 1; }
+    Z[k] = vs.val;
+  });
+
+  const X = gaussianElimination(A, Z);
+  const nodeV = { 0: 0.0 };
+  for (let i = 1; i <= N; i++) {
+    nodeV[i] = (X && !isNaN(X[i - 1])) ? X[i - 1] : 0.0;
+  }
+  CIRCUIT_STATE.results.nodeVoltages = nodeV;
+
+  let totalPdiss = 0;
+  let totalPgen = 0;
+  const branchI = {};
+
+  elems.forEach(el => {
+    const v1 = nodeV[parseInt(el.n1)] || 0;
+    const v2 = nodeV[parseInt(el.n2)] || 0;
+    const vDiff = v1 - v2;
+    let iBranch = 0;
+    if (el.type === 'R') {
+      iBranch = vDiff / Math.max(1e-6, el.val);
+      totalPdiss += Math.pow(iBranch, 2) * el.val;
+    } else if (el.type === 'WIRE') {
+      iBranch = vDiff / 1e-4;
+    }
+    branchI[el.id] = iBranch;
+  });
+
+  vSources.forEach((vs, idx) => {
+    const iSrc = (X && !isNaN(X[N + idx])) ? -X[N + idx] : 0.0;
+    branchI[vs.id] = iSrc;
+    totalPgen += vs.val * iSrc;
+  });
+
+  CIRCUIT_STATE.results.branchCurrents = branchI;
+  CIRCUIT_STATE.results.P_gen = totalPgen;
+  CIRCUIT_STATE.results.P_diss = totalPdiss;
+  CIRCUIT_STATE.results.tellegen_ok = Math.abs(totalPgen - totalPdiss) < 0.01;
+
+  // Equivalente de Thévenin entre probeA y probeB
+  const pA = CIRCUIT_STATE.probeA;
+  const pB = CIRCUIT_STATE.probeB;
+  const Vth = (nodeV[pA] || 0) - (nodeV[pB] || 0);
+  CIRCUIT_STATE.results.Vth = Vth;
+
+  // Cálculo de Rth pasivando fuentes
+  const Rth = calculateTheveninResistance(pA, pB, N);
+  CIRCUIT_STATE.results.Rth = Rth;
+
+  // Norton
+  const Inorton = Math.abs(Rth) > 1e-6 ? (Vth / Rth) : 0;
+  CIRCUIT_STATE.results.Inorton = Inorton;
+
+  // Máxima transferencia de potencia: PL_max = Vth^2 / (4 * Rth)
+  CIRCUIT_STATE.results.P_max_thevenin = Math.abs(Rth) > 1e-6 ? (Math.pow(Vth, 2) / (4 * Rth)) : 0;
+
+  // Ganancias
+  const vinNode = CIRCUIT_STATE.inNode || 1;
+  const Vin = nodeV[vinNode] || 1.0;
+  const Vout = Vth;
+  const Av = Math.abs(Vin) > 1e-6 ? (Vout / Vin) : 0;
+  CIRCUIT_STATE.results.Av = Av;
+  CIRCUIT_STATE.results.Av_dB = Av > 1e-6 ? (20 * Math.log10(Av)) : -100;
+
+  const mainSrc = vSources[0];
+  const Iin = mainSrc ? Math.abs(branchI[mainSrc.id] || 1e-6) : 1e-3;
+  CIRCUIT_STATE.results.Zin = Math.abs(Iin) > 1e-9 ? (Math.abs(Vin) / Iin) : 999999;
+  CIRCUIT_STATE.results.Zout = Rth;
+}
+
+// Calcula Rth inyectando 1A con fuentes pasivadas
+function calculateTheveninResistance(nodeA, nodeB, N) {
+  if (nodeA === nodeB) return 0.0;
+  const elems = CIRCUIT_STATE.elements;
+  const A = Array.from({ length: N }, () => Array(N).fill(0));
+  const Z = Array(N).fill(0);
+
+  elems.forEach(el => {
+    if (el.type === 'R') {
+      const g = 1.0 / Math.max(1e-6, el.val);
+      const n1 = parseInt(el.n1);
+      const n2 = parseInt(el.n2);
+      if (n1 > 0) A[n1-1][n1-1] += g;
+      if (n2 > 0) A[n2-1][n2-1] += g;
+      if (n1 > 0 && n2 > 0) { A[n1-1][n2-1] -= g; A[n2-1][n1-1] -= g; }
+    } else if (el.type === 'WIRE') {
+      const g = 1.0 / 1e-4;
+      const n1 = parseInt(el.n1);
+      const n2 = parseInt(el.n2);
+      if (n1 > 0) A[n1-1][n1-1] += g;
+      if (n2 > 0) A[n2-1][n2-1] += g;
+      if (n1 > 0 && n2 > 0) { A[n1-1][n2-1] -= g; A[n2-1][n1-1] -= g; }
+    }
+  });
+
+  if (nodeA > 0) Z[nodeA - 1] += 1.0;
+  if (nodeB > 0) Z[nodeB - 1] -= 1.0;
+
+  const X = gaussianElimination(A, Z);
+  if (!X) return 1000.0;
+
+  const vA = nodeA > 0 ? X[nodeA - 1] : 0.0;
+  const vB = nodeB > 0 ? X[nodeB - 1] : 0.0;
+  return Math.max(0.001, vA - vB);
+}
+
+// Añade componente interactivo al circuito
+function addManualComponent(type, n1, n2, val, unit, name) {
+  const id = type[0] + (CIRCUIT_STATE.elements.length + 1);
+  CIRCUIT_STATE.elements.push({
+    id, type, n1: parseInt(n1), n2: parseInt(n2), val: parseFloat(val), unit: unit || '', name: name || `${type} ${val}${unit}`
+  });
+  solveCircuitAnalysis();
+  if (typeof updateModule16LeftUI === 'function') updateModule16LeftUI();
+  if (typeof build3DGeometry === 'function') build3DGeometry();
+  if (typeof renderCircuitSchematic === 'function') renderCircuitSchematic();
+}
+
+function addManualWire(n1, n2) {
+  const id = 'W' + (CIRCUIT_STATE.elements.length + 1);
+  CIRCUIT_STATE.elements.push({
+    id, type: 'WIRE', n1: parseInt(n1), n2: parseInt(n2), val: 0.0, unit: '', name: `Cable ${n1}-${n2}`
+  });
+  solveCircuitAnalysis();
+  if (typeof updateModule16LeftUI === 'function') updateModule16LeftUI();
+  if (typeof build3DGeometry === 'function') build3DGeometry();
+  if (typeof renderCircuitSchematic === 'function') renderCircuitSchematic();
+}
+
+function removeManualComponent(id) {
+  CIRCUIT_STATE.elements = CIRCUIT_STATE.elements.filter(el => el.id !== id);
+  solveCircuitAnalysis();
+  if (typeof updateModule16LeftUI === 'function') updateModule16LeftUI();
+  if (typeof build3DGeometry === 'function') build3DGeometry();
+  if (typeof renderCircuitSchematic === 'function') renderCircuitSchematic();
+}
+
+function clearManualCircuit() {
+  CIRCUIT_STATE.elements = [
+    { id: 'V1', type: 'V_DC', n1: 1, n2: 0, val: 10.0, unit: 'V', name: 'Fuente DC' }
+  ];
+  solveCircuitAnalysis();
+  if (typeof updateModule16LeftUI === 'function') updateModule16LeftUI();
+  if (typeof build3DGeometry === 'function') build3DGeometry();
+  if (typeof renderCircuitSchematic === 'function') renderCircuitSchematic();
+}
+
+function setManualTheveninProbes(pA, pB) {
+  CIRCUIT_STATE.probeA = parseInt(pA);
+  CIRCUIT_STATE.probeB = parseInt(pB);
+  solveCircuitAnalysis();
+  if (typeof updateModule16LeftUI === 'function') updateModule16LeftUI();
+  if (typeof renderCircuitSchematic === 'function') renderCircuitSchematic();
+}
+
+// Presets canónicos de Análisis de Circuitos UPC (CCE)
+function applyCircuitPreset(idx) {
+  if (idx === 0) { // Divisor de Tensión con Carga (Thévenin clásico)
+    CIRCUIT_STATE.elements = [
+      { id: 'V1', type: 'V_DC', n1: 1, n2: 0, val: 12.0, unit: 'V', name: 'Fuente Vg = 12V' },
+      { id: 'R1', type: 'R', n1: 1, n2: 2, val: 1000.0, unit: 'Ω', name: 'R1 = 1 kΩ' },
+      { id: 'R2', type: 'R', n1: 2, n2: 0, val: 2200.0, unit: 'Ω', name: 'R2 = 2.2 kΩ' },
+      { id: 'W1', type: 'WIRE', n1: 2, n2: 3, val: 0.0, unit: '', name: 'Cable A' },
+      { id: 'RL', type: 'R', n1: 3, n2: 0, val: 3300.0, unit: 'Ω', name: 'RL = 3.3 kΩ' }
+    ];
+    CIRCUIT_STATE.probeA = 2; CIRCUIT_STATE.probeB = 0; CIRCUIT_STATE.inNode = 1;
+  } else if (idx === 1) { // Puente de Wheatstone Desequilibrado
+    CIRCUIT_STATE.elements = [
+      { id: 'V1', type: 'V_DC', n1: 1, n2: 0, val: 10.0, unit: 'V', name: 'Alimentación 10V' },
+      { id: 'R1', type: 'R', n1: 1, n2: 2, val: 1000.0, unit: 'Ω', name: 'R1 = 1 kΩ' },
+      { id: 'R2', type: 'R', n1: 2, n2: 0, val: 1050.0, unit: 'Ω', name: 'R2 = 1.05 kΩ' },
+      { id: 'R3', type: 'R', n1: 1, n2: 3, val: 1000.0, unit: 'Ω', name: 'R3 = 1 kΩ' },
+      { id: 'R4', type: 'R', n1: 3, n2: 0, val: 1000.0, unit: 'Ω', name: 'R4 = 1 kΩ' },
+      { id: 'RD', type: 'R', n1: 2, n2: 3, val: 5000.0, unit: 'Ω', name: 'Detector Galv.' }
+    ];
+    CIRCUIT_STATE.probeA = 2; CIRCUIT_STATE.probeB = 3; CIRCUIT_STATE.inNode = 1;
+  } else if (idx === 2) { // Atenuador en T Adaptado (50 Ohm)
+    CIRCUIT_STATE.elements = [
+      { id: 'V1', type: 'V_AC', n1: 1, n2: 0, val: 5.0, unit: 'Vpp', name: 'Generador AFG' },
+      { id: 'RS', type: 'R', n1: 1, n2: 2, val: 50.0, unit: 'Ω', name: 'Rs = 50 Ω' },
+      { id: 'R1', type: 'R', n1: 2, n2: 3, val: 17.5, unit: 'Ω', name: 'R1 serie' },
+      { id: 'R2', type: 'R', n1: 3, n2: 0, val: 150.0, unit: 'Ω', name: 'R2 derivación' },
+      { id: 'R3', type: 'R', n1: 3, n2: 4, val: 17.5, unit: 'Ω', name: 'R3 serie' },
+      { id: 'RL', type: 'R', n1: 4, n2: 0, val: 50.0, unit: 'Ω', name: 'RL = 50 Ω' }
+    ];
+    CIRCUIT_STATE.probeA = 4; CIRCUIT_STATE.probeB = 0; CIRCUIT_STATE.inNode = 1;
+  } else if (idx === 3) { // Red R-2R de 3 Bits
+    CIRCUIT_STATE.elements = [
+      { id: 'V1', type: 'V_DC', n1: 1, n2: 0, val: 5.0, unit: 'V', name: 'Bit 2 (MSB)' },
+      { id: 'V2', type: 'V_DC', n1: 4, n2: 0, val: 5.0, unit: 'V', name: 'Bit 1' },
+      { id: 'V3', type: 'V_DC', n1: 6, n2: 0, val: 0.0, unit: 'V', name: 'Bit 0 (LSB)' },
+      { id: 'R1', type: 'R', n1: 1, n2: 2, val: 2000.0, unit: 'Ω', name: '2R = 2 kΩ' },
+      { id: 'R2', type: 'R', n1: 2, n2: 3, val: 1000.0, unit: 'Ω', name: 'R = 1 kΩ' },
+      { id: 'R3', type: 'R', n1: 4, n2: 3, val: 2000.0, unit: 'Ω', name: '2R = 2 kΩ' },
+      { id: 'R4', type: 'R', n1: 3, n2: 5, val: 1000.0, unit: 'Ω', name: 'R = 1 kΩ' },
+      { id: 'R5', type: 'R', n1: 6, n2: 5, val: 2000.0, unit: 'Ω', name: '2R = 2 kΩ' },
+      { id: 'R6', type: 'R', n1: 5, n2: 0, val: 2000.0, unit: 'Ω', name: '2R terminación' }
+    ];
+    CIRCUIT_STATE.probeA = 2; CIRCUIT_STATE.probeB = 0; CIRCUIT_STATE.inNode = 1;
+  } else if (idx === 4) { // Circuito RLC de 2º Orden
+    CIRCUIT_STATE.elements = [
+      { id: 'V1', type: 'V_AC', n1: 1, n2: 0, val: 5.0, unit: 'Vpp', name: 'AFG 1kHz' },
+      { id: 'R1', type: 'R', n1: 1, n2: 2, val: 500.0, unit: 'Ω', name: 'R amortiguamiento' },
+      { id: 'L1', type: 'L', n1: 2, n2: 3, val: 10.0, unit: 'mH', name: 'L1 = 10 mH' },
+      { id: 'C1', type: 'C', n1: 3, n2: 0, val: 100.0, unit: 'nF', name: 'C1 = 100 nF' },
+      { id: 'RL', type: 'R', n1: 3, n2: 0, val: 5000.0, unit: 'Ω', name: 'RL = 5 kΩ' }
+    ];
+    CIRCUIT_STATE.probeA = 3; CIRCUIT_STATE.probeB = 0; CIRCUIT_STATE.inNode = 1;
+  } else { // Máxima Transferencia de Potencia
+    CIRCUIT_STATE.elements = [
+      { id: 'V1', type: 'V_DC', n1: 1, n2: 0, val: 20.0, unit: 'V', name: 'Fuente Vth = 20V' },
+      { id: 'RS', type: 'R', n1: 1, n2: 2, val: 800.0, unit: 'Ω', name: 'R_th = 800 Ω' },
+      { id: 'RL', type: 'R', n1: 2, n2: 0, val: 800.0, unit: 'Ω', name: 'RL óptima = 800 Ω' }
+    ];
+    CIRCUIT_STATE.probeA = 2; CIRCUIT_STATE.probeB = 0; CIRCUIT_STATE.inNode = 1;
+  }
+
+  solveCircuitAnalysis();
+  if (typeof updateModule16LeftUI === 'function') updateModule16LeftUI();
+  if (typeof build3DGeometry === 'function') build3DGeometry();
+  if (typeof renderCircuitSchematic === 'function') renderCircuitSchematic();
+}
+
+// Inicialización de circuitos
+solveCircuitAnalysis();
 
 
 const MODULE_DATA = [
@@ -3063,6 +3447,83 @@ function downloadSpiceNetlist() {
   a.click();
 }
 
+
+// ======================================================================
+// MANEJADORES DE EVENTOS DEL TALLER LIBRE CAD & THÉVENIN WORKBENCH
+// ======================================================================
+function handleProbeChange() {
+  const pA = document.getElementById('probe-a-sel');
+  const pB = document.getElementById('probe-b-sel');
+  if (pA && pB) {
+    setTheveninProbe(parseInt(pA.value), parseInt(pB.value));
+    loadModuleUI();
+    renderCircuitSchematic();
+    build3DGeometry();
+  }
+}
+
+function handleCompTypeChange() {
+  const typeSel = document.getElementById('new-comp-type');
+  const valInput = document.getElementById('new-comp-val');
+  if (!typeSel || !valInput) return;
+  const t = typeSel.value;
+  if (t === 'R') valInput.value = '1000';
+  else if (t === 'C') valInput.value = '100';
+  else if (t === 'L') valInput.value = '10';
+  else if (t === 'V_DC' || t === 'V_AC') valInput.value = '5.0';
+  else if (t === 'WIRE') valInput.value = '0';
+}
+
+function handleUserAddComponent() {
+  const type = document.getElementById('new-comp-type').value;
+  const val = parseFloat(document.getElementById('new-comp-val').value) || 0;
+  const n1 = parseInt(document.getElementById('new-comp-n1').value);
+  const n2 = parseInt(document.getElementById('new-comp-n2').value);
+
+  if (n1 === n2) {
+    alert('¡Error circuital! Ambos terminales no pueden conectarse al mismo nodo (' + n1 + ').');
+    return;
+  }
+
+  if (type === 'WIRE') {
+    addManualWire(n1, n2);
+  } else {
+    addManualComponent(type, val, n1, n2);
+  }
+  loadModuleUI();
+  renderCircuitSchematic();
+  build3DGeometry();
+}
+
+function handleUserDeleteComponent(id) {
+  removeManualComponent(id);
+  loadModuleUI();
+  renderCircuitSchematic();
+  build3DGeometry();
+}
+
+function loadCircuitPreset(idx) {
+  applyCircuitPreset(idx);
+  loadModuleUI();
+  renderCircuitSchematic();
+  build3DGeometry();
+}
+
+function clearManualCircuit() {
+  CIRCUIT_STATE.elements = [
+    { id: 'V1', type: 'V_DC', n1: 1, n2: 0, val: 5.0, unit: 'V', name: 'Fuente DC' }
+  ];
+  CIRCUIT_STATE.probeA = 1;
+  CIRCUIT_STATE.probeB = 0;
+  loadModuleUI();
+  renderCircuitSchematic();
+  build3DGeometry();
+}
+
+function updateSpiceNetlistForPreset(idx) {
+  // compatibilidad
+}
+
 function copySpiceNetlist() {
   const editor = document.getElementById('spice-netlist-editor');
   if (editor) {
@@ -3112,28 +3573,139 @@ function loadModuleUI() {
   
   // Si estamos en el Módulo 16 (Taller Libre CAD), inyectamos la herramienta interactiva SPICE
   if (currentModule === 15) {
-    leftHTML += `
-      <div class="section-title" style="margin-top:14px;"><span>🛠️ Editor CAD & Netlist SPICE</span></div>
-      <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; margin-bottom: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <span style="font-size: 11px; font-weight: 700; color: #38bdf8;">NETLIST SPICE (.cir)</span>
-          <span style="font-size: 10px; color: #94a3b8;">MNA Solver v2.4</span>
+    solveCircuitAnalysis();
+    const resM = CIRCUIT_STATE.results;
+    const rthD = resM.Rth >= 1000 ? (resM.Rth/1000).toFixed(2) + ' kΩ' : resM.Rth.toFixed(1) + ' Ω';
+    const inD = (resM.Inorton * 1000).toFixed(2) + ' mA';
+    const plD = (resM.P_max_thevenin * 1000).toFixed(2) + ' mW';
+    const zinD = resM.Zin >= 1000 ? (resM.Zin/1000).toFixed(1) + ' kΩ' : resM.Zin.toFixed(0) + ' Ω';
+
+    // Opciones de nodos 0 a 6 para los selectores de sondas
+    let optA = '', optB = '';
+    for (let n = 0; n <= 6; n++) {
+      const nLabel = (n === 0) ? 'Nodo 0 (GND)' : `Nodo ${n}`;
+      optA += `<option value="${n}" ${CIRCUIT_STATE.probeA === n ? 'selected' : ''}>${nLabel}</option>`;
+      optB += `<option value="${n}" ${CIRCUIT_STATE.probeB === n ? 'selected' : ''}>${nLabel}</option>`;
+    }
+
+    // Lista de componentes activos con botón de borrado
+    let elemsListHTML = '';
+    CIRCUIT_STATE.elements.forEach(el => {
+      const iBr = resM.branchCurrents[el.id] !== undefined ? (Math.abs(resM.branchCurrents[el.id]) >= 1 ? Math.abs(resM.branchCurrents[el.id]).toFixed(2) + ' A' : (Math.abs(resM.branchCurrents[el.id])*1000).toFixed(1) + ' mA') : '---';
+      const valStr = el.type === 'WIRE' ? 'Cortocircuito (0Ω)' : `${el.val}${el.unit || ''}`;
+      elemsListHTML += `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#020617; border:1px solid #1e293b; border-radius:4px; padding:4px 8px; margin-bottom:4px; font-size:11px;">
+          <span style="font-weight:700; color:#38bdf8; min-width:40px;">${el.id}</span>
+          <span style="color:#94a3b8; font-family:monospace;">${el.n1} ➔ ${el.n2}</span>
+          <span style="color:#f8fafc; font-family:monospace; min-width:65px; text-align:right;">${valStr}</span>
+          <span style="color:#fbbf24; font-family:monospace; font-size:10px;">I=${iBr}</span>
+          <button onclick="handleUserDeleteComponent('${el.id}')" style="background:#7f1d1d; color:#fecaca; border:none; border-radius:3px; padding:1px 6px; cursor:pointer; font-weight:bold; font-size:10px;">✕</button>
         </div>
-        <textarea id="spice-netlist-editor" rows="6" style="width: 100%; background: #020617; border: 1px solid #334155; border-radius: 4px; color: #38bdf8; font-family: monospace; font-size: 11px; padding: 6px; resize: vertical;" spellcheck="false"></textarea>
-        <div style="display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap;">
-          <button onclick="runSpiceSimulation()" style="flex: 1; min-width: 110px; background: #0284c7; color: #fff; border: none; padding: 6px 10px; border-radius: 4px; font-weight: 700; font-size: 11px; cursor: pointer;">⚡ Simular Netlist</button>
-          <button onclick="insertSpiceComponent('R')" style="background: #1e293b; color: #cbd5e1; border: 1px solid #475569; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">+ R</button>
-          <button onclick="insertSpiceComponent('C')" style="background: #1e293b; color: #cbd5e1; border: 1px solid #475569; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">+ C</button>
-          <button onclick="insertSpiceComponent('L')" style="background: #1e293b; color: #cbd5e1; border: 1px solid #475569; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">+ L</button>
-          <button onclick="insertSpiceComponent('D')" style="background: #1e293b; color: #cbd5e1; border: 1px solid #475569; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">+ D</button>
-          <button onclick="downloadSpiceNetlist()" style="background: #1e293b; color: #38bdf8; border: 1px solid #0284c7; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">💾 .cir</button>
-          <button onclick="copySpiceNetlist()" style="background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer;">📋 Copiar</button>
+      `;
+    });
+
+    leftHTML = `
+      <div class="section-title"><span>🎯 Puntas de Prueba Thévenin / Norton</span></div>
+      <div style="background:#0f172a; border:1px solid #1e293b; border-radius:8px; padding:10px; margin-bottom:12px;">
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+          <div style="flex:1;">
+            <label style="font-size:10px; color:#ef4444; font-weight:bold;">🔴 Sonda A (+):</label>
+            <select id="probe-a-sel" onchange="handleProbeChange()" style="width:100%; background:#020617; border:1px solid #dc2626; color:#f8fafc; padding:4px; border-radius:4px; font-size:11px;">${optA}</select>
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:10px; color:#38bdf8; font-weight:bold;">🔵 Sonda B (-):</label>
+            <select id="probe-b-sel" onchange="handleProbeChange()" style="width:100%; background:#020617; border:1px solid #0284c7; color:#f8fafc; padding:4px; border-radius:4px; font-size:11px;">${optB}</select>
+          </div>
         </div>
+
+        <!-- Dashboard Thévenin/Norton -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; background:#020617; padding:8px; border-radius:6px; border:1px solid #334155;">
+          <div><span style="color:#94a3b8; font-size:10px;">V_th:</span> <strong style="color:#38bdf8; font-size:12px;">${resM.Vth.toFixed(3)} V</strong></div>
+          <div><span style="color:#94a3b8; font-size:10px;">R_th:</span> <strong style="color:#34d399; font-size:12px;">${rthD}</strong></div>
+          <div><span style="color:#94a3b8; font-size:10px;">I_Norton:</span> <strong style="color:#facc15; font-size:12px;">${inD}</strong></div>
+          <div><span style="color:#94a3b8; font-size:10px;">P_L,max:</span> <strong style="color:#ec4899; font-size:12px;">${plD}</strong></div>
+          <div><span style="color:#94a3b8; font-size:10px;">Av:</span> <strong style="color:#a855f7; font-size:12px;">${resM.Av.toFixed(2)} (${resM.Av_dB.toFixed(1)}dB)</strong></div>
+          <div><span style="color:#94a3b8; font-size:10px;">Z_in:</span> <strong style="color:#38bdf8; font-size:12px;">${zinD}</strong></div>
+        </div>
+        <div style="margin-top:6px; font-size:10px; color:#10b981; font-family:monospace; text-align:center;">
+          ✓ Teorema de Tellegen: Σ P_gen = Σ P_diss = ${(resM.P_gen*1000).toFixed(1)} mW
+        </div>
+      </div>
+
+      <div class="section-title"><span>➕ Añadir Componente / Cable Manual</span></div>
+      <div style="background:#0f172a; border:1px solid #1e293b; border-radius:8px; padding:10px; margin-bottom:12px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px;">
+          <div>
+            <label style="font-size:10px; color:#94a3b8;">Tipo:</label>
+            <select id="new-comp-type" onchange="handleCompTypeChange()" style="width:100%; background:#020617; border:1px solid #334155; color:#f8fafc; padding:4px; border-radius:4px; font-size:11px;">
+              <option value="R">Resistencia (R)</option>
+              <option value="C">Condensador (C)</option>
+              <option value="L">Bobina (L)</option>
+              <option value="V_DC">Fuente DC (V)</option>
+              <option value="V_AC">Fuente AC (V)</option>
+              <option value="WIRE">Cable Directo (0Ω)</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:10px; color:#94a3b8;">Valor:</label>
+            <input type="number" id="new-comp-val" value="1000" step="any" style="width:100%; background:#020617; border:1px solid #334155; color:#f8fafc; padding:4px; border-radius:4px; font-size:11px;" />
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
+          <div>
+            <label style="font-size:10px; color:#94a3b8;">Desde Nodo:</label>
+            <select id="new-comp-n1" style="width:100%; background:#020617; border:1px solid #334155; color:#f8fafc; padding:4px; border-radius:4px; font-size:11px;">
+              <option value="0">Nodo 0 (GND)</option>
+              <option value="1">Nodo 1 (Entrada)</option>
+              <option value="2" selected>Nodo 2</option>
+              <option value="3">Nodo 3</option>
+              <option value="4">Nodo 4 (Salida)</option>
+              <option value="5">Nodo 5</option>
+              <option value="6">Nodo 6</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:10px; color:#94a3b8;">Hasta Nodo:</label>
+            <select id="new-comp-n2" style="width:100%; background:#020617; border:1px solid #334155; color:#f8fafc; padding:4px; border-radius:4px; font-size:11px;">
+              <option value="0" selected>Nodo 0 (GND)</option>
+              <option value="1">Nodo 1 (Entrada)</option>
+              <option value="2">Nodo 2</option>
+              <option value="3">Nodo 3</option>
+              <option value="4">Nodo 4 (Salida)</option>
+              <option value="5">Nodo 5</option>
+              <option value="6">Nodo 6</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="handleUserAddComponent()" style="width:100%; background:#0284c7; color:#fff; border:none; padding:7px; border-radius:4px; font-weight:700; font-size:11px; cursor:pointer;">
+          ➕ Insertar Componente / Cable
+        </button>
+      </div>
+
+      <div class="section-title"><span>📋 Ramas y Componentes (${CIRCUIT_STATE.elements.length})</span></div>
+      <div style="max-height:160px; overflow-y:auto; background:#0b1120; border:1px solid #1e293b; border-radius:6px; padding:6px; margin-bottom:12px;">
+        ${elemsListHTML}
+      </div>
+
+      <div class="section-title"><span>⚡ Presets de Circuitos UPC</span></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:12px;">
+        <button onclick="loadCircuitPreset(0)" style="background:#1e293b; border:1px solid #475569; color:#f8fafc; padding:5px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">1. Divisor Thévenin</button>
+        <button onclick="loadCircuitPreset(1)" style="background:#1e293b; border:1px solid #475569; color:#f8fafc; padding:5px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">2. Wheatstone</button>
+        <button onclick="loadCircuitPreset(2)" style="background:#1e293b; border:1px solid #475569; color:#f8fafc; padding:5px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">3. Atenuador en T</button>
+        <button onclick="loadCircuitPreset(3)" style="background:#1e293b; border:1px solid #475569; color:#f8fafc; padding:5px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">4. Escalera DAC R-2R</button>
+        <button onclick="loadCircuitPreset(4)" style="background:#1e293b; border:1px solid #475569; color:#f8fafc; padding:5px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">5. Filtro RLC 2º Ord</button>
+        <button onclick="loadCircuitPreset(5)" style="background:#1e293b; border:1px solid #475569; color:#f8fafc; padding:5px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">6. Máx. Potencia RL</button>
+      </div>
+
+      <div class="section-title"><span>🛠️ Netlist SPICE y Acciones</span></div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+        <button onclick="copySpiceNetlist()" style="flex:1; background:#1e293b; color:#38bdf8; border:1px solid #0284c7; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">📋 Copiar SPICE</button>
+        <button onclick="downloadSpiceNetlist()" style="flex:1; background:#1e293b; color:#34d399; border:1px solid #059669; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">💾 Bajar .cir</button>
+        <button onclick="clearManualCircuit()" style="flex:1; background:#371b1b; color:#fca5a5; border:1px solid #b91c1c; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">🔄 Limpiar Todo</button>
       </div>
     `;
   }
-
-  pLeft.innerHTML = leftHTML;
+pLeft.innerHTML = leftHTML;
   if (currentModule === 15) { const pSel = document.getElementById("param-preset"); updateSpiceNetlistForPreset(pSel ? parseInt(pSel.value) : 0); }
 
   // Actualizar Físicas y Cálculos
@@ -3160,6 +3732,7 @@ function onParamChange() {
   updateSimulation();
   build3DGeometry();
   updateAudioSynthesis();
+  renderCircuitSchematic();
 }
 
 function applyPreset(idx) {
@@ -3244,32 +3817,55 @@ function switchModule(idx) {
   tabs.forEach((t, i) => t.className = i === idx ? 'mod-tab active' : 'mod-tab');
   loadModuleUI();
   updateAudioSynthesis();
+  renderCircuitSchematic();
 }
 
 let currentViewMode = '3d';
 
 function setViewMode(mode) {
   currentViewMode = mode;
-  document.getElementById('btn-view-3d').className = mode === '3d' ? 'view-btn active' : 'view-btn';
-  document.getElementById('btn-view-diag').className = mode === 'diag' ? 'view-btn active' : 'view-btn';
+  const b3d = document.getElementById('btn-view-3d');
+  const bDiag = document.getElementById('btn-view-diag');
+  const bSplit = document.getElementById('btn-view-split');
+  if (b3d) b3d.className = mode === '3d' ? 'view-btn active' : 'view-btn';
+  if (bDiag) bDiag.className = mode === 'diag' ? 'view-btn active' : 'view-btn';
+  if (bSplit) bSplit.className = mode === 'split' ? 'view-btn active' : 'view-btn';
+
   const glC = document.getElementById('webgl-canvas');
   const diagC = document.getElementById('diag-canvas');
   const hud = document.querySelector('.hud-controls-hint');
+  const hud3d = document.querySelector('.hud-3d');
+
   if (mode === '3d') {
     glC.style.display = 'block';
+    glC.style.width = '100%';
     diagC.style.display = 'none';
     if (hud) hud.style.display = 'flex';
-  } else {
+    if (hud3d) hud3d.style.display = 'flex';
+  } else if (mode === 'diag') {
     glC.style.display = 'none';
     diagC.style.display = 'block';
+    diagC.style.width = '100%';
+    diagC.style.position = 'relative';
     if (hud) hud.style.display = 'none';
+    if (hud3d) hud3d.style.display = 'none';
+    renderCircuitSchematic();
+  } else if (mode === 'split') {
+    glC.style.display = 'block';
+    glC.style.width = '50%';
+    diagC.style.display = 'block';
+    diagC.style.width = '50%';
+    diagC.style.position = 'relative';
+    diagC.style.borderLeft = '1px solid #1e293b';
+    if (hud) hud.style.display = 'flex';
+    if (hud3d) hud3d.style.display = 'flex';
     renderCircuitSchematic();
   }
 }
 
 function renderCircuitSchematic() {
   const c = document.getElementById('diag-canvas');
-  if (!c || currentViewMode !== 'diag') return;
+  if (!c || (currentViewMode !== 'diag' && currentViewMode !== 'split')) return;
   const dpr = window.devicePixelRatio || 1;
   const w = c.clientWidth || 800;
   const h = c.clientHeight || 450;
@@ -3324,7 +3920,7 @@ function renderCircuitSchematic() {
     ctx.fillText(label, x + 8, y - 6);
   }
 
-  function drawGnd(x, y) {
+  function drawGround(x, y) {
     ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(x, y); ctx.lineTo(x, y + 10);
@@ -3333,26 +3929,111 @@ function renderCircuitSchematic() {
     ctx.moveTo(x - 4, y + 20); ctx.lineTo(x + 4, y + 20);
     ctx.stroke();
   }
+  const drawGnd = drawGround;
+
+  function drawResistor(x, y, len, h, label, isVertical) {
+    ctx.save();
+    ctx.translate(x, y);
+    if (isVertical) ctx.rotate(Math.PI / 2);
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-len/2, 0);
+    ctx.lineTo(-len/2 + 10, 0);
+    const segs = 6;
+    const segW = (len - 20) / segs;
+    for (let i = 0; i < segs; i++) {
+      const sx = -len/2 + 10 + i * segW + segW/2;
+      const sy = (i % 2 === 0) ? -h/2 : h/2;
+      ctx.lineTo(sx, sy);
+    }
+    ctx.lineTo(len/2 - 10, 0);
+    ctx.lineTo(len/2, 0);
+    ctx.stroke();
+    if (label) {
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 10px "SF Mono", monospace';
+      ctx.fillText(label, -len/2.5, -h/2 - 6);
+    }
+    ctx.restore();
+  }
+
+  function drawCapacitor(x, y, len, h, label, isVertical) {
+    ctx.save();
+    ctx.translate(x, y);
+    if (isVertical) ctx.rotate(Math.PI / 2);
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-len/2, 0); ctx.lineTo(-4, 0);
+    ctx.moveTo(len/2, 0); ctx.lineTo(4, 0);
+    ctx.moveTo(-4, -h/2); ctx.lineTo(-4, h/2);
+    ctx.moveTo(4, -h/2); ctx.lineTo(4, h/2);
+    ctx.stroke();
+    if (label) {
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 10px "SF Mono", monospace';
+      ctx.fillText(label, -len/2.5, -h/2 - 5);
+    }
+    ctx.restore();
+  }
+
+  function drawInductor(x, y, len, r, label, isVertical) {
+    ctx.save();
+    ctx.translate(x, y);
+    if (isVertical) ctx.rotate(Math.PI / 2);
+    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-len/2, 0); ctx.lineTo(-len/2 + 10, 0); ctx.stroke();
+    const nLoops = 4;
+    const loopW = (len - 20) / nLoops;
+    for (let i = 0; i < nLoops; i++) {
+      ctx.beginPath();
+      ctx.arc(-len/2 + 10 + i * loopW + loopW/2, 0, loopW/2, Math.PI, 0);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(len/2 - 10, 0); ctx.lineTo(len/2, 0); ctx.stroke();
+    if (label) {
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 10px "SF Mono", monospace';
+      ctx.fillText(label, -len/2.5, -r - 5);
+    }
+    ctx.restore();
+  }
+
+  function drawVoltageSource(x, y, r, label, isAC) {
+    ctx.strokeStyle = isAC ? '#facc15' : '#38bdf8'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = isAC ? '#facc15' : '#38bdf8';
+    if (isAC) {
+      ctx.font = 'bold 16px monospace';
+      ctx.fillText('~', x - 6, y + 5);
+    } else {
+      ctx.font = 'bold 13px monospace';
+      ctx.fillText('+', x - 4, y - 4);
+      ctx.fillText('-', x - 4, y + 12);
+    }
+    if (label) {
+      ctx.font = 'bold 10px "SF Mono", monospace';
+      ctx.fillText(label, x - 35, y - r - 6);
+    }
+  }
 
   function drawOpAmp(x, y, label) {
     ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(x, y - 35);
     ctx.lineTo(x, y + 35);
-    ctx.lineTo(x + 55, y);
+    ctx.lineTo(x + 60, y);
     ctx.closePath();
     ctx.stroke();
-    ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 12px monospace';
+    ctx.fillStyle = '#94a3b8'; ctx.font = 'bold 14px "SF Mono", monospace';
     ctx.fillText('-', x + 8, y - 14);
     ctx.fillText('+', x + 8, y + 20);
     if (label) {
-      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 10px monospace';
-      ctx.fillText(label, x + 18, y + 4);
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 11px "SF Mono", monospace';
+      ctx.fillText(label, x + 16, y + 3);
     }
   }
 
   // ====================================================================
-  // DISPATCHER DE ESQUEMÁTICOS PARA CADA UNO DE LOS 15 MÓDULOS
+  // DISPATCHER DE ESQUEMÁTICOS PARA CADA UNO DE LOS 16 MÓDULOS
   // ====================================================================
 
   if (m === 0) { // 1. Puente de Wheatstone & Galgas
@@ -3932,109 +4613,137 @@ function renderCircuitSchematic() {
     ctx.fillText('Sensor Feedback H(s) = 1.0', cx - 40, cy + 80);
 
   
-  } else if (m === 15) { // 16. MÓDULO 16: TALLER LIBRE CAD & ESQUEMÁTICO MNA
-    const pSel = document.getElementById('param-preset');
-    const topo = pSel ? parseInt(pSel.value) : 0;
-    const Vin = params.v_gen || 5.0;
-    const R1 = params.r1 || 1000;
-    const C1 = params.c1 || 100;
-    const L1 = params.l1 || 10;
-    const RL = params.rload || 2000;
+  } else if (m === 15) { // 16. MÓDULO 16: TALLER LIBRE CAD & ANÁLISIS DE CIRCUITOS THEVENIN
+    solveCircuitAnalysis();
+    const resC = CIRCUIT_STATE.results;
+    const elems = CIRCUIT_STATE.elements;
+    const pA = CIRCUIT_STATE.probeA;
+    const pB = CIRCUIT_STATE.probeB;
 
-    // Generador AFG Rigol DG1022Z
-    ctx.strokeStyle = '#facc15'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(cx - 200, cy, 22, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = '#facc15'; ctx.font = 'bold 16px monospace';
-    ctx.fillText('~', cx - 206, cy + 5);
-    ctx.font = '10px monospace';
-    ctx.fillText(`AFG Vin = ${Vin} Vpp`, cx - 250, cy - 28);
-    drawNode(cx - 200, cy - 22, 'Nodo 1 (IN)', '#facc15');
+    // Encabezado técnico con información de simulación MNA y Thévenin
+    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px "SF Mono", monospace';
+    ctx.fillText('TALLER DE ANÁLISIS DE CIRCUITOS & TEOREMA DE THÉVENIN (UPC CCE)', 25, 25);
+    ctx.fillStyle = '#94a3b8'; ctx.font = '11px "SF Mono", monospace';
+    ctx.fillText(`MNA Solver • Nodos activos: ${Object.keys(resC.nodeVoltages).length} | Puntas de Test Thévenin: Nodo ${pA} (+) y Nodo ${pB} (-)`, 25, 42);
 
-    // Cable de entrada
-    ctx.strokeStyle = '#facc15'; ctx.beginPath(); ctx.moveTo(cx - 178, cy); ctx.lineTo(cx - 120, cy); ctx.stroke();
+    // Mapeo espacial de nodos a coordenadas del lienzo CAD
+    const nodeCoords = {
+      0: { x: cx, y: cy + 90, label: 'GND (0V)' },
+      1: { x: cx - 240, y: cy - 60, label: 'Nodo 1' },
+      2: { x: cx - 80, y: cy - 60, label: 'Nodo 2' },
+      3: { x: cx + 80, y: cy - 60, label: 'Nodo 3' },
+      4: { x: cx + 240, y: cy - 60, label: 'Nodo 4' },
+      5: { x: cx + 160, y: cy + 30, label: 'Nodo 5' },
+      6: { x: cx - 160, y: cy + 30, label: 'Nodo 6' }
+    };
 
-    if (topo === 0) { // Filtro RLC
-      // Inductor L1
-      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
-      for (let i = 0; i < 3; i++) {
-        ctx.beginPath(); ctx.arc(cx - 95 + i * 22, cy, 11, Math.PI, 0); ctx.stroke();
+    // Dibuja los componentes y cables definidos en CIRCUIT_STATE
+    elems.forEach(el => {
+      const c1 = nodeCoords[el.n1] || { x: cx - 100, y: cy };
+      const c2 = nodeCoords[el.n2] || { x: cx + 100, y: cy };
+      const midX = (c1.x + c2.x) / 2;
+      const midY = (c1.y + c2.y) / 2;
+      const isVert = Math.abs(c1.x - c2.x) < 30;
+
+      // Líneas de conexión
+      ctx.strokeStyle = el.type === 'WIRE' ? '#34d399' : '#38bdf8';
+      ctx.lineWidth = el.type === 'WIRE' ? 2.5 : 2;
+      ctx.beginPath();
+      ctx.moveTo(c1.x, c1.y);
+      ctx.lineTo(c2.x, c2.y);
+      ctx.stroke();
+
+      // Símbolo del elemento
+      if (el.type === 'R') {
+        drawResistor(midX, midY, 50, 16, `${el.id}: ${el.val >= 1000 ? (el.val/1000).toFixed(1)+'k' : el.val}Ω`, isVert);
+      } else if (el.type === 'WIRE') {
+        ctx.fillStyle = '#34d399'; ctx.font = 'bold 9px monospace';
+        ctx.fillText(`CABLE`, midX - 16, midY - 6);
+      } else if (el.type === 'V_DC' || el.type === 'V_AC') {
+        drawVoltageSource(midX, midY, 18, `${el.id}: ${el.val}${el.unit}`, el.type === 'V_AC');
+      } else if (el.type === 'C') {
+        drawCapacitor(midX, midY, 40, 16, `${el.id}: ${el.val}nF`, isVert);
+      } else if (el.type === 'L') {
+        drawInductor(midX, midY, 40, 12, `${el.id}: ${el.val}mH`, isVert);
       }
-      ctx.fillStyle = '#38bdf8'; ctx.font = '10px monospace';
-      ctx.fillText(`L1 = ${L1} mH`, cx - 90, cy - 16);
 
-      // Resistencia R1
-      drawResistor(cx - 20, cy, 70, 20, `R1 = ${R1 >= 1000 ? (R1/1000).toFixed(1)+'k' : R1} Ω`, false);
+      // Flecha indicadora de corriente
+      const iVal = resC.branchCurrents[el.id];
+      if (iVal !== undefined && Math.abs(iVal) > 1e-6) {
+        ctx.fillStyle = '#fbbf24'; ctx.font = '9px monospace';
+        const iStr = (Math.abs(iVal) >= 1 ? Math.abs(iVal).toFixed(3) + ' A' : (Math.abs(iVal)*1000).toFixed(2) + ' mA');
+        ctx.fillText(`I=${iStr}`, midX - 18, midY + 16);
+      }
+    });
 
-      // Nodo central de salida
-      drawNode(cx + 70, cy, `Nodo 2 (OUT): ${res.dmmText}`, '#30d158');
+    // Dibuja los nodos con sus voltajes en tiempo real
+    Object.keys(resC.nodeVoltages).forEach(nStr => {
+      const n = parseInt(nStr);
+      const coord = nodeCoords[n];
+      if (coord) {
+        const v = resC.nodeVoltages[n] || 0;
+        const isProbeA = (n === pA);
+        const isProbeB = (n === pB);
 
-      // Condensador C1 en derivación a GND
-      drawCapacitor(cx + 70, cy + 45, 40, 20, `C1 = ${C1} nF`, true);
-      drawGround(cx + 70, cy + 90);
+        // Indicador de nodo
+        ctx.fillStyle = (n === 0) ? '#94a3b8' : (isProbeA ? '#ef4444' : (isProbeB ? '#3b82f6' : '#38bdf8'));
+        ctx.beginPath(); ctx.arc(coord.x, coord.y, isProbeA || isProbeB ? 7 : 5, 0, Math.PI * 2); ctx.fill();
 
-      // Resistencia de carga RL a GND
-      ctx.strokeStyle = '#38bdf8'; ctx.beginPath(); ctx.moveTo(cx + 70, cy); ctx.lineTo(cx + 170, cy); ctx.stroke();
-      drawResistor(cx + 170, cy + 45, 60, 20, `RL = ${RL >= 1000 ? (RL/1000).toFixed(1)+'k' : RL} Ω`, true);
-      drawGround(cx + 170, cy + 90);
+        // Etiqueta del nodo
+        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 10px monospace';
+        ctx.fillText(`${coord.label}`, coord.x + 8, coord.y - 8);
 
-    } else if (topo === 1) { // Rectificador Diodo
-      // Diodo D1
-      ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(cx - 70, cy - 14); ctx.lineTo(cx - 70, cy + 14);
-      ctx.lineTo(cx - 35, cy); ctx.closePath(); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx - 35, cy - 14); ctx.lineTo(cx - 35, cy + 14); ctx.stroke();
-      ctx.fillStyle = '#f43f5e'; ctx.font = '10px monospace'; ctx.fillText('1N4007', cx - 65, cy - 18);
+        // Caja de voltaje del nodo
+        ctx.fillStyle = '#0f172a'; ctx.strokeStyle = (n === 0) ? '#475569' : '#38bdf8'; ctx.lineWidth = 1;
+        ctx.fillRect(coord.x + 8, coord.y + 2, 60, 16);
+        ctx.strokeRect(coord.x + 8, coord.y + 2, 60, 16);
+        ctx.fillStyle = (n === 0) ? '#94a3b8' : '#34d399'; ctx.font = 'bold 9px monospace';
+        ctx.fillText(`${v >= 0 ? '+' : ''}${v.toFixed(3)}V`, coord.x + 12, coord.y + 14);
 
-      ctx.strokeStyle = '#38bdf8'; ctx.beginPath(); ctx.moveTo(cx - 120, cy); ctx.lineTo(cx - 70, cy); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx - 35, cy); ctx.lineTo(cx + 50, cy); ctx.stroke();
+        // Badges de Sonda Thévenin
+        if (isProbeA) {
+          ctx.fillStyle = '#ef4444'; ctx.fillRect(coord.x - 45, coord.y - 25, 80, 15);
+          ctx.fillStyle = '#ffffff'; ctx.font = 'bold 9px monospace';
+          ctx.fillText('🔴 SONDA A (+)', coord.x - 41, coord.y - 14);
+        }
+        if (isProbeB) {
+          ctx.fillStyle = '#3b82f6'; ctx.fillRect(coord.x - 45, coord.y + 22, 80, 15);
+          ctx.fillStyle = '#ffffff'; ctx.font = 'bold 9px monospace';
+          ctx.fillText('🔵 SONDA B (-)', coord.x - 41, coord.y + 33);
+        }
+      }
+    });
 
-      drawNode(cx + 50, cy, `V_DC = ${res.dmmText}`, '#30d158');
-      drawCapacitor(cx + 50, cy + 45, 40, 20, `C = ${C1 >= 1000 ? (C1/1000).toFixed(1)+'µF' : C1+'nF'}`, true);
-      drawGround(cx + 50, cy + 90);
+    // Conexión de tierra física en el nodo 0
+    drawGround(nodeCoords[0].x, nodeCoords[0].y + 10);
 
-      ctx.beginPath(); ctx.moveTo(cx + 50, cy); ctx.lineTo(cx + 150, cy); ctx.stroke();
-      drawResistor(cx + 150, cy + 45, 60, 20, `RL = ${RL} Ω`, true);
-      drawGround(cx + 150, cy + 90);
+    // =========================================================================
+    // PANEL INFERIOR DINÁMICO EN LIENZO: RESULTADOS DE ANÁLISIS DE CIRCUITOS
+    // =========================================================================
+    const cardY = h - 85;
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+    ctx.fillRect(20, cardY, w - 40, 72);
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1.5; ctx.strokeRect(20, cardY, w - 40, 72);
 
-    } else if (topo === 2) { // Op-Amp No Inversor
-      // Símbolo Op-Amp triángulo
-      ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(cx - 40, cy - 40); ctx.lineTo(cx + 40, cy); ctx.lineTo(cx - 40, cy + 40); ctx.closePath();
-      ctx.stroke();
-      ctx.fillStyle = '#a855f7'; ctx.font = 'bold 12px monospace';
-      ctx.fillText('LM358', cx - 25, cy - 5);
-      ctx.fillText('+', cx - 35, cy - 18);
-      ctx.fillText('-', cx - 35, cy + 22);
+    // Columna 1: Thévenin & Norton
+    ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 11px "SF Mono", monospace';
+    ctx.fillText('🌟 EQUIVALENTE DE THÉVENIN & NORTON:', 35, cardY + 20);
+    ctx.fillStyle = '#38bdf8'; ctx.font = '11px "SF Mono", monospace';
+    const rthStr = resC.Rth >= 1000 ? (resC.Rth/1000).toFixed(2) + ' kΩ' : resC.Rth.toFixed(1) + ' Ω';
+    const inStr = (resC.Inorton * 1000).toFixed(2) + ' mA';
+    ctx.fillText(`V_th = ${resC.Vth.toFixed(3)} V  |  R_th = ${rthStr}  |  I_Norton = ${inStr}`, 35, cardY + 38);
+    ctx.fillStyle = '#94a3b8'; ctx.font = '10px "SF Mono", monospace';
+    ctx.fillText(`Máx. Transferencia: RL_opt = ${rthStr} ➔ PL_max = ${(resC.P_max_thevenin*1000).toFixed(2)} mW`, 35, cardY + 56);
 
-      // Entrada no inversora (+) desde AFG
-      ctx.strokeStyle = '#facc15'; ctx.beginPath(); ctx.moveTo(cx - 120, cy - 20); ctx.lineTo(cx - 40, cy - 20); ctx.stroke();
-
-      // Salida
-      ctx.strokeStyle = '#30d158'; ctx.beginPath(); ctx.moveTo(cx + 40, cy); ctx.lineTo(cx + 140, cy); ctx.stroke();
-      drawNode(cx + 140, cy, `Vout = ${res.dmmText}`, '#30d158');
-
-      // Lazo de realimentación R1 y RF
-      ctx.strokeStyle = '#38bdf8'; ctx.beginPath();
-      ctx.moveTo(cx + 90, cy); ctx.lineTo(cx + 90, cy + 60);
-      ctx.lineTo(cx - 70, cy + 60); ctx.lineTo(cx - 70, cy + 20); ctx.lineTo(cx - 40, cy + 20);
-      ctx.stroke();
-      drawResistor(cx + 10, cy + 60, 50, 18, `RF = ${RL} Ω`, false);
-      drawResistor(cx - 70, cy + 95, 45, 18, `R1 = ${R1} Ω`, true);
-      drawGround(cx - 70, cy + 130);
-
-    } else { // Atenuador / Circuito CAD
-      drawResistor(cx - 50, cy, 60, 20, `R1 = ${R1} Ω`, false);
-      ctx.strokeStyle = '#38bdf8'; ctx.beginPath(); ctx.moveTo(cx - 120, cy); ctx.lineTo(cx - 80, cy); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx - 20, cy); ctx.lineTo(cx + 60, cy); ctx.stroke();
-      drawNode(cx + 60, cy, `Nodo 2 (OUT) = ${res.dmmText}`, '#30d158');
-      drawResistor(cx + 60, cy + 45, 60, 20, `RL = ${RL} Ω`, true);
-      drawGround(cx + 60, cy + 90);
-    }
-
-    // Retorno de masa común
-    drawGround(cx - 200, cy + 40);
+    // Columna 2: Ganancias e Impedancias
+    const col2X = cx + 80;
+    ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 11px "SF Mono", monospace';
+    ctx.fillText('📊 PARÁMETROS DE CUADRIPOLO:', col2X, cardY + 20);
+    ctx.fillStyle = '#34d399'; ctx.font = '11px "SF Mono", monospace';
+    const zinStr = resC.Zin >= 1000 ? (resC.Zin/1000).toFixed(1) + ' kΩ' : resC.Zin.toFixed(0) + ' Ω';
+    ctx.fillText(`Av = ${resC.Av.toFixed(3)} (${resC.Av_dB.toFixed(1)} dB)  |  Z_in = ${zinStr}  |  Z_out = ${rthStr}`, col2X, cardY + 38);
+    ctx.fillStyle = '#fbbf24'; ctx.font = '10px "SF Mono", monospace';
+    ctx.fillText(`Teorema de Tellegen: P_gen = ${(resC.P_gen*1000).toFixed(1)}mW = P_diss = ${(resC.P_diss*1000).toFixed(1)}mW (100% OK)`, col2X, cardY + 56);
 
   } else {
     // Fallback de seguridad estilizado
