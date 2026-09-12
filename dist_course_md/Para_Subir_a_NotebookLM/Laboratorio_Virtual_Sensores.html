@@ -74,8 +74,31 @@
 
   /* Nav Modules */
   .modules-bar {
-    background: #101014; border-bottom: 1px solid var(--border-color);
-    display: flex; overflow-x: auto; padding: 6px 16px; gap: 8px; flex-shrink: 0;
+    background: #0d0f14; border-bottom: 1px solid #1e2430;
+    display: flex; flex-wrap: wrap; align-items: center; padding: 6px 14px; gap: 5px; flex-shrink: 0;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.03);
+  }
+  .modules-bar::-webkit-scrollbar { height: 6px; }
+  .modules-bar::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 3px; }
+  .mod-tab {
+    padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
+    white-space: nowrap; color: #94a3b8; background: #141822; border: 1px solid #1e293b;
+    transition: all 0.15s ease-in-out; display: flex; align-items: center; gap: 5px;
+  }
+  .mod-tab:hover { color: #f8fafc; background: #1e293b; border-color: #38bdf8; }
+  .mod-tab.active {
+    color: #ffffff; background: #0284c7; border-color: #38bdf8;
+    box-shadow: 0 0 12px rgba(56,189,248,0.4);
+  }
+  .mod-tab.greelec-tab {
+    background: #0f1c2e; border-color: #1e3a8a; color: #60a5fa;
+  }
+  .mod-tab.greelec-tab:hover {
+    background: #1e3a8a; border-color: #60a5fa; color: #ffffff;
+  }
+  .mod-tab.greelec-tab.active {
+    background: #2563eb; border-color: #60a5fa; color: #ffffff;
+    box-shadow: 0 0 14px rgba(37,99,235,0.6);
   }
   .modules-bar::-webkit-scrollbar { height: 4px; }
   .modules-bar::-webkit-scrollbar-thumb { background: #2e2e3e; border-radius: 2px; }
@@ -289,7 +312,7 @@
       <div class="brand-title">SISTEMES DE MESURA · LABORATORI VIRTUAL 3D</div>
       <div class="brand-subtitle">Universitat Politècnica de Catalunya · EEBE / ETSETB</div>
     </div>
-    <span class="badge-v5">v5.0 Enterprise 3D</span>
+    <span class="badge-v5" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; font-weight: 800; padding: 2px 8px; border-radius: 4px;">v6.0 · 15 Módulos GREELEC</span>
   </div>
   <div class="header-actions">
     <button class="btn btn-green" id="btn-audio" onclick="toggleAudio()">
@@ -303,21 +326,30 @@
 
 <!-- Modules Nav -->
 <nav class="modules-bar" id="modules-bar">
-  <button class="mod-tab active" onclick="switchModule(0)">⚖️ 1. Galgas & Viga 3D</button>
-  <button class="mod-tab" onclick="switchModule(1)">🌡️ 2. Pt100 & 4 Hilos</button>
-  <button class="mod-tab" onclick="switchModule(2)">⚡ 3. INA3 & CMRR Real</button>
-  <button class="mod-tab" onclick="switchModule(3)">〰️ 4. Filtro Sallen-Key</button>
-  <button class="mod-tab" onclick="switchModule(4)">📊 5. ADC & Nyquist 3D</button>
-  <button class="mod-tab" onclick="switchModule(5)">🔥 6. Termopar & CJC</button>
-  <button class="mod-tab" onclick="switchModule(6)">📈 7. Termistor Taylor</button>
-  <button class="mod-tab" onclick="switchModule(7)">🔊 8. Ruido Johnson</button>
-  <button class="mod-tab" onclick="switchModule(8)">💎 9. Piezoeléctrico 3D</button>
-  <button class="mod-tab" onclick="switchModule(9)">⚡ 10. Capacitivo Diferencial</button>
-  <button class="mod-tab" onclick="switchModule(10)">🔌 11. Banco R-L-C & Presets</button>
-  <button class="mod-tab" onclick="switchModule(11)">⚡ 12. Fuentes Buck/Boost</button>
-  <button class="mod-tab" onclick="switchModule(12)">📡 13. Líneas RF & Carta Smith</button>
-  <button class="mod-tab" onclick="switchModule(13)">🎛️ 14. BJT & MOSFET Polarización</button>
-  <button class="mod-tab" onclick="switchModule(14)">🎯 15. Lazo Feedback & PID</button>
+  <!-- Asignatura Sistemes de Mesura UPC (Módulos 1 al 10) -->
+  <button class="mod-tab active" onclick="switchModule(0)">⚖️ 1. Galgas</button>
+  <button class="mod-tab" onclick="switchModule(1)">🌡️ 2. Pt100</button>
+  <button class="mod-tab" onclick="switchModule(2)">⚡ 3. INA3</button>
+  <button class="mod-tab" onclick="switchModule(3)">〰️ 4. Sallen-Key</button>
+  <button class="mod-tab" onclick="switchModule(4)">📊 5. ADC</button>
+  <button class="mod-tab" onclick="switchModule(5)">🔥 6. Termopar</button>
+  <button class="mod-tab" onclick="switchModule(6)">📈 7. NTC Taylor</button>
+  <button class="mod-tab" onclick="switchModule(7)">🔊 8. Ruido</button>
+  <button class="mod-tab" onclick="switchModule(8)">💎 9. Piezo 3D</button>
+  <button class="mod-tab" onclick="switchModule(9)">⚡ 10. Capacitivo</button>
+
+  <!-- Separador e Insignia Oficial GREELEC UPC -->
+  <div style="display: flex; align-items: center; gap: 4px; margin: 0 4px;">
+    <span style="height: 18px; width: 1px; background: #334155; margin: 0 2px;"></span>
+    <span style="font-size: 10px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); padding: 3px 7px; border-radius: 4px; letter-spacing: 0.5px; white-space: nowrap;">🎓 GREELEC · UPC</span>
+  </div>
+
+  <!-- Asignaturas GREELEC ETSETB (Módulos 11 al 15) -->
+  <button class="mod-tab greelec-tab" onclick="switchModule(10)">🔌 11. Banco R-L-C</button>
+  <button class="mod-tab greelec-tab" onclick="switchModule(11)">⚡ 12. Buck/Boost (PEE)</button>
+  <button class="mod-tab greelec-tab" onclick="switchModule(12)">📡 13. Líneas RF & Smith (CAF)</button>
+  <button class="mod-tab greelec-tab" onclick="switchModule(13)">🎛️ 14. BJT/MOSFET (CA)</button>
+  <button class="mod-tab greelec-tab" onclick="switchModule(14)">🎯 15. Feedback PID (SC)</button>
 </nav>
 
 <!-- Main Workspace -->

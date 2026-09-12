@@ -4385,6 +4385,9 @@ def run_gui():
     def find_resource_file(filename):
         dst = out_var.get().strip()
         candidates = []
+        candidates.append(Path("dist_course_md") / filename)
+        candidates.append(Path("dist_course_md/Para_Subir_a_NotebookLM") / filename)
+        candidates.append(Path(".") / filename)
         if hasattr(sys, "_MEIPASS"):
             candidates.append(Path(sys._MEIPASS) / filename)
         try:
@@ -4397,8 +4400,6 @@ def run_gui():
             d = Path(dst)
             candidates.append(d / filename)
             candidates.append(d.parent / filename)
-        candidates.append(Path("dist_course_md") / filename)
-        candidates.append(Path(".") / filename)
         for c in candidates:
             if c.exists() and c.is_file():
                 return c
@@ -4501,13 +4502,14 @@ def run_gui():
             )
 
     def open_virtual_lab():
+        import time
         p = find_resource_file("Laboratorio_Virtual_Sensores.html")
         if p and p.exists():
-            webbrowser.open(f"file:///{p.resolve().as_posix()}")
+            webbrowser.open(f"file:///{p.resolve().as_posix()}?v={int(time.time())}")
         else:
             fallback = Path("dist_course_md/Laboratorio_Virtual_Sensores.html")
             if fallback.exists():
-                webbrowser.open(f"file:///{fallback.resolve().as_posix()}")
+                webbrowser.open(f"file:///{fallback.resolve().as_posix()}?v={int(time.time())}")
             else:
                 messagebox.showwarning(
                     "Laboratorio no encontrado",
