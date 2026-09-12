@@ -60,9 +60,20 @@
     * *Curva de Calibración en Vivo:* Trazado continuo en Canvas y generación de netlist SPICE a 4 hilos.
   - **Generador de Netlists SPICE / LTspice:** Código de circuito `.cir` completo con subcircuitos de amplificador operacional y directivas de simulación en corriente alterna (`.ac dec 100 ...`), copiable en 1 clic para validar en LTspice, Multisim o KiCad.
   - **Puente de Wheatstone & INA (AD620 / AD623):** Cálculo de tensión diferencial, ajuste de resistencia de ganancia $R_g$, error inducido por tensión de modo común según CMRR en dB y disipación térmica en las galgas para evitar autocalentamiento.
-  - **Convertidores ADC & Análisis de Cuantización:** Resolución $N$ bits, tamaño de LSB $q$, piso de ruido RMS de cuantización $\sigma_q = q/\sqrt{12}$, SNR teórico ($6.02N + 1.76\text{ dB}$), margen dinámico y criterios de filtrado antialiasing según Nyquist.
-
 ---
+
+### 🔌 4b. Banco de Componentes R-L-C & Presets Canónicos de Laboratorio
+- **6ª Pestaña Nativa en la Suite:** Entorno de análisis, cálculo paramétrico y exportación para electrónica práctica:
+  - **Divisores Resistivos para ADC (5V a 3.3V / Level Shifters):** Cálculo de tensión de salida, corriente de reposo e impedancia Thévenin $R_{th} = R_1 \parallel R_2$ con advertencia automática si excede los $10\text{ k}\Omega$ recomendados para los tiempos de muestreo y retención de microcontroladores modernos (ESP32, STM32, Arduino).
+  - **Redes Resistivas Serie y Paralelo:** Fórmulas exactas, disipación de potencia por rama y sugerencia de valores comerciales normalizados según las series estándar E12 / E24 / E96.
+  - **Redes de Desacoplo Digital (100nF Cerámico + 10µF Tantalio/Bulk):** Capacidad en paralelo, energía electrostática $E = \frac{1}{2} C V^2$, y mitigación de transitorios inductivos $L \cdot di/dt$ en líneas de alimentación.
+  - **Inductancias y Resonadores Sintonizados LC:** Frecuencia de resonancia $f_0 = 1 / (2\pi\sqrt{LC})$, impedancia característica $Z_0 = \sqrt{L/C}$ y reactancias en resonancia para filtros pasabanda o filtros de frecuencia intermedia (IF 455 kHz).
+  - **Temporizadores 555 Astables (Oscilador PWM / Reloj):** Tiempos de nivel alto $T_{high} = 0.693(R_A+R_B)C$, nivel bajo $T_{low} = 0.693 R_B C$, Duty Cycle % y frecuencia de oscilación.
+  - **Driver NPN para Relé / Motor con Diodo Flyback:** Verificación de saturación forzada con $\beta_{sat} \le 10$, cálculo de corriente de base $I_B$ para GPIOs de 3.3V/5V y absorción del pico inductivo $V = -L \cdot di/dt$ mediante diodo de libre circulación 1N4007.
+  - **Limitador de Corriente para LEDs (Rojo, Verde, Azul, Blanco):** Resistencia limitadora y disipación de potencia para proteger diodos electroluminiscentes.
+  - **Decodificador Visual de Código de Colores:** Identificación visual de resistencias de 4 y 5 bandas con representación cromática en Canvas vectorial.
+  - **Generador de Netlists SPICE (.cir) y Exportación Markdown en 1 Clic.**
+
 
 ### 🔍 5. Buscador Ultrarrápido estilo macOS Spotlight
 - Pulsa el botón **Spotlight** o el atajo de búsqueda para indexar en milisegundos todos los archivos Markdown de tu curso.
@@ -123,7 +134,7 @@
     * *Cursores Duales de Medición:* Líneas móviles de precisión para $\Delta t$, $\Delta V$ y cálculo instantáneo de frecuencia $f = 1/\Delta t$.
     * *Exportación de Telemetría a CSV:* Descarga inmediata de las señales adquiridas para su procesamiento en Python, MATLAB o Excel.
 - **🔊 Síntesis Acústica en Tiempo Real con Web Audio API:** Permite *escuchar* la física de los sensores (aliasing de Nyquist en ADC, zumbido de 50 Hz en INA/filtros y ruido térmico blanco Johnson).
-- **10 Módulos de Simulación Física y Circuital (Temas 1 al 10 UPC):**
+- **11 Módulos de Simulación Física y Circuital (Temas 1 al 10 UPC + Banco R-L-C):**
   1. *Puente de Wheatstone & Galgas (1/4, 1/2 y completo)*
   2. *Pt100 y compensación a 4 hilos Kelvin*
   3. *INA3 & CMRR real con AD623/AD620*
@@ -134,7 +145,8 @@
   8. *Ruido térmico Johnson-Nyquist & relación SNR*
   9. *Sensor piezoeléctrico & amplificador de carga vs tensión*
   10. *Sensor capacitivo diferencial & detección síncrona lock-in (PSD)*
-- **🎯 10 Retos de Examen Oficiales UPC:** Problemas numéricos reales con comprobación de tolerancia y solución matemática paso a paso.
+  11. *🔌 Banco R-L-C & Presets Canónicos de Laboratorio (Protoboard 3D, Divisores 5V a 3.3V, Desacoplo 100nF+10µF, Oscilador 555 Astable con Duty Cycle en DSO, Driver Relé NPN con Diodo Flyback 1N4007, Limitador de LEDs y Resonancia LC)*
+- **🎯 11 Retos de Examen Oficiales UPC:** Problemas numéricos reales con comprobación de tolerancia y solución matemática paso a paso.
 - **📄 Exportador de Informes Experimentales:** Generador de informe en Markdown descargable en 1 clic.
 
 ---

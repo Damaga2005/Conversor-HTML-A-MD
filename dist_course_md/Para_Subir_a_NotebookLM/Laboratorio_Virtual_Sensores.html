@@ -312,6 +312,7 @@
   <button class="mod-tab" onclick="switchModule(7)">🔊 8. Ruido Johnson</button>
   <button class="mod-tab" onclick="switchModule(8)">💎 9. Piezoeléctrico 3D</button>
   <button class="mod-tab" onclick="switchModule(9)">⚡ 10. Capacitivo Diferencial</button>
+  <button class="mod-tab" onclick="switchModule(10)">🔌 11. Banco R-L-C & Presets</button>
 </nav>
 
 <!-- Main Workspace -->
@@ -949,6 +950,47 @@ function build3DGeometry() {
     addBox(1.6, 0, 0, 0.25, 2.6, 0.25, 0.32, 0.35, 0.42);
     // Vástago micrométrico conectado a la placa central
     addBox(0, xPos + 1.2, 0, 0.15, 1.6, 0.15, 0.75, 0.78, 0.85);
+
+  } else if (m === 10) { // 11. Banco Protoboard R-L-C & Circuitos Típicos
+    // Protoboard blanca de laboratorio (165 x 55 mm)
+    addBox(0, -0.25, 0, 5.2, 0.22, 3.2, 0.94, 0.94, 0.95);
+    // Carriles de alimentación (Rojo VCC y Azul GND)
+    addBox(0, -0.13, 1.35, 4.8, 0.02, 0.08, 0.95, 0.2, 0.2);
+    addBox(0, -0.13, 1.20, 4.8, 0.02, 0.08, 0.2, 0.4, 0.95);
+    addBox(0, -0.13, -1.20, 4.8, 0.02, 0.08, 0.95, 0.2, 0.2);
+    addBox(0, -0.13, -1.35, 4.8, 0.02, 0.08, 0.2, 0.4, 0.95);
+    // Matriz de orificios de inserción
+    for (let hx = -2.1; hx <= 2.1; hx += 0.5) {
+      for (let hz = -0.8; hz <= 0.8; hz += 0.4) {
+        addBox(hx, -0.12, hz, 0.09, 0.03, 0.09, 0.15, 0.15, 0.20);
+      }
+    }
+    // Resistencia R1 cilíndrica con anillos de colores reales
+    addBox(-1.2, 0.12, 0, 0.9, 0.26, 0.26, 0.88, 0.82, 0.65);
+    addBox(-1.45, 0.13, 0, 0.08, 0.28, 0.28, 0.65, 0.35, 0.15); // Banda 1 (Marrón 1)
+    addBox(-1.30, 0.13, 0, 0.08, 0.28, 0.28, 0.10, 0.10, 0.10); // Banda 2 (Negro 0)
+    addBox(-1.15, 0.13, 0, 0.08, 0.28, 0.28, 0.95, 0.50, 0.10); // Multiplicador (Naranja x1k)
+    addBox(-0.90, 0.13, 0, 0.08, 0.28, 0.28, 0.85, 0.70, 0.20); // Tolerancia (Oro 5%)
+    // Terminales metálicos axiales R1
+    addBox(-1.8, 0.05, 0, 0.4, 0.04, 0.04, 0.8, 0.82, 0.85);
+    addBox(-0.6, 0.05, 0, 0.4, 0.04, 0.04, 0.8, 0.82, 0.85);
+
+    // Condensador C1 radial azul / cerámico
+    addBox(0.2, 0.35, -0.4, 0.45, 0.75, 0.45, 0.15, 0.45, 0.90);
+    addBox(0.2, 0.35, -0.18, 0.10, 0.75, 0.04, 0.90, 0.90, 0.95); // Banda (-)
+    addBox(0.12, -0.05, -0.4, 0.04, 0.2, 0.04, 0.8, 0.82, 0.85);
+    addBox(0.28, -0.05, -0.4, 0.04, 0.2, 0.04, 0.8, 0.82, 0.85);
+
+    // Circuito Integrado DIP-8 (NE555 / OpAmp)
+    addBox(1.3, 0.1, 0.3, 1.4, 0.28, 0.9, 0.12, 0.12, 0.15);
+    addBox(0.65, 0.22, 0.3, 0.1, 0.05, 0.2, 0.3, 0.3, 0.35); // Muesca Pin 1
+    for (let dp = -0.45; dp <= 0.45; dp += 0.3) {
+      addBox(1.3 + dp, 0.0, 0.8, 0.08, 0.15, 0.18, 0.85, 0.75, 0.25);
+      addBox(1.3 + dp, 0.0, -0.2, 0.08, 0.15, 0.18, 0.85, 0.75, 0.25);
+    }
+    // Cables Jumpers flexibles
+    addBox(-0.5, 0.15, 0.6, 1.2, 0.06, 0.06, 0.95, 0.15, 0.15);
+    addBox(0.8, 0.18, -0.7, 0.9, 0.06, 0.06, 0.2, 0.85, 0.25);
   }
 
   currentGeoPositions = positions;
@@ -1231,6 +1273,25 @@ function renderTekScope() {
       yVal = Math.sin(t*2 + animPhase) * 0.7;
     } else if (m === 7) { // Ruido Johnson puro
       yVal = (Math.random() - 0.5) * 0.6 + Math.sin(t*2 + animPhase)*0.3;
+    } else if (m === 10) { // Banco R-L-C & Presets
+      const topoEl = document.getElementById('param-topo');
+      const topo = topoEl ? parseInt(topoEl.value) : 0;
+      if (topo === 4) { // 555 Astable Square Wave
+        const cycle = (t * 2.5 + animPhase * 3) % (Math.PI * 2);
+        yVal = (cycle < Math.PI * 2 * 0.60) ? 0.75 : -0.75;
+      } else if (topo === 3) { // RC charge / discharge
+        const cycle = (t * 1.8 + animPhase * 2) % (Math.PI * 2);
+        if (cycle < Math.PI) {
+          yVal = (1.0 - Math.exp(-cycle * 2.2)) * 1.3 - 0.65;
+        } else {
+          yVal = (Math.exp(-(cycle - Math.PI) * 2.2)) * 1.3 - 0.65;
+        }
+      } else if (topo === 7) { // LC Resonator damped ringing
+        const cycle = (t * 3.5 + animPhase * 2) % (Math.PI * 2);
+        yVal = Math.sin(cycle * 4) * Math.exp(-cycle * 0.7) * 0.8;
+      } else { // DC levels (Divisor, LED, Relé)
+        yVal = 0.40 + (Math.random() - 0.5) * 0.02;
+      }
     } else {
       yVal = Math.sin(t*3 + animPhase) * 0.65;
     }
@@ -1685,6 +1746,197 @@ const MODULE_DATA = [
         }
       };
     }
+  },
+  {
+    title: "11. Banco R-L-C & Presets Típicos de Laboratorio de Electrónica",
+    hud: ["Banco: R-L-C & Proyectos", "Modo: Fidelidad de Laboratorio"],
+    controls: [
+      { id: "topo", label: "Topología Circuital", type: "select", options: [
+        "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)",
+        "Resistencias en Serie & Paralelo (E12/E24 y Potencia)",
+        "Condensadores en Serie & Paralelo (Red Desacoplo)",
+        "Filtro Pasa-Bajos RC Anti-Aliasing (1er Orden)",
+        "Temporizador 555 Astable (Generador PWM / Reloj)",
+        "Driver NPN con Diodo Flyback (Relé / Carga Inductiva)",
+        "Limitador de Corriente para LEDs (Rojo / Azul)",
+        "Circuito Resonante LC & Filtro Sintonizado"
+      ], val: 0 },
+      { id: "r1", label: "Resistencia R1 / RA", min: 10, max: 1000000, val: 10000, unit: "Ω", step: 50 },
+      { id: "r2", label: "Resistencia R2 / RB", min: 10, max: 1000000, val: 20000, unit: "Ω", step: 50 },
+      { id: "c1", label: "Capacidad C1 / C", min: 1, max: 100000, val: 100, unit: "nF", step: 5 },
+      { id: "l1", label: "Inductancia L1 / L", min: 10, max: 100000, val: 1000, unit: "µH", step: 50 },
+      { id: "vin", label: "Tensión de Alimentación (Vin)", min: 1.0, max: 24.0, val: 5.0, unit: "V", step: 0.5 }
+    ],
+    presets: [
+      { name: "Divisor 5V -> 3.3V ADC (ESP32 / MCU)", topo: 0, r1: 10000, r2: 20000, c1: 100, l1: 1000, vin: 5.0 },
+      { name: "Desacoplo Digital 100nF + 10µF (3.3V Rail)", topo: 2, r1: 10, r2: 100, c1: 100, l1: 100, vin: 3.3 },
+      { name: "Temporizador 555 a 1.0 kHz (Duty ~60%)", topo: 4, r1: 4700, r2: 4700, c1: 100, l1: 1000, vin: 5.0 },
+      { name: "Filtro RC Anti-Aliasing (fc = 1.59 kHz)", topo: 3, r1: 1000, r2: 1000, c1: 100, l1: 1000, vin: 3.3 },
+      { name: "Driver Relé 12V con 2N2222 + 1N4007", topo: 5, r1: 1000, r2: 120, c1: 100, l1: 10000, vin: 12.0 },
+      { name: "LED Azul 3.2V / 20mA desde 5V", topo: 6, r1: 91, r2: 1000, c1: 100, l1: 1000, vin: 5.0 },
+      { name: "Resonador LC 455 kHz (IF Radio)", topo: 7, r1: 100, r2: 100, c1: 10, l1: 12000, vin: 5.0 }
+    ],
+    calc: (p) => {
+      const topo = p.topo;
+      let dmmText = "0.000 V";
+      let dmmMin = "0.000 V", dmmMax = "10.000 V", dmmBar = 50, dmmUb = "±0.0001 V";
+      let metrics = [];
+      let formula = "";
+      let challenge = {};
+
+      if (topo === 0) { // Divisor 5V a 3.3V
+        const vout = p.vin * (p.r2 / (p.r1 + p.r2));
+        const rth = (p.r1 * p.r2) / (p.r1 + p.r2);
+        const itot = (p.vin / (p.r1 + p.r2)) * 1000.0; // mA
+        const pr1 = Math.pow(p.vin - vout, 2) / p.r1 * 1000.0; // mW
+        const pr2 = Math.pow(vout, 2) / p.r2 * 1000.0; // mW
+        dmmText = vout.toFixed(4) + " V";
+        dmmMin = "0.000 V"; dmmMax = p.vin.toFixed(1) + " V";
+        dmmBar = Math.min(100, (vout / p.vin) * 100);
+        dmmUb = "±0.0002 V";
+        metrics = [
+          { name: "Tensión de Salida (Vout)", val: vout.toFixed(4) + " V", sub: "Vin = " + p.vin.toFixed(1) + " V" },
+          { name: "Impedancia Thévenin (Rth)", val: (rth / 1000).toFixed(2) + " kΩ", sub: rth <= 10000 ? "✅ Apto ADC (≤ 10 kΩ)" : "⚠️ Rth > 10 kΩ (Añadir Buffer)" },
+          { name: "Corriente de Reposo", val: itot.toFixed(2) + " mA", sub: "P_total = " + (pr1 + pr2).toFixed(1) + " mW" }
+        ];
+        formula = "Vout = Vin · [ R2 / (R1 + R2) ] = " + vout.toFixed(3) + " V\nRth = (R1 · R2) / (R1 + R2) = " + (rth/1000).toFixed(2) + " kΩ\nPotencia R1: " + pr1.toFixed(1) + " mW | R2: " + pr2.toFixed(1) + " mW";
+        challenge = {
+          q: "Para un Vin = 5.0 V y R2 = 20 kΩ, ¿qué valor exacto de R1 en kΩ se requiere para Vout = 3.30 V?",
+          ans: 10.3, tol: 0.2, unit: "kΩ",
+          sol: "Vout = Vin·R2/(R1+R2) => R1 = R2·(Vin/Vout - 1) = 20·(5/3.3 - 1) = 10.30 kΩ."
+        };
+      } else if (topo === 1) { // Resistencias Serie & Paralelo
+        const r_ser = p.r1 + p.r2;
+        const r_par = (p.r1 * p.r2) / (p.r1 + p.r2);
+        const i_ser = (p.vin / r_ser) * 1000.0;
+        const i_par = (p.vin / r_par) * 1000.0;
+        dmmText = (r_par < 1000 ? r_par.toFixed(2) + " Ω" : (r_par/1000).toFixed(3) + " kΩ");
+        dmmMin = "0 Ω"; dmmMax = "1 MΩ"; dmmBar = 45; dmmUb = "±0.05 Ω";
+        metrics = [
+          { name: "R Equivalente Paralelo", val: (r_par < 1000 ? r_par.toFixed(1) + " Ω" : (r_par/1000).toFixed(3) + " kΩ"), sub: "R1||R2" },
+          { name: "R Equivalente Serie", val: (r_ser < 1000 ? r_ser.toFixed(1) + " Ω" : (r_ser/1000).toFixed(3) + " kΩ"), sub: "R1 + R2" },
+          { name: "Corriente Paralelo (Vin=" + p.vin + "V)", val: i_par.toFixed(2) + " mA", sub: "I_ser = " + i_ser.toFixed(2) + " mA" }
+        ];
+        formula = "R_serie = R1 + R2 = " + (r_ser/1000).toFixed(2) + " kΩ\nR_paralelo = (R1 · R2) / (R1 + R2) = " + (r_par/1000).toFixed(2) + " kΩ\nDivisión de corriente: I1 = I_tot · (R2 / (R1+R2))";
+        challenge = {
+          q: "Si R1 = 10 kΩ y R2 = 10 kΩ en paralelo, ¿cuál es la Req en kΩ?",
+          ans: 5.0, tol: 0.1, unit: "kΩ",
+          sol: "Req = (10·10)/(10+10) = 5.0 kΩ."
+        };
+      } else if (topo === 2) { // Condensadores Serie & Paralelo (Desacoplo)
+        const c1_nf = p.c1;
+        const c2_nf = 10000.0; // 10 uF
+        const c_par_uf = (c1_nf + c2_nf) / 1000.0;
+        const c_ser_nf = (c1_nf * c2_nf) / (c1_nf + c2_nf);
+        const energy_uj = 0.5 * (c_par_uf * 1e-6) * Math.pow(p.vin, 2) * 1e6;
+        dmmText = c_par_uf.toFixed(3) + " µF";
+        dmmMin = "0 µF"; dmmMax = "20 µF"; dmmBar = 60; dmmUb = "±0.02 µF";
+        metrics = [
+          { name: "C Paralelo (Desacoplo Total)", val: c_par_uf.toFixed(3) + " µF", sub: "100nF Cerámico + 10µF Tantalio" },
+          { name: "C Serie Equivalente", val: c_ser_nf.toFixed(2) + " nF", sub: "(C1 · C2) / (C1 + C2)" },
+          { name: "Energía Almacenada", val: energy_uj.toFixed(2) + " µJ", sub: "E = ½ · C · V²" }
+        ];
+        formula = "C_paralelo = C1 + C2 = " + c_par_uf.toFixed(2) + " µF\nC_serie = (C1 · C2) / (C1 + C2) = " + c_ser_nf.toFixed(1) + " nF\nRed estándar digital: 100nF (alta f) || 10µF (reserva carga)";
+        challenge = {
+          q: "Calcule la energía en µJ almacenada en un banco de desacoplo de 10.1 µF cargado a 3.3 V.",
+          ans: 55.0, tol: 2.0, unit: "µJ",
+          sol: "E = 0.5 · 10.1e-6 · 3.3² = 54.99 µJ ≈ 55.0 µJ."
+        };
+      } else if (topo === 3) { // Filtro RC
+        const fc = 1.0 / (2 * Math.PI * p.r1 * (p.c1 * 1e-9));
+        const tau_us = p.r1 * (p.c1 * 1e-9) * 1e6;
+        dmmText = (fc >= 1000 ? (fc/1000).toFixed(2) + " kHz" : fc.toFixed(1) + " Hz");
+        dmmMin = "0 Hz"; dmmMax = "50 kHz"; dmmBar = 40; dmmUb = "±1 Hz";
+        metrics = [
+          { name: "Frecuencia de Corte (-3dB)", val: (fc >= 1000 ? (fc/1000).toFixed(2) + " kHz" : fc.toFixed(1) + " Hz"), sub: "fc = 1 / (2π·R·C)" },
+          { name: "Constante de Tiempo (τ)", val: tau_us.toFixed(2) + " µs", sub: "τ = R · C" },
+          { name: "Tiempo de Subida (10%-90%)", val: (2.2 * tau_us).toFixed(2) + " µs", sub: "tr = 2.2 · τ" }
+        ];
+        formula = "fc = 1 / (2π · R1 · C1) = " + fc.toFixed(1) + " Hz\nτ = R1 · C1 = " + tau_us.toFixed(1) + " µs\nAtenuación a alta frecuencia: -20 dB/década";
+        challenge = {
+          q: "Para R = 1 kΩ y C = 100 nF, calcule la frecuencia de corte fc en kHz.",
+          ans: 1.59, tol: 0.1, unit: "kHz",
+          sol: "fc = 1 / (2π · 1000 · 100e-9) = 1591.5 Hz ≈ 1.59 kHz."
+        };
+      } else if (topo === 4) { // 555 Astable
+        const rA = p.r1, rB = p.r2, c_f = p.c1 * 1e-9;
+        const th_ms = 0.693 * (rA + rB) * c_f * 1000.0;
+        const tl_ms = 0.693 * rB * c_f * 1000.0;
+        const t_tot = th_ms + tl_ms;
+        const freq = 1000.0 / t_tot;
+        const duty = ((rA + rB) / (rA + 2 * rB)) * 100.0;
+        dmmText = (freq >= 1000 ? (freq/1000).toFixed(2) + " kHz" : freq.toFixed(1) + " Hz");
+        dmmMin = "0 Hz"; dmmMax = "20 kHz"; dmmBar = 55; dmmUb = "±0.5 Hz";
+        metrics = [
+          { name: "Frecuencia de Oscilación", val: (freq >= 1000 ? (freq/1000).toFixed(2) + " kHz" : freq.toFixed(1) + " Hz"), sub: "f = 1.44 / [(RA + 2RB)·C]" },
+          { name: "Ciclo de Trabajo (Duty)", val: duty.toFixed(1) + " %", sub: "Th = " + th_ms.toFixed(2) + " ms | Tl = " + tl_ms.toFixed(2) + " ms" },
+          { name: "Periodo Total (T)", val: t_tot.toFixed(2) + " ms", sub: "Vcc = " + p.vin.toFixed(1) + " V" }
+        ];
+        formula = "Th = 0.693 · (RA + RB) · C = " + th_ms.toFixed(2) + " ms\nTl = 0.693 · RB · C = " + tl_ms.toFixed(2) + " ms\nDuty Cycle = (RA + RB) / (RA + 2RB) = " + duty.toFixed(1) + " %";
+        challenge = {
+          q: "Con RA = 4.7 kΩ, RB = 4.7 kΩ y C = 100 nF, ¿cuál es el Duty Cycle exacto en %?",
+          ans: 66.7, tol: 1.0, unit: "%",
+          sol: "Duty = (4.7 + 4.7) / (4.7 + 2·4.7) = 9.4 / 14.1 = 66.67% ≈ 66.7%."
+        };
+      } else if (topo === 5) { // Driver NPN Relé con Flyback
+        const ib_ma = ((3.3 - 0.7) / p.r1) * 1000.0;
+        const ic_ma = ((p.vin - 0.2) / p.r2) * 1000.0;
+        const beta_forced = ic_ma / ib_ma;
+        dmmText = ic_ma.toFixed(1) + " mA";
+        dmmMin = "0 mA"; dmmMax = "500 mA"; dmmBar = Math.min(100, (ic_ma / 200) * 100); dmmUb = "±0.1 mA";
+        metrics = [
+          { name: "Corriente de Bobina (Ic)", val: ic_ma.toFixed(1) + " mA", sub: "Vce(sat) ≈ 0.2 V" },
+          { name: "Corriente de Base (Ib)", val: ib_ma.toFixed(2) + " mA", sub: "Vbe ≈ 0.7 V (GPIO 3.3V)" },
+          { name: "Ganancia Forzada (β)", val: beta_forced.toFixed(1), sub: beta_forced <= 10 ? "✅ Saturación Fuerte" : "⚠️ Aumentar Ib" }
+        ];
+        formula = "Ib = (V_gpio - 0.7V) / Rb = " + ib_ma.toFixed(2) + " mA\nIc = (Vcc - 0.2V) / R_bobina = " + ic_ma.toFixed(1) + " mA\nDiodo 1N4007: Absorbe pico inductivo V = -L·(di/dt)";
+        challenge = {
+          q: "Para excitar una bobina de relé de 120 Ω a 12V con saturación garantizada β_forced = 10, ¿cuál debe ser la corriente de base Ib en mA?",
+          ans: 9.83, tol: 0.3, unit: "mA",
+          sol: "Ic = (12 - 0.2)/120 = 98.33 mA. Ib = Ic / 10 = 9.83 mA."
+        };
+      } else if (topo === 6) { // Limitador LED
+        const vf = 3.2; // LED azul
+        const if_ma = Math.max(0, (p.vin - vf) / p.r1 * 1000.0);
+        const p_res_mw = Math.pow(if_ma / 1000.0, 2) * p.r1 * 1000.0;
+        dmmText = if_ma.toFixed(1) + " mA";
+        dmmMin = "0 mA"; dmmMax = "40 mA"; dmmBar = Math.min(100, (if_ma / 25) * 100); dmmUb = "±0.05 mA";
+        metrics = [
+          { name: "Corriente Directa (If)", val: if_ma.toFixed(1) + " mA", sub: if_ma <= 20 ? "✅ Dentro de tolerancia (<20mA)" : "⚠️ Exceso de corriente" },
+          { name: "Potencia en Resistencia", val: p_res_mw.toFixed(1) + " mW", sub: p_res_mw < 125 ? "Resistencia 1/8 W o 1/4 W suficiente" : "Requerida 1/2 W" },
+          { name: "Tensión LED (Vf)", val: vf.toFixed(1) + " V", sub: "LED Azul / Blanco InGaN" }
+        ];
+        formula = "R_lim = (Vin - Vf) / If = " + p.r1 + " Ω\nPotencia disipada: P = If² · R = " + p_res_mw.toFixed(1) + " mW\nRegla práctica: 1/4W (250 mW) para seguridad térmica";
+        challenge = {
+          q: "Si Vin = 5.0 V, Vf = 2.0 V (LED Rojo) e If deseada es 15 mA, calcule R en Ω.",
+          ans: 200.0, tol: 5.0, unit: "Ω",
+          sol: "R = (5.0 - 2.0) / 0.015 = 3.0 / 0.015 = 200 Ω (comercial 200 Ω o 220 Ω E24)."
+        };
+      } else { // Resonancia LC
+        const l_h = p.l1 * 1e-6;
+        const c_f = p.c1 * 1e-9;
+        const f0 = 1.0 / (2 * Math.PI * Math.sqrt(l_h * c_f));
+        const z0 = Math.sqrt(l_h / c_f);
+        dmmText = (f0 >= 1000 ? (f0/1000).toFixed(2) + " kHz" : f0.toFixed(1) + " Hz");
+        dmmMin = "0 Hz"; dmmMax = "2 MHz"; dmmBar = 65; dmmUb = "±10 Hz";
+        metrics = [
+          { name: "Frecuencia de Resonancia f0", val: (f0 >= 1000 ? (f0/1000).toFixed(2) + " kHz" : f0.toFixed(1) + " Hz"), sub: "f0 = 1 / (2π·√(L·C))" },
+          { name: "Impedancia Característica Z0", val: z0.toFixed(1) + " Ω", sub: "Z0 = √(L / C)" },
+          { name: "Reactancia XL = XC en f0", val: (2 * Math.PI * f0 * l_h).toFixed(1) + " Ω", sub: "Cancelación de reactancias" }
+        ];
+        formula = "f0 = 1 / (2π · √(L1 · C1)) = " + (f0/1000).toFixed(2) + " kHz\nZ0 = √(L1 / C1) = " + z0.toFixed(1) + " Ω\nEn f0 la impedancia del circuito resonante es puramente resistiva";
+        challenge = {
+          q: "Con L = 1000 µH y C = 10 nF, ¿cuál es la frecuencia de resonancia en kHz?",
+          ans: 50.3, tol: 1.0, unit: "kHz",
+          sol: "f0 = 1 / [2π·√(1e-3 · 10e-9)] = 1 / [2π · 3.162e-6] = 50329 Hz ≈ 50.3 kHz."
+        };
+      }
+
+      return {
+        dmmText, dmmMin, dmmMax, dmmBar, dmmUb,
+        metrics, formula, challenge
+      };
+    }
   }
 ];
 
@@ -1987,6 +2239,76 @@ function renderCircuitSchematic() {
     ctx.beginPath(); ctx.moveTo(cx + 140, cy); ctx.lineTo(cx + 200, cy); ctx.stroke();
     ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px monospace';
     ctx.fillText('V_out', cx + 205, cy + 4);
+
+  } else if (m === 10) { // Banco R-L-C & Presets
+    const topo = params.topo || 0;
+    if (topo === 0) { // Divisor 5V a 3.3V
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5;
+      // Rail Vin
+      ctx.beginPath(); ctx.moveTo(cx - 120, cy - 90); ctx.lineTo(cx + 40, cy - 90); ctx.stroke();
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 12px "SF Mono", monospace';
+      ctx.fillText('+Vin (' + params.vin + ' V)', cx - 120, cy - 100);
+
+      // Resistencia R1 (rectángulo)
+      ctx.strokeStyle = '#e2e8f0'; ctx.strokeRect(cx + 25, cy - 70, 30, 60);
+      ctx.fillStyle = '#e2e8f0'; ctx.fillText('R1: ' + (params.r1 >= 1000 ? (params.r1/1000) + ' kΩ' : params.r1 + ' Ω'), cx + 65, cy - 35);
+
+      // Nodo Vout
+      ctx.fillStyle = '#34d399'; ctx.beginPath(); ctx.arc(cx + 40, cy + 5, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillText('Vout = ' + res.dmmText, cx + 55, cy + 10);
+      ctx.strokeStyle = '#34d399'; ctx.beginPath(); ctx.moveTo(cx + 40, cy + 5); ctx.lineTo(cx + 140, cy + 5); ctx.stroke();
+
+      // Resistencia R2
+      ctx.strokeStyle = '#e2e8f0'; ctx.strokeRect(cx + 25, cy + 25, 30, 60);
+      ctx.fillStyle = '#e2e8f0'; ctx.fillText('R2: ' + (params.r2 >= 1000 ? (params.r2/1000) + ' kΩ' : params.r2 + ' Ω'), cx + 65, cy + 60);
+
+      // Conexiones verticales
+      ctx.strokeStyle = '#e2e8f0'; ctx.beginPath();
+      ctx.moveTo(cx + 40, cy - 90); ctx.lineTo(cx + 40, cy - 70);
+      ctx.moveTo(cx + 40, cy - 10); ctx.lineTo(cx + 40, cy + 25);
+      ctx.moveTo(cx + 40, cy + 85); ctx.lineTo(cx + 40, cy + 115);
+      ctx.stroke();
+
+      // Símbolo GND
+      ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2; ctx.beginPath();
+      ctx.moveTo(cx + 20, cy + 115); ctx.lineTo(cx + 60, cy + 115);
+      ctx.moveTo(cx + 28, cy + 121); ctx.lineTo(cx + 52, cy + 121);
+      ctx.moveTo(cx + 34, cy + 127); ctx.lineTo(cx + 46, cy + 127);
+      ctx.stroke();
+      ctx.fillStyle = '#94a3b8'; ctx.fillText('GND', cx + 65, cy + 120);
+
+    } else if (topo === 4) { // Temporizador 555
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5;
+      ctx.strokeRect(cx - 70, cy - 70, 140, 140);
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px "SF Mono", monospace';
+      ctx.fillText('NE555 TIMER', cx - 45, cy - 45);
+
+      ctx.font = '11px "SF Mono", monospace'; ctx.fillStyle = '#e2e8f0';
+      ctx.fillText('8: VCC', cx - 60, cy - 20);
+      ctx.fillText('4: RST', cx - 60, cy - 2);
+      ctx.fillText('7: DIS', cx - 60, cy + 18);
+      ctx.fillText('2: TRG', cx - 60, cy + 38);
+      ctx.fillText('6: THR', cx - 60, cy + 55);
+
+      ctx.fillText('OUT: 3', cx + 15, cy - 5);
+      ctx.fillText('GND: 1', cx + 15, cy + 45);
+
+      // Traza salida
+      ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(cx + 70, cy - 5); ctx.lineTo(cx + 150, cy - 5); ctx.stroke();
+      ctx.fillStyle = '#34d399'; ctx.font = 'bold 12px "SF Mono", monospace';
+      ctx.fillText('CLK OUT (' + res.dmmText + ')', cx + 80, cy - 15);
+
+    } else {
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
+      ctx.strokeRect(cx - 150, cy - 65, 300, 130);
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 13px "SF Mono", monospace';
+      ctx.fillText('CIRCUITO DE LABORATORIO: ' + modData.controls[0].options[topo].split('(')[0], cx - 130, cy - 30);
+      ctx.fillStyle = '#94a3b8'; ctx.font = '12px system-ui, sans-serif';
+      ctx.fillText('Valor Medido / Frecuencia: ' + res.dmmText, cx - 130, cy);
+      const firstLine = (res.formula || '').split(String.fromCharCode(10))[0];
+      ctx.fillText('Ecuación: ' + firstLine, cx - 130, cy + 25);
+    }
 
   } else {
     ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;

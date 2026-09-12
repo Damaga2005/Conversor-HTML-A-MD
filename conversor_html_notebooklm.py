@@ -3647,7 +3647,8 @@ def run_gui():
         ("Visor Markdown & Prompts", "👁️"),
         ("Biblioteca del Curso", "🗂️"),
         ("Calculadora GUM", "📐"),
-        ("Filtros & Acondicionadores", "🎛️")
+        ("Filtros & Acondicionadores", "🎛️"),
+        ("Banco R-L-C & Presets", "🔌")
     ]):
         btn_t = tk.Button(
             seg_pill_box, text=f"{icon}  {tab_label}",
@@ -3670,12 +3671,14 @@ def run_gui():
     tab_resources = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_gum = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_filters = tk.Frame(notebook, bg=COLOR_CANVAS)
+    tab_rlc = tk.Frame(notebook, bg=COLOR_CANVAS)
 
     notebook.add(tab_convert, text="Conversión")
     notebook.add(tab_viewer, text="Visor")
     notebook.add(tab_resources, text="Recursos")
     notebook.add(tab_gum, text="Calculadora GUM")
     notebook.add(tab_filters, text="Filtros & Acondicionadores")
+    notebook.add(tab_rlc, text="Banco R-L-C & Presets")
 
     def on_notebook_tab_changed(event):
         try:
@@ -6271,8 +6274,371 @@ def run_gui():
         combo_approx.bind("<<ComboboxSelected>>", lambda e: calculate_filter())
         calculate_filter()
 
+    def setup_rlc_presets_tab(parent, root_win):
+        p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
+        p.pack(fill="both", expand=True)
+
+        top_card = make_card(p, "🔌 Banco de Componentes R-L-C & Presets de Laboratorio de Electrónica (UPC)")
+        top_card.pack(fill="x", pady=(0, 8))
+        top_inner = tk.Frame(top_card, bg=COLOR_CARD, padx=14, pady=8)
+        top_inner.pack(fill="x")
+
+        # Selector de topología circuital
+        row_sel = tk.Frame(top_inner, bg=COLOR_CARD)
+        row_sel.pack(fill="x", pady=(0, 6))
+
+        tk.Label(row_sel, text="Topología de Laboratorio:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 10))
+        rlc_mode_var = tk.StringVar(value="Divisor Resistivo (5V a 3.3V ADC / Level Shifter)")
+        combo_rlc = ttk.Combobox(row_sel, textvariable=rlc_mode_var, state="readonly", width=48, style="Modern.TCombobox")
+        combo_rlc["values"] = [
+            "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)",
+            "Resistencias Serie / Paralelo & Normalización E12/E24",
+            "Condensadores Serie / Paralelo & Red Desacoplo Digital",
+            "Inductores Serie / Paralelo & Resonancia LC",
+            "Temporizador 555 Astable (Oscilador Reloj / PWM)",
+            "Driver NPN (2N2222) + Diodo Flyback (1N4007) para Relé",
+            "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)",
+            "Decodificador de Código de Colores (4 y 5 Bandas)"
+        ]
+        combo_rlc.pack(side="left", padx=(0, 15))
+
+        # Barra de Presets Rápidos
+        row_chips = tk.Frame(top_inner, bg=COLOR_CARD)
+        row_chips.pack(fill="x", pady=(2, 2))
+        tk.Label(row_chips, text="Presets Típicos:", font=(FONT_FAMILY, 9, "bold"), fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 6))
+
+        # Split central
+        split_box = tk.Frame(p, bg=COLOR_CANVAS)
+        split_box.pack(fill="both", expand=True)
+
+        # Panel izquierdo: Entradas
+        card_l = make_card(split_box, "⚙️ Parámetros Físicos del Componente")
+        card_l.pack(side="left", fill="both", expand=True, padx=(0, 6))
+        inner_l = tk.Frame(card_l, bg=COLOR_CARD, padx=12, pady=8)
+        inner_l.pack(fill="both", expand=True)
+
+        param_grid = tk.Frame(inner_l, bg=COLOR_CARD)
+        param_grid.pack(fill="x", pady=(0, 8))
+
+        def make_field(lbl, def_val):
+            row = tk.Frame(param_grid, bg=COLOR_CARD)
+            tk.Label(row, text=lbl, font=FONT_BODY, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=22, anchor="w").pack(side="left")
+            e = tk.Entry(row, font=FONT_CODE, width=14, bg="#101014", fg="#ffffff", bd=1, relief="solid")
+            e.insert(0, def_val)
+            e.pack(side="left", padx=5)
+            row.pack(fill="x", pady=3)
+            return e
+
+        entry_r1 = make_field("Resistencia R1 / RA (Ω):", "10000")
+        entry_r2 = make_field("Resistencia R2 / RB (Ω):", "20000")
+        entry_c1 = make_field("Condensador C1 / C (nF):", "100")
+        entry_l1 = make_field("Inductor L1 / L (µH):", "1000")
+        entry_vin = make_field("Tensión Vin / Vcc (V):", "5.0")
+
+        row_act = tk.Frame(inner_l, bg=COLOR_CARD)
+        row_act.pack(fill="x", pady=(6, 0))
+
+        # Panel derecho: Canvas & Resultados
+        card_r = make_card(split_box, "📐 Esquemático Técnico & Netlist SPICE")
+        card_r.pack(side="right", fill="both", expand=True, padx=(6, 0))
+        inner_r = tk.Frame(card_r, bg=COLOR_CARD, padx=12, pady=8)
+        inner_r.pack(fill="both", expand=True)
+
+        canvas_sch = tk.Canvas(inner_r, bg="#07090e", height=165, highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
+        canvas_sch.pack(fill="x", pady=(0, 8))
+
+        txt_out = ScrolledText(inner_r, font=(FONT_CODE[0], 9), bg="#0e0e12", fg="#e2e8f0", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, height=10)
+        txt_out.pack(fill="both", expand=True)
+
+        def draw_schematic(mode, p):
+            canvas_sch.delete("all")
+            w, h = 420, 160
+            for x in range(0, w, 25):
+                canvas_sch.create_line(x, 0, x, h, fill="#111827", width=1)
+            for y in range(0, h, 25):
+                canvas_sch.create_line(0, y, w, y, fill="#111827", width=1)
+
+            cx, cy = w // 2, h // 2
+
+            if "Divisor" in mode:
+                canvas_sch.create_text(25, 20, text=f"+Vin ({p['vin']}V)", fill="#38bdf8", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                canvas_sch.create_line(40, 32, cx, 32, fill="#38bdf8", width=2)
+                canvas_sch.create_rectangle(cx - 15, 38, cx + 15, 75, outline="#ffffff", width=2, fill="#1e293b")
+                canvas_sch.create_text(cx + 25, 56, text=f"R1: {p['r1']}Ω", fill="#ffffff", font=(FONT_BODY[0], 9), anchor="w")
+                canvas_sch.create_line(cx, 32, cx, 38, fill="#ffffff", width=2)
+                canvas_sch.create_line(cx, 75, cx, 90, fill="#ffffff", width=2)
+                canvas_sch.create_oval(cx - 4, 90 - 4, cx + 4, 90 + 4, fill="#30d158", outline="#30d158")
+                canvas_sch.create_line(cx, 90, cx + 90, 90, fill="#30d158", width=2)
+                vout = p['vin'] * (p['r2'] / (p['r1'] + p['r2']))
+                canvas_sch.create_text(cx + 95, 90, text=f"Vout = {vout:.2f}V", fill="#30d158", font=(FONT_HEAD[0], 10, "bold"), anchor="w")
+                canvas_sch.create_line(cx, 90, cx, 102, fill="#ffffff", width=2)
+                canvas_sch.create_rectangle(cx - 15, 102, cx + 15, 138, outline="#ffffff", width=2, fill="#1e293b")
+                canvas_sch.create_text(cx + 25, 120, text=f"R2: {p['r2']}Ω", fill="#ffffff", font=(FONT_BODY[0], 9), anchor="w")
+                canvas_sch.create_line(cx, 138, cx, 148, fill="#ffffff", width=2)
+                canvas_sch.create_line(cx - 15, 148, cx + 15, 148, fill="#94a3b8", width=2)
+                canvas_sch.create_line(cx - 9, 152, cx + 9, 152, fill="#94a3b8", width=2)
+                canvas_sch.create_line(cx - 3, 156, cx + 3, 156, fill="#94a3b8", width=2)
+
+            elif "Código de Colores" in mode:
+                canvas_sch.create_text(cx, 22, text=f"CÓDIGO DE COLORES (R = {p['r1']} Ω)", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
+                canvas_sch.create_line(cx - 150, cy, cx - 80, cy, fill="#cbd5e1", width=4)
+                canvas_sch.create_line(cx + 80, cy, cx + 150, cy, fill="#cbd5e1", width=4)
+                canvas_sch.create_rectangle(cx - 80, cy - 25, cx + 80, cy + 25, fill="#d2b48c", outline="#b89758", width=2)
+                color_map = ["#000000", "#78350f", "#dc2626", "#ea580c", "#eab308", "#16a34a", "#2563eb", "#9333ea", "#6b7280", "#ffffff"]
+                r_val = max(1.0, p['r1'])
+                exp = int(math.floor(math.log10(r_val)))
+                norm = r_val / (10**exp)
+                d1 = int(str(round(norm * 10))[0])
+                d2 = int(str(round(norm * 10))[1]) if len(str(round(norm * 10))) > 1 else 0
+                mult_band = max(0, min(9, exp - 1))
+                canvas_sch.create_rectangle(cx - 60, cy - 25, cx - 48, cy + 25, fill=color_map[d1 % 10], outline="")
+                canvas_sch.create_rectangle(cx - 35, cy - 25, cx - 23, cy + 25, fill=color_map[d2 % 10], outline="")
+                canvas_sch.create_rectangle(cx - 10, cy - 25, cx + 2, cy + 25, fill=color_map[mult_band % 10], outline="")
+                canvas_sch.create_rectangle(cx + 45, cy - 25, cx + 57, cy + 25, fill="#d97706", outline="")
+                canvas_sch.create_text(cx, cy + 45, text="Tolerancia Comercial: ±5% (Oro)", fill="#fbbf24", font=(FONT_BODY[0], 9))
+
+            elif "555" in mode:
+                canvas_sch.create_rectangle(cx - 70, cy - 50, cx + 70, cy + 50, fill="#18181b", outline="#38bdf8", width=2)
+                canvas_sch.create_text(cx, cy - 32, text="NE555 TIMER", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
+                canvas_sch.create_text(cx - 55, cy - 10, text="8:VCC", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
+                canvas_sch.create_text(cx - 55, cy + 8, text="7:DIS", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
+                canvas_sch.create_text(cx - 55, cy + 26, text="6:THR", fill="#e2e8f0", font=(FONT_CODE[0], 8), anchor="w")
+                canvas_sch.create_text(cx + 25, cy - 10, text="OUT:3", fill="#34d399", font=(FONT_CODE[0], 8), anchor="w")
+                canvas_sch.create_text(cx + 25, cy + 15, text="GND:1", fill="#94a3b8", font=(FONT_CODE[0], 8), anchor="w")
+                canvas_sch.create_line(cx + 70, cy - 10, cx + 90, cy - 10, fill="#34d399", width=2)
+                canvas_sch.create_line(cx + 90, cy - 18, cx + 110, cy - 18, fill="#34d399", width=2)
+                canvas_sch.create_line(cx + 110, cy - 18, cx + 110, cy - 2, fill="#34d399", width=2)
+                canvas_sch.create_line(cx + 110, cy - 2, cx + 125, cy - 2, fill="#34d399", width=2)
+                canvas_sch.create_line(cx + 125, cy - 2, cx + 125, cy - 18, fill="#34d399", width=2)
+                canvas_sch.create_line(cx + 125, cy - 18, cx + 145, cy - 18, fill="#34d399", width=2)
+
+            else:
+                canvas_sch.create_rectangle(30, 25, w - 30, h - 25, outline="#38bdf8", width=2, fill="#0f172a")
+                canvas_sch.create_text(cx, cy - 20, text=f"[BANCO R-L-C]: {mode.split('(')[0].strip()}", fill="#38bdf8", font=(FONT_HEAD[0], 11, "bold"))
+                canvas_sch.create_text(cx, cy + 10, text=f"R1={p['r1']}Ω • R2={p['r2']}Ω • C1={p['c1']}nF • L1={p['l1']}µH", fill="#94a3b8", font=(FONT_CODE[0], 9))
+
+        def calculate_rlc():
+            txt_out.delete("1.0", "end")
+            mode = rlc_mode_var.get()
+            try:
+                r1 = float(entry_r1.get().strip() or "10000")
+                r2 = float(entry_r2.get().strip() or "20000")
+                c1 = float(entry_c1.get().strip() or "100")
+                l1 = float(entry_l1.get().strip() or "1000")
+                vin = float(entry_vin.get().strip() or "5.0")
+            except ValueError:
+                txt_out.insert("end", "⚠️ Por favor, ingrese valores numéricos válidos en los campos.")
+                return
+
+            p = {"r1": r1, "r2": r2, "c1": c1, "l1": l1, "vin": vin}
+            draw_schematic(mode, p)
+
+            lines = []
+            if "Divisor" in mode:
+                vout = vin * (r2 / (r1 + r2))
+                rth = (r1 * r2) / (r1 + r2)
+                itot = (vin / (r1 + r2)) * 1000.0
+                pr1 = ((vin - vout)**2) / r1 * 1000.0
+                pr2 = (vout**2) / r2 * 1000.0
+                suit = "✅ Apta para muestreo ADC ≤ 10 kΩ" if rth <= 10000 else "⚠️ > 10 kΩ: Se aconseja añadir seguidor de tensión Op-Amp"
+                lines.append("### 🔌 Divisor Resistivo de Precisión (Adaptador 5V a 3.3V ADC / Level Shifter)")
+                lines.append(f"- **Tensión de Entrada Vin:** `{vin:.2f} V`")
+                lines.append(f"- **Tensión de Salida Vout:** `{vout:.4f} V` ({vout*1000:.1f} mV)")
+                lines.append(f"- **Impedancia de Salida Thévenin (Rth):** `{rth/1000:.3f} kΩ` ({suit})")
+                lines.append(f"- **Corriente de Reposo:** `{itot:.3f} mA`")
+                lines.append(f"- **Potencia Disipada por R1:** `{pr1:.2f} mW`")
+                lines.append(f"- **Potencia Disipada por R2:** `{pr2:.2f} mW`\n")
+                lines.append("#### 📋 Netlist SPICE / LTspice (.cir):")
+                lines.append("```spice")
+                lines.append("* Divisor Resistivo 5V a 3.3V")
+                lines.append(f"Vin in 0 DC {vin:.2f}")
+                lines.append(f"R1 in out {r1:.1f}")
+                lines.append(f"R2 out 0 {r2:.1f}")
+                lines.append(".op")
+                lines.append(".end")
+                lines.append("```\n")
+
+            elif "Resistencias Serie" in mode:
+                r_ser = r1 + r2
+                r_par = (r1 * r2) / (r1 + r2)
+                i_ser = (vin / r_ser) * 1000.0
+                i_par = (vin / r_par) * 1000.0
+                lines.append("### ⚡ Red Resistiva Serie y Paralelo & Normalización E12 / E24")
+                lines.append(f"- **Valores Nominales:** R1 = `{r1:.1f} Ω`, R2 = `{r2:.1f} Ω`")
+                lines.append(f"- **Resistencia Equivalente Serie:** `{r_ser/1000:.3f} kΩ` ({r_ser:.1f} Ω)")
+                lines.append(f"- **Resistencia Equivalente Paralelo:** `{r_par/1000:.3f} kΩ` ({r_par:.1f} Ω)")
+                lines.append(f"- **Corriente Total Serie (Vin = {vin}V):** `{i_ser:.3f} mA`")
+                lines.append(f"- **Corriente Total Paralelo (Vin = {vin}V):** `{i_par:.3f} mA`\n")
+                lines.append("#### 📋 Netlist SPICE (.cir) Equivalente:")
+                lines.append("```spice")
+                lines.append("* Red Paralelo y Serie R1, R2")
+                lines.append(f"Vin in 0 DC {vin:.2f}")
+                lines.append(f"R1 in n_par {r1:.1f}")
+                lines.append(f"R2 in n_par {r2:.1f}")
+                lines.append(f"R_ser_1 in n_mid {r1:.1f}")
+                lines.append(f"R_ser_2 n_mid 0 {r2:.1f}")
+                lines.append(".op")
+                lines.append(".end")
+                lines.append("```\n")
+
+            elif "Condensadores" in mode:
+                c2_nf = 10000.0
+                c_par_uf = (c1 + c2_nf) / 1000.0
+                c_ser_nf = (c1 * c2_nf) / (c1 + c2_nf)
+                energy_uj = 0.5 * (c_par_uf * 1e-6) * (vin**2) * 1e6
+                lines.append("### 🔋 Red de Condensadores & Desacoplo de Alimentación Digital (100nF + 10µF)")
+                lines.append(f"- **Condensador C1 (Cerámico Alta Frecuencia):** `{c1:.1f} nF`")
+                lines.append("- **Condensador C2 (Electrolítico / Tantalio Reserva):** `10.0 µF` (10,000 nF)")
+                lines.append(f"- **Capacidad Total en Paralelo (Desacoplo):** `{c_par_uf:.3f} µF`")
+                lines.append(f"- **Capacidad Total en Serie:** `{c_ser_nf:.2f} nF`")
+                lines.append(f"- **Energía Almacenada en el Banco (Vin = {vin}V):** `E = ½·C·V² = {energy_uj:.2f} µJ`")
+                lines.append("- **Función en el Sistema:** C1 filtra ruido HF (>10 MHz) mientras C2 entrega corriente transitoria di/dt.\n")
+                lines.append("#### 📋 Netlist SPICE (.cir):")
+                lines.append("```spice")
+                lines.append("* Red de Desacoplo Digital")
+                lines.append(f"Vcc in 0 DC {vin:.2f}")
+                lines.append(f"C_ceramic in 0 {c1:.1f}n")
+                lines.append("C_bulk in 0 10u")
+                lines.append(".op")
+                lines.append(".end")
+                lines.append("```\n")
+
+            elif "Inductores" in mode:
+                l_h = l1 * 1e-6
+                c_f = c1 * 1e-9
+                f0 = 1.0 / (2 * math.pi * math.sqrt(l_h * c_f))
+                z0 = math.sqrt(l_h / c_f)
+                xl_at_f0 = 2 * math.pi * f0 * l_h
+                lines.append("### 🧲 Inductores Serie/Paralelo & Circuito Resonante Sintonizado LC")
+                lines.append(f"- **Inductancia L1:** `{l1:.1f} µH` ({l_h*1000:.3f} mH)")
+                lines.append(f"- **Capacidad C1 asociada:** `{c1:.1f} nF`")
+                lines.append(f"- **Frecuencia de Resonancia f0:** `{f0/1000:.3f} kHz` ({f0:.1f} Hz)")
+                lines.append(f"- **Impedancia Característica Z0:** `{z0:.2f} Ω`")
+                lines.append(f"- **Reactancia XL = XC en Resonancia:** `{xl_at_f0:.2f} Ω`\n")
+                lines.append("#### 📋 Netlist SPICE (.cir):")
+                lines.append("```spice")
+                lines.append("* Circuito Resonante LC")
+                lines.append("Iin 0 in AC 1.0m")
+                lines.append(f"L1 in 0 {l1:.1f}u")
+                lines.append(f"C1 in 0 {c1:.1f}n")
+                lines.append(f".ac dec 100 {max(1, f0/10):.0f} {f0*10:.0f}")
+                lines.append(".end")
+                lines.append("```\n")
+
+            elif "555" in mode:
+                ra = r1; rb = r2; c_f = c1 * 1e-9
+                th_ms = 0.693 * (ra + rb) * c_f * 1000.0
+                tl_ms = 0.693 * rb * c_f * 1000.0
+                t_tot_ms = th_ms + tl_ms
+                freq = 1000.0 / t_tot_ms if t_tot_ms > 0 else 0
+                duty = ((ra + rb) / (ra + 2 * rb)) * 100.0
+                lines.append("### ⏱️ Temporizador NE555 en Configuración Astable (Generador de Pulsos / PWM)")
+                lines.append(f"- **Resistencias:** RA = `{ra/1000:.2f} kΩ`, RB = `{rb/1000:.2f} kΩ`, C = `{c1:.1f} nF`")
+                lines.append(f"- **Frecuencia de Oscilación f:** `{freq/1000:.3f} kHz` ({freq:.1f} Hz)")
+                lines.append(f"- **Tiempo en Nivel Alto (Thigh):** `{th_ms:.3f} ms`")
+                lines.append(f"- **Tiempo en Nivel Bajo (Tlow):** `{tl_ms:.3f} ms`")
+                lines.append(f"- **Ciclo de Trabajo (Duty Cycle):** `{duty:.1f} %`")
+                lines.append(f"- **Periodo Total (T):** `{t_tot_ms:.3f} ms`\n")
+                lines.append("#### 📋 Netlist SPICE (.cir):")
+                lines.append("```spice")
+                lines.append("* 555 Astable")
+                lines.append(f"Vcc 8 0 DC {vin:.1f}")
+                lines.append(f"RA 8 7 {ra:.1f}")
+                lines.append(f"RB 7 6 {rb:.1f}")
+                lines.append(f"C1 6 0 {c1:.1f}n")
+                lines.append(".tran 10u 20m")
+                lines.append(".end")
+                lines.append("```\n")
+
+            elif "Driver NPN" in mode:
+                v_gpio = 3.3
+                ib_ma = ((v_gpio - 0.7) / r1) * 1000.0
+                ic_ma = ((vin - 0.2) / r2) * 1000.0
+                beta_forced = ic_ma / ib_ma if ib_ma > 0 else 0
+                sat_ok = "✅ Saturación garantizada (β ≤ 10)" if beta_forced <= 10 else "⚠️ Aumentar Ib para asegurar saturación"
+                lines.append("### ⚡ Driver NPN (2N2222) + Diodo Flyback (1N4007) para Relé de 12V")
+                lines.append(f"- **Tensión Bobina Vcc:** `{vin:.1f} V` · **Resistencia Bobina:** `{r2:.1f} Ω`")
+                lines.append(f"- **Tensión Control GPIO:** `{v_gpio:.1f} V` · **Resistencia Base R1:** `{r1:.1f} Ω`")
+                lines.append(f"- **Corriente de Colector (Bobina Ic):** `{ic_ma:.1f} mA`")
+                lines.append(f"- **Corriente de Base (Ib):** `{ib_ma:.2f} mA`")
+                lines.append(f"- **Ganancia de Corriente Forzada (β):** `{beta_forced:.1f}` ({sat_ok})")
+                lines.append("- **Protección Flyback:** Diodo 1N4007 en antiparalelo absorbe el pico V = -L·(di/dt).\n")
+                lines.append("#### 📋 Netlist SPICE (.cir):")
+                lines.append("```spice")
+                lines.append("* Driver Relé NPN")
+                lines.append(f"Vcc vcc 0 DC {vin:.1f}")
+                lines.append(f"Rb in base {r1:.1f}")
+                lines.append(f"R_coil vcc col {r2:.1f}")
+                lines.append(".end")
+                lines.append("```\n")
+
+            elif "Limitador de Corriente" in mode:
+                vf = 3.2
+                if_ma = max(0.0, ((vin - vf) / r1) * 1000.0)
+                p_res_mw = ((if_ma / 1000.0)**2) * r1 * 1000.0
+                lines.append("### 💡 Limitador de Corriente para LEDs (Azul/Blanco 3.2V / 20mA)")
+                lines.append(f"- **Tensión de Fuente Vin:** `{vin:.2f} V` · **Tensión Directa Vf:** `{vf:.2f} V`")
+                lines.append(f"- **Resistencia Limitadora R1:** `{r1:.1f} Ω`")
+                lines.append(f"- **Corriente Directa resultante (If):** `{if_ma:.2f} mA`")
+                lines.append(f"- **Potencia Disipada:** `{p_res_mw:.2f} mW` (Usar 1/4W = 250mW)\n")
+
+            else:
+                lines.append("### 🎨 Decodificador de Código de Colores de Resistencias (4 y 5 Bandas)")
+                lines.append(f"- **Valor Nominal:** `{r1:.1f} Ω`")
+                lines.append("- **Bandas:** Marrón (1) - Negro (0) - Naranja (x1,000) - Oro (±5%)")
+                lines.append(f"- **Rango Tolerado:** `[{r1*0.95:.1f} Ω - {r1*1.05:.1f} Ω]`")
+
+            txt_out.insert("end", "\n".join(lines))
+
+        def copy_rlc_code():
+            txt = txt_out.get("1.0", "end-1c")
+            if "```spice" in txt:
+                spice_part = txt.split("```spice")[1].split("```")[0].strip()
+                root_win.clipboard_clear()
+                root_win.clipboard_append(spice_part)
+                messagebox.showinfo("SPICE Netlist", "¡Netlist SPICE copiado al portapapeles!")
+            else:
+                root_win.clipboard_clear()
+                root_win.clipboard_append(txt)
+                messagebox.showinfo("Informe Técnico", "¡Informe técnico copiado al portapapeles!")
+
+        def set_preset(mode_str, r1_v, r2_v, c1_v, l1_v, vin_v):
+            rlc_mode_var.set(mode_str)
+            entry_r1.delete(0, "end"); entry_r1.insert(0, str(r1_v))
+            entry_r2.delete(0, "end"); entry_r2.insert(0, str(r2_v))
+            entry_c1.delete(0, "end"); entry_c1.insert(0, str(c1_v))
+            entry_l1.delete(0, "end"); entry_l1.insert(0, str(l1_v))
+            entry_vin.delete(0, "end"); entry_vin.insert(0, str(vin_v))
+            calculate_rlc()
+
+        presets_list = [
+            ("Divisor 5V->3.3V", "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)", 10000, 20000, 100, 1000, 5.0),
+            ("Desacoplo 100nF+10µF", "Condensadores Serie / Paralelo & Red Desacoplo Digital", 10, 100, 100, 100, 3.3),
+            ("555 a 1 kHz", "Temporizador 555 Astable (Oscilador Reloj / PWM)", 4700, 4700, 100, 1000, 5.0),
+            ("Filtro RC 1.59kHz", "Divisor Resistivo (5V a 3.3V ADC / Level Shifter)", 1000, 1000, 100, 1000, 3.3),
+            ("Driver Relé 12V", "Driver NPN (2N2222) + Diodo Flyback (1N4007) para Relé", 1000, 120, 100, 10000, 12.0),
+            ("LED Azul 20mA", "Limitador de Corriente para LEDs (Rojo / Verde / Azul / Blanco)", 91, 1000, 100, 1000, 5.0),
+            ("LC 455 kHz", "Inductores Serie / Paralelo & Resonancia LC", 100, 100, 10, 12000, 5.0)
+        ]
+
+        for p_label, m_str, r1_v, r2_v, c1_v, l1_v, vin_v in presets_list:
+            btn_p = tk.Button(
+                row_chips, text=f"⚡ {p_label}", font=(FONT_FAMILY, 8, "bold"),
+                bg="#1e1e24", fg="#94a3b8", activebackground=COLOR_ACCENT_BLUE, activeforeground="#ffffff",
+                relief="flat", bd=0, padx=6, pady=2, cursor="hand2",
+                command=lambda m=m_str, a=r1_v, b=r2_v, c=c1_v, d=l1_v, e=vin_v: set_preset(m, a, b, c, d, e)
+            )
+            btn_p.pack(side="left", padx=2)
+
+        create_btn(row_act, "⚡ Calcular y Simular", calculate_rlc, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
+        create_btn(row_act, "📋 Copiar Netlist / Datos", copy_rlc_code, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+
+        combo_rlc.bind("<<ComboboxSelected>>", lambda e: calculate_rlc())
+        calculate_rlc()
+
     setup_gum_calculator_tab(tab_gum, root)
     setup_filters_tab(tab_filters, root)
+    setup_rlc_presets_tab(tab_rlc, root)
     root.after(250, lambda: setup_windows_drag_and_drop(root, on_files_dropped))
 
     root.mainloop()
