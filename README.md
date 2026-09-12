@@ -122,42 +122,60 @@
 
 ---
 
-### 🔬 8. Laboratorio Virtual Interactivo de Sensores & Grado GREELEC (`Laboratorio_Virtual_Sensores.html`) — v6.0 Enterprise 3D Edition
-- **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue / SPICE:** 100% autónomo, ejecutable en local sin internet ni CDNs, optimizado para los planes de estudio de la UPC (ETSETB / EEBE).
-- **🌐 Motor WebGL 3D Nativo Acelerado por GPU (60 FPS):**
-  - **Rotación Orbital y Zoom Interactivos:** Control total con ratón (arrastrar para orbitar, rueda para zoom, doble clic para centrar).
-  - **Iluminación Realista Phong:** Materiales metálicos (oro, acero pulido, cobre) y dieléctricos con reflejos especulares dinámicos.
-  - **Modelos Físicos 3D Paramétricos:**
-    * *Viga en voladizo 3D deformable* con curvatura elástica de Euler-Bernoulli y mapa de calor de tensiones mecánicas de von Mises.
-    * *Sonda industrial Pt100 3D* con termopozo de acero inoxidable y cabezal DIN B sumergida en baño termostático agitado.
-    * *Acelerómetro piezoeléctrico 3D* con cristal de cuarzo $d_{33}$ deformable bajo masa sísmica.
-    * *Sensor capacitivo diferencial MEMS 3D* de 3 placas móviles con visualización de desplazamiento micrométrico.
-    * *Protoboard 3D de Electrónica* con matriz de inserción, resistencias axiales con anillos de color, condensadores radiales y encapsulado DIP-8.
-    * *Convertidor DC-DC Buck/Boost 3D* con inductor toroidal de cobre, MOSFET TO-263 con disipador, diodo Schottky y condensador electrolítico Low-ESR.
-    * *Cable Coaxial de Alta Frecuencia 3D* seccionado por capas (cubierta PVC, malla de blindaje, dieléctrico PTFE, vivo) y conector SMA dorado.
-    * *Etapa Transistor BJT/MOSFET 3D* con encapsulado TO-92, resistencias de película metálica y condensadores cerámicos de paso.
-    * *Actuador y Lazo de Control PID 3D* con servomotor DC, disco encoder óptico ranurado, horquilla optoacopladora y módulo PID industrial con display digital.
-- **📐 Esquemáticos Circuitales de Precisión (100% Cobertura Vectorial):**
-  - **Cobertura Absoluta de los 15 Módulos:** Eliminados por completo los bloques genéricos o esquemas en negro. Cada módulo cuenta con representación de grado libro de texto (normas IEC 60617 / IEEE Std 315) con valores dinámicos calculados en tiempo real.
-  - **Carta de Smith Vectorial Interactiva (Módulo 13):** Proyección polar en vivo del coeficiente de reflexión complejo $\Gamma = |\Gamma| e^{j\theta}$, círculos de resistencia normalizada ($r = 0.5, 1.0, 2.0$), arcos de reactancia ($x = \pm 0.5, \pm 1.0$) y círculo de ROE constante.
-- **🎛️ Banco de Instrumentación con Réplicas Fidedignas:**
-  - **Keysight 34465A Truevolt 6½ Digit DMM:** Pantalla digital VFD de alta resolución, barra analógica bar-graph con rangos automáticos y cálculo de incertidumbre metrológica $u_B$ en vivo.
-  - **Osciloscopio Tektronix TBS2000B (Phosphor 60 FPS):**
-    * *Modo Doble `[TIME DOMAIN]` / `[FFT SPECTRUM]`:* Permite conmutar con 1 clic al análisis espectral de Fourier con span de $500\text{ Hz}$, detección de picos armónicos y suelo de ruido en dBV.
-    * *Formas de Onda Específicas por Física Circuital:*
-      - *Buck/Boost:* Onda PWM de nodo switch $V_{SW}$ con ringing de conmutación y rizado triangular de corriente en inductor $i_L(t)$.
-      - *Líneas RF:* Onda incidente $V^+(t)$, onda reflejada $V^-(t)$ y envolvente de onda estacionaria con nodos y vientres de tensión según VSWR.
-      - *BJT/MOSFET:* Señal sinusoidal de entrada y señal amplificada invertida $180^\circ$ con saturación y corte visibles ante excursión excesiva.
-      - *Control PID:* Respuesta temporal al escalón unitario con tiempo de subida $t_r$, sobreoscilación $M_p$ y tiempo de establecimiento $t_s (2\%)$.
-    * *Cursores Duales de Medición:* Líneas móviles de precisión para $\Delta t$, $\Delta V$ y cálculo instantáneo de frecuencia $f = 1/\Delta t$.
-    * *Exportación de Telemetría a CSV:* Descarga inmediata de las señales adquiridas para su procesamiento en Python, MATLAB o Excel.
+### 🔬 8. Laboratorio Virtual Interactivo de Sensores & Grado GREELEC (`Laboratorio_Virtual_Sensores.html`) — v7.5 Enterprise 3D Edition
+- **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue / SPICE:** 100% autónomo, ejecutable en local sin internet ni CDNs, optimizado para los planes de estudio de la UPC (ETSETB / EEBE) y las asignaturas del Grado en Ingeniería Electrónica de Telecomunicación (GREELEC).
+- **🌐 Motor WebGL 3D Nativo con Reconstrucción Dinámica por Topología (GPU 60 FPS):**
+  - **Rotación Orbital y Zoom Interactivos:** Control táctil y con ratón (arrastrar para orbitar, rueda para zoom, doble clic para centrar la cámara).
+  - **Iluminación Realista Phong:** Materiales metálicos (oro, cobre esmaltado, aluminio mecanizado, acero pulido) y dieléctricos con reflejos dinámicos y sombras.
+  - **Reconstrucción Geométrica 3D Dinámica por Topología Física:**
+    * *Módulo 11 (Banco RLC):* La protoboard 3D se reconstruye físicamente según la topología activa:
+      - **Divisor de Tensión:** 2 resistencias axiales con anillos de colores reales calculados dinámicamente según su valor nominal, jumpers de alimentación VCC/GND y clip de prueba de osciloscopio amarillo en el nodo central.
+      - **Red Serie/Paralelo:** 3 resistencias en red mixta con puentes de inserción y bananas de prueba.
+      - **Filtro de Desacoplo:** Condensador electrolítico radial de 10 µF azul con banda de polaridad (-) y tapa con cruz de seguridad + condensador cerámico de lenteja de 100 nF directamente sobre los rieles de alimentación.
+      - **Filtro RC Pasa-Bajos:** Resistencia axial + condensador de película tipo Mylar rectangular amarillo + sonda de osciloscopio BNC con pinza de masa.
+      - **Temporizador 555 Astable:** Encapsulado DIP-8 sobre el canal central con muesca y punto pin 1, resistencias $R_A/R_B$, condensador $C_T$ y **LED rojo de 5 mm pulsando en tiempo real**.
+      - **Driver de Relé Inductivo:** Relé azul cúbico electromagnético (Songle), transistor NPN TO-92 (2N2222), diodo flyback 1N4007 de vidrio y bornera de tornillo.
+      - **Limitador de Corriente con LED:** Resistencia limitadora + LED de 5 mm con bisel y ánodo/cátodo, brillando en función de la corriente directa.
+      - **Resonador LC Tanque:** Bobina toroidal con espiras de cobre esmaltado visibles sobre núcleo de ferrita + condensador WIMA de poliéster.
+    * *Módulo 12 (Fuentes Conmutadas Buck vs Boost):*
+      - **Buck (Reductor):** MOSFET High-Side con disipador, diodo Schottky shunt a masa, inductor toroidal de potencia de salida y condensador Low-ESR.
+      - **Boost (Elevador):** Inductor de choque a la entrada, MOSFET Low-Side con aletas disipadoras, diodo Schottky en serie y condensador electrolítico de alta tensión.
+    * *Módulo 13 (Líneas de Transmisión RF):* Cable coaxial RG-58 pelado por capas (PVC, malla de blindaje, dieléctrico PTFE, vivo de cobre) con conector SMA dorado y terminaciones intercambiables: carga adaptada de 50 $\Omega$ con aletas de refrigeración, tapón de cortocircuito de latón dorado, circuito abierto o antena helicoidal de cobre.
+    * *Módulo 14 (Semiconductores BJT vs MOSFET):* Encapsulado plástico TO-92 de 3 pines (2N2222) vs encapsulado TO-220 de potencia (IRF540) atornillado a disipador de aluminio extruido con tornillo y mica aislante.
+    * *Módulo 15 (Control PID):* Servomotor DC con disco encoder ranurado y horquilla optoacopladora vs horno térmico de aluminio con cartucho calefactor y vaina RTD vs depósito hidráulico acrílico transparente con nivel de agua dinámico y flotador.
+    * *Módulo 16 (Taller Libre CAD):* Gran protoboard de desarrollo libre donde se renderizan físicamente en 3D todos los componentes activos del netlist SPICE (resistencias, condensadores, inductores, diodos, integrados DIP-8 y cables jumpers flexibles de interconexión).
+
+- **🛠️ Módulo 16: Taller Libre CAD & Editor de Circuitos Manual (MNA Solver & SPICE):**
+  - **Entorno de Diseño Circuital Abierto:** Permite diseñar, analizar y testear cualquier circuito analógico personalizado o seleccionar topologías predefinidas (Filtro RLC Butterworth de 2º orden con factor $Q=0.707$, Rectificador de media onda con filtro capacitivo y cálculo de rizado $V_r$, Amplificador Operacional no inversor LM358 con límite de ganancia-ancho de banda GBW y saturación a $\pm 14	ext{ V}$, Atenuador en Pi coaxial RF 50 $\Omega$ adaptado a $-6	ext{ dB}$, y Filtro Notch doble T para rechazo de zumbido de red de $50	ext{ Hz}$).
+  - **Editor Interactivo de Netlist SPICE (.cir):**
+    * Caja de texto interactiva con resaltado para código SPICE estándar (`VIN 1 0 AC ...`, `R1 1 2 1k`, `C1 2 0 100n`, etc.).
+    * Botones de inserción rápida de componentes: `+ R`, `+ C`, `+ L`, `+ D`, `+ OpAmp`.
+    * Botón de simulación matricial instantánea (**`⚡ Simular Netlist`**) mediante análisis nodal modificado (MNA).
+    * Botones para descargar el archivo de circuito listo para simular (**`💾 .cir`**) o copiarlo al portapapeles (**`📋 Copiar`**).
+  - **Esquemático CAD Vectorial de Alta Precisión:** Dibujo en tiempo real sobre lienzo Canvas con normas IEC/IEEE, nodos de circuito claramente numerados (Node 1 IN, Node 2 OUT, GND 0), valores de componentes en unidades ingenieriles normalizadas (k$\Omega$, nF, mH), etiquetas de tensión en vivo y flechas de flujo de corriente.
+
+- **🎛️ Rack de Instrumentación Triple de Laboratorio (Keysight + Rigol + Tektronix):**
+  - **1. Multímetro Digital Keysight 34465A Truevolt (6½ Dígitos):** Pantalla VFD de alta resolución, barra analógica bar-graph con rangos automáticos, conmutación DC/AC RMS y cálculo de incertidumbre metrológica $u_B$ en tiempo real según la guía GUM.
+  - **2. Generador de Funciones Arbitrarias Rigol DG1022Z (AFG):**
+    * Réplica del panel de instrumentos con pantalla LCD y controles de ajuste rápido para Frecuencia (1 Hz a 10 MHz), Amplitud (0.1 a 20.0 Vpp), Offset (-10 a +10 V), Ciclo de Trabajo (Duty Cycle) y Barrido de Frecuencia (Sweep).
+    * 5 Formas de onda sintetizadas: Senoidal, Cuadrada, Triangular/Rampa, Pulso y DC pura.
+    * Botón conmutable de salida con LED de activación (`Output ON/OFF`).
+  - **3. Osciloscopio Digital Tektronix TDS2024C de Doble Traza (Phosphor 60 FPS):**
+    * **Canal 1 (CH1 - Amarillo fosforescente `#facc15`):** Visualiza en tiempo real la señal inyectada por el Generador AFG Rigol DG1022Z.
+    * **Canal 2 (CH2 - Cian fosforescente `#38bdf8`):** Visualiza simultáneamente la respuesta de salida del circuito bajo prueba (filtrada, atenuada, recortada o con desfase $\Delta\phi$).
+    * **On-Screen Display (OSD) Calibrado:** Muestra en pantalla la tasa de muestreo `2.0 GS/s Trig'd`, badges con parámetros de canal (`CH1: SINE 1.0 kHz 5.0 Vpp`, `CH2: Vout Circuito Activo`), base de tiempos `M: 250 µs` y nivel de disparo `CH1 / 0.00 V`.
+    * **Modo FFT (Fast Fourier Transform):** Espectro de frecuencias de 0 a 500 Hz con detección de picos armónicos y suelo de ruido en dBV.
+    * **Cursores de Medición de Precisión:** Medición de $\Delta t$, $\Delta V$ y cálculo directo de frecuencia experimental $f = 1/\Delta t$.
+    * **Exportación de Telemetría a CSV:** Descarga inmediata de las trazas de tensión digitalizadas para su procesamiento en MATLAB, Python o Excel.
+
 - **🎨 Decodificador Interactivo de Código de Colores de Resistencias:**
-  - Modal integrado con visualizador vectorial SVG interactivo de resistencias axiales (normas E12 / E24 / E96).
+  - Visualizador vectorial SVG interactivo de resistencias axiales con selector de bandas (4 y 5 anillos).
   - Cálculo instantáneo de valor nominal, tolerancia y rango admisible $[R_{\min}, R_{\max}]$, con botón para inyectar el valor directamente en el banco de simulación.
-- **15 Módulos de Simulación Física y Circuital (Temario Sistemes de Mesura + Plan de Estudios GREELEC UPC):**
-  1. *Puente de Wheatstone & Galgas (1/4, 1/2 y completo con viga 3D)*
-  2. *Pt100 y compensación a 4 hilos Kelvin con sonda DIN B 3D*
-  3. *INA3 & CMRR real con amplificadores AD623/AD620*
+
+- **16 Módulos de Simulación Física y Circuital (Temario Sistemes de Mesura + Plan de Estudios GREELEC UPC):**
+  1. *Puente de Wheatstone & Galgas (1/4, 1/2 y completo con viga 3D deformable y mapa de von Mises)*
+  2. *Pt100 y compensación a 4 hilos Kelvin con sonda DIN B 3D sumergida en baño termostático*
+  3. *INA3 & CMRR real con amplificadores AD623/AD620 y balanceo de modo común*
   4. *Filtro activo Sallen-Key pasobajo de 2º orden con respuesta Butterworth/Chebyshev*
   5. *Muestreo Nyquist & ADC con analizador FFT y DAC R-2R*
   6. *Termopares K/J & compensación de unión fría (CJC) con bloque isotérmico*
@@ -165,12 +183,14 @@
   8. *Ruido térmico Johnson-Nyquist & relación SNR con jaula de Faraday*
   9. *Sensor piezoeléctrico & amplificador de carga vs tensión*
   10. *Sensor capacitivo diferencial & detección síncrona lock-in (PSD)*
-  11. *🔌 Banco R-L-C & Presets Canónicos de Laboratorio (13 proyectos típicos: divisores ADC, desacoplo digital 100nF+10µF, 555 astable/monoestable, driver relé con diodo volante 1N4007, limitadores LED, resonador LC)*
+  11. *🔌 Banco R-L-C & Presets Canónicos de Laboratorio (Divisores ADC, desacoplo digital 100nF+10µF, 555 astable con LED pulsante, driver relé con diodo flyback 1N4007, limitador LED, resonador LC)*
   12. *⚡ Fuentes Conmutadas DC-DC: Buck (Reductor) & Boost (Elevador) — GREELEC PEE (Procesado de Energía Eléctrica)*
   13. *📡 Líneas de Transmisión RF & Carta de Smith Vectorial — GREELEC CAF (Circuitos de Alta Frecuencia / Ondas)*
   14. *🎛️ Transistores BJT & MOSFET: Polarización y Pequeña Señal — GREELEC DE/CA (Dispositivos & Circuitos Analógicos)*
   15. *🎯 Sistemas de Control Feedback & Regulador PID Continuo — GREELEC SC (Sistemas de Control)*
-- **🎯 15 Retos de Examen Oficiales UPC:** Problemas numéricos reales integrados en cada módulo con comprobación automática de tolerancia y desglose algebraico de la solución.
+  16. *🛠️ Taller Libre CAD & Editor de Circuitos Manual con Motor Matricial MNA y Editor SPICE en vivo*
+
+- **🎯 16 Retos de Examen Oficiales UPC:** Problemas numéricos reales integrados en cada módulo con comprobación automática de tolerancia y desglose algebraico de la solución.
 - **📄 Exportador de Informes Experimentales:** Generador de informe estructurado en Markdown con todas las mediciones, métricas y ecuaciones, descargable o copiable al portapapeles en 1 clic.
 
 ---
@@ -179,7 +199,7 @@
 Al procesar el curso completo, la herramienta sintetiza automáticamente:
 1. **`_Examenes_Finales_Oficiales_UPC.md`:** 3 exámenes finales oficiales completos (2021, 2024, 2025) resueltos con 100% rigor analítico en LaTeX.
 2. **`_Problemas_Examen_Resueltos.md`:** 10 problemas numéricos de nivel de examen completamente resueltos y explicados.
-3. **`Laboratorio_Virtual_Sensores.html`:** Simulador industrial de física e instrumentación 3D (v5.0 Enterprise 3D Edition).
+3. **`Laboratorio_Virtual_Sensores.html`:** Simulador industrial de física e instrumentación 3D (v7.5 Enterprise 3D Edition).
 4. **`_Cuaderno_Maestro_Tema_XX.md`:** 10 cuadernos maestros temáticos de alta densidad.
 5. **`_Formulario_Oficial_Examen.md`:** Formulario consolidado con todas las ecuaciones matemáticas del curso.
 6. **`_Glosario_Conceptos_Clave.md`:** Vocabulario técnico y definiciones operativas.

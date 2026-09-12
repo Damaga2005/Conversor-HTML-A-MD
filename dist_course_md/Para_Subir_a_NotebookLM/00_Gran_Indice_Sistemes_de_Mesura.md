@@ -58,3 +58,41 @@ Cada tema dispone de un **Cuaderno Maestro Unificado** (`_Cuaderno_Maestro_*.md`
 
 #### 🔍 Tarjetas de Repaso Rápido (Flashcards)
 > *«Genera una tabla comparativa con las 5 definiciones y conceptos más críticos de esta unidad, destacando las trampas conceptuales habituales de examen.»*
+
+
+---
+
+## 🔬 4. Laboratorio Virtual de Sensores & Electrónica 3D (v7.5 Enterprise)
+
+Acceso directo al simulador web autónomo: [`Laboratorio_Virtual_Sensores.html`](Laboratorio_Virtual_Sensores.html)
+
+### 🎛️ Instrumentación Triple de Grado Industrial
+1. **Multímetro Digital Keysight 34465A Truevolt (6½ Dígitos):** Pantalla VFD, barra analógica en tiempo real, medición True-RMS y cálculo de incertidumbre metrológica $u_B$ según la GUM.
+2. **Generador de Funciones Arbitrarias Rigol DG1022Z (AFG):** Salida de 1 Hz a 10 MHz, 0.1 a 20 Vpp, offset, duty cycle, barrido sweep y 5 formas de onda (seno, cuadrada, triangular, pulso, DC).
+3. **Osciloscopio Digital Tektronix TDS2024C de Doble Traza (Phosphor 60 FPS):**
+   - **Canal 1 (CH1 - Amarillo):** Monitoriza la señal inyectada por el Generador AFG en tiempo real.
+   - **Canal 2 (CH2 - Cian):** Monitoriza la respuesta de salida del circuito activo bajo prueba.
+   - **OSD y Cursores:** Tasa de muestreo `2.0 GS/s Trig'd`, cálculo de $\Delta t$, $\Delta V$ y frecuencia $f$, modo FFT de Fourier y modo XY (curvas de Lissajous).
+
+### 📐 16 Módulos Físicos & Topologías de Circuitos (UPC EEBE & GREELEC)
+- **Módulo 1:** Puente de Wheatstone & Galgas Extensométricas con viga en voladizo 3D deformable y tensiones de von Mises.
+- **Módulo 2:** Sensor Pt100 & Compensación de Cable a 4 Hilos Kelvin en baño termostático 3D.
+- **Módulo 3:** Amplificador de Instrumentación INA3 & CMRR Real con AD620 / AD623.
+- **Módulo 4:** Filtro Activo Sallen-Key Paso Bajo de 2º Orden (Butterworth / Chebyshev / Bessel).
+- **Módulo 5:** Muestreo, Cuantización ADC & Nyquist 3D con analizador espectral FFT.
+- **Módulo 6:** Termopares & Compensación de Unión Fría (CJC) con bloque isotérmico.
+- **Módulo 7:** Termistor NTC & Linealización Analítica de Taylor.
+- **Módulo 8:** Ruido Térmico Johnson-Nyquist & SNR con jaula de Faraday 3D.
+- **Módulo 9:** Sensor Piezoeléctrico & Amplificador de Carga vs Tensión.
+- **Módulo 10:** Sensor Capacitivo Diferencial & Detección Síncrona Lock-in (PSD).
+- **Módulo 11:** 🔌 Banco R-L-C & Presets Canónicos de Laboratorio (Divisores ADC, desacoplo de riel con 10 µF + 100 nF, temporizador 555 astable con LED pulsante, driver relé con diodo flyback 1N4007, limitador LED con brillo variable, resonador LC en toroide).
+- **Módulo 12:** ⚡ Fuentes Conmutadas DC-DC: Buck (Reductor) & Boost (Elevador) — *GREELEC PEE*.
+- **Módulo 13:** 📡 Líneas de Transmisión RF & Carta de Smith Vectorial — *GREELEC CAF*.
+- **Módulo 14:** 🎛️ Transistores BJT & MOSFET: Polarización y Pequeña Señal — *GREELEC DE/CA*.
+- **Módulo 15:** 🎯 Sistemas de Control Feedback & Regulador PID Continuo — *GREELEC SC*.
+- **Módulo 16:** 🛠️ **Taller Libre CAD & Editor de Circuitos Manual (MNA Solver & SPICE):**
+  - Editor interactivo de netlists SPICE (`.cir`) con botones de inserción rápida (`+ R`, `+ C`, `+ L`, `+ D`, `+ OpAmp`).
+  - Motor de simulación nodal modificado (MNA) con resolución matricial en tiempo real.
+  - Esquemático CAD vectorial dinámico con normas IEC/IEEE y etiquetas de tensión nodales.
+  - Protoboard 3D viva con regeneración física de componentes y jumpers.
+  - Descarga de archivos `.cir` listos para importar en LTspice y Ngspice.
