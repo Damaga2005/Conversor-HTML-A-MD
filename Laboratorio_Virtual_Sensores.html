@@ -6,437 +6,744 @@
 <title>Laboratorio Virtual de Sensores e Instrumentación · v7.0 Enterprise 3D (UPC)</title>
 <style>
   :root {
-    --bg-primary: #0a0a0c;
-    --bg-secondary: #141418;
-    --bg-card: #1c1c24;
-    --bg-card-hover: #262632;
-    --border-color: #2e2e3e;
-    --text-main: #f5f5f7;
-    --text-muted: #9898a6;
-    --accent-blue: #0a84ff;
-    --accent-green: #30d158;
-    --accent-amber: #ffd60a;
-    --accent-red: #ff453a;
-    --accent-purple: #bf5af2;
-    --accent-cyan: #64d2ff;
+    /* macOS Sequoia / iOS 27 Liquid Glass System Tokens */
+    --macos-bg: #07090e;
+    --macos-window-bg: rgba(14, 18, 28, 0.78);
+    --macos-card: rgba(22, 28, 44, 0.65);
+    --macos-card-hover: rgba(30, 39, 62, 0.85);
+    --macos-sidebar: rgba(12, 16, 26, 0.82);
+    --macos-border: rgba(255, 255, 255, 0.08);
+    --macos-border-highlight: rgba(255, 255, 255, 0.16);
+    --macos-specular: inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+    /* Apple Pro Typography Colors */
+    --text-primary: #f5f5f7;
+    --text-secondary: #9898a6;
+    --text-tertiary: #686877;
+
+    /* Apple Vibrant Hues */
+    --apple-blue: #0a84ff;
+    --apple-blue-glow: rgba(10, 132, 255, 0.35);
+    --apple-green: #30d158;
+    --apple-green-glow: rgba(48, 209, 88, 0.35);
+    --apple-amber: #ffd60a;
+    --apple-amber-glow: rgba(255, 214, 10, 0.3);
+    --apple-red: #ff453a;
+    --apple-purple: #bf5af2;
+    --apple-cyan: #64d2ff;
+    --apple-indigo: #5e5ce6;
+
+    /* Instrumentation Heritage Colors */
     --phosphor-green: #00ff66;
     --vfd-teal: #00e5ff;
     --keysight-orange: #ff6600;
+
+    /* Depth & Springs */
+    --shadow-window: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    --shadow-dock: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.12);
+    --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.4);
+    --spring-quick: all 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    --spring-bounce: all 0.35s cubic-bezier(0.18, 1.25, 0.32, 1.15);
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-main);
-    line-height: 1.5;
-    overflow-x: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: radial-gradient(circle at 50% 10%, #151a2e 0%, #07090e 65%, #030407 100%);
+    color: var(--text-primary);
+    line-height: 1.45;
+    overflow: hidden;
     height: 100vh;
     display: flex;
     flex-direction: column;
+    letter-spacing: -0.015em;
   }
 
-  /* Header */
-  header {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border-color);
-    padding: 10px 24px;
+  /* =========================================================================
+     1. macOS SYSTEM MENU BAR (TOP BAR)
+     ========================================================================= */
+  .macos-menubar {
+    height: 30px;
+    background: rgba(10, 14, 24, 0.68);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 14px;
+    font-size: 11.5px;
+    font-weight: 500;
+    user-select: none;
+    z-index: 100;
+    flex-shrink: 0;
+  }
+  .macos-menu-left { display: flex; align-items: center; gap: 16px; }
+  .apple-logo {
+    font-size: 14px; color: var(--text-primary); cursor: pointer; padding: 2px 4px; border-radius: 4px;
+    transition: var(--spring-quick);
+  }
+  .apple-logo:hover { background: rgba(255, 255, 255, 0.1); }
+  .app-name-title { font-weight: 700; color: #ffffff; letter-spacing: -0.2px; }
+  .menu-item {
+    color: var(--text-secondary); cursor: pointer; padding: 2px 7px; border-radius: 4px;
+    transition: var(--spring-quick); font-size: 11.5px;
+  }
+  .menu-item:hover { color: #ffffff; background: rgba(255, 255, 255, 0.08); }
+
+  .macos-menu-right { display: flex; align-items: center; gap: 14px; color: var(--text-secondary); font-size: 11px; }
+  .menu-stat-pill {
+    background: rgba(255, 255, 255, 0.06); border: 1px solid var(--macos-border);
+    padding: 2px 8px; border-radius: 12px; display: flex; align-items: center; gap: 5px;
+    font-family: -apple-system, "SF Mono", monospace; font-size: 10.5px; color: var(--apple-cyan);
+  }
+  .status-dot {
+    width: 6.5px; height: 6.5px; border-radius: 50%; background: var(--apple-green);
+    box-shadow: 0 0 8px var(--apple-green); display: inline-block;
+  }
+
+  /* =========================================================================
+     2. APP WINDOW HEADER (TRAFFIC LIGHTS + DYNAMIC ISLAND + ACTIONS)
+     ========================================================================= */
+  .macos-window-header {
+    height: 52px;
+    background: rgba(16, 22, 36, 0.72);
+    backdrop-filter: blur(35px) saturate(200%);
+    -webkit-backdrop-filter: blur(35px) saturate(200%);
+    border-bottom: 1px solid var(--macos-border);
+    padding: 0 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
-  }
-  .brand { display: flex; align-items: center; gap: 12px; }
-  .brand-logo {
-    width: 36px; height: 36px; background: linear-gradient(135deg, #0a84ff, #30d158);
-    border-radius: 8px; display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 18px; color: #fff; box-shadow: 0 4px 12px rgba(10,132,255,0.4);
-  }
-  .brand-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
-  .brand-subtitle { font-size: 11px; color: var(--text-muted); }
-  .badge-v5 {
-    background: rgba(48,209,88,0.15); color: var(--accent-green);
-    border: 1px solid rgba(48,209,88,0.3); padding: 3px 8px; border-radius: 12px;
-    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    box-shadow: var(--macos-specular);
   }
 
-  .header-actions { display: flex; align-items: center; gap: 10px; }
-  .btn {
-    background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);
-    padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
-    transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; user-select: none;
+  /* Traffic Light Window Controls */
+  .traffic-lights {
+    display: flex; align-items: center; gap: 8px; width: 140px;
   }
-  .btn:hover { background: var(--bg-card-hover); border-color: #4a4a5e; }
-  .btn-primary { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
-  .btn-primary:hover { background: #0071e3; }
-  .btn-green { background: #13381e; color: var(--accent-green); border-color: rgba(48,209,88,0.3); }
-  .btn-green:hover { background: #1c522b; }
+  .traffic-dot {
+    width: 12px; height: 12px; border-radius: 50%; cursor: pointer;
+    position: relative; transition: var(--spring-quick);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.3);
+  }
+  .traffic-close { background: #ff5f56; border: 1px solid #e0443e; }
+  .traffic-minimize { background: #ffbd2e; border: 1px solid #dea123; }
+  .traffic-maximize { background: #27c93f; border: 1px solid #1aab29; }
+  .traffic-dot:hover { transform: scale(1.15); filter: brightness(1.1); }
+  .traffic-dot:active { transform: scale(0.95); }
 
-  /* Nav Modules */
-  .modules-bar {
-    background: #0d0f14; border-bottom: 1px solid #1e2430;
-    display: flex; flex-wrap: wrap; align-items: center; padding: 6px 14px; gap: 5px; flex-shrink: 0;
-    box-shadow: inset 0 -1px 0 rgba(255,255,255,0.03);
+  /* Dynamic Island Center Status Pill */
+  .dynamic-island {
+    background: rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    padding: 5px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: default;
+    transition: var(--spring-bounce);
   }
-  .modules-bar::-webkit-scrollbar { height: 6px; }
-  .modules-bar::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 3px; }
-  .mod-tab {
-    padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
-    white-space: nowrap; color: #94a3b8; background: #141822; border: 1px solid #1e293b;
-    transition: all 0.15s ease-in-out; display: flex; align-items: center; gap: 5px;
+  .dynamic-island:hover {
+    border-color: var(--apple-blue);
+    box-shadow: 0 6px 24px var(--apple-blue-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
   }
-  .mod-tab:hover { color: #f8fafc; background: #1e293b; border-color: #38bdf8; }
-  .mod-tab.active {
-    color: #ffffff; background: #0284c7; border-color: #38bdf8;
-    box-shadow: 0 0 12px rgba(56,189,248,0.4);
+  .di-pill-title { font-size: 11.5px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 6px; }
+  .di-pill-tag {
+    font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 2px 7px; border-radius: 8px; background: rgba(56, 189, 248, 0.15);
+    color: var(--apple-cyan); border: 1px solid rgba(56, 189, 248, 0.3); font-family: -apple-system, monospace;
   }
-  .mod-tab.greelec-tab {
-    background: #0f1c2e; border-color: #1e3a8a; color: #60a5fa;
+  .di-metrics { font-size: 10px; font-family: -apple-system, "SF Mono", monospace; color: #94a3b8; }
+
+  /* Header Toolbar Buttons */
+  .macos-actions { display: flex; align-items: center; gap: 7px; }
+  .btn-macos {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--text-primary);
+    border: 1px solid var(--macos-border);
+    padding: 6px 12px;
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--spring-quick);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
-  .mod-tab.greelec-tab:hover {
-    background: #1e3a8a; border-color: #60a5fa; color: #ffffff;
+  .btn-macos:hover {
+    background: rgba(255, 255, 255, 0.13);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
   }
-  .mod-tab.greelec-tab.active {
-    background: #2563eb; border-color: #60a5fa; color: #ffffff;
-    box-shadow: 0 0 14px rgba(37,99,235,0.6);
+  .btn-macos:active {
+    transform: scale(0.96) translateY(0);
+    background: rgba(255, 255, 255, 0.05);
   }
-  .modules-bar::-webkit-scrollbar { height: 4px; }
-  .modules-bar::-webkit-scrollbar-thumb { background: #2e2e3e; border-radius: 2px; }
-  .mod-tab {
-    padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
-    white-space: nowrap; color: var(--text-muted); background: transparent; border: 1px solid transparent;
-    transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  .btn-macos.primary {
+    background: linear-gradient(180deg, #0a84ff 0%, #0066cc 100%);
+    border-color: #0077ed; color: #ffffff;
+    box-shadow: 0 2px 10px var(--apple-blue-glow), inset 0 1px 0 rgba(255,255,255,0.3);
   }
-  .mod-tab:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
-  .mod-tab.active {
-    color: #fff; background: var(--accent-blue); border-color: var(--accent-blue);
-    box-shadow: 0 2px 8px rgba(10,132,255,0.4);
+  .btn-macos.primary:hover {
+    background: linear-gradient(180deg, #2693ff 0%, #0071e3 100%);
+    box-shadow: 0 4px 14px var(--apple-blue-glow);
+  }
+  .btn-macos.green {
+    background: rgba(48, 209, 88, 0.15);
+    border-color: rgba(48, 209, 88, 0.35);
+    color: var(--apple-green);
+  }
+  .btn-macos.green:hover { background: rgba(48, 209, 88, 0.25); }
+
+  /* =========================================================================
+     3. FLOATING GLASS DOCK (MODULE NAVIGATION)
+     ========================================================================= */
+  .macos-dock-container {
+    padding: 6px 14px;
+    background: rgba(10, 14, 24, 0.65);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border-bottom: 1px solid var(--macos-border);
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 4px;
+    flex-shrink: 0;
+    box-shadow: var(--macos-specular);
+  }
+  .macos-dock-container::-webkit-scrollbar { height: 3px; }
+  .macos-dock-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+  .dock-item {
+    padding: 5px 11px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: var(--spring-bounce);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+    position: relative;
+  }
+  .dock-item:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .dock-item:active { transform: scale(0.96); }
+  .dock-item.active {
+    color: #ffffff;
+    background: linear-gradient(180deg, rgba(10, 132, 255, 0.85) 0%, rgba(0, 102, 204, 0.85) 100%);
+    border-color: rgba(100, 210, 255, 0.5);
+    box-shadow: 0 4px 16px var(--apple-blue-glow), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+  }
+  .dock-item.active::after {
+    content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 4px; border-radius: 50%; background: #ffffff;
+    box-shadow: 0 0 6px #ffffff;
+  }
+  .dock-item.greelec {
+    background: rgba(94, 92, 230, 0.12);
+    border-color: rgba(94, 92, 230, 0.28);
+    color: #a5b4fc;
+  }
+  .dock-item.greelec:hover {
+    background: rgba(94, 92, 230, 0.25);
+    color: #ffffff;
+  }
+  .dock-item.greelec.active {
+    background: linear-gradient(180deg, rgba(94, 92, 230, 0.9) 0%, rgba(79, 70, 229, 0.9) 100%);
+    border-color: rgba(192, 132, 252, 0.6);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.5);
   }
 
-  /* Main Workspace Layout */
+  /* =========================================================================
+     4. WORKSPACE THREE-COLUMN LAYOUT (SIDEBARS & CENTER STAGE)
+     ========================================================================= */
   .workspace {
-    flex: 1; display: grid; grid-template-columns: 340px 1fr 340px; overflow: hidden;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr 320px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(5, 7, 12, 0.85);
   }
 
-  /* Left Panel: Controls */
+  /* macOS Acrylic Sidebar - Left Controls */
   .panel-left {
-    background: var(--bg-secondary); border-right: 1px solid var(--border-color);
-    padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+    background: var(--macos-sidebar);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-right: 1px solid var(--macos-border);
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: inset -1px 0 0 rgba(255,255,255,0.03);
   }
+  .panel-left::-webkit-scrollbar { width: 5px; }
+  .panel-left::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
   .section-title {
-    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
-    color: var(--text-muted); display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--text-tertiary); display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 2px;
   }
+
+  /* Liquid Glass Cards */
   .control-group {
-    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px;
-    padding: 12px; display: flex; flex-direction: column; gap: 10px;
+    background: var(--macos-card);
+    border: 1px solid var(--macos-border);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow-card), var(--macos-specular);
+    transition: var(--spring-quick);
+  }
+  .control-group:hover {
+    border-color: var(--macos-border-highlight);
+    background: var(--macos-card-hover);
   }
   .control-label {
-    font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; color: var(--text-main);
+    font-size: 12px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;
+    color: var(--text-primary);
   }
-  .control-val { font-family: "SF Mono", monospace; color: var(--accent-cyan); font-weight: 700; }
+  .control-val {
+    font-family: -apple-system, "SF Mono", monospace; color: var(--apple-cyan); font-weight: 700; font-size: 11px;
+    background: rgba(100, 210, 255, 0.1); padding: 1px 6px; border-radius: 5px; border: 1px solid rgba(100, 210, 255, 0.2);
+  }
+
+  /* iOS 27 Fluid Track Sliders */
   .slider {
-    -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px;
-    background: #2e2e3e; outline: none; transition: background 0.2s;
+    -webkit-appearance: none; width: 100%; height: 6px; border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1); outline: none; transition: background 0.2s;
   }
   .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
-    background: var(--accent-blue); cursor: pointer; box-shadow: 0 0 8px rgba(10,132,255,0.6);
+    -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+    background: #ffffff; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0,0,0,0.1);
+    transition: transform 0.15s cubic-bezier(0.2, 0.9, 0.3, 1.2);
   }
+  .slider::-webkit-slider-thumb:hover { transform: scale(1.18); }
+  .slider::-webkit-slider-thumb:active { transform: scale(0.92); background: var(--apple-blue); }
+
   .select-styled {
-    background: #101014; color: var(--text-main); border: 1px solid var(--border-color);
-    border-radius: 6px; padding: 6px 10px; font-size: 12px; outline: none; width: 100%;
+    background: rgba(0, 0, 0, 0.4); color: var(--text-primary); border: 1px solid var(--macos-border);
+    border-radius: 8px; padding: 7px 10px; font-size: 11.5px; outline: none; width: 100%;
+    transition: var(--spring-quick);
   }
+  .select-styled:focus { border-color: var(--apple-blue); box-shadow: 0 0 0 3px var(--apple-blue-glow); }
 
-  .presets-box {
-    display: flex; flex-wrap: wrap; gap: 6px;
-  }
+  /* Presets Chips */
+  .presets-box { display: flex; flex-wrap: wrap; gap: 5px; }
   .preset-chip {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    color: var(--text-muted); font-size: 11px; padding: 4px 8px; border-radius: 6px;
-    cursor: pointer; transition: all 0.2s;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--macos-border);
+    color: var(--text-secondary); font-size: 10.5px; font-weight: 500; padding: 4px 8px; border-radius: 7px;
+    cursor: pointer; transition: var(--spring-quick);
   }
-  .preset-chip:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+  .preset-chip:hover {
+    background: var(--apple-blue); color: #ffffff; border-color: var(--apple-blue);
+    transform: translateY(-1px); box-shadow: 0 3px 8px var(--apple-blue-glow);
+  }
 
-  /* Center Stage: 3D Viewport & Instruments */
+  /* =========================================================================
+     5. CENTER STAGE (3D WEBGL & CAD SCHEMATIC VIEWPORT)
+     ========================================================================= */
   .panel-center {
-    background: #08080a; display: flex; flex-direction: column; overflow: hidden; position: relative;
+    background: #04060a; display: flex; flex-direction: column; overflow: hidden; position: relative;
   }
   .view-toolbar {
-    background: rgba(20,20,24,0.9); backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-color); padding: 8px 16px;
+    background: rgba(14, 18, 28, 0.75); backdrop-filter: blur(25px);
+    border-bottom: 1px solid var(--macos-border); padding: 8px 16px;
     display: flex; justify-content: space-between; align-items: center; z-index: 10;
+    box-shadow: var(--macos-specular);
   }
-  .view-toggle { display: flex; gap: 4px; background: #0c0c10; padding: 3px; border-radius: 8px; }
+  .view-toggle {
+    display: flex; gap: 3px; background: rgba(0, 0, 0, 0.5); padding: 3px; border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
   .view-btn {
-    padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;
-    background: transparent; border: none; color: var(--text-muted); transition: all 0.2s;
+    padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer;
+    background: transparent; border: none; color: var(--text-secondary); transition: var(--spring-quick);
   }
-  .view-btn.active { background: var(--bg-card); color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+  .view-btn:hover { color: #ffffff; }
+  .view-btn.active {
+    background: rgba(255, 255, 255, 0.15); color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
 
   .canvas-container {
     flex: 1; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
   }
-  #webgl-canvas {
-    width: 100%; height: 100%; display: block; cursor: grab;
-  }
+  #webgl-canvas { width: 100%; height: 100%; display: block; cursor: grab; }
   #webgl-canvas:active { cursor: grabbing; }
 
-  /* 3D Overlay HUD */
+  /* 3D Overlays */
   .hud-3d {
-    position: absolute; top: 16px; left: 16px; pointer-events: none;
+    position: absolute; top: 14px; left: 16px; pointer-events: none;
     display: flex; flex-direction: column; gap: 6px;
   }
   .hud-tag {
-    background: rgba(16,16,22,0.85); backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.12); padding: 5px 10px; border-radius: 6px;
-    font-size: 11px; font-family: "SF Mono", monospace; color: var(--accent-cyan);
+    background: rgba(10, 14, 24, 0.85); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12); padding: 5px 11px; border-radius: 8px;
+    font-size: 11px; font-family: -apple-system, "SF Mono", monospace; color: var(--apple-cyan);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   }
   .hud-controls-hint {
     position: absolute; bottom: 12px; left: 16px; pointer-events: none;
-    font-size: 11px; color: rgba(255,255,255,0.4); display: flex; gap: 12px;
+    font-size: 10.5px; color: rgba(255, 255, 255, 0.45); display: flex; gap: 14px;
+    background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.06);
   }
 
-  /* Lower Instrument Rack: Keysight / Tektronix */
+  /* =========================================================================
+     6. INSTRUMENT RACK (STUDIO BENCH: KEYSIGHT + AFG + PSU + TEKTRONIX)
+     ========================================================================= */
   .instrument-rack {
-    height: 240px; background: #121216; border-top: 1px solid var(--border-color);
-    display: flex; flex-direction: column; flex-shrink: 0;
+    height: 250px;
+    background: rgba(10, 14, 24, 0.88);
+    backdrop-filter: blur(35px);
+    border-top: 1px solid var(--macos-border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
   }
   .rack-header {
-    background: #181820; padding: 6px 16px; border-bottom: 1px solid var(--border-color);
+    background: rgba(14, 18, 30, 0.95); padding: 6px 16px; border-bottom: 1px solid var(--macos-border);
     display: flex; justify-content: space-between; align-items: center;
   }
-  .rack-title { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; }
-  .rack-logo { color: var(--keysight-orange); font-weight: 900; }
-  
+  .rack-title { font-size: 11px; font-weight: 700; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+  .rack-logo { font-weight: 900; }
+
   .rack-body {
     flex: 1; display: grid; grid-template-columns: 240px 220px 230px 1fr; padding: 8px 10px; gap: 8px;
   }
-  @media (max-width: 1400px) {
-    .rack-body { grid-template-columns: 1fr 1fr; }
+  @media (max-width: 1400px) { .rack-body { grid-template-columns: 1fr 1fr; } }
+
+  /* Studio Faceplates */
+  .rigol-psu, .rigol-afg, .keysight-dmm, .tek-scope {
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    transition: var(--spring-quick);
+  }
+  .rigol-psu:hover, .rigol-afg:hover, .keysight-dmm:hover, .tek-scope:hover {
+    border-color: rgba(255, 255, 255, 0.18) !important;
   }
 
-  /* Rigol DP832 Triple Power Supply Faceplate */
   .rigol-psu {
-    background: #060910; border: 2px solid #1e293b; border-radius: 8px;
-    padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.85); font-family: 'SF Mono', monospace;
+    background: #060910; padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between;
+    font-family: -apple-system, "SF Mono", monospace;
   }
   .psu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
   .psu-title { font-size: 10px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 4px; }
   .btn-psu-all {
-    padding: 2px 7px; font-size: 9px; font-weight: 800; border-radius: 4px; cursor: pointer;
-    border: 1px solid #16a34a; background: #052e16; color: #4ade80; transition: all 0.2s;
+    padding: 2px 7px; font-size: 9px; font-weight: 800; border-radius: 5px; cursor: pointer;
+    border: 1px solid #16a34a; background: #052e16; color: #4ade80; transition: var(--spring-quick);
   }
   .btn-psu-all.off { border-color: #dc2626; background: #450a0a; color: #f87171; }
   .psu-channels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 4px; }
   .psu-ch-card {
-    background: #0a0e1a; border: 1px solid #1e2433; border-radius: 4px; padding: 3px 4px;
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); border-radius: 7px; padding: 4px;
     display: flex; flex-direction: column; gap: 2px;
   }
   .psu-ch-top { display: flex; justify-content: space-between; align-items: center; font-size: 8px; font-weight: 700; color: #64748b; }
-  .psu-mode-badge { font-size: 7.5px; padding: 1px 3px; border-radius: 2px; font-weight: 800; background: #1e293b; color: #38bdf8; }
+  .psu-mode-badge { font-size: 7.5px; padding: 1px 4px; border-radius: 3px; font-weight: 800; background: #1e293b; color: #38bdf8; }
   .psu-v-disp { font-size: 11px; font-weight: 800; color: #38bdf8; text-align: right; }
   .psu-i-disp { font-size: 9px; font-weight: 700; color: #34d399; text-align: right; }
   .psu-steppers { display: flex; justify-content: space-between; margin-top: 2px; }
   .psu-step-btn {
-    padding: 1px 4px; font-size: 8px; background: #1e2430; border: 1px solid #334155;
-    color: #e2e8f0; border-radius: 2px; cursor: pointer;
+    padding: 1px 5px; font-size: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+    color: #e2e8f0; border-radius: 4px; cursor: pointer; transition: var(--spring-quick);
   }
-  .psu-step-btn:hover { background: #334155; }
+  .psu-step-btn:hover { background: rgba(255,255,255,0.18); }
 
-  /* Function Generator Faceplate (Rigol / Keysight Style) */
+  /* Rigol AFG Faceplate */
   .rigol-afg {
-    background: #06080e; border: 2px solid #1e293b; border-radius: 8px;
-    padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    background: #06080e; padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between;
   }
   .afg-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
   .btn-afg-out {
-    padding: 2px 7px; font-size: 10px; font-weight: 800; border-radius: 4px; cursor: pointer;
+    padding: 2px 7px; font-size: 9px; font-weight: 800; border-radius: 5px; cursor: pointer;
     border: 1px solid #16a34a; background: #052e16; color: #4ade80; display: flex; align-items: center; gap: 4px;
-    transition: all 0.2s; font-family: monospace;
+    transition: var(--spring-quick); font-family: monospace;
   }
   .btn-afg-out.off { border-color: #dc2626; background: #450a0a; color: #f87171; }
   .afg-led {
-    width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+    width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
     box-shadow: 0 0 8px #22c55e; display: inline-block;
   }
   .afg-led.off { background: #64748b; box-shadow: none; }
-  .afg-waves {
-    display: flex; gap: 3px; margin-bottom: 5px;
-  }
+  .afg-waves { display: flex; gap: 3px; margin-bottom: 5px; }
   .afg-wave-btn {
-    flex: 1; padding: 3px 1px; font-size: 9px; font-weight: 700; background: #10141f;
-    border: 1px solid #232c3f; color: #94a3b8; border-radius: 4px; cursor: pointer;
-    transition: all 0.15s; text-align: center; font-family: monospace;
+    flex: 1; padding: 3px 1px; font-size: 8.5px; font-weight: 700; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08); color: #94a3b8; border-radius: 5px; cursor: pointer;
+    transition: var(--spring-quick); text-align: center; font-family: monospace;
   }
-  .afg-wave-btn:hover { background: #1e293b; color: #f8fafc; }
+  .afg-wave-btn:hover { background: rgba(255,255,255,0.12); color: #f8fafc; }
   .afg-wave-btn.active {
     background: #0284c7; border-color: #38bdf8; color: #ffffff;
     box-shadow: 0 0 8px rgba(56,189,248,0.4);
   }
-  .afg-controls-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 5px;
-  }
+  .afg-controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
   .afg-param-box {
-    background: #0b0e15; border: 1px solid #1a202c; border-radius: 4px; padding: 3px 5px;
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 3px 5px;
   }
-  .afg-lbl { font-size: 8.5px; color: #64748b; font-family: monospace; font-weight: 700; }
+  .afg-lbl { font-size: 8px; color: #64748b; font-family: monospace; font-weight: 700; }
   .afg-val-row { display: flex; justify-content: space-between; align-items: center; }
-  .afg-num { font-size: 11px; font-weight: 800; color: #38bdf8; font-family: monospace; }
+  .afg-num { font-size: 10.5px; font-weight: 800; color: #38bdf8; font-family: monospace; }
   .afg-steppers { display: flex; gap: 2px; }
   .afg-step {
-    padding: 1px 4px; font-size: 8px; background: #1e2430; border: 1px solid #334155;
-    color: #e2e8f0; border-radius: 2px; cursor: pointer;
+    padding: 1px 4px; font-size: 8px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+    color: #e2e8f0; border-radius: 3px; cursor: pointer;
   }
-  .afg-step:hover { background: #334155; }
+  .afg-step:hover { background: rgba(255,255,255,0.18); }
 
-  /* Keysight 34465A DMM Faceplate */
+  /* Keysight DMM Faceplate */
   .keysight-dmm {
-    background: #050508; border: 2px solid #2a2a38; border-radius: 8px;
-    padding: 10px 14px; display: flex; flex-direction: column; justify-content: space-between;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    background: #050508; padding: 10px 14px; display: flex; flex-direction: column; justify-content: space-between;
   }
   .dmm-top { display: flex; justify-content: space-between; align-items: center; }
-  .dmm-mode-badge { font-size: 10px; font-weight: 800; color: #fff; background: var(--keysight-orange); padding: 2px 6px; border-radius: 4px; }
+  .dmm-mode-badge { font-size: 9.5px; font-weight: 800; color: #fff; background: var(--keysight-orange); padding: 2px 6px; border-radius: 5px; }
   .dmm-display {
-    font-family: "SF Mono", "Courier New", monospace;
-    color: var(--vfd-teal); text-shadow: 0 0 10px rgba(0,229,255,0.6);
-    font-size: 28px; font-weight: 800; text-align: right; margin: 4px 0;
-    letter-spacing: 1px;
+    font-family: -apple-system, "SF Mono", "Courier New", monospace;
+    color: var(--vfd-teal); text-shadow: 0 0 12px rgba(0,229,255,0.65);
+    font-size: 26px; font-weight: 800; text-align: right; margin: 2px 0; letter-spacing: 1px;
   }
   .dmm-bar {
-    width: 100%; height: 6px; background: #1a1a24; border-radius: 3px; overflow: hidden; position: relative;
+    width: 100%; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; position: relative;
   }
   .dmm-bar-fill {
     height: 100%; width: 50%; background: linear-gradient(90deg, #00e5ff, #30d158); transition: width 0.1s;
   }
   .dmm-footer {
-    display: flex; justify-content: space-between; font-size: 10px; color: #666; font-family: "SF Mono", monospace;
+    display: flex; justify-content: space-between; font-size: 9.5px; color: #64748b; font-family: -apple-system, "SF Mono", monospace;
   }
 
-  /* Tektronix Mini DSO Screen */
+  /* Tektronix DSO Screen */
   .tek-scope {
-    background: #020c04; border: 2px solid #1a3320; border-radius: 8px;
-    padding: 6px; display: flex; flex-direction: column; position: relative;
-    box-shadow: inset 0 0 15px rgba(0,255,102,0.15);
+    background: #020c04; padding: 6px; display: flex; flex-direction: column; position: relative;
   }
-  .tek-canvas { width: 100%; height: 100%; border-radius: 4px; }
+  .tek-canvas { width: 100%; height: 100%; border-radius: 8px; }
   .tek-hud {
-    position: absolute; top: 10px; left: 10px; font-size: 10px; font-family: "SF Mono", monospace;
+    position: absolute; top: 10px; left: 10px; font-size: 9.5px; font-family: -apple-system, "SF Mono", monospace;
     color: var(--phosphor-green); text-shadow: 0 0 6px rgba(0,255,102,0.6);
   }
 
-  /* Right Panel: Physics & Exam Challenge */
+  /* =========================================================================
+     7. RIGHT SIDEBAR (PHYSICS & EXAM CHALLENGE)
+     ========================================================================= */
   .panel-right {
-    background: var(--bg-secondary); border-left: 1px solid var(--border-color);
-    padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+    background: var(--macos-sidebar);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-left: 1px solid var(--macos-border);
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.03);
   }
+  .panel-right::-webkit-scrollbar { width: 5px; }
+  .panel-right::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
   .metric-card {
-    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px;
-    padding: 12px; display: flex; flex-direction: column; gap: 6px;
+    background: var(--macos-card);
+    border: 1px solid var(--macos-border);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--shadow-card), var(--macos-specular);
+    transition: var(--spring-quick);
   }
-  .metric-header { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
-  .metric-value { font-size: 20px; font-weight: 800; font-family: "SF Mono", monospace; color: var(--accent-green); }
-  .metric-sub { font-size: 11px; color: #888; }
+  .metric-card:hover { background: var(--macos-card-hover); border-color: var(--macos-border-highlight); }
+  .metric-header { font-size: 10.5px; color: var(--text-tertiary); font-weight: 700; text-transform: uppercase; }
+  .metric-value { font-size: 19px; font-weight: 800; font-family: -apple-system, "SF Mono", monospace; color: var(--apple-green); }
+  .metric-sub { font-size: 10.5px; color: var(--text-secondary); }
 
   .formula-box {
-    background: #0e0e12; border: 1px solid #22222e; border-radius: 8px;
-    padding: 10px; font-family: "SF Mono", monospace; font-size: 11px; color: #ccc;
-    line-height: 1.6;
+    background: rgba(0, 0, 0, 0.45); border: 1px solid var(--macos-border); border-radius: 12px;
+    padding: 12px; font-family: -apple-system, "SF Mono", monospace; font-size: 10.5px; color: #d1d5db;
+    line-height: 1.6; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
   }
-  .formula-highlight { color: var(--accent-amber); font-weight: 700; }
 
   .challenge-box {
-    background: linear-gradient(135deg, rgba(191,90,242,0.1), rgba(10,132,255,0.1));
-    border: 1px solid rgba(191,90,242,0.3); border-radius: 10px; padding: 14px;
-    display: flex; flex-direction: column; gap: 10px;
+    background: linear-gradient(135deg, rgba(191,90,242,0.12), rgba(10,132,255,0.08));
+    border: 1px solid rgba(191,90,242,0.3); border-radius: 14px; padding: 14px;
+    display: flex; flex-direction: column; gap: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
   }
-  .challenge-title { font-size: 12px; font-weight: 800; color: #d8b4fe; display: flex; align-items: center; gap: 6px; }
-  .challenge-desc { font-size: 12px; color: #e2e8f0; }
+  .challenge-title { font-size: 11.5px; font-weight: 800; color: #d8b4fe; display: flex; align-items: center; gap: 6px; }
+  .challenge-desc { font-size: 11.5px; color: #e2e8f0; line-height: 1.4; }
   .challenge-input-row { display: flex; gap: 6px; }
   .challenge-input {
-    flex: 1; background: #101018; border: 1px solid #3b3b4f; border-radius: 6px;
-    padding: 6px 10px; color: #fff; font-family: "SF Mono", monospace; font-size: 12px; outline: none;
+    flex: 1; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+    padding: 6px 10px; color: #fff; font-family: -apple-system, "SF Mono", monospace; font-size: 11px; outline: none;
   }
   .challenge-res {
-    font-size: 11px; padding: 8px; border-radius: 6px; display: none; line-height: 1.4;
+    font-size: 11px; padding: 8px; border-radius: 8px; display: none; line-height: 1.4;
   }
   .challenge-res.correct { background: rgba(48,209,88,0.15); color: #86efac; border: 1px solid rgba(48,209,88,0.3); }
   .challenge-res.incorrect { background: rgba(255,69,58,0.15); color: #fca5a5; border: 1px solid rgba(255,69,58,0.3); }
 
-  /* Modal Report */
+  /* =========================================================================
+     8. macOS SHEETS & MODALS (LIQUID ACRYLIC MODALS)
+     ========================================================================= */
   .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+    position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.68);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
     display: none; align-items: center; justify-content: center; z-index: 1000;
+    animation: macosModalFadeIn 0.25s cubic-bezier(0.18, 0.9, 0.32, 1);
+  }
+  @keyframes macosModalFadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1.0); }
   }
   .modal-box {
-    background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px;
-    width: 90%; max-width: 750px; max-height: 85vh; display: flex; flex-direction: column;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    background: rgba(18, 24, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 20px;
+    width: 90%; max-width: 750px; max-height: 86vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.8), var(--macos-specular);
+    overflow: hidden;
   }
-  .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-  .modal-body { padding: 20px; overflow-y: auto; font-family: "SF Mono", monospace; font-size: 12px; color: #ccc; line-height: 1.6; }
-  .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
+  .modal-header {
+    padding: 14px 20px; border-bottom: 1px solid var(--macos-border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .modal-body {
+    padding: 20px; overflow-y: auto; font-family: -apple-system, "SF Mono", monospace; font-size: 11.5px;
+    color: #cbd5e1; line-height: 1.6;
+  }
+  .modal-footer {
+    padding: 12px 20px; border-top: 1px solid var(--macos-border);
+    display: flex; justify-content: flex-end; gap: 10px;
+    background: rgba(255, 255, 255, 0.02);
+  }
 </style>
 </head>
 <body>
+<body>
 
-<!-- Header -->
-<header>
-  <div class="brand">
-    <div class="brand-logo">μ</div>
-    <div>
-      <div class="brand-title">SISTEMES DE MESURA · LABORATORI VIRTUAL 3D</div>
-      <div class="brand-subtitle">Universitat Politècnica de Catalunya · EEBE / ETSETB</div>
-    </div>
-    <span class="badge-v5" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; font-weight: 800; padding: 2px 8px; border-radius: 4px;">v8.0 Enterprise · Rack Cuádruple, Bode, Tolerancias & EDA KiCad/LTspice</span>
+<!-- macOS System Menu Bar -->
+<div class="macos-menubar">
+  <div class="macos-menu-left">
+    <span class="apple-logo"></span>
+    <span class="app-name-title">Laboratori Virtual 3D</span>
+    <span class="menu-item">Arxiu</span>
+    <span class="menu-item">Edició</span>
+    <span class="menu-item">Instruments</span>
+    <span class="menu-item">Visualització</span>
+    <span class="menu-item">Finestra</span>
+    <span class="menu-item">Ajuda</span>
   </div>
-  <div class="header-actions">
-    <button class="btn btn-green" id="btn-audio" onclick="toggleAudio()">
-      <span id="audio-icon">🔊</span> <span id="audio-text">Audio Físico: ON</span>
+  <div class="macos-menu-right">
+    <div class="menu-stat-pill">
+      <span class="status-dot"></span> WebGL GPU 60 FPS
+    </div>
+    <div class="menu-stat-pill" id="mb-active-sensor">
+      ⚖️ Mòdul 1: Galgues
+    </div>
+    <span>UPC · ETSETB / EEBE</span>
+    <span id="macos-clock">19:30</span>
+  </div>
+</div>
+
+<!-- macOS App Window Header (Traffic Lights + Dynamic Island + Studio Actions) -->
+<header class="macos-window-header">
+  <div class="traffic-lights">
+    <div class="traffic-dot traffic-close" onclick="closeReportModal()" title="Tancar"></div>
+    <div class="traffic-dot traffic-minimize" onclick="toggleFullscreen()" title="Minimitzar"></div>
+    <div class="traffic-dot traffic-maximize" onclick="toggleFullscreen()" title="Pantalla Completa"></div>
+  </div>
+
+  <!-- Dynamic Island Central Pill -->
+  <div class="dynamic-island" id="dynamic-island-pill">
+    <span class="status-dot"></span>
+    <div class="di-pill-title">
+      <span>UPC LAB</span>
+      <span class="di-pill-tag" id="di-module-name">GREELEC 16-MÒDULS</span>
+    </div>
+    <div class="di-metrics" id="di-telemetry">
+      Rigol AFG 1.0kHz · DMM +0.000V
+    </div>
+  </div>
+
+  <!-- Actions Toolbar -->
+  <div class="macos-actions">
+    <button class="btn-macos green" id="btn-audio" onclick="toggleAudio()">
+      <span id="audio-icon">🔊</span> <span id="audio-text">Àudio: ON</span>
     </button>
-    <button class="btn" onclick="toggleFullscreen()">🖥️ Pantalla Completa</button>
-    <button class="btn" onclick="openBodeModal()" style="background: #064e3b; color: #34d399; border: 1px solid #059669;">📈 Analizador Bode</button>
-    <button class="btn" onclick="openFaultModal()" style="background: #450a0a; color: #f87171; border: 1px solid #dc2626;">⚠️ Fallos &amp; Diagnóstico</button>
-    <button class="btn" onclick="openToleranceModal()" style="background: #2e1065; color: #c084fc; border: 1px solid #7c3aed;">🎲 Tolerancias Monte Carlo</button>
-    <button class="btn" onclick="openWorksheetModal()" style="background: #1e1b4b; color: #a5b4fc; border: 1px solid #4f46e5;">📑 Guías de Prácticas</button>
-    <button class="btn" onclick="openColorCodeModal()">🎨 Código de Colores</button>
-    <button class="btn btn-primary" onclick="openReportModal()">📄 Exportar Informe</button>
+    <button class="btn-macos" onclick="openBodeModal()" style="border-color: rgba(5,150,105,0.4); color:#34d399;">
+      📈 Bode
+    </button>
+    <button class="btn-macos" onclick="openFaultModal()" style="border-color: rgba(220,38,38,0.4); color:#f87171;">
+      ⚠️ Fallades
+    </button>
+    <button class="btn-macos" onclick="openToleranceModal()" style="border-color: rgba(124,58,237,0.4); color:#c084fc;">
+      🎲 Monte Carlo
+    </button>
+    <button class="btn-macos" onclick="openWorksheetModal()" style="border-color: rgba(79,70,229,0.4); color:#a5b4fc;">
+      📑 Guies
+    </button>
+    <button class="btn-macos" onclick="openColorCodeModal()">
+      🎨 Colors R
+    </button>
+    <button class="btn-macos primary" onclick="openReportModal()">
+      📄 Exportar Informe
+    </button>
   </div>
 </header>
 
-<!-- Modules Nav -->
-<nav class="modules-bar" id="modules-bar">
-  <!-- Asignatura Sistemes de Mesura UPC (Módulos 1 al 10) -->
-  <button class="mod-tab active" onclick="switchModule(0)">⚖️ 1. Galgas</button>
-  <button class="mod-tab" onclick="switchModule(1)">🌡️ 2. Pt100</button>
-  <button class="mod-tab" onclick="switchModule(2)">⚡ 3. INA3</button>
-  <button class="mod-tab" onclick="switchModule(3)">〰️ 4. Sallen-Key</button>
-  <button class="mod-tab" onclick="switchModule(4)">📊 5. ADC</button>
-  <button class="mod-tab" onclick="switchModule(5)">🔥 6. Termopar</button>
-  <button class="mod-tab" onclick="switchModule(6)">📈 7. NTC Taylor</button>
-  <button class="mod-tab" onclick="switchModule(7)">🔊 8. Ruido</button>
-  <button class="mod-tab" onclick="switchModule(8)">💎 9. Piezo 3D</button>
-  <button class="mod-tab" onclick="switchModule(9)">⚡ 10. Capacitivo</button>
-
-  <!-- Separador e Insignia Oficial GREELEC UPC -->
-  <div style="display: flex; align-items: center; gap: 4px; margin: 0 4px;">
-    <span style="height: 18px; width: 1px; background: #334155; margin: 0 2px;"></span>
-    <span style="font-size: 10px; font-weight: 800; color: #38bdf8; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); padding: 3px 7px; border-radius: 4px; letter-spacing: 0.5px; white-space: nowrap;">🎓 GREELEC · UPC</span>
-  </div>
-
-  <!-- Asignaturas GREELEC ETSETB (Módulos 11 al 15) -->
-  <button class="mod-tab greelec-tab" onclick="switchModule(10)">🔌 11. Banco R-L-C</button>
-  <button class="mod-tab greelec-tab" onclick="switchModule(11)">⚡ 12. Buck/Boost (PEE)</button>
-  <button class="mod-tab greelec-tab" onclick="switchModule(12)">📡 13. Líneas RF & Smith (CAF)</button>
-  <button class="mod-tab greelec-tab" onclick="switchModule(13)">🎛️ 14. BJT/MOSFET (CA)</button>
-  <button class="mod-tab greelec-tab" onclick="switchModule(14)">🎯 15. Feedback PID (SC)</button>
-  <button class="mod-tab greelec-tab" onclick="switchModule(15)" style="background: #1e1b4b; border-color: #4f46e5; color: #a5b4fc;">🛠️ 16. Taller Libre CAD</button>
+<!-- Floating Glass Dock (16 Modules Navigation) -->
+<nav class="macos-dock-container" id="modules-bar">
+  <button class="dock-item active" onclick="switchModule(0)">⚖️ 1. Galgues</button>
+  <button class="dock-item" onclick="switchModule(1)">🌡️ 2. Pt100</button>
+  <button class="dock-item" onclick="switchModule(2)">⚡ 3. INA3</button>
+  <button class="dock-item" onclick="switchModule(3)">〰️ 4. Sallen-Key</button>
+  <button class="dock-item" onclick="switchModule(4)">📊 5. ADC</button>
+  <button class="dock-item" onclick="switchModule(5)">🔥 6. Termoparell</button>
+  <button class="dock-item" onclick="switchModule(6)">📈 7. NTC Taylor</button>
+  <button class="dock-item" onclick="switchModule(7)">🔊 8. Soroll</button>
+  <button class="dock-item" onclick="switchModule(8)">💎 9. Piezo 3D</button>
+  <button class="dock-item" onclick="switchModule(9)">⚡ 10. Capacitiu</button>
+  <span style="height: 18px; width: 1px; background: rgba(255,255,255,0.15); margin: 0 4px;"></span>
+  <button class="dock-item greelec" onclick="switchModule(10)">🔌 11. Banc R-L-C</button>
+  <button class="dock-item greelec" onclick="switchModule(11)">⚡ 12. Buck/Boost</button>
+  <button class="dock-item greelec" onclick="switchModule(12)">📡 13. Línies RF & Smith</button>
+  <button class="dock-item greelec" onclick="switchModule(13)">🎛️ 14. BJT/MOSFET</button>
+  <button class="dock-item greelec" onclick="switchModule(14)">🎯 15. PID Feedback</button>
+  <button class="dock-item greelec" onclick="switchModule(15)" style="background: rgba(79, 70, 229, 0.25); border-color: #818cf8; color:#ffffff;">🛠️ 16. Taller CAD</button>
 </nav>
 
-<!-- Main Workspace -->
 <div class="workspace">
 
   <!-- Left Controls Panel -->
@@ -4147,6 +4454,11 @@ function updateSimulation() {
 
   // Actualizar Keysight DMM
   document.getElementById('dmm-display').textContent = res.dmmText;
+  const diTel = document.getElementById('di-telemetry');
+  if (diTel) {
+    const fStr = (typeof AFG_STATE !== 'undefined') ? (AFG_STATE.freq >= 1e6 ? (AFG_STATE.freq/1e6).toFixed(1)+'MHz' : (AFG_STATE.freq>=1e3?(AFG_STATE.freq/1e3).toFixed(1)+'kHz':AFG_STATE.freq.toFixed(0)+'Hz')) : '1kHz';
+    diTel.innerText = `Rigol AFG ${fStr} · DMM ${res.dmmText}`;
+  }
   document.getElementById('dmm-min').textContent = res.dmmMin;
   document.getElementById('dmm-max').textContent = res.dmmMax;
   document.getElementById('dmm-bar-fill').style.width = res.dmmBar + '%';
@@ -4205,8 +4517,23 @@ function verifyChallenge() {
 
 function switchModule(idx) {
   currentModule = idx;
-  const tabs = document.querySelectorAll('.mod-tab');
-  tabs.forEach((t, i) => t.className = i === idx ? 'mod-tab active' : 'mod-tab');
+  const tabs = document.querySelectorAll('.dock-item');
+  tabs.forEach((t, i) => {
+    const isGreelec = i >= 10;
+    if (i === idx) {
+      t.className = isGreelec ? 'dock-item greelec active' : 'dock-item active';
+    } else {
+      t.className = isGreelec ? 'dock-item greelec' : 'dock-item';
+    }
+  });
+
+  // Actualizar Dynamic Island y Menú Superior
+  const diMod = document.getElementById('di-module-name');
+  const mbMod = document.getElementById('mb-active-sensor');
+  const modTitle = MODULE_DATA[idx]?.title || 'Mòdul ' + (idx + 1);
+  if (diMod) diMod.innerText = modTitle.split('.')[1]?.trim() || modTitle;
+  if (mbMod) mbMod.innerText = modTitle;
+
   loadModuleUI();
   updateAudioSynthesis();
   renderCircuitSchematic();
@@ -5990,6 +6317,17 @@ window.onload = () => {
   loadModuleUI();
   initInteractiveCanvasEvents();
   updatePsuDisplays();
+
+  // Reloj en tiempo real de macOS en la barra de menú
+  function updateMacClock() {
+    const el = document.getElementById('macos-clock');
+    if (el) {
+      const d = new Date();
+      el.innerText = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+  }
+  setInterval(updateMacClock, 1000);
+  updateMacClock();
   loop();
 };
 </script>
