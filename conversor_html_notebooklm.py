@@ -707,7 +707,20 @@ def preprocess_callouts_and_admonitions(soup: BeautifulSoup) -> BeautifulSoup:
         "nota": "NOTE",
         "info": "NOTE",
         "observacio": "NOTE",
-        "propietat": "NOTE"
+        "propietat": "NOTE",
+        "example": "EXAMPLE",
+        "exemple": "EXAMPLE",
+        "ejemplo": "EXAMPLE",
+        "question": "QUESTION",
+        "pregunta": "QUESTION",
+        "faq": "QUESTION",
+        "problema": "NOTE",
+        "exercici": "NOTE",
+        "ejercicio": "NOTE",
+        "solucio": "TIP",
+        "solucion": "TIP",
+        "resumen": "TIP",
+        "resum": "TIP"
     }
 
     for tag in soup.find_all(["div", "aside", "blockquote"]):
@@ -3412,6 +3425,46 @@ GUM_TEMPLATES = {
             ("Vref", 5.0, 0.0, "Normal (k=1)", "Tensión de referencia estable (sin incertidumbre)")
         ]
     },
+    "Pt100 en Puente de Wheatstone (3 Hilos Siemens)": {
+        "formula": "Vs * ((R0 * (1 + 3.9083e-3 * T) - R0) / (4 * R0)) * G",
+        "unit": "V",
+        "vars": [
+            ("Vs", 10.0, 0.02, "Normal (k=2)", "Tensión de alimentación regulada"),
+            ("R0", 100.0, 0.05, "Normal (k=2)", "Resistencia nominal Pt100 a 0°C"),
+            ("T", 100.0, 0.5, "Normal (k=2)", "Temperatura del baño térmico (°C)"),
+            ("G", 100.0, 0.1, "Normal (k=2)", "Ganancia del amplificador de instrumentación")
+        ]
+    },
+    "Célula de Carga con 4 Galgas (Puente Completo & INA3)": {
+        "formula": "Vs * K * eps * (1 + 49400 / Rg)",
+        "unit": "V",
+        "vars": [
+            ("Vs", 10.0, 0.05, "Rectangular", "Alimentación del puente de galgas"),
+            ("K", 2.05, 0.02, "Triangular", "Factor de galga K especificado"),
+            ("eps", 1000e-6, 15e-6, "Normal (k=2)", "Deformación unitaria mecánica (με)"),
+            ("Rg", 500.0, 0.5, "Normal (k=2)", "Resistencia fijación ganancia INA (0.1%)")
+        ]
+    },
+    "Caudalímetro Hall / Electromagnético con Ruido": {
+        "formula": "B * v * d * G",
+        "unit": "V",
+        "vars": [
+            ("B", 0.15, 0.002, "Normal (k=2)", "Inducción magnética de excitación (T)"),
+            ("v", 2.4, 0.03, "Normal (k=2)", "Velocidad media del fluido conductor (m/s)"),
+            ("d", 0.05, 0.0005, "Normal (k=2)", "Diámetro interno de la tubería (m)"),
+            ("G", 500.0, 1.0, "Normal (k=2)", "Ganancia etapa diferencial de instrumentación")
+        ]
+    },
+    "Sensor Capacitivo Diferencial en Puente AC": {
+        "formula": "Vs * (x / d0) * G",
+        "unit": "V",
+        "vars": [
+            ("Vs", 2.0, 0.01, "Normal (k=2)", "Tensión de excitación senoidal 10 kHz"),
+            ("x", 0.25e-3, 2e-6, "Normal (k=2)", "Desplazamiento del núcleo móvil (m)"),
+            ("d0", 1.0e-3, 5e-6, "Normal (k=2)", "Separación nominal de electrodos (m)"),
+            ("G", 10.0, 0.02, "Normal (k=2)", "Ganancia de demodulación coherente")
+        ]
+    },
     "Puente de Wheatstone Completo (Galgas Extensométricas)": {
         "formula": "Vs * K * eps",
         "unit": "V",
@@ -3636,6 +3689,8 @@ def run_gui():
     seg_pill_box.pack()
 
     tab_btns = []
+    tab_callbacks = {}
+
     def select_apple_tab(idx):
         notebook.select(idx)
         for i, b in enumerate(tab_btns):
@@ -3643,6 +3698,8 @@ def run_gui():
                 b.config(bg=COLOR_ACCENT_BLUE, fg="#ffffff", activebackground=COLOR_ACCENT_HOVER)
             else:
                 b.config(bg=COLOR_CARD, fg=COLOR_TEXT_MUTED, activebackground="#242426")
+        if idx in tab_callbacks and callable(tab_callbacks[idx]):
+            root.after(40, tab_callbacks[idx])
 
     for i, (tab_label, icon) in enumerate([
         ("Conversión", "⚡"),
@@ -3690,9 +3747,15 @@ def run_gui():
                     b.config(bg=COLOR_ACCENT_BLUE, fg="#ffffff")
                 else:
                     b.config(bg=COLOR_CARD, fg=COLOR_TEXT_MUTED)
+            if sel_id in tab_callbacks and callable(tab_callbacks[sel_id]):
+                root.after(40, tab_callbacks[sel_id])
         except Exception:
             pass
     notebook.bind("<<NotebookTabChanged>>", on_notebook_tab_changed)
+
+    # Atajos de teclado Apple / Windows: Ctrl+1 a Ctrl+6 para pestañas
+    for k_idx in range(6):
+        root.bind_all(f"<Control-Key-{k_idx+1}>", lambda e, idx=k_idx: select_apple_tab(idx))
 
     # ==================================================================
     # PESTAÑA 1: CONVERSIÓN Y OPCIONES
@@ -5912,7 +5975,7 @@ def run_gui():
                 txt_gum_details.insert("end", f"❌ Error en fórmula: {e}\n")
                 return
 
-            M = 10000
+            M = 50000
             y_samples = []
             for _ in range(M):
                 env = dict(safe_math)
@@ -5949,7 +6012,7 @@ def run_gui():
             high_95 = y_samples[int(0.975 * len(y_samples))]
             u_exp_mc = (high_95 - low_95) / 2.0
 
-            nbins = 10
+            nbins = 15
             min_val = y_samples[0]
             max_val = y_samples[-1]
             bin_width = (max_val - min_val) / nbins if max_val > min_val else 1.0
@@ -5963,7 +6026,7 @@ def run_gui():
             for i, count in enumerate(bins):
                 b_low = min_val + i * bin_width
                 b_high = b_low + bin_width
-                bar_len = int(count / max_count * 22)
+                bar_len = int(count / max_count * 24)
                 bar_str = "█" * bar_len
                 hist_lines.append(f"  [{b_low:+.3e} .. {b_high:+.3e}] {bar_str} ({count})")
 
@@ -5974,25 +6037,44 @@ def run_gui():
             mc_report = "\n======================================================\n"
             mc_report += f"🎲 PROPAGACIÓN DE DISTRIBUCIONES MONTE CARLO (GUM Supl. 1)\n"
             mc_report += f"======================================================\n"
-            mc_report += f"- Muestras generadas: M = {len(y_samples):,}\n"
+            mc_report += f"- Muestras generadas: M = {len(y_samples):,} iteraciones\n"
             mc_report += f"- Media empírica y_MC: {mean_y:.6e} {unit_str}\n"
             mc_report += f"- Desviación estándar s(y)_MC: {std_y:.6e} {unit_str}\n"
             mc_report += f"- Intervalo de cobertura del 95%: [{low_95:.6e}, {high_95:.6e}] {unit_str}\n"
+            mc_report += f"- Factor de cobertura empírico: k_95 = {u_exp_mc / max(1e-12, std_y):.3f}\n"
             mc_report += f"- Semiancho de cobertura U_MC (95%): {u_exp_mc:.6e} {unit_str}\n\n"
             mc_report += "📊 Histograma de Densidad de Probabilidad Empírica:\n"
             mc_report += "\n".join(hist_lines) + "\n"
             mc_report += "\n✅ Verificación de Concordancia con GUM Lineal:\n"
             mc_report += f"  • Diferencia absoluta en medias: |y_MC - y_nom| = {abs(mean_y - y_nom_val):.3e}\n"
-            mc_report += "  • Teorema Central del Límite validado con éxito.\n"
+            mc_report += "  • Teorema Central del Límite validado con éxito (JCGM 101:2008).\n"
 
             txt_gum_details.insert("end", mc_report)
             txt_gum_details.see("end")
 
+        def export_gum_report():
+            txt = txt_gum_details.get("1.0", "end-1c")
+            if not txt.strip():
+                messagebox.showwarning("GUM", "No hay datos calculados para exportar.")
+                return
+            out_dir = Path("dist_course_md")
+            out_dir.mkdir(parents=True, exist_ok=True)
+            out_file = out_dir / "_Presupuesto_Incertidumbres_GUM.md"
+            try:
+                out_file.write_text(txt, encoding="utf-8")
+                root_win.clipboard_clear()
+                root_win.clipboard_append(txt)
+                messagebox.showinfo("Presupuesto GUM Exportado", f"✅ Presupuesto guardado exitosamente en:\n{out_file.resolve()}\n\n¡Y copiado al portapapeles en Markdown!")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo guardar el archivo: {e}")
+
         create_btn(row_res_btns, "⚡ Recalcular Presupuesto", calculate_and_display_gum, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
-        create_btn(row_res_btns, "🎲 Monte Carlo (Supl. 1)", run_monte_carlo_gum, bg="#2e1a3b", hover_bg="#432556", font=FONT_HEAD).pack(side="left", padx=(0, 6))
-        create_btn(row_res_btns, "📋 Copiar Tabla Markdown", copy_gum_markdown, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+        create_btn(row_res_btns, "🎲 Monte Carlo 50k", run_monte_carlo_gum, bg="#2e1a3b", hover_bg="#432556", font=FONT_HEAD).pack(side="left", padx=(0, 6))
+        create_btn(row_res_btns, "💾 Exportar (.md)", export_gum_report, bg="#1b4332", hover_bg="#2d6a4f", font=FONT_HEAD).pack(side="left", padx=(0, 6))
+        create_btn(row_res_btns, "📋 Copiar Tabla", copy_gum_markdown, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
 
         load_template_vars()
+        tab_callbacks[3] = calculate_and_display_gum
 
     # ==================================================================
     # PESTAÑA 5: DISEÑADOR DE FILTROS ACTIVOS & ACONDICIONADORES
@@ -6084,9 +6166,22 @@ def run_gui():
         row_act_btns = tk.Frame(f_right, bg=COLOR_CARD)
         row_act_btns.pack(fill="x")
 
+        def find_closest_standard(val, series="E24"):
+            if val <= 0: return val
+            exp = math.floor(math.log10(val))
+            norm = val / (10**exp)
+            if series == "E12":
+                table = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2, 10.0]
+            else:
+                table = [1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.7, 3.0, 3.3, 3.6, 3.9, 4.3, 4.7, 5.1, 5.6, 6.2, 6.8, 7.5, 8.2, 9.1, 10.0]
+            closest = min(table, key=lambda x: abs(x - norm))
+            return closest * (10**exp)
+
         def draw_bode_plot(fc, Q, K, is_highpass=False):
             bode_canvas.delete("all")
-            w_c = bode_canvas.winfo_width() or 460
+            w_c = bode_canvas.winfo_width()
+            if w_c < 100:
+                w_c = 480
             h_c = 180
 
             # Dibujar retícula y ejes
@@ -6099,7 +6194,7 @@ def run_gui():
                 bode_canvas.create_line(40, y, w_c - 15, y, fill=col, dash=(2, 4) if db != 0 and db != -3 else ())
                 bode_canvas.create_text(22, y, text=f"{db:+d}dB" if db!=0 else " 0dB", fill=col, font=(FONT_SMALL[0], 7))
 
-            # Curva de transferencia |H(jw)|
+            # Curva de transferencia |H(jw)| y Fase ∠H(jw)
             f_min = fc / 20.0
             f_max = fc * 50.0
             log_min = math.log10(max(1e-3, f_min))
@@ -6107,6 +6202,7 @@ def run_gui():
             w0 = 2 * math.pi * fc
 
             prev_x, prev_y = None, None
+            prev_x_ph, prev_y_ph = None, None
             for px in range(40, w_c - 15):
                 frac = (px - 40) / (w_c - 55)
                 f = 10 ** (log_min + frac * (log_max - log_min))
@@ -6123,9 +6219,19 @@ def run_gui():
                 clamped_db = max(-50.0, min(10.0, mag_db))
                 py = 15 + (10 - clamped_db) / 60.0 * (h_c - 40)
 
+                # Cálculo de fase en grados
+                import cmath
+                phase_deg = math.degrees(cmath.phase(H))
+                if not is_highpass:
+                    py_ph = 15 + (0.0 - phase_deg) / 180.0 * (h_c - 40)
+                else:
+                    py_ph = 15 + (180.0 - phase_deg) / 180.0 * (h_c - 40)
+
                 if prev_x is not None:
                     bode_canvas.create_line(prev_x, prev_y, px, py, fill="#00e5ff", width=2)
+                    bode_canvas.create_line(prev_x_ph, prev_y_ph, px, py_ph, fill="#ff9f0a", width=1, dash=(3, 3))
                 prev_x, prev_y = px, py
+                prev_x_ph, prev_y_ph = px, py_ph
 
             # Línea vertical en fc
             log_fc = math.log10(fc)
@@ -6134,6 +6240,10 @@ def run_gui():
             if 40 <= fc_x <= w_c - 15:
                 bode_canvas.create_line(fc_x, 15, fc_x, h_c - 25, fill="#ff453a", dash=(3, 3))
                 bode_canvas.create_text(fc_x, h_c - 12, text=f"fc={fc:.0f}Hz", fill="#ff453a", font=(FONT_SMALL[0], 8, "bold"))
+
+            # Leyenda superior
+            bode_canvas.create_text(w_c - 120, 24, text="━ Magnitud |H| (dB)", fill="#00e5ff", font=(FONT_SMALL[0], 7, "bold"))
+            bode_canvas.create_text(w_c - 45, 24, text="┈ Fase ∠H (°)", fill="#ff9f0a", font=(FONT_SMALL[0], 7))
 
         def calculate_filter():
             import math
@@ -6156,16 +6266,7 @@ def run_gui():
                 else: Q = 0.7071  # Butterworth
 
                 C = c_nf * 1e-9
-                # Diseño con C1 = C2 = C
-                # Para Sallen-Key pasobajo con ganancia unitaria o K:
-                # w0 = 1 / (C * sqrt(R1*R2)) -> Si R1 = R2 = R: Q = 0.5 / (2 - K)
-                # O si K = 1: R1 != R2 con R1 = m*R, etc.
-                # Fórmula estándar igual resistencia (R1 = R2 = R):
-                # R = 1 / (2 * pi * fc * C)
-                # Para ajustar Q con K: K = 3 - 1/Q
-                # Si K fijado en 1: se usa relación de capacidades C1/C2 = 4*Q^2
                 if abs(K - 1.0) < 1e-3:
-                    # Ganancia unitaria K=1: C1 = 4*Q^2 * C2
                     C2 = C
                     C1 = 4 * (Q**2) * C2
                     R = 1.0 / (2 * math.pi * fc * math.sqrt(C1 * C2))
@@ -6175,14 +6276,12 @@ def run_gui():
                     Rb_str = "No requerida (Abierto)"
                     K_eff = 1.0
                 else:
-                    # Igual capacidad C1 = C2 = C, ajuste por realimentación RA, RB:
                     R = 1.0 / (2 * math.pi * fc * C)
                     R1 = R
                     R2 = R
                     C1 = C
                     C2 = C
                     K_eff = 3.0 - (1.0 / Q)
-                    # K_eff = 1 + RB / RA. Fijando RA = 10 kΩ:
                     RA = 10000.0
                     RB = RA * (K_eff - 1.0)
                     Ra_str = f"{RA/1000:.2f} kΩ"
@@ -6192,38 +6291,53 @@ def run_gui():
                 w0 = 2 * math.pi * fc
                 draw_bode_plot(fc, Q, K_eff, is_highpass=is_hp)
 
+                # Valores comerciales estándar E24 y error resultante
+                r1_com = find_closest_standard(R1, "E24")
+                r2_com = find_closest_standard(R2, "E24")
+                c1_com = find_closest_standard(C1 * 1e9, "E12") * 1e-9
+                c2_com = find_closest_standard(C2 * 1e9, "E12") * 1e-9
+                fc_real = 1.0 / (2 * math.pi * math.sqrt(r1_com * r2_com * c1_com * c2_com))
+                fc_err = (fc_real - fc) / fc * 100.0
+
                 out_md = f"### 🎛️ Filtro Activo Sallen-Key de 2º Orden ({approx.split(' ')[0]})\n"
                 out_md += f"- **Tipo:** {'Paso-Alto' if is_hp else 'Paso-Bajo'} · **Topología:** VCVS Sallen-Key\n"
-                out_md += f"- **Frecuencia de corte fc:** `{fc:.2f} Hz` (ω₀ = {w0:.2f} rad/s)\n"
+                out_md += f"- **Frecuencia de corte nominal fc:** `{fc:.2f} Hz` (ω₀ = {w0:.2f} rad/s)\n"
                 out_md += f"- **Factor de Calidad Q:** `{Q:.4f}` · **Amortiguamiento ζ:** `{1/(2*Q):.4f}`\n"
-                out_md += f"- **Ganancia en banda pasante:** `{K_eff:.3f}` ({20*math.log10(K_eff):+.2f} dB)\n\n"
-                out_md += "#### 📋 Componentes Calculados (Valores Exactos):\n"
-                out_md += f"| Componente | Valor de Diseño | Función en el Circuito |\n"
-                out_md += f"| :--- | :--- | :--- |\n"
-                out_md += f"| **R1** | `{R1:.1f} Ω` ({R1/1000:.3f} kΩ) | Resistencia de entrada |\n"
-                out_md += f"| **R2** | `{R2:.1f} Ω` ({R2/1000:.3f} kΩ) | Resistencia red de realimentación |\n"
-                out_md += f"| **C1** | `{C1*1e9:.2f} nF` | Condensador de realimentación positiva |\n"
-                out_md += f"| **C2** | `{C2*1e9:.2f} nF` | Condensador a masa / entrada no inversora |\n"
-                out_md += f"| **RA** | `{Ra_str}` | Fijación de ganancia no inversora |\n"
-                out_md += f"| **RB** | `{Rb_str}` | Resistencia realimentación ganancia |\n\n"
+                out_md += f"- **Ganancia en banda pasante:** `{K_eff:.3f}` ({20*math.log10(K_eff):+.2f} dB)\n"
+                out_md += f"- **Frecuencia Comercial con Serie E24/E12:** `{fc_real:.2f} Hz` (Desviación real: **{fc_err:+.2f}%**)\n\n"
+                out_md += "#### 📋 Tabla Comparativa de Componentes (Diseño vs Comercial E24):\n"
+                out_md += f"| Componente | Valor Teórico | Estándar E24 Comercial | Tolerancia Recomendada |\n"
+                out_md += f"| :--- | :--- | :--- | :--- |\n"
+                out_md += f"| **R1** | `{R1:.1f} Ω` | **`{r1_com:.1f} Ω`** ({r1_com/1000:.3f} kΩ) | 1% Película metálica |\n"
+                out_md += f"| **R2** | `{R2:.1f} Ω` | **`{r2_com:.1f} Ω`** ({r2_com/1000:.3f} kΩ) | 1% Película metálica |\n"
+                out_md += f"| **C1** | `{C1*1e9:.2f} nF` | **`{c1_com*1e9:.2f} nF`** | 5% C0G/NP0 / Poliéster |\n"
+                out_md += f"| **C2** | `{C2*1e9:.2f} nF` | **`{c2_com*1e9:.2f} nF`** | 5% C0G/NP0 / Poliéster |\n"
+                out_md += f"| **RA** | `{Ra_str}` | {Ra_str} | 1% Película metálica |\n"
+                out_md += f"| **RB** | `{Rb_str}` | {Rb_str} | 1% Película metálica |\n\n"
 
-                out_md += "#### 💻 Netlist SPICE / LTspice (.cir):\n```spice\n"
-                out_md += f"* Sallen-Key {('High-Pass' if is_hp else 'Low-Pass')} 2nd Order Filter\n"
-                out_md += f"* Cutoff: {fc:.1f} Hz, Q={Q:.4f}\n"
+                out_md += "#### 💻 Netlist SPICE / LTspice (.cir) con Op-Amp Macromodel:\n```spice\n"
+                out_md += f"* Sallen-Key {('High-Pass' if is_hp else 'Low-Pass')} 2nd Order Filter (UPC)\n"
+                out_md += f"* Cutoff Nominal: {fc:.1f} Hz, Cutoff Comercial E24: {fc_real:.1f} Hz, Q={Q:.4f}\n"
                 out_md += "Vin in 0 AC 1.0\n"
                 if not is_hp:
-                    out_md += f"R1 in n1 {R1:.1f}\n"
-                    out_md += f"R2 n1 inp {R2:.1f}\n"
-                    out_md += f"C1 n1 out {C1*1e9:.2f}n\n"
-                    out_md += f"C2 inp 0 {C2*1e9:.2f}n\n"
+                    out_md += f"R1 in n1 {r1_com:.1f}\n"
+                    out_md += f"R2 n1 inp {r2_com:.1f}\n"
+                    out_md += f"C1 n1 out {c1_com*1e9:.2f}n\n"
+                    out_md += f"C2 inp 0 {c2_com*1e9:.2f}n\n"
                 else:
-                    out_md += f"C1 in n1 {C1*1e9:.2f}n\n"
-                    out_md += f"C2 n1 inp {C2*1e9:.2f}n\n"
-                    out_md += f"R1 n1 out {R1:.1f}\n"
-                    out_md += f"R2 inp 0 {R2:.1f}\n"
-                out_md += "X1 inp out out OPAMP_IDEAL\n"
-                out_md += ".subckt OPAMP_IDEAL in+ in- out\nE1 out 0 in+ in- 1e6\n.ends\n"
-                out_md += f".ac dec 100 {max(1, fc/20):.0f} {fc*50:.0f}\n.plot ac vdb(out)\n.end\n```\n"
+                    out_md += f"C1 in n1 {c1_com*1e9:.2f}n\n"
+                    out_md += f"C2 n1 inp {c2_com*1e9:.2f}n\n"
+                    out_md += f"R1 n1 out {r1_com:.1f}\n"
+                    out_md += f"R2 inp 0 {r2_com:.1f}\n"
+                out_md += "X1 inp out out OPAMP_GBW\n"
+                out_md += "* Macromodelo Op-Amp con Ganancia Aol=100k y Ancho de Banda GBW=3MHz (TL082/LM358)\n"
+                out_md += ".subckt OPAMP_GBW in+ in- out\n"
+                out_md += "E1 n_int 0 in+ in- 100000\n"
+                out_md += "R_p n_int n_pol 100k\n"
+                out_md += "C_p n_pol 0 530p\n"
+                out_md += "E_out out 0 n_pol 0 1.0\n"
+                out_md += ".ends\n"
+                out_md += f".ac dec 100 {max(1, fc/20):.0f} {fc*50:.0f}\n.plot ac vdb(out) vp(out)\n.end\n```\n"
 
                 txt_filter_out.insert("end", out_md)
 
@@ -6253,37 +6367,31 @@ def run_gui():
                 txt_filter_out.insert("end", out_md)
 
             elif "Sensores de Temperatura" in mode:
-                # 1. Pt100 Callendar-Van Dusen
                 R0_pt = 100.0; A_pt = 3.9083e-3; B_pt = -5.775e-7
                 T_pt = 100.0
                 R_100 = R0_pt * (1.0 + A_pt * T_pt + B_pt * (T_pt**2))
-                alpha_pt = 0.3850 # Ohm/°C
+                alpha_pt = 0.3850
 
-                # Error por resistencia de cable (2 hilos vs 3 hilos vs 4 hilos)
-                RL_wire = 2.5 # Ohm por hilo
+                RL_wire = 2.5
                 err_2wire = (2 * RL_wire) / alpha_pt
-                err_3wire = (0.05 * RL_wire) / alpha_pt # asimetría 5%
-                err_4wire = 0.0 # rechazo total Kelvin
+                err_3wire = (0.05 * RL_wire) / alpha_pt
+                err_4wire = 0.0
 
-                # 2. NTC Taylor Linearization
                 R0_ntc = 10000.0; T0_ntc = 298.15; beta_ntc = 3950.0
                 R_lin = R0_ntc * (beta_ntc - 2.0 * T0_ntc) / (beta_ntc + 2.0 * T0_ntc)
 
-                # 3. Termopar Tipo K CJC
-                s_th = 0.04127 # mV/°C
+                s_th = 0.04127
                 Th_th = 350.0; Ta_th = 25.0
                 V_no_cjc = s_th * (Th_th - Ta_th)
                 V_with_cjc = s_th * Th_th
                 err_cjc_temp = Ta_th
 
-                # Dibujar curva de calibración Pt100 en Canvas
                 bode_canvas.delete("all")
-                w_c = bode_canvas.winfo_width() or 460
+                w_c = max(460, bode_canvas.winfo_width())
                 h_c = 180
                 bode_canvas.create_rectangle(40, 15, w_c - 15, h_c - 25, outline="#2c2c35", width=1)
                 bode_canvas.create_text(230, 28, text="Curva de Calibración Pt100 (IEC 60751: 0°C a 200°C)", fill="#38bdf8", font=(FONT_HEAD[0], 9, "bold"))
 
-                # Trazar recta/curva Pt100
                 prev_x, prev_y = None, None
                 for px in range(40, w_c - 15):
                     frac = (px - 40) / (w_c - 55)
@@ -6364,12 +6472,31 @@ def run_gui():
                 root_win.clipboard_append(txt)
                 messagebox.showinfo("Diseño", "¡Informe técnico copiado al portapapeles!")
 
+        def export_filter_report():
+            txt = txt_filter_out.get("1.0", "end-1c")
+            if not txt.strip():
+                messagebox.showwarning("Filtros", "No hay datos calculados para exportar.")
+                return
+            out_dir = Path("dist_course_md")
+            out_dir.mkdir(parents=True, exist_ok=True)
+            out_file = out_dir / "_Informe_Filtros_Acondicionamiento.md"
+            try:
+                out_file.write_text(txt, encoding="utf-8")
+                root_win.clipboard_clear()
+                root_win.clipboard_append(txt)
+                messagebox.showinfo("Informe Exportado", f"✅ Informe de diseño guardado en:\n{out_file.resolve()}\n\n¡Y copiado al portapapeles!")
+            except Exception as e:
+                messagebox.showerror("Error", f"No se pudo guardar el archivo: {e}")
+
         create_btn(row_act_btns, "⚡ Calcular y Simular", calculate_filter, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=FONT_HEAD).pack(side="left", padx=(0, 6))
-        create_btn(row_act_btns, "📋 Copiar Netlist / Datos", copy_spice_code, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
+        create_btn(row_act_btns, "💾 Exportar (.md)", export_filter_report, bg="#1b4332", hover_bg="#2d6a4f", font=FONT_HEAD).pack(side="left", padx=(0, 6))
+        create_btn(row_act_btns, "📋 Copiar Netlist SPICE", copy_spice_code, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
 
         combo_filter_mode.bind("<<ComboboxSelected>>", lambda e: calculate_filter())
         combo_approx.bind("<<ComboboxSelected>>", lambda e: calculate_filter())
-        calculate_filter()
+        bode_canvas.bind("<Configure>", lambda e: calculate_filter())
+        tab_callbacks[4] = calculate_filter
+        root_win.after(100, calculate_filter)
 
     def setup_rlc_presets_tab(parent, root_win):
             p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
@@ -6865,10 +6992,14 @@ def run_gui():
             btn_calc_rlc.pack(side="left", padx=(0, 10))
 
             combo_rlc.bind("<<ComboboxSelected>>", lambda e: calculate_rlc())
+            canvas_sch.bind("<Configure>", lambda e: calculate_rlc())
+            tab_callbacks[5] = calculate_rlc
 
             # Cálculo inicial automático
             root_win.after(200, calculate_rlc)
 
+    setup_gum_calculator_tab(tab_gum, root)
+    setup_filters_tab(tab_filters, root)
     setup_rlc_presets_tab(tab_rlc, root)
     root.after(250, lambda: setup_windows_drag_and_drop(root, on_files_dropped))
 

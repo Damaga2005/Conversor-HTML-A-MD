@@ -2303,6 +2303,7 @@ const tekCanvas = document.getElementById('tek-canvas');
 const tekCtx = tekCanvas.getContext('2d');
 let animFrameId = null;
 let animPhase = 0;
+let scopePaused = false;
 
 let scopeMode = "TIME"; // "TIME", "FFT", "MATH", "XY"
 
@@ -2391,7 +2392,7 @@ function renderTekScope() {
   }
 
   const m = currentModule;
-  animPhase += 0.05;
+  if (!scopePaused) animPhase += 0.05;
 
   // Parámetros de la señal del AFG Rigol
   const afgOn = AFG_STATE.enabled;
@@ -2580,7 +2581,43 @@ function renderTekScope() {
     tekCtx.shadowBlur = 0;
   }
 
-  // OSD Tektronix TDS2024C
+  // Medidas automáticas en tiempo real (Tektronix Measurement Box)
+  let min1 = 999, max1 = -999, sumSq1 = 0;
+  let min2 = 999, max2 = -999, sumSq2 = 0;
+  for (let x = 0; x < w; x++) {
+    const s1 = ch1Samples[x];
+    const s2 = ch2Samples[x];
+    if (s1 < min1) min1 = s1;
+    if (s1 > max1) max1 = s1;
+    sumSq1 += s1 * s1;
+    if (s2 < min2) min2 = s2;
+    if (s2 > max2) max2 = s2;
+    sumSq2 += s2 * s2;
+  }
+  const vpp1 = Math.max(0, (max1 - min1) * (afgAmp > 0 ? (afgAmp / 0.9) : 1.0));
+  const vrms1 = Math.sqrt(sumSq1 / Math.max(1, w)) * (afgAmp > 0 ? (afgAmp / 0.9) : 1.0);
+  const vpp2 = Math.max(0, (max2 - min2) * 4.8);
+  const vrms2 = Math.sqrt(sumSq2 / Math.max(1, w)) * 4.8;
+
+  // Box OSD Medidas Automáticas (Esquina Superior Derecha)
+  const osdW = 184 * dpr;
+  const osdH = 62 * dpr;
+  tekCtx.fillStyle = 'rgba(7, 12, 20, 0.88)';
+  tekCtx.fillRect(w - osdW - 8 * dpr, 6 * dpr, osdW, osdH);
+  tekCtx.strokeStyle = 'rgba(0, 229, 255, 0.45)';
+  tekCtx.lineWidth = 1;
+  tekCtx.strokeRect(w - osdW - 8 * dpr, 6 * dpr, osdW, osdH);
+
+  tekCtx.font = `bold ${8.5 * dpr}px "SF Mono", monospace`;
+  tekCtx.fillStyle = '#facc15';
+  tekCtx.fillText(`CH1 Vpp: ${vpp1.toFixed(2)} V  Vrms: ${vrms1.toFixed(2)} V`, w - osdW - 2 * dpr, 19 * dpr);
+  tekCtx.fillText(`CH1 Freq: ${afgFreq >= 1000 ? (afgFreq/1000).toFixed(2)+' kHz' : afgFreq.toFixed(0)+' Hz'}`, w - osdW - 2 * dpr, 33 * dpr);
+  tekCtx.fillStyle = '#38bdf8';
+  tekCtx.fillText(`CH2 Vpp: ${vpp2.toFixed(2)} V  Vrms: ${vrms2.toFixed(2)} V`, w - osdW - 2 * dpr, 47 * dpr);
+  tekCtx.fillStyle = scopePaused ? '#f87171' : '#30d158';
+  tekCtx.fillText(`SWEEP: ${scopePaused ? '⏸ STOPPED' : '▶ RUNNING (Trig\'d)'}`, w - osdW - 2 * dpr, 60 * dpr);
+
+  // OSD Tektronix TDS2024C Header
   tekCtx.font = `bold ${10 * dpr}px "SF Mono", monospace`;
   tekCtx.fillStyle = '#38bdf8';
   tekCtx.fillText(`TEKTRONIX TDS2024C • Real-Time 2.0 GS/s • Trig'd [${scopeMode}]`, 8 * dpr, 14 * dpr);
@@ -2610,6 +2647,7 @@ function loop() {
     renderCircuitSchematic();
   }
   renderTekScope();
+  if (typeof updateFaultHUD === 'function') updateFaultHUD();
   animFrameId = requestAnimationFrame(loop);
 }
 
@@ -4617,6 +4655,17 @@ function updateSimulation() {
   document.getElementById('dmm-bar-fill').style.width = res.dmmBar + '%';
   document.getElementById('dmm-ub').textContent = res.dmmUb;
 
+  // Beeper de continuidad sonora si resistencia es inferior a 30 Ω
+  if (res.dmmText && (res.dmmText.includes('Ω') || res.dmmText.includes('Ohm'))) {
+    const numMatch = res.dmmText.match(/([0-9.]+)/);
+    if (numMatch) {
+      const ohmVal = parseFloat(numMatch[1]);
+      if (ohmVal > 0 && ohmVal < 30.0 && !res.dmmText.includes('kΩ') && !res.dmmText.includes('MΩ')) {
+        if (typeof playContinuityBeep === 'function') playContinuityBeep();
+      }
+    }
+  }
+
   // Actualizar Panel Derecho
   const pRight = document.getElementById('panel-right');
   let rightHTML = `<div class="section-title"><span>Medidas & Metrología GUM</span></div>`;
@@ -6486,6 +6535,165 @@ function copyWorksheetToClipboard() {
     navigator.clipboard.writeText(body.innerText).then(() => alert('¡Guía copiada al portapapeles!'));
   }
 }
+
+// ======================================================================
+// FLOATING FAULT & TOLERANCE HUD BANNER
+// ======================================================================
+function updateFaultHUD() {
+  let hud = document.getElementById('floating-fault-hud');
+  if (!hud) {
+    hud = document.createElement('div');
+    hud.id = 'floating-fault-hud';
+    hud.style.cssText = 'position:fixed; top:42px; left:50%; transform:translateX(-50%); z-index:9999; display:none; align-items:center; gap:10px; background:rgba(220,38,38,0.92); backdrop-filter:blur(10px); color:#fff; padding:6px 18px; border-radius:20px; font-family:"SF Pro Display",system-ui; font-size:12px; font-weight:700; box-shadow:0 8px 24px rgba(220,38,38,0.5); border:1px solid rgba(255,255,255,0.3);';
+    document.body.appendChild(hud);
+  }
+  if (typeof FAULT_STATE !== 'undefined' && FAULT_STATE && FAULT_STATE.active) {
+    hud.style.display = 'flex';
+    hud.style.background = 'rgba(220,38,38,0.92)';
+    hud.innerHTML = `⚠️ FALLO ACTIVO: <b>${FAULT_STATE.type}</b> en <b>${FAULT_STATE.targetComp || 'Componente'}</b> <button onclick="resetFaults()" style="background:#fff; color:#b91c1c; border:none; border-radius:10px; padding:2px 8px; font-weight:800; cursor:pointer; margin-left:6px;">Resetear (R)</button>`;
+  } else if (typeof TOLERANCE_STATE !== 'undefined' && TOLERANCE_STATE && TOLERANCE_STATE.active) {
+    hud.style.display = 'flex';
+    hud.style.background = 'rgba(217,119,6,0.92)';
+    hud.innerHTML = `🎲 MONTE CARLO ACTIVO: Tolerancia ±<b>${TOLERANCE_STATE.pct}%</b> <button onclick="resetTolerances()" style="background:#fff; color:#b45309; border:none; border-radius:10px; padding:2px 8px; font-weight:800; cursor:pointer; margin-left:6px;">Nominal (R)</button>`;
+  } else {
+    hud.style.display = 'none';
+  }
+}
+
+// ======================================================================
+// DMM CONTINUITY BEEPER (WEB AUDIO API)
+// ======================================================================
+function playContinuityBeep(freq = 2700, duration = 0.08) {
+  try {
+    const actx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = actx.createOscillator();
+    const gain = actx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(freq, actx.currentTime);
+    gain.gain.setValueAtTime(0.06, actx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(actx.destination);
+    osc.start();
+    osc.stop(actx.currentTime + duration);
+  } catch(e) {}
+}
+
+// ======================================================================
+// INFORME OFICIAL DE LABORATORIO (PRINT / EXPORT WORKSHEET)
+// ======================================================================
+function exportLabReportPDF() {
+  const modData = (typeof MODULE_DATA !== 'undefined' && MODULE_DATA[currentModule]) ? MODULE_DATA[currentModule] : { title: "Módulo Activo", desc: "" };
+  const dmmV = (typeof CIRCUIT_STATE !== 'undefined' && CIRCUIT_STATE.results) ? CIRCUIT_STATE.results.Vth : 0;
+  const dmmR = (typeof CIRCUIT_STATE !== 'undefined' && CIRCUIT_STATE.results) ? CIRCUIT_STATE.results.Rth : 0;
+  const dmmIn = (typeof CIRCUIT_STATE !== 'undefined' && CIRCUIT_STATE.results) ? CIRCUIT_STATE.results.Inorton : 0;
+  const Pgen = (typeof CIRCUIT_STATE !== 'undefined' && CIRCUIT_STATE.results) ? CIRCUIT_STATE.results.P_gen : 0;
+  const Pdiss = (typeof CIRCUIT_STATE !== 'undefined' && CIRCUIT_STATE.results) ? CIRCUIT_STATE.results.P_diss : 0;
+  const afgW = (typeof AFG_STATE !== 'undefined') ? AFG_STATE.wave.toUpperCase() : 'SINE';
+  const afgF = (typeof AFG_STATE !== 'undefined') ? AFG_STATE.freq : 1000;
+  const afgA = (typeof AFG_STATE !== 'undefined') ? AFG_STATE.amp : 5.0;
+
+  const w = window.open('', '_blank');
+  if (!w) {
+    alert("Por favor, permite ventanas emergentes para ver el informe de laboratorio.");
+    return;
+  }
+  w.document.write(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Informe Oficial de Laboratorio - ${modData.title}</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 40px; color: #111827; background: #fff; max-width: 900px; margin: 0 auto; }
+        .header { border-bottom: 2px solid #0a84ff; padding-bottom: 12px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; }
+        h1 { margin: 0; font-size: 20px; color: #0a84ff; }
+        .sub { font-size: 13px; color: #6b7280; }
+        .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 18px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; font-size: 13px; }
+        th { background: #f9fafb; font-weight: 600; }
+        .btn-print { background: #0a84ff; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        @media print { .btn-print { display: none; } }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <div>
+          <h1>UNIVERSITAT POLITÈCNICA DE CATALUNYA (UPC · EEBE)</h1>
+          <div class="sub">Grau en Enginyeria Electrònica (GREELEC) • Laboratori Virtual de Mesura i Circuitry</div>
+        </div>
+        <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+      </div>
+
+      <div class="card">
+        <h3>📋 Datos de la Sesión Experimental</h3>
+        <p><b>Módulo Seleccionado:</b> ${currentModule + 1}. ${modData.title}</p>
+        <p><b>Fecha de Registro:</b> ${new Date().toLocaleString()}</p>
+        <p><b>Generador AFG Rigol:</b> ${afgW} a ${afgF} Hz, ${afgA} Vpp</p>
+      </div>
+
+      <div class="card">
+        <h3>📐 Parámetros Thévenin & Multímetro Digital (Keysight 34465A)</h3>
+        <table>
+          <tr><th>Magnitud Eléctrica</th><th>Valor Simulado</th><th>Unidades</th><th>Observaciones</th></tr>
+          <tr><td>Tensión de Thévenin (Vth)</td><td><b>${dmmV.toFixed(4)}</b></td><td>V</td><td>Circuito Abierto entre Sondas</td></tr>
+          <tr><td>Resistencia de Thévenin (Rth)</td><td><b>${dmmR.toFixed(2)}</b></td><td>Ω</td><td>Impedancia interna equivalente</td></tr>
+          <tr><td>Corriente de Norton (In)</td><td><b>${(dmmIn*1000).toFixed(3)}</b></td><td>mA</td><td>Corriente en cortocircuito</td></tr>
+          <tr><td>Potencia Máxima Transferible</td><td><b>${((dmmV**2)/(4*Math.max(1e-6,dmmR))*1000).toFixed(3)}</b></td><td>mW</td><td>Condición de Jacobi (RL = Rth)</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>⚡ Verificación de Balance de Potencias (Teorema de Tellegen)</h3>
+        <p>• Potencia Generada (Σ P_gen): <b>${(Pgen*1000).toFixed(3)} mW</b></p>
+        <p>• Potencia Disipada (Σ P_diss): <b>${(Pdiss*1000).toFixed(3)} mW</b></p>
+        <p>• Conservación de Energía: <b>${Math.abs(Pgen - Pdiss) < 0.01 ? '✅ VALIDADA (Error < 0.01 mW)' : '⚠️ DISCREPANCIA'}</b></p>
+      </div>
+
+      <div class="card" style="min-height: 100px;">
+        <h3>✍️ Observaciones y Conclusiones del Estudiante</h3>
+        <p style="color: #9ca3af; font-style: italic;">Anotaciones técnicas del ensayo experimental...</p>
+      </div>
+    </body>
+    </html>
+  `);
+  w.document.close();
+}
+
+// ======================================================================
+// ATAJOS DE TECLADO GLOBALES (HOTKEYS)
+// ======================================================================
+window.addEventListener('keydown', (e) => {
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+
+  const key = e.key.toLowerCase();
+  if (key >= '1' && key <= '9') {
+    selectModule(parseInt(key) - 1);
+  } else if (key === '0') {
+    selectModule(9);
+  } else if (key === 'v') {
+    const modes = ['3d', 'diag', 'split'];
+    const nextIdx = (modes.indexOf(currentViewMode) + 1) % modes.length;
+    switchMainView(modes[nextIdx]);
+  } else if (key === ' ' || key === 'd') {
+    e.preventDefault();
+    scopePaused = !scopePaused;
+  } else if (key === 'm') {
+    toggleScopeMode();
+  } else if (key === 'c') {
+    toggleScopeCursors();
+  } else if (key === 'r') {
+    resetFaults();
+    resetTolerances();
+  } else if (key === 'f') {
+    startBlindChallenge();
+  } else if (key === 'e') {
+    exportScopeDataCSV();
+  } else if (key === 'p') {
+    exportLabReportPDF();
+  }
+});
 
 window.onload = () => {
   loadModuleUI();
