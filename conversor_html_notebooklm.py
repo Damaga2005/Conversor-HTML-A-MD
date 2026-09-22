@@ -3512,23 +3512,23 @@ def run_gui():
     root.minsize(980, 660)
 
     # ------------------------------------------------------------------
-    # PALETA APPLE.COM SPACE BLACK / TITANIUM PRO
+    # PALETA APPLE.COM SPACE BLACK / TITANIUM PRO (MACOS SEQUOIA)
     # ------------------------------------------------------------------
-    COLOR_CANVAS = "#000000"          # Apple True Black
-    COLOR_HEADER = "#161617"          # Apple Navigation Bar
-    COLOR_CARD = "#1c1c1e"            # Apple System Card Gray 6
-    COLOR_CARD_BORDER = "#2c2c2e"     # Hairline border divider
-    COLOR_INSET = "#121214"           # Dark Inset container
-    COLOR_INPUT_BG = "#0a0a0c"        # Inset Code / Entry field
-    COLOR_TEXT_PRIMARY = "#f5f5f7"    # Apple White / Silver
-    COLOR_TEXT_MUTED = "#86868b"      # Apple signature neutral gray
-    COLOR_ACCENT_BLUE = "#0071e3"     # Apple Signature Blue
-    COLOR_ACCENT_HOVER = "#0077ed"    # Apple Blue hover
-    COLOR_ACCENT_GREEN = "#30d158"    # Apple Green
-    COLOR_ACCENT_GREEN_HOVER = "#34c759"
+    COLOR_CANVAS = "#13151b"          # Canvas grafito profundo macOS Sequoia
+    COLOR_HEADER = "#1a1d26"          # Barra superior Apple Studio
+    COLOR_CARD = "#212530"            # Superficie de tarjeta acrílica con contraste
+    COLOR_CARD_BORDER = "#313747"     # Borde nítido y elegante
+    COLOR_INSET = "#171a22"           # Contenedor inset oscuro
+    COLOR_INPUT_BG = "#0f1116"        # Fondo de campos de entrada y código
+    COLOR_TEXT_PRIMARY = "#f8fafc"    # Texto blanco Apple brillante
+    COLOR_TEXT_MUTED = "#94a3b8"      # Gris plata legible
+    COLOR_ACCENT_BLUE = "#0a84ff"     # Apple SF Blue
+    COLOR_ACCENT_HOVER = "#0071e3"    # Apple Blue hover
+    COLOR_ACCENT_GREEN = "#30d158"    # Apple Mint Green
+    COLOR_ACCENT_GREEN_HOVER = "#28cd41"
     COLOR_ACCENT_RED = "#ff453a"      # Apple Red
-    COLOR_ACCENT_RED_HOVER = "#ff6961"
-    COLOR_ACCENT_AMBER = "#ff9f0a"    # Apple Amber / Gold
+    COLOR_ACCENT_RED_HOVER = "#e0382e"
+    COLOR_ACCENT_AMBER = "#ff9f0a"    # Apple Amber
     COLOR_ACCENT_PURPLE = "#bf5af2"   # Apple Purple
     COLOR_ACCENT_CYAN = "#64d2ff"     # Apple Cyan
 
@@ -3545,11 +3545,11 @@ def run_gui():
     except Exception:
         pass
 
-    FONT_TITLE = (FONT_FAMILY, 15, "bold")
+    FONT_TITLE = (FONT_FAMILY, 14, "bold")
     FONT_SUBTITLE = (FONT_FAMILY, 9)
-    FONT_HEAD = (FONT_FAMILY, 9, "bold")
+    FONT_HEAD = (FONT_FAMILY, 10, "bold")
     FONT_BODY = (FONT_FAMILY, 9)
-    FONT_CODE = ("Consolas", 9)
+    FONT_CODE = ("Consolas", 10)
     FONT_SMALL = (FONT_FAMILY, 8)
 
     style = ttk.Style()
@@ -3562,18 +3562,20 @@ def run_gui():
     style.configure("Modern.TCombobox", fieldbackground=COLOR_INPUT_BG, background=COLOR_CARD, foreground=COLOR_TEXT_PRIMARY, arrowcolor=COLOR_TEXT_MUTED, borderwidth=1)
     style.map("Modern.TCombobox", fieldbackground=[("readonly", COLOR_INPUT_BG)])
 
-    def create_btn(parent, text, command, bg="#2c2c2e", fg=COLOR_TEXT_PRIMARY, hover_bg="#3a3a3c", font=FONT_HEAD, padx=16, pady=7, **kwargs):
+    def create_btn(parent, text, command, bg="#262a36", fg=COLOR_TEXT_PRIMARY, hover_bg="#353b4c", font=FONT_HEAD, padx=14, pady=7, **kwargs):
         b = tk.Button(parent, text=text, command=command, bg=bg, fg=fg, activebackground=hover_bg, activeforeground=fg, font=font, cursor="hand2", relief="flat", bd=0, padx=padx, pady=pady, **kwargs)
         b.bind("<Enter>", lambda e: b.config(bg=hover_bg) if b["state"] != "disabled" else None)
         b.bind("<Leave>", lambda e: b.config(bg=bg) if b["state"] != "disabled" else None)
         return b
 
-    def make_card(parent, title=""):
+    def make_card(parent, title="", badge=""):
         c = tk.Frame(parent, bg=COLOR_CARD, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
         if title:
             h = tk.Frame(c, bg=COLOR_CARD)
-            h.pack(fill="x", padx=16, pady=(12, 4))
+            h.pack(fill="x", padx=16, pady=(12, 6))
             tk.Label(h, text=title, font=FONT_HEAD, fg=COLOR_TEXT_PRIMARY, bg=COLOR_CARD).pack(side="left")
+            if badge:
+                tk.Label(h, text=badge, font=FONT_SMALL, fg=COLOR_ACCENT_CYAN, bg=COLOR_INSET, padx=7, pady=2).pack(side="right")
         return c
 
     # Variables de control
@@ -3699,13 +3701,23 @@ def run_gui():
     btn_frame = tk.Frame(tab_convert, bg=COLOR_HEADER, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, padx=14, pady=10)
     btn_frame.pack(side="bottom", fill="x")
 
-    p1 = tk.Frame(tab_convert, bg=COLOR_CANVAS, padx=4, pady=4)
-    p1.pack(side="top", fill="both", expand=True)
+    # Layout de 2 columnas estilo macOS Studio Pro
+    workspace = tk.Frame(tab_convert, bg=COLOR_CANVAS)
+    workspace.pack(side="top", fill="both", expand=True, padx=14, pady=8)
+
+    # Columna izquierda: Configuración (Modo, Rutas, Opciones)
+    col_left = tk.Frame(workspace, bg=COLOR_CANVAS)
+    col_left.pack(side="left", fill="both", expand=True, padx=(0, 8))
+
+    # Columna derecha: Dashboard de Métricas y Terminal
+    col_right = tk.Frame(workspace, bg=COLOR_CANVAS, width=470)
+    col_right.pack(side="right", fill="both", expand=False, padx=(8, 0))
+    col_right.pack_propagate(False)
 
     # ------------------------------------------------------------------
     # CARD 1: MODO Y PERFIL RÁPIDO (APPLE SEGMENTED CONTROLS)
     # ------------------------------------------------------------------
-    card_mode = make_card(p1, "⚙️ Modo de Operación y Perfil")
+    card_mode = make_card(col_left, "⚙️ Modo de Operación y Perfil", badge="UPC GREELEC")
     card_mode.pack(fill="x", pady=(0, 8))
 
     top_bar = tk.Frame(card_mode, bg=COLOR_CARD, padx=16, pady=10)
@@ -3721,6 +3733,9 @@ def run_gui():
 
     mode_btns = {}
 
+    lbl_mode_desc = tk.Label(card_mode, text="", font=FONT_SUBTITLE, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, padx=16, pady=4)
+    lbl_mode_desc.pack(anchor="w", pady=(0, 6))
+
     def update_mode():
         m = mode_var.get()
         if m == "batch":
@@ -3728,6 +3743,7 @@ def run_gui():
             lbl_out.config(text="Carpeta de destino (Markdown):")
             chk_master.config(state="normal")
             chk_dash.config(state="normal")
+            lbl_mode_desc.config(text="📁 Procesa una carpeta de temas o archivos HTML convirtiéndolos a Markdown fiel.")
             try:
                 btn_exec.config(text="⚡ Convertir Lote", bg=COLOR_ACCENT_BLUE)
             except Exception:
@@ -3737,6 +3753,7 @@ def run_gui():
             lbl_out.config(text="Carpeta de destino para el curso completo:")
             chk_master.config(state="normal")
             chk_dash.config(state="normal")
+            lbl_mode_desc.config(text="🎓 Escanea y convierte los 10 temas oficiales del curso generando el Cuaderno Maestro y Gran Índice.")
             try:
                 btn_exec.config(text="🎓 Iniciar Conversión de los 10 Temas", bg=COLOR_ACCENT_GREEN)
             except Exception:
@@ -3746,6 +3763,7 @@ def run_gui():
             lbl_out.config(text="Archivo Markdown resultante (.md):")
             chk_master.config(state="disabled")
             chk_dash.config(state="disabled")
+            lbl_mode_desc.config(text="📄 Convierte un único archivo .html a .md con fórmulas LaTeX y tablas GFM intactas.")
             try:
                 btn_exec.config(text="⚡ Convertir Archivo Único", bg=COLOR_ACCENT_BLUE)
             except Exception:
@@ -3781,7 +3799,7 @@ def run_gui():
 
     tk.Label(preset_sub, text="Perfil:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 6))
 
-    def on_preset_selected(event=None):
+    def on_preset_selected(event):
         val = preset_var.get()
         if "NotebookLM" in val:
             rewrite_links_var.set(True)
@@ -3794,7 +3812,7 @@ def run_gui():
             dashboard_var.set(True)
         elif "Obsidian" in val:
             rewrite_links_var.set(True)
-            generate_toc_var.set(True)
+            generate_toc_var.set(False)
             include_meta_var.set(True)
             include_yaml_var.set(True)
             extract_b64_var.set(True)
@@ -3824,17 +3842,17 @@ def run_gui():
     # ------------------------------------------------------------------
     # CARD 2: RUTAS DE ORIGEN Y DESTINO
     # ------------------------------------------------------------------
-    card_paths = make_card(p1, "📁 Rutas de Entrada y Salida")
+    card_paths = make_card(col_left, "📁 Rutas de Entrada y Salida", badge="Smart Path")
     card_paths.pack(fill="x", pady=(0, 8))
 
-    paths_inner = tk.Frame(card_paths, bg=COLOR_CARD, padx=16, pady=6)
+    paths_inner = tk.Frame(card_paths, bg=COLOR_CARD, padx=16, pady=8)
     paths_inner.pack(fill="x")
 
     lbl_in = tk.Label(paths_inner, text="Carpeta de origen (HTML):", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD)
     lbl_in.pack(anchor="w")
 
     f1 = tk.Frame(paths_inner, bg=COLOR_CARD)
-    f1.pack(fill="x", pady=(2, 6))
+    f1.pack(fill="x", pady=(3, 8))
     entry_in = tk.Entry(f1, textvariable=in_var, font=FONT_CODE, bg=COLOR_INPUT_BG, fg=COLOR_TEXT_PRIMARY, insertbackground=COLOR_ACCENT_BLUE, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
     entry_in.pack(side="left", fill="x", expand=True, ipady=4, padx=(0, 8))
 
@@ -3864,14 +3882,14 @@ def run_gui():
         except Exception:
             pass
 
-    create_btn(f1, "Examinar...", select_in, bg="#2c2c2e", hover_bg="#3a3a3c").pack(side="right", padx=(4, 0))
-    create_btn(f1, "📋 Pegar", paste_in, bg="#2c2c2e", hover_bg="#3a3a3c").pack(side="right", padx=(4, 0))
+    create_btn(f1, "Examinar...", select_in, bg=COLOR_INSET, hover_bg="#2c3242").pack(side="right", padx=(4, 0))
+    create_btn(f1, "📋 Pegar", paste_in, bg=COLOR_INSET, hover_bg="#2c3242").pack(side="right", padx=(4, 0))
 
     lbl_out = tk.Label(paths_inner, text="Carpeta de destino (Markdown):", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD)
     lbl_out.pack(anchor="w")
 
     f2 = tk.Frame(paths_inner, bg=COLOR_CARD)
-    f2.pack(fill="x", pady=(2, 4))
+    f2.pack(fill="x", pady=(3, 6))
     entry_out = tk.Entry(f2, textvariable=out_var, font=FONT_CODE, bg=COLOR_INPUT_BG, fg=COLOR_TEXT_PRIMARY, insertbackground=COLOR_ACCENT_BLUE, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
     entry_out.pack(side="left", fill="x", expand=True, ipady=4, padx=(0, 8))
 
@@ -3890,16 +3908,16 @@ def run_gui():
         except Exception:
             pass
 
-    create_btn(f2, "Examinar...", select_out, bg="#2c2c2e", hover_bg="#3a3a3c").pack(side="right", padx=(4, 0))
-    create_btn(f2, "📋 Pegar", paste_out, bg="#2c2c2e", hover_bg="#3a3a3c").pack(side="right", padx=(4, 0))
+    create_btn(f2, "Examinar...", select_out, bg=COLOR_INSET, hover_bg="#2c3242").pack(side="right", padx=(4, 0))
+    create_btn(f2, "📋 Pegar", paste_out, bg=COLOR_INSET, hover_bg="#2c3242").pack(side="right", padx=(4, 0))
 
     # ------------------------------------------------------------------
-    # CARD 3: OPCIONES DE FORMATO Y RIGOR
+    # CARD 3: OPCIONES DE RIGOR ACADÉMICO Y NOTEBOOKLM
     # ------------------------------------------------------------------
-    card_opts = make_card(p1, "🛠️ Opciones de Formato y Rigor")
-    card_opts.pack(fill="x", pady=(0, 8))
+    card_opts = make_card(col_left, "🛠️ Rigor Académico & Formato NotebookLM", badge="8 Ajustes")
+    card_opts.pack(fill="x")
 
-    opts_inner = tk.Frame(card_opts, bg=COLOR_CARD, padx=16, pady=4)
+    opts_inner = tk.Frame(card_opts, bg=COLOR_CARD, padx=16, pady=8)
     opts_inner.pack(fill="x")
 
     def make_chk(parent, text, var, fg=COLOR_TEXT_PRIMARY, font=FONT_BODY):
@@ -3910,42 +3928,99 @@ def run_gui():
             bd=0, highlightthickness=0
         )
 
-    row_opt1 = tk.Frame(opts_inner, bg=COLOR_CARD)
-    row_opt1.pack(fill="x", pady=1)
-    make_chk(row_opt1, "🔗 Adaptar enlaces locales (.html → .md)", rewrite_links_var).pack(side="left", padx=(0, 18))
-    make_chk(row_opt1, "📑 Índice de contenidos (TOC)", generate_toc_var).pack(side="left", padx=(0, 18))
-    make_chk(row_opt1, "🖼️ Extraer imágenes Base64 a assets/", extract_b64_var).pack(side="left")
+    opts_grid = tk.Frame(opts_inner, bg=COLOR_CARD)
+    opts_grid.pack(fill="x")
 
-    row_opt2 = tk.Frame(opts_inner, bg=COLOR_CARD)
-    row_opt2.pack(fill="x", pady=1)
-    make_chk(row_opt2, "🏷️ Metadatos (Autor, Fecha)", include_meta_var).pack(side="left", padx=(0, 18))
-    make_chk(row_opt2, "📐 Formulario Resumen de Ecuaciones", formula_sheet_var).pack(side="left", padx=(0, 18))
-    make_chk(row_opt2, "📝 Cabecera YAML Frontmatter", include_yaml_var).pack(side="left")
+    col_o1 = tk.Frame(opts_grid, bg=COLOR_CARD)
+    col_o1.pack(side="left", fill="both", expand=True, padx=(0, 8))
 
-    row_opt3 = tk.Frame(opts_inner, bg=COLOR_CARD)
-    row_opt3.pack(fill="x", pady=1)
-    chk_master = make_chk(row_opt3, "📚 Cuaderno Maestro Unificado (_Cuaderno_Maestro.md)", master_doc_var, fg=COLOR_ACCENT_CYAN, font=FONT_HEAD)
-    chk_master.pack(side="left", padx=(0, 18))
-    chk_dash = make_chk(row_opt3, "📊 Reporte Analítico del Lote (_Reporte_Analitico.md)", dashboard_var, fg=COLOR_ACCENT_GREEN, font=FONT_HEAD)
-    chk_dash.pack(side="left")
+    make_chk(col_o1, "🔗 Adaptar enlaces locales (.html → .md)", rewrite_links_var).pack(anchor="w", pady=2)
+    make_chk(col_o1, "📑 Índice de contenidos (TOC)", generate_toc_var).pack(anchor="w", pady=2)
+    make_chk(col_o1, "🏷️ Metadatos (Autor, Fecha)", include_meta_var).pack(anchor="w", pady=2)
+    make_chk(col_o1, "🖼️ Extraer imágenes Base64 a assets/", extract_b64_var).pack(anchor="w", pady=2)
+
+    col_o2 = tk.Frame(opts_grid, bg=COLOR_CARD)
+    col_o2.pack(side="right", fill="both", expand=True, padx=(8, 0))
+
+    make_chk(col_o2, "📐 Formulario de Ecuaciones", formula_sheet_var).pack(anchor="w", pady=2)
+    make_chk(col_o2, "📝 Cabecera YAML Frontmatter", include_yaml_var).pack(anchor="w", pady=2)
+    chk_master = make_chk(col_o2, "📚 Cuaderno Maestro (_Cuaderno_Maestro.md)", master_doc_var, fg=COLOR_ACCENT_CYAN, font=FONT_HEAD)
+    chk_master.pack(anchor="w", pady=2)
+    chk_dash = make_chk(col_o2, "📊 Reporte Analítico (_Reporte_Analitico.md)", dashboard_var, fg=COLOR_ACCENT_GREEN, font=FONT_HEAD)
+    chk_dash.pack(anchor="w", pady=2)
 
     # ------------------------------------------------------------------
-    # CARD 4: CONSOLA DE ACTIVIDAD Y MONITOR
+    # CARD 4: PANEL DE ESTADO Y ACCESOS RÁPIDOS
     # ------------------------------------------------------------------
-    card_console = make_card(p1, "💻 Consola de Actividad")
-    card_console.pack(fill="both", expand=True, pady=(0, 8))
+    card_metrics = make_card(col_right, "📊 Estado del Curso & Tutor IA", badge="NotebookLM Suite")
+    card_metrics.pack(fill="x", pady=(0, 8))
 
-    cons_inner = tk.Frame(card_console, bg=COLOR_CARD, padx=16, pady=4)
+    met_inner = tk.Frame(card_metrics, bg=COLOR_CARD, padx=14, pady=8)
+    met_inner.pack(fill="x")
+
+    met_grid = tk.Frame(met_inner, bg=COLOR_CARD)
+    met_grid.pack(fill="x", pady=(0, 6))
+
+    def make_stat_tile(parent, icon, val, label, color):
+        t = tk.Frame(parent, bg=COLOR_INSET, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, padx=8, pady=5)
+        tk.Label(t, text=f"{icon}  {val}", font=FONT_HEAD, fg=color, bg=COLOR_INSET).pack(anchor="w")
+        tk.Label(t, text=label, font=FONT_SMALL, fg=COLOR_TEXT_MUTED, bg=COLOR_INSET).pack(anchor="w")
+        return t
+
+    t1 = make_stat_tile(met_grid, "📚", "10 Temas", "Temario Oficial UPC", COLOR_ACCENT_BLUE)
+    t1.grid(row=0, column=0, sticky="ew", padx=(0, 4), pady=2)
+    t2 = make_stat_tile(met_grid, "📐", "LaTeX", "Fórmulas & KaTeX", COLOR_ACCENT_GREEN)
+    t2.grid(row=0, column=1, sticky="ew", padx=(4, 0), pady=2)
+    t3 = make_stat_tile(met_grid, "📋", "GFM 2D", "Tablas Markdown", COLOR_ACCENT_AMBER)
+    t3.grid(row=1, column=0, sticky="ew", padx=(0, 4), pady=(4, 2))
+    t4 = make_stat_tile(met_grid, "🧠", "Quizzes", "Preguntas Examen", COLOR_ACCENT_PURPLE)
+    t4.grid(row=1, column=1, sticky="ew", padx=(4, 0), pady=(4, 2))
+
+    met_grid.columnconfigure(0, weight=1)
+    met_grid.columnconfigure(1, weight=1)
+
+    quick_actions = tk.Frame(met_inner, bg=COLOR_CARD)
+    quick_actions.pack(fill="x", pady=(4, 0))
+
+    def copy_tutor_quick():
+        pr = (
+            "Actúa como un profesor universitario experto y riguroso de la asignatura 'Sistemes de Mesura' (UPC). "
+            "Basándote estrictamente en los documentos cargados, explícame los conceptos clave, "
+            "plantea preguntas desafiantes para comprobar mi entendimiento y corrígeme en base a las deducciones matemáticas."
+        )
+        root.clipboard_clear()
+        root.clipboard_append(pr)
+        log("📋 Prompt oficial de Tutor copiado al portapapeles.", "success")
+        messagebox.showinfo("Prompt Copiado", "¡Prompt de Tutor para NotebookLM copiado al portapapeles!\nPégalo en NotebookLM para iniciar tu sesión de estudio.")
+
+    create_btn(quick_actions, "📋 Copiar Prompt Tutor", copy_tutor_quick, bg=COLOR_INSET, hover_bg="#2c3242", font=FONT_SMALL, padx=8, pady=4).pack(side="left", padx=(0, 4))
+    create_btn(quick_actions, "🔬 Lab Virtual 3D", lambda: open_virtual_lab(), bg="#132a19", hover_bg="#1b3d24", fg=COLOR_ACCENT_GREEN, font=FONT_SMALL, padx=8, pady=4).pack(side="left")
+
+    # ------------------------------------------------------------------
+    # CARD 5: CONSOLA DE ACTIVIDAD (MACOS TERMINAL STYLE)
+    # ------------------------------------------------------------------
+    card_console = make_card(col_right, "💻 Consola de Actividad")
+    card_console.pack(fill="both", expand=True)
+
+    cons_inner = tk.Frame(card_console, bg=COLOR_CARD, padx=14, pady=6)
     cons_inner.pack(fill="both", expand=True)
 
     log_header = tk.Frame(cons_inner, bg=COLOR_CARD)
-    log_header.pack(fill="x")
-    tk.Label(log_header, text="Registro en Tiempo Real:", font=FONT_SMALL, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left")
-    lbl_progress_text = tk.Label(log_header, text="", font=FONT_SMALL, fg=COLOR_ACCENT_CYAN, bg=COLOR_CARD)
+    log_header.pack(fill="x", pady=(0, 4))
+
+    # macOS Terminal traffic lights
+    tl_box = tk.Frame(log_header, bg=COLOR_CARD)
+    tl_box.pack(side="left")
+    tk.Label(tl_box, text="●", fg="#ff5f56", bg=COLOR_CARD, font=("Arial", 9)).pack(side="left", padx=1)
+    tk.Label(tl_box, text="●", fg="#ffbd2e", bg=COLOR_CARD, font=("Arial", 9)).pack(side="left", padx=1)
+    tk.Label(tl_box, text="●", fg="#27c93f", bg=COLOR_CARD, font=("Arial", 9)).pack(side="left", padx=1)
+    tk.Label(tl_box, text=" Terminal", font=FONT_SMALL, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(4, 0))
+
+    lbl_progress_text = tk.Label(log_header, text="Sistema listo", font=FONT_SMALL, fg=COLOR_ACCENT_CYAN, bg=COLOR_CARD)
     lbl_progress_text.pack(side="right")
 
-    log_area = ScrolledText(cons_inner, height=5, font=FONT_CODE, bg=COLOR_INPUT_BG, fg=COLOR_TEXT_PRIMARY, insertbackground=COLOR_ACCENT_BLUE, bd=0, highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
-    log_area.pack(fill="both", expand=True, pady=(4, 6))
+    log_area = ScrolledText(cons_inner, height=6, font=FONT_CODE, bg=COLOR_INPUT_BG, fg=COLOR_TEXT_PRIMARY, insertbackground=COLOR_ACCENT_BLUE, bd=0, highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
+    log_area.pack(fill="both", expand=True, pady=(2, 6))
 
     log_area.tag_config("success", foreground=COLOR_ACCENT_GREEN)
     log_area.tag_config("error", foreground=COLOR_ACCENT_RED)
@@ -3956,10 +4031,29 @@ def run_gui():
         log_area.insert("end", f"[{time.strftime('%H:%M:%S')}] {msg}\n", tag)
         log_area.see("end")
 
-    log("Sistema listo. Configura las rutas para iniciar la conversión.", "info")
-
     progress_bar = ttk.Progressbar(cons_inner, orient="horizontal", mode="determinate", style="Modern.Horizontal.TProgressbar")
-    progress_bar.pack(fill="x", pady=(0, 6))
+    progress_bar.pack(fill="x", pady=(0, 4))
+
+    cons_footer = tk.Frame(cons_inner, bg=COLOR_CARD)
+    cons_footer.pack(fill="x", pady=(2, 0))
+
+    def clear_log():
+        log_area.delete("1.0", "end")
+        log("Consola reiniciada.", "info")
+
+    def copy_log():
+        try:
+            txt = log_area.get("1.0", "end")
+            root.clipboard_clear()
+            root.clipboard_append(txt)
+            log("Registro copiado al portapapeles.", "success")
+        except Exception:
+            pass
+
+    create_btn(cons_footer, "🗑️ Limpiar", clear_log, bg=COLOR_INSET, hover_bg="#2c3242", font=FONT_SMALL, padx=8, pady=2).pack(side="right", padx=(4, 0))
+    create_btn(cons_footer, "📋 Copiar Log", copy_log, bg=COLOR_INSET, hover_bg="#2c3242", font=FONT_SMALL, padx=8, pady=2).pack(side="right")
+
+    log("Sistema listo. Configura las rutas para iniciar la conversión.", "info")
 
     def open_destination():
         dst = out_var.get().strip()
@@ -5507,17 +5601,17 @@ def run_gui():
 
     btn_exec = create_btn(
         btn_frame, "⚡ Convertir Lote", execute,
-        bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, fg="white", font=FONT_HEAD, padx=20, pady=8
+        bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, fg="white", font=(FONT_FAMILY, 10, "bold"), padx=24, pady=10
     )
     btn_exec.pack(side="left", fill="x", expand=True)
 
     btn_all_course = create_btn(
         btn_frame, "🎓 Convertir Todo el Curso (10 Temas)", execute_all_course,
-        bg=COLOR_ACCENT_GREEN, hover_bg=COLOR_ACCENT_GREEN_HOVER, fg="white", font=FONT_HEAD, padx=18, pady=8
+        bg=COLOR_ACCENT_GREEN, hover_bg=COLOR_ACCENT_GREEN_HOVER, fg="white", font=(FONT_FAMILY, 10, "bold"), padx=20, pady=10
     )
-    btn_all_course.pack(side="left", padx=(8, 0))
+    btn_all_course.pack(side="left", padx=(10, 0))
 
-    btn_cancel.pack(side="left", padx=(8, 0))
+    btn_cancel.pack(side="left", padx=(10, 0))
     update_mode()
 
     # Atajos de teclado globales (Spotlight Ctrl+K)
