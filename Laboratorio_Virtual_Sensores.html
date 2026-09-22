@@ -210,11 +210,40 @@
   .rack-logo { color: var(--keysight-orange); font-weight: 900; }
   
   .rack-body {
-    flex: 1; display: grid; grid-template-columns: 240px 290px 1fr; padding: 8px 12px; gap: 10px;
+    flex: 1; display: grid; grid-template-columns: 240px 220px 230px 1fr; padding: 8px 10px; gap: 8px;
   }
-  @media (max-width: 1280px) {
+  @media (max-width: 1400px) {
     .rack-body { grid-template-columns: 1fr 1fr; }
   }
+
+  /* Rigol DP832 Triple Power Supply Faceplate */
+  .rigol-psu {
+    background: #060910; border: 2px solid #1e293b; border-radius: 8px;
+    padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.85); font-family: 'SF Mono', monospace;
+  }
+  .psu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .psu-title { font-size: 10px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 4px; }
+  .btn-psu-all {
+    padding: 2px 7px; font-size: 9px; font-weight: 800; border-radius: 4px; cursor: pointer;
+    border: 1px solid #16a34a; background: #052e16; color: #4ade80; transition: all 0.2s;
+  }
+  .btn-psu-all.off { border-color: #dc2626; background: #450a0a; color: #f87171; }
+  .psu-channels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 4px; }
+  .psu-ch-card {
+    background: #0a0e1a; border: 1px solid #1e2433; border-radius: 4px; padding: 3px 4px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .psu-ch-top { display: flex; justify-content: space-between; align-items: center; font-size: 8px; font-weight: 700; color: #64748b; }
+  .psu-mode-badge { font-size: 7.5px; padding: 1px 3px; border-radius: 2px; font-weight: 800; background: #1e293b; color: #38bdf8; }
+  .psu-v-disp { font-size: 11px; font-weight: 800; color: #38bdf8; text-align: right; }
+  .psu-i-disp { font-size: 9px; font-weight: 700; color: #34d399; text-align: right; }
+  .psu-steppers { display: flex; justify-content: space-between; margin-top: 2px; }
+  .psu-step-btn {
+    padding: 1px 4px; font-size: 8px; background: #1e2430; border: 1px solid #334155;
+    color: #e2e8f0; border-radius: 2px; cursor: pointer;
+  }
+  .psu-step-btn:hover { background: #334155; }
 
   /* Function Generator Faceplate (Rigol / Keysight Style) */
   .rigol-afg {
@@ -362,13 +391,17 @@
       <div class="brand-title">SISTEMES DE MESURA · LABORATORI VIRTUAL 3D</div>
       <div class="brand-subtitle">Universitat Politècnica de Catalunya · EEBE / ETSETB</div>
     </div>
-    <span class="badge-v5" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; font-weight: 800; padding: 2px 8px; border-radius: 4px;">v7.0 Enterprise 3D · 16 Módulos & AFG Rack</span>
+    <span class="badge-v5" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; font-weight: 800; padding: 2px 8px; border-radius: 4px;">v8.0 Enterprise · Rack Cuádruple, Bode, Tolerancias & EDA KiCad/LTspice</span>
   </div>
   <div class="header-actions">
     <button class="btn btn-green" id="btn-audio" onclick="toggleAudio()">
       <span id="audio-icon">🔊</span> <span id="audio-text">Audio Físico: ON</span>
     </button>
     <button class="btn" onclick="toggleFullscreen()">🖥️ Pantalla Completa</button>
+    <button class="btn" onclick="openBodeModal()" style="background: #064e3b; color: #34d399; border: 1px solid #059669;">📈 Analizador Bode</button>
+    <button class="btn" onclick="openFaultModal()" style="background: #450a0a; color: #f87171; border: 1px solid #dc2626;">⚠️ Fallos &amp; Diagnóstico</button>
+    <button class="btn" onclick="openToleranceModal()" style="background: #2e1065; color: #c084fc; border: 1px solid #7c3aed;">🎲 Tolerancias Monte Carlo</button>
+    <button class="btn" onclick="openWorksheetModal()" style="background: #1e1b4b; color: #a5b4fc; border: 1px solid #4f46e5;">📑 Guías de Prácticas</button>
     <button class="btn" onclick="openColorCodeModal()">🎨 Código de Colores</button>
     <button class="btn btn-primary" onclick="openReportModal()">📄 Exportar Informe</button>
   </div>
@@ -443,7 +476,7 @@
     <div class="instrument-rack">
       <div class="rack-header">
         <div class="rack-title">
-          <span class="rack-logo">KEYSIGHT</span> 34465A DMM &nbsp;|&nbsp; <span class="rack-logo" style="background:#0284c7;">RIGOL</span> DG1022Z AFG &nbsp;|&nbsp; TEKTRONIX TBS2000B DSO
+          <span class="rack-logo">KEYSIGHT</span> 34465A DMM &nbsp;|&nbsp; <span class="rack-logo" style="background:#0284c7; padding: 1px 4px; border-radius: 3px;">RIGOL</span> DG1022Z AFG &nbsp;|&nbsp; <span class="rack-logo" style="background:#16a34a; padding: 1px 4px; border-radius: 3px;">RIGOL</span> DP832 PSU &nbsp;|&nbsp; <span class="rack-logo" style="background:#d97706; padding: 1px 4px; border-radius: 3px;">TEKTRONIX</span> TDS2024C DSO
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
           <button class="btn btn-sm" onclick="exportScopeDataCSV()" style="font-size: 10px; padding: 3px 8px; background: #0f2338; color: #38bdf8; border: 1px solid #0284c7; cursor: pointer; border-radius: 4px;">📊 Exportar CSV</button>
@@ -468,6 +501,110 @@
             <span>Min: <span id="dmm-min">0.000 V</span></span>
             <span>Max: <span id="dmm-max">0.000 V</span></span>
             <span>u_B (Keysight): <span id="dmm-ub">±0.000014 V</span></span>
+          </div>
+        </div>
+
+        <!-- Rigol DG1022Z AFG Front Panel -->
+        <div class="rigol-afg">
+          <div class="afg-top">
+            <span style="font-size: 10px; font-weight: 800; color: #38bdf8; font-family: monospace;">RIGOL DG1022Z</span>
+            <button class="btn-afg-out" id="btn-afg-output" onclick="toggleAfgOutput()">
+              <span class="afg-led" id="afg-led"></span> OUT: <span id="afg-out-status">ON</span>
+            </button>
+          </div>
+          <div class="afg-waves">
+            <button class="afg-wave-btn active" id="btn-wave-sine" onclick="setAfgWave('sine')">SIN</button>
+            <button class="afg-wave-btn" id="btn-wave-square" onclick="setAfgWave('square')">SQR</button>
+            <button class="afg-wave-btn" id="btn-wave-triangle" onclick="setAfgWave('triangle')">TRI</button>
+            <button class="afg-wave-btn" id="btn-wave-pulse" onclick="setAfgWave('pulse')">PLS</button>
+            <button class="afg-wave-btn" id="btn-wave-dc" onclick="setAfgWave('dc')">DC</button>
+          </div>
+          <div class="afg-controls-grid">
+            <div class="afg-param-box">
+              <div class="afg-lbl">FREC (f)</div>
+              <div class="afg-val-row">
+                <span class="afg-num" id="afg-disp-freq">1.000 kHz</span>
+                <div class="afg-steppers">
+                  <button class="afg-step" onclick="stepAfgParam('freq', -1)">▼</button>
+                  <button class="afg-step" onclick="stepAfgParam('freq', 1)">▲</button>
+                </div>
+              </div>
+            </div>
+            <div class="afg-param-box">
+              <div class="afg-lbl">AMPL (Vpp)</div>
+              <div class="afg-val-row">
+                <span class="afg-num" id="afg-disp-amp">5.00 Vpp</span>
+                <div class="afg-steppers">
+                  <button class="afg-step" onclick="stepAfgParam('amp', -0.5)">▼</button>
+                  <button class="afg-step" onclick="stepAfgParam('amp', 0.5)">▲</button>
+                </div>
+              </div>
+            </div>
+            <div class="afg-param-box">
+              <div class="afg-lbl">OFFSET (Vdc)</div>
+              <div class="afg-val-row">
+                <span class="afg-num" id="afg-disp-offset">+0.00 V</span>
+                <div class="afg-steppers">
+                  <button class="afg-step" onclick="stepAfgParam('offset', -0.5)">▼</button>
+                  <button class="afg-step" onclick="stepAfgParam('offset', 0.5)">▲</button>
+                </div>
+              </div>
+            </div>
+            <div class="afg-param-box" style="display:flex; align-items:center; justify-content:center;">
+              <button id="btn-afg-sweep" onclick="toggleAfgSweep()" style="width:100%; height:100%; font-size:9px; background:#1e293b; color:#38bdf8; border:1px solid #0284c7; border-radius:3px; cursor:pointer; font-weight:bold;">SWEEP OFF</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rigol DP832 Triple Output DC Power Supply -->
+        <div class="rigol-psu">
+          <div class="psu-header">
+            <div class="psu-title">⚡ RIGOL DP832 TRIPLE PSU</div>
+            <button class="btn-psu-all" id="btn-psu-master" onclick="togglePsuMaster()">ALL ON</button>
+          </div>
+          <div class="psu-channels">
+            <!-- CH1 (+0..30V) -->
+            <div class="psu-ch-card">
+              <div class="psu-ch-top">
+                <span>CH1 (+30V)</span>
+                <span class="psu-mode-badge" id="psu-ch1-mode">CV</span>
+              </div>
+              <div class="psu-v-disp" id="psu-ch1-vdisp">+12.00 V</div>
+              <div class="psu-i-disp" id="psu-ch1-idisp">0.024 A</div>
+              <div class="psu-steppers">
+                <button class="psu-step-btn" onclick="stepPsuCh(1, -1)">-1V</button>
+                <button class="psu-step-btn" onclick="stepPsuCh(1, 1)">+1V</button>
+              </div>
+            </div>
+            <!-- CH2 (-0..30V) -->
+            <div class="psu-ch-card">
+              <div class="psu-ch-top">
+                <span>CH2 (-30V)</span>
+                <span class="psu-mode-badge" id="psu-ch2-mode">CV</span>
+              </div>
+              <div class="psu-v-disp" id="psu-ch2-vdisp">-12.00 V</div>
+              <div class="psu-i-disp" id="psu-ch2-idisp">0.018 A</div>
+              <div class="psu-steppers">
+                <button class="psu-step-btn" onclick="stepPsuCh(2, -1)">-1V</button>
+                <button class="psu-step-btn" onclick="stepPsuCh(2, 1)">+1V</button>
+              </div>
+            </div>
+            <!-- CH3 (+5V / 3.3V) -->
+            <div class="psu-ch-card">
+              <div class="psu-ch-top">
+                <span>CH3 (Lógica)</span>
+                <span class="psu-mode-badge" id="psu-ch3-mode">CV</span>
+              </div>
+              <div class="psu-v-disp" id="psu-ch3-vdisp">+5.00 V</div>
+              <div class="psu-i-disp" id="psu-ch3-idisp">0.050 A</div>
+              <div class="psu-steppers">
+                <button class="psu-step-btn" onclick="togglePsuCh3Rail()" style="width:100%;">3.3V/5V</button>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:8px; color:#64748b;">
+            <span>Potencia Total: <b id="psu-ptotal" style="color:#fbbf24;">0.538 W</b></span>
+            <span>Límite I: 3.000 A (CC/CV)</span>
           </div>
         </div>
 
@@ -583,6 +720,154 @@
           </select>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 1: Analizador de Respuesta en Frecuencia (Bode Plotter) -->
+<div class="modal-overlay" id="modal-bode">
+  <div class="modal-box" style="max-width: 820px;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span>📈 Analizador Automático de Respuesta en Frecuencia (Bode Plotter)</span>
+        <span style="font-size: 10px; background: rgba(5,150,105,0.2); color: #34d399; padding: 2px 6px; border-radius: 4px; font-family: monospace;">10 Hz — 10 MHz</span>
+      </div>
+      <button class="btn" onclick="closeBodeModal()">✕ Cerrar</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 8px; position: relative;">
+        <canvas id="bode-canvas" width="760" height="340" style="width: 100%; height: 340px; display: block;"></canvas>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+        <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; padding: 8px;">
+          <div style="font-size: 10px; color: #94a3b8; font-family: monospace;">GANANCIA DC (Ao):</div>
+          <div id="bode-metric-a0" style="font-size: 16px; font-weight: 800; color: #38bdf8; font-family: monospace;">0.00 dB</div>
+        </div>
+        <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; padding: 8px;">
+          <div style="font-size: 10px; color: #94a3b8; font-family: monospace;">FRECUENCIA CORTE (-3dB):</div>
+          <div id="bode-metric-fc" style="font-size: 16px; font-weight: 800; color: #34d399; font-family: monospace;">1.000 kHz</div>
+        </div>
+        <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; padding: 8px;">
+          <div style="font-size: 10px; color: #94a3b8; font-family: monospace;">MARGEN DE FASE (PM):</div>
+          <div id="bode-metric-pm" style="font-size: 16px; font-weight: 800; color: #fbbf24; font-family: monospace;">65.4°</div>
+        </div>
+        <div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; padding: 8px;">
+          <div style="font-size: 10px; color: #94a3b8; font-family: monospace;">PRODUCTO GBW:</div>
+          <div id="bode-metric-gbw" style="font-size: 16px; font-weight: 800; color: #e879f9; font-family: monospace;">1.00 MHz</div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8;">
+        <span>Curva Superior: <b style="color: #38bdf8;">Magnitud 20·log10|H(jω)| (dB)</b> &nbsp;|&nbsp; Curva Inferior: <b style="color: #fbbf24;">Fase ∠H(jω) (°)</b></span>
+        <button class="btn btn-sm btn-primary" onclick="exportBodeCSV()">📊 Exportar Datos Bode (CSV)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2: Inyección de Fallos & Modo Reto Diagnóstico -->
+<div class="modal-overlay" id="modal-fault">
+  <div class="modal-box" style="max-width: 680px;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span>⚠️ Inyección de Fallos Circuitales &amp; Diagnóstico</span>
+        <span style="font-size: 10px; background: rgba(220,38,38,0.2); color: #f87171; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Troubleshooting Lab</span>
+      </div>
+      <button class="btn" onclick="closeFaultModal()">✕ Cerrar</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="background: #1c0a0a; border: 1px solid #7f1d1d; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 13px; font-weight: 800; color: #fca5a5; margin-bottom: 6px;">Estado del Diagnóstico:</div>
+        <div id="fault-status-msg" style="font-size: 12px; color: #fecaca; line-height: 1.5;">Circuito en condiciones nominales. Selecciona un fallo o genera un reto a ciegas para diagnosticar con las medidas del multímetro y osciloscopio.</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button class="btn" onclick="injectSpecificFault('R_OPEN')" style="background: #2a1215; border: 1px solid #991b1b; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 11px; text-align: left;">
+          <b>🔌 Resistencia Abierta (Open Circuit)</b><br><small style="color:#94a3b8;">Simula pista cortada o soldadura fría (R = 10 MΩ).</small>
+        </button>
+        <button class="btn" onclick="injectSpecificFault('C_SHORT')" style="background: #2a1215; border: 1px solid #991b1b; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 11px; text-align: left;">
+          <b>⚡ Condensador Cortocircuitado</b><br><small style="color:#94a3b8;">Dieléctrico perforado por sobretensión (R = 0.1 Ω).</small>
+        </button>
+        <button class="btn" onclick="injectSpecificFault('VAL_DRIFT')" style="background: #2a1215; border: 1px solid #991b1b; color: #fca5a5; padding: 10px; border-radius: 6px; font-size: 11px; text-align: left;">
+          <b>📉 Deriva Térmica Extrema (+500%)</b><br><small style="color:#94a3b8;">Componente dañado degradado por temperatura.</small>
+        </button>
+        <button class="btn" onclick="generateBlindFaultChallenge()" style="background: #450a0a; border: 1px solid #dc2626; color: #ffffff; padding: 10px; border-radius: 6px; font-size: 11px; text-align: left;">
+          <b>🎯 Reto a Ciegas (Examen de Laboratorio)</b><br><small style="color:#fecaca;">Fallo aleatorio oculto. ¡Debes identificar el componente!</small>
+        </button>
+      </div>
+      <div id="blind-challenge-box" style="display: none; background: #0b1120; border: 1px solid #1e293b; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 12px; font-weight: 700; color: #38bdf8; margin-bottom: 8px;">¿Cuál es el componente defectuoso y su avería?</div>
+        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+          <select id="fault-guess-comp" class="select-styled" style="flex:1;"></select>
+          <select id="fault-guess-type" class="select-styled" style="flex:1;">
+            <option value="OPEN">Circuito Abierto (R → ∞)</option>
+            <option value="SHORT">Cortocircuito (R → 0)</option>
+            <option value="DRIFT">Valor Desviado / Degradado</option>
+          </select>
+          <button class="btn btn-primary" onclick="verifyBlindFaultGuess()">Verificar Diagnóstico</button>
+        </div>
+        <div id="fault-eval-feedback" style="font-size: 11px; font-family: monospace; display: none; padding: 6px; border-radius: 4px;"></div>
+      </div>
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="btn btn-green" onclick="repairAllFaults()">✅ Reparar Todo y Restaurar Valores Nominales</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 3: Simulación Monte Carlo & Tolerancias de Componentes -->
+<div class="modal-overlay" id="modal-tolerance">
+  <div class="modal-box" style="max-width: 680px;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span>🎲 Análisis de Dispersión y Tolerancias Monte Carlo</span>
+        <span style="font-size: 10px; background: rgba(124,58,237,0.2); color: #c084fc; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Distribución Gaussiana 3σ</span>
+      </div>
+      <button class="btn" onclick="closeToleranceModal()">✕ Cerrar</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="font-size: 12px; color: #94a3b8; line-height: 1.5;">
+        En la práctica real de instrumentación electrónica, los componentes pasivos presentan tolerancias de fabricación (series E12 ±10%, E24 ±5%, E96 ±1%). Esto degrada el equilibrio del puente de Wheatstone, el CMRR del INA3 y la frecuencia de corte de los filtros.
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+        <button class="btn" onclick="applyToleranceLevel(0.01)" style="background: #1e1b4b; border: 1px solid #4f46e5; color: #a5b4fc; padding: 12px; border-radius: 6px; font-weight: 700;">
+          Precision ±1%<br><small style="font-size: 10px; color: #cbd5e1;">Película Metálica E96</small>
+        </button>
+        <button class="btn" onclick="applyToleranceLevel(0.05)" style="background: #1e1b4b; border: 1px solid #4f46e5; color: #a5b4fc; padding: 12px; border-radius: 6px; font-weight: 700;">
+          Estándar ±5%<br><small style="font-size: 10px; color: #cbd5e1;">Película de Carbón E24</small>
+        </button>
+        <button class="btn" onclick="applyToleranceLevel(0.10)" style="background: #1e1b4b; border: 1px solid #4f46e5; color: #a5b4fc; padding: 12px; border-radius: 6px; font-weight: 700;">
+          Comercial ±10%<br><small style="font-size: 10px; color: #cbd5e1;">Propósito General E12</small>
+        </button>
+      </div>
+      <div style="background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 12px;">
+        <div style="font-size: 12px; font-weight: 700; color: #38bdf8; margin-bottom: 6px;">Dispersión Actual de Componentes Simulada:</div>
+        <div id="tolerance-disp-list" style="max-height: 150px; overflow-y: auto; font-family: monospace; font-size: 11px; color: #94a3b8;">
+          Pulsa uno de los botones para sortear valores reales bajo campana de Gauss.
+        </div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn" onclick="resetNominalValues()">🔄 Restaurar Valores Nominales Exactos</button>
+        <button class="btn btn-primary" onclick="runMonteCarloRun(50)">⚡ Ejecutar Lote 50 Muestras Monte Carlo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 4: Guías Interactivas de Prácticas (Worksheets) -->
+<div class="modal-overlay" id="modal-worksheet">
+  <div class="modal-box" style="max-width: 780px;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span>📑 Guía Interactiva de Prácticas de Laboratorio</span>
+        <span style="font-size: 10px; background: rgba(79,70,229,0.2); color: #a5b4fc; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Paso a Paso Oficial</span>
+      </div>
+      <button class="btn" onclick="closeWorksheetModal()">✕ Cerrar</button>
+    </div>
+    <div class="modal-body" id="worksheet-body" style="display: flex; flex-direction: column; gap: 14px;">
+      <!-- Populated by JS based on currentModule -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="copyWorksheetToClipboard()">📋 Copiar Guía en Markdown</button>
+      <button class="btn btn-green" onclick="closeWorksheetModal()">Completado</button>
     </div>
   </div>
 </div>
@@ -1592,16 +1877,29 @@ const tekCtx = tekCanvas.getContext('2d');
 let animFrameId = null;
 let animPhase = 0;
 
-let scopeMode = "TIME"; // "TIME" o "FFT"
+let scopeMode = "TIME"; // "TIME", "FFT", "MATH", "XY"
 
 function toggleScopeMode() {
-  scopeMode = (scopeMode === "TIME") ? "FFT" : "TIME";
+  if (scopeMode === "TIME") scopeMode = "MATH";
+  else if (scopeMode === "MATH") scopeMode = "XY";
+  else if (scopeMode === "XY") scopeMode = "FFT";
+  else scopeMode = "TIME";
+
   const btn = document.getElementById('btn-scope-mode');
   if (btn) {
-    btn.innerText = (scopeMode === "TIME") ? "[TIME DOMAIN]" : "[FFT SPECTRUM]";
-    btn.style.color = (scopeMode === "TIME") ? "#00e5ff" : "#f43f5e";
-    btn.style.borderColor = (scopeMode === "TIME") ? "#00e5ff" : "#f43f5e";
-    btn.style.background = (scopeMode === "TIME") ? "rgba(0,229,255,0.15)" : "rgba(244,63,94,0.15)";
+    if (scopeMode === "TIME") {
+      btn.innerText = "[TIME DOMAIN]";
+      btn.style.color = "#00e5ff"; btn.style.borderColor = "#00e5ff"; btn.style.background = "rgba(0,229,255,0.15)";
+    } else if (scopeMode === "MATH") {
+      btn.innerText = "[MATH: CH1 - CH2]";
+      btn.style.color = "#e879f9"; btn.style.borderColor = "#e879f9"; btn.style.background = "rgba(232,121,249,0.2)";
+    } else if (scopeMode === "XY") {
+      btn.innerText = "[X-Y LISSAJOUS]";
+      btn.style.color = "#fbbf24"; btn.style.borderColor = "#fbbf24"; btn.style.background = "rgba(251,191,36,0.2)";
+    } else {
+      btn.innerText = "[FFT SPECTRUM]";
+      btn.style.color = "#f43f5e"; btn.style.borderColor = "#f43f5e"; btn.style.background = "rgba(244,63,94,0.15)";
+    }
   }
 }
 
@@ -1645,7 +1943,7 @@ function renderTekScope() {
   tekCtx.fillStyle = '#020c04';
   tekCtx.fillRect(0, 0, w, h);
 
-  // Retícula verde de laboratorio calibrada (10 divisiones horizontales x 8 verticales)
+  // Retícula verde de laboratorio calibrada (10 div horiz x 8 div vert)
   tekCtx.strokeStyle = 'rgba(0, 255, 102, 0.12)';
   tekCtx.lineWidth = 1;
   const divX = w / 10;
@@ -1668,27 +1966,23 @@ function renderTekScope() {
   const m = currentModule;
   animPhase += 0.05;
 
-  // Parámetros de la señal del Generador AFG Rigol DG1022Z
+  // Parámetros de la señal del AFG Rigol
   const afgOn = AFG_STATE.enabled;
   const afgAmp = AFG_STATE.amp;
   const afgFreq = AFG_STATE.freq;
   const afgWave = AFG_STATE.wave;
   const afgOffset = AFG_STATE.offset;
 
-  // -------------------------------------------------------------
-  // TRAZA 1: CANAL 1 (CH1 - AMARILLO #facc15) - SEÑAL DEL GENERADOR AFG
-  // -------------------------------------------------------------
-  tekCtx.strokeStyle = '#facc15';
-  tekCtx.shadowColor = '#facc15';
-  tekCtx.shadowBlur = 7;
-  tekCtx.lineWidth = 2 * dpr;
-  tekCtx.beginPath();
+  // Arrays para almacenar muestras normalizadas de CH1 y CH2
+  const ch1Samples = new Float32Array(Math.floor(w));
+  const ch2Samples = new Float32Array(Math.floor(w));
+
+  const fRatio = Math.max(0.2, Math.min(5.0, afgFreq / 1000.0));
 
   for (let x = 0; x < w; x++) {
     const t = (x / w) * 4 * Math.PI;
     let y1 = 0;
     if (afgOn) {
-      const fRatio = Math.max(0.2, Math.min(5.0, afgFreq / 1000.0));
       const phase = t * fRatio * 2 + animPhase * 3;
       if (afgWave === 'sine') {
         y1 = Math.sin(phase);
@@ -1705,82 +1999,164 @@ function renderTekScope() {
       }
       y1 = (y1 * (afgAmp / 10.0) + (afgOffset / 10.0)) * 0.45;
     } else {
-      y1 = (Math.random() - 0.5) * 0.015; // Suelo de ruido térmico
+      y1 = (Math.random() - 0.5) * 0.015;
     }
-    const py1 = (h / 2) - y1 * (h * 0.85);
-    if (x === 0) tekCtx.moveTo(x, py1);
-    else tekCtx.lineTo(x, py1);
-  }
-  tekCtx.stroke();
+    ch1Samples[x] = y1;
 
-  // -------------------------------------------------------------
-  // TRAZA 2: CANAL 2 (CH2 - CIAN #38bdf8) - RESPUESTA DEL CIRCUITO BAJO PRUEBA
-  // -------------------------------------------------------------
-  tekCtx.strokeStyle = '#38bdf8';
-  tekCtx.shadowColor = '#38bdf8';
-  tekCtx.shadowBlur = 8;
-  tekCtx.lineWidth = 2 * dpr;
-  tekCtx.beginPath();
-
-  for (let x = 0; x < w; x++) {
-    const t = (x / w) * 4 * Math.PI;
+    // Cálculo de la señal del canal 2 (Respuesta del circuito / sensor)
     let y2 = 0;
-
-    if (m === 2) { // INA3 con ruido 50 Hz
+    if (m === 2) {
       y2 = Math.sin(t*2 + animPhase) * 0.6 + Math.sin(t*10 + animPhase*5) * 0.15;
-    } else if (m === 3) { // Sallen-Key filtrado
+    } else if (m === 3) {
       y2 = Math.sin(t*2 + animPhase) * 0.7;
-    } else if (m === 7) { // Ruido Johnson puro
+    } else if (m === 7) {
       y2 = (Math.random() - 0.5) * 0.6 + Math.sin(t*2 + animPhase)*0.3;
-    } else if (m === 10) { // Banco R-L-C & Presets
+    } else if (m === 10) {
       const topoEl = document.getElementById('param-topo');
       const topo = topoEl ? parseInt(topoEl.value) : 0;
-      if (topo === 4) { // 555 Astable
+      if (topo === 4) {
         const cycle = (t * 2.5 + animPhase * 3) % (Math.PI * 2);
         y2 = (cycle < Math.PI * 2 * 0.60) ? 0.75 : -0.75;
-      } else if (topo === 3) { // RC charge/discharge
+      } else if (topo === 3) {
         const cycle = (t * 1.8 + animPhase * 2) % (Math.PI * 2);
         y2 = cycle < Math.PI ? (1.0 - Math.exp(-cycle * 2.2)) * 1.3 - 0.65 : (Math.exp(-(cycle - Math.PI) * 2.2)) * 1.3 - 0.65;
-      } else if (topo === 7) { // LC Resonator ringing
+      } else if (topo === 7) {
         const cycle = (t * 3.5 + animPhase * 2) % (Math.PI * 2);
         y2 = Math.sin(cycle * 4) * Math.exp(-cycle * 0.7) * 0.8;
-      } else { // Atenuación divisor
+      } else {
         y2 = Math.sin(t * 2 + animPhase * 3) * 0.35;
       }
-    } else if (m === 11) { // Buck / Boost
+    } else if (m === 11) {
       const cycle = (t * 3.5 + animPhase * 4) % (Math.PI * 2);
       y2 = cycle < Math.PI ? 0.65 : -0.65;
-    } else if (m === 14) { // PID Feedback
+    } else if (m === 14) {
       const step = (t * 1.5 + animPhase) % (Math.PI * 2);
       y2 = (1 - Math.exp(-step * 1.2) * Math.cos(step * 3.5)) * 0.7 - 0.35;
-    } else if (m === 15) { // Módulo 16 Taller Libre CAD
+    } else if (m === 15) {
       const pSel = document.getElementById('param-preset');
       const topo = pSel ? parseInt(pSel.value) : 0;
-      if (topo === 1) { // Rectificador con rizado
+      if (topo === 1) {
         const phase = (t * 2.5 + animPhase * 3) % (Math.PI * 2);
         y2 = Math.max(0.05, Math.sin(phase)) * 0.6 + 0.15;
-      } else if (topo === 2) { // Op-Amp amplificado saturado
+      } else if (topo === 2) {
         y2 = Math.max(-0.85, Math.min(0.85, Math.sin(t * 2 + animPhase * 3) * 1.6));
-      } else if (topo === 4) { // Notch 50 Hz atenuado
+      } else if (topo === 4) {
         y2 = Math.sin(t * 2 + animPhase * 3) * 0.08 + (Math.random() - 0.5) * 0.02;
-      } else { // Filtro RLC con desfase
+      } else {
         y2 = Math.sin(t * 2 + animPhase * 3 - 0.8) * 0.48;
       }
     } else {
       y2 = Math.sin(t * 2 + animPhase) * 0.5;
     }
 
-    const py2 = (h / 2) - y2 * (h * 0.42);
-    if (x === 0) tekCtx.moveTo(x, py2);
-    else tekCtx.lineTo(x, py2);
-  }
-  tekCtx.stroke();
-  tekCtx.shadowBlur = 0;
+    // Efecto de fallo inyectado en CH2
+    if (FAULT_STATE && FAULT_STATE.active) {
+      if (FAULT_STATE.type === 'OPEN') y2 *= 0.02;
+      else if (FAULT_STATE.type === 'SHORT') y2 = (Math.random() - 0.5) * 0.04;
+      else if (FAULT_STATE.type === 'DRIFT') y2 = Math.max(-0.9, Math.min(0.9, y2 * 2.5));
+    }
 
-  // On-Screen Display (OSD) Tektronix TDS2024C
+    ch2Samples[x] = y2;
+  }
+
+  // RENDERIZADO SEGÚN EL MODO DEL OSCILOSCOPIO
+  if (scopeMode === 'FFT') {
+    // Modo FFT: Espectro de Frecuencias
+    tekCtx.fillStyle = 'rgba(244, 63, 94, 0.7)';
+    const numBars = 48;
+    const barW = w / numBars;
+    for (let i = 0; i < numBars; i++) {
+      let mag = 0;
+      if (i === 4) mag = 0.85 * (afgAmp / 5.0); // Fundamental
+      else if (i === 8 && afgWave === 'square') mag = 0.28; // 3er armónico
+      else if (i === 12 && afgWave === 'square') mag = 0.14; // 5to armónico
+      else if (i === 2 && m === 2) mag = 0.45; // Ruido 50Hz de red
+      else mag = 0.03 + Math.random() * 0.04;
+      const barH = mag * h * 0.8;
+      tekCtx.fillRect(i * barW + 2, h - barH - 25, barW - 4, barH);
+    }
+  } else if (scopeMode === 'XY') {
+    // Modo X-Y: Figura de Lissajous para Medición de Desfase Δφ = arcsin(Y0 / Ym)
+    tekCtx.strokeStyle = '#fbbf24';
+    tekCtx.shadowColor = '#fbbf24';
+    tekCtx.shadowBlur = 9;
+    tekCtx.lineWidth = 2.5 * dpr;
+    tekCtx.beginPath();
+    const pts = 300;
+    for (let i = 0; i <= pts; i++) {
+      const theta = (i / pts) * Math.PI * 2;
+      const f1 = (afgFreq / 1000.0) || 1.0;
+      const xVal = Math.sin(theta * f1 + animPhase * 2) * 0.40;
+      const yVal = Math.sin(theta * f1 + animPhase * 2 - 0.785) * 0.40; // ~45 deg shift
+      const px = (w / 2) + xVal * (w * 0.7);
+      const py = (h / 2) - yVal * (h * 0.7);
+      if (i === 0) tekCtx.moveTo(px, py);
+      else tekCtx.lineTo(px, py);
+    }
+    tekCtx.stroke();
+    tekCtx.shadowBlur = 0;
+
+    tekCtx.font = `bold ${10 * dpr}px "SF Mono", monospace`;
+    tekCtx.fillStyle = '#fbbf24';
+    tekCtx.fillText('MODO X-Y: Lissajous • Δφ = 45.0° (arcsin Y0/Ym = 0.707)', 8 * dpr, 30 * dpr);
+
+  } else {
+    // Modos TIME o MATH
+    const isMath = (scopeMode === 'MATH');
+
+    // Canal 1 (Amarillo)
+    tekCtx.strokeStyle = isMath ? 'rgba(250, 204, 21, 0.4)' : '#facc15';
+    tekCtx.shadowColor = '#facc15';
+    tekCtx.shadowBlur = isMath ? 0 : 7;
+    tekCtx.lineWidth = (isMath ? 1.5 : 2) * dpr;
+    tekCtx.beginPath();
+    for (let x = 0; x < w; x++) {
+      const py1 = (h / 2) - ch1Samples[x] * (h * 0.85);
+      if (x === 0) tekCtx.moveTo(x, py1);
+      else tekCtx.lineTo(x, py1);
+    }
+    tekCtx.stroke();
+
+    // Canal 2 (Cian)
+    tekCtx.strokeStyle = isMath ? 'rgba(56, 189, 248, 0.4)' : '#38bdf8';
+    tekCtx.shadowColor = '#38bdf8';
+    tekCtx.shadowBlur = isMath ? 0 : 8;
+    tekCtx.lineWidth = (isMath ? 1.5 : 2) * dpr;
+    tekCtx.beginPath();
+    for (let x = 0; x < w; x++) {
+      const py2 = (h / 2) - ch2Samples[x] * (h * 0.42);
+      if (x === 0) tekCtx.moveTo(x, py2);
+      else tekCtx.lineTo(x, py2);
+    }
+    tekCtx.stroke();
+
+    // Si es MATH: Traza Magenta (#e879f9) correspondiente a CH1 - CH2
+    if (isMath) {
+      tekCtx.strokeStyle = '#e879f9';
+      tekCtx.shadowColor = '#e879f9';
+      tekCtx.shadowBlur = 10;
+      tekCtx.lineWidth = 2.5 * dpr;
+      tekCtx.beginPath();
+      for (let x = 0; x < w; x++) {
+        const mathVal = (ch1Samples[x] - ch2Samples[x] * 0.5) * 0.8;
+        const pyMath = (h / 2) - mathVal * (h * 0.45);
+        if (x === 0) tekCtx.moveTo(x, pyMath);
+        else tekCtx.lineTo(x, pyMath);
+      }
+      tekCtx.stroke();
+      tekCtx.shadowBlur = 0;
+
+      tekCtx.font = `bold ${10 * dpr}px "SF Mono", monospace`;
+      tekCtx.fillStyle = '#e879f9';
+      tekCtx.fillText('MATH: CH1 - CH2 (Diferencial Operacional) • 500 mV/div', 8 * dpr, 30 * dpr);
+    }
+    tekCtx.shadowBlur = 0;
+  }
+
+  // OSD Tektronix TDS2024C
   tekCtx.font = `bold ${10 * dpr}px "SF Mono", monospace`;
   tekCtx.fillStyle = '#38bdf8';
-  tekCtx.fillText('TEKTRONIX TDS2024C • Real-Time 2.0 GS/s • Trig\'d', 8 * dpr, 14 * dpr);
+  tekCtx.fillText(`TEKTRONIX TDS2024C • Real-Time 2.0 GS/s • Trig'd [${scopeMode}]`, 8 * dpr, 14 * dpr);
 
   // Badges de canal inferiores
   tekCtx.fillStyle = '#facc15';
@@ -1794,7 +2170,7 @@ function renderTekScope() {
 
   const hud = document.getElementById('tek-hud');
   if (hud) {
-    hud.innerHTML = `CH1: 1.00 V/div (Rigol AFG) • CH2: 500 mV/div (Salida)<br><span style="color:#facc15;">CH1: ${afgAmp.toFixed(2)} Vpp @ ${afgFreq} Hz</span> • <span style="color:#38bdf8;">CH2: Vout AC+DC</span>`;
+    hud.innerHTML = `CH1: 1.00 V/div (Rigol AFG) • CH2: 500 mV/div • PSU: ${PSU_STATE ? (PSU_STATE.ch1.toFixed(1)+'V / '+PSU_STATE.ch2.toFixed(1)+'V') : '±12V'}<br><span style="color:#facc15;">CH1: ${afgAmp.toFixed(2)} Vpp @ ${afgFreq} Hz</span> • <span style="color:#38bdf8;">CH2: Vout</span> • <span style="color:#e879f9;">Modo: ${scopeMode}</span>`;
   }
 }
 
@@ -1917,21 +2293,35 @@ function solveCircuitAnalysis() {
   elems.forEach(el => {
     const n1 = parseInt(el.n1);
     const n2 = parseInt(el.n2);
+    let effVal = el.val;
+
+    // Inyección de tolerancia Monte Carlo
+    if (typeof TOLERANCE_STATE !== 'undefined' && TOLERANCE_STATE.applied && TOLERANCE_STATE.perturbedValues[el.id]) {
+      effVal = TOLERANCE_STATE.perturbedValues[el.id];
+    }
+
+    // Inyección de avería de circuito
+    if (typeof FAULT_STATE !== 'undefined' && FAULT_STATE.active && FAULT_STATE.targetComp === el.id) {
+      if (FAULT_STATE.type === 'OPEN') effVal = 1e7; // 10 MΩ circuito abierto
+      else if (FAULT_STATE.type === 'SHORT') effVal = 1e-4; // cortocircuito
+      else if (FAULT_STATE.type === 'DRIFT') effVal = el.val * 5.0; // deriva
+    }
+
     if (el.type === 'R') {
-      addConductance(n1, n2, 1.0 / Math.max(1e-6, el.val));
+      addConductance(n1, n2, 1.0 / Math.max(1e-6, effVal));
     } else if (el.type === 'WIRE') {
       addConductance(n1, n2, 1.0 / 1e-4);
     } else if (el.type === 'C') {
       const f = (typeof AFG_STATE !== 'undefined' && AFG_STATE.freq) ? AFG_STATE.freq : 1000;
-      const xc = 1.0 / Math.max(1e-12, 2 * Math.PI * f * el.val * 1e-9);
+      const xc = 1.0 / Math.max(1e-12, 2 * Math.PI * f * effVal * 1e-9);
       addConductance(n1, n2, 1.0 / xc);
     } else if (el.type === 'L') {
       const f = (typeof AFG_STATE !== 'undefined' && AFG_STATE.freq) ? AFG_STATE.freq : 1000;
-      const xl = Math.max(1e-4, 2 * Math.PI * f * el.val * 1e-3);
+      const xl = Math.max(1e-4, 2 * Math.PI * f * effVal * 1e-3);
       addConductance(n1, n2, 1.0 / xl);
     } else if (el.type === 'I_SRC') {
-      if (n1 > 0) Z[n1 - 1] -= el.val;
-      if (n2 > 0) Z[n2 - 1] += el.val;
+      if (n1 > 0) Z[n1 - 1] -= effVal;
+      if (n2 > 0) Z[n2 - 1] += effVal;
     }
   });
 
@@ -3697,12 +4087,14 @@ function loadModuleUI() {
         <button onclick="loadCircuitPreset(5)" style="background:#1e293b; border:1px solid #475569; color:#f8fafc; padding:5px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:600;">6. Máx. Potencia RL</button>
       </div>
 
-      <div class="section-title"><span>🛠️ Netlist SPICE y Acciones</span></div>
-      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
-        <button onclick="copySpiceNetlist()" style="flex:1; background:#1e293b; color:#38bdf8; border:1px solid #0284c7; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">📋 Copiar SPICE</button>
-        <button onclick="downloadSpiceNetlist()" style="flex:1; background:#1e293b; color:#34d399; border:1px solid #059669; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">💾 Bajar .cir</button>
-        <button onclick="clearManualCircuit()" style="flex:1; background:#371b1b; color:#fca5a5; border:1px solid #b91c1c; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">🔄 Limpiar Todo</button>
+      <div class="section-title"><span>🛠️ Netlist SPICE &amp; Exportación EDA</span></div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom:8px;">
+        <button onclick="copySpiceNetlist()" style="background:#1e293b; color:#38bdf8; border:1px solid #0284c7; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">📋 Copiar SPICE</button>
+        <button onclick="downloadSpiceNetlist()" style="background:#1e293b; color:#34d399; border:1px solid #059669; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">💾 Bajar .cir SPICE</button>
+        <button onclick="exportToKiCadSchematic()" style="background:#172554; color:#60a5fa; border:1px solid #2563eb; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">📐 KiCad 8 (.kicad_sch)</button>
+        <button onclick="exportToLTspiceAsc()" style="background:#3b0764; color:#e879f9; border:1px solid #9333ea; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold;">⚡ LTspice (.asc)</button>
       </div>
+      <button onclick="clearManualCircuit()" style="width:100%; background:#371b1b; color:#fca5a5; border:1px solid #b91c1c; padding:6px; border-radius:4px; font-size:10px; cursor:pointer; font-weight:bold; margin-bottom:12px;">🔄 Limpiar Todo el Circuito</button>
     `;
   }
 pLeft.innerHTML = leftHTML;
@@ -4923,8 +5315,681 @@ function downloadReportMarkdown() {
 }
 
 // Inicialización al cargar la ventana
+
+// ======================================================================
+// RIGOL DP832 TRIPLE DC POWER SUPPLY CONTROLLER
+// ======================================================================
+const PSU_STATE = {
+  enabled: true,
+  ch1: 12.0,   // +0..30V regulable
+  ch2: -12.0,  // -0..30V regulable
+  ch3: 5.0,    // +5V / +3.3V digital logic
+  limit1: 3.0,
+  limit2: 3.0,
+  limit3: 3.0
+};
+
+function togglePsuMaster() {
+  PSU_STATE.enabled = !PSU_STATE.enabled;
+  const btn = document.getElementById('btn-psu-master');
+  if (btn) {
+    if (PSU_STATE.enabled) {
+      btn.className = 'btn-psu-all';
+      btn.innerText = 'ALL ON';
+    } else {
+      btn.className = 'btn-psu-all off';
+      btn.innerText = 'ALL OFF';
+    }
+  }
+  updatePsuDisplays();
+  updateSimulation();
+  renderTekScope();
+}
+
+function stepPsuCh(ch, delta) {
+  if (ch === 1) {
+    PSU_STATE.ch1 = Math.max(0.0, Math.min(30.0, PSU_STATE.ch1 + delta));
+  } else if (ch === 2) {
+    PSU_STATE.ch2 = Math.min(0.0, Math.max(-30.0, PSU_STATE.ch2 - delta));
+  }
+  updatePsuDisplays();
+  updateSimulation();
+  renderTekScope();
+}
+
+function togglePsuCh3Rail() {
+  PSU_STATE.ch3 = (PSU_STATE.ch3 === 5.0) ? 3.3 : 5.0;
+  updatePsuDisplays();
+  updateSimulation();
+}
+
+function updatePsuDisplays() {
+  const v1 = document.getElementById('psu-ch1-vdisp');
+  const v2 = document.getElementById('psu-ch2-vdisp');
+  const v3 = document.getElementById('psu-ch3-vdisp');
+  const i1 = document.getElementById('psu-ch1-idisp');
+  const i2 = document.getElementById('psu-ch2-idisp');
+  const i3 = document.getElementById('psu-ch3-idisp');
+  const pt = document.getElementById('psu-ptotal');
+
+  if (!PSU_STATE.enabled) {
+    if (v1) v1.innerText = '0.00 V';
+    if (v2) v2.innerText = '0.00 V';
+    if (v3) v3.innerText = '0.00 V';
+    if (i1) i1.innerText = '0.000 A';
+    if (i2) i2.innerText = '0.000 A';
+    if (i3) i3.innerText = '0.000 A';
+    if (pt) pt.innerText = '0.000 W';
+    return;
+  }
+
+  const cur1 = Math.min(PSU_STATE.limit1, Math.abs(PSU_STATE.ch1) / 500.0);
+  const cur2 = Math.min(PSU_STATE.limit2, Math.abs(PSU_STATE.ch2) / 660.0);
+  const cur3 = 0.050;
+  const pTotal = Math.abs(PSU_STATE.ch1) * cur1 + Math.abs(PSU_STATE.ch2) * cur2 + PSU_STATE.ch3 * cur3;
+
+  if (v1) v1.innerText = (PSU_STATE.ch1 >= 0 ? '+' : '') + PSU_STATE.ch1.toFixed(2) + ' V';
+  if (v2) v2.innerText = PSU_STATE.ch2.toFixed(2) + ' V';
+  if (v3) v3.innerText = '+' + PSU_STATE.ch3.toFixed(2) + ' V';
+  if (i1) i1.innerText = cur1.toFixed(3) + ' A';
+  if (i2) i2.innerText = cur2.toFixed(3) + ' A';
+  if (i3) i3.innerText = cur3.toFixed(3) + ' A';
+  if (pt) pt.innerText = pTotal.toFixed(3) + ' W';
+}
+
+
+// ======================================================================
+// AUTOMATIC BODE PLOTTER ENGINE (10 Hz — 10 MHz)
+// ======================================================================
+function openBodeModal() {
+  const modal = document.getElementById('modal-bode');
+  if (modal) modal.style.display = 'flex';
+  setTimeout(renderBodePlot, 50);
+}
+
+function closeBodeModal() {
+  const modal = document.getElementById('modal-bode');
+  if (modal) modal.style.display = 'none';
+}
+
+let lastBodeData = [];
+
+function renderBodePlot() {
+  const canvas = document.getElementById('bode-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.fillStyle = '#030712';
+  ctx.fillRect(0, 0, w, h);
+
+  // Cuadrícula logarítmica (10 Hz a 10 MHz = 6 décadas)
+  const decMin = 1; // 10^1 = 10 Hz
+  const decMax = 7; // 10^7 = 10 MHz
+  const numDecades = decMax - decMin;
+
+  const padLeft = 55;
+  const padRight = 35;
+  const padTop = 25;
+  const padBottom = 35;
+  const plotW = w - padLeft - padRight;
+  const plotH = (h - padTop - padBottom) / 2;
+
+  // Líneas verticales de décadas
+  ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 1;
+  ctx.font = '9px "SF Mono", monospace';
+  ctx.fillStyle = '#6b7280';
+
+  for (let d = decMin; d <= decMax; d++) {
+    const x = padLeft + ((d - decMin) / numDecades) * plotW;
+    ctx.beginPath(); ctx.moveTo(x, padTop); ctx.lineTo(x, h - padBottom); ctx.stroke();
+    const fVal = Math.pow(10, d);
+    const fStr = fVal >= 1e6 ? (fVal/1e6).toFixed(0) + 'M' : (fVal >= 1e3 ? (fVal/1e3).toFixed(0) + 'k' : fVal.toFixed(0));
+    ctx.fillText(fStr + 'Hz', x - 12, h - padBottom + 16);
+  }
+
+  // Líneas horizontales de Magnitud (+20 dB a -60 dB)
+  const magMin = -60, magMax = 20;
+  for (let db = magMin; db <= magMax; db += 20) {
+    const y = padTop + ((magMax - db) / (magMax - magMin)) * plotH;
+    ctx.strokeStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(padLeft, y); ctx.lineTo(w - padRight, y); ctx.stroke();
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(`${db > 0 ? '+' : ''}${db}dB`, 14, y + 3);
+  }
+
+  // Líneas horizontales de Fase (0° a -180°)
+  const phaseMin = -180, phaseMax = 45;
+  const phaseTop = padTop + plotH + 15;
+  for (let deg = phaseMin; deg <= phaseMax; deg += 45) {
+    const y = phaseTop + ((phaseMax - deg) / (phaseMax - phaseMin)) * plotH;
+    ctx.strokeStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(padLeft, y); ctx.lineTo(w - padRight, y); ctx.stroke();
+    ctx.fillStyle = '#d97706';
+    ctx.fillText(`${deg}°`, 20, y + 3);
+  }
+
+  // Cálculo de la respuesta del módulo activo
+  const m = currentModule;
+  let fcNominal = 1000.0;
+  let order = 1;
+  let dcGain = 1.0;
+
+  if (m === 3) { // Sallen-Key 2do orden
+    const r1 = 10000, c1 = 15e-9;
+    fcNominal = 1.0 / (2 * Math.PI * r1 * c1);
+    order = 2;
+    dcGain = 1.586;
+  } else if (m === 10) { // Banco RLC
+    fcNominal = 1590.0;
+    order = 2;
+  } else {
+    fcNominal = 2500.0;
+  }
+
+  lastBodeData = [];
+  const N_PTS = 200;
+  ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.beginPath();
+
+  for (let i = 0; i <= N_PTS; i++) {
+    const dec = decMin + (i / N_PTS) * numDecades;
+    const f = Math.pow(10, dec);
+    const wRatio = f / fcNominal;
+
+    // Magnitud aproximada en dB y Fase en grados
+    let mag = dcGain / Math.pow(1 + Math.pow(wRatio, 2 * order), 0.5);
+    let mag_dB = 20 * Math.log10(Math.max(1e-4, mag));
+    let phase_deg = -Math.atan(Math.pow(wRatio, order)) * (180 / Math.PI) * (order === 2 ? 1.8 : 1.0);
+
+    lastBodeData.push({ f, mag_dB, phase_deg });
+
+    const x = padLeft + (i / N_PTS) * plotW;
+    const yMag = padTop + ((magMax - mag_dB) / (magMax - magMin)) * plotH;
+
+    if (i === 0) ctx.moveTo(x, yMag);
+    else ctx.lineTo(x, yMag);
+  }
+  ctx.stroke();
+
+  // Curva de Fase (Ámbar / Naranja)
+  ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 2; ctx.beginPath();
+  for (let i = 0; i <= N_PTS; i++) {
+    const x = padLeft + (i / N_PTS) * plotW;
+    const phase_deg = lastBodeData[i].phase_deg;
+    const yPhase = phaseTop + ((phaseMax - phase_deg) / (phaseMax - phaseMin)) * plotH;
+    if (i === 0) ctx.moveTo(x, yPhase);
+    else ctx.lineTo(x, yPhase);
+  }
+  ctx.stroke();
+
+  // Marcar Frecuencia de Corte -3 dB
+  const a0 = 20 * Math.log10(dcGain);
+  const m3dB = a0 - 3.01;
+  const y3dB = padTop + ((magMax - m3dB) / (magMax - magMin)) * plotH;
+  ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+  ctx.beginPath(); ctx.moveTo(padLeft, y3dB); ctx.lineTo(w - padRight, y3dB); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Actualizar métricas del modal
+  const elA0 = document.getElementById('bode-metric-a0');
+  const elFc = document.getElementById('bode-metric-fc');
+  const elPm = document.getElementById('bode-metric-pm');
+  const elGbw = document.getElementById('bode-metric-gbw');
+
+  if (elA0) elA0.innerText = a0.toFixed(2) + ' dB';
+  if (elFc) elFc.innerText = (fcNominal >= 1000 ? (fcNominal/1000).toFixed(2) + ' kHz' : fcNominal.toFixed(1) + ' Hz');
+  if (elPm) elPm.innerText = (order === 2 ? '65.4°' : '88.2°');
+  if (elGbw) elGbw.innerText = (fcNominal * dcGain / 1000).toFixed(1) + ' kHz';
+}
+
+function exportBodeCSV() {
+  if (!lastBodeData.length) return;
+  let csv = "Frequency_Hz,Magnitude_dB,Phase_Deg\n";
+  lastBodeData.forEach(pt => {
+    csv += `${pt.f.toFixed(2)},${pt.mag_dB.toFixed(3)},${pt.phase_deg.toFixed(2)}\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Respuesta_Frecuencia_Bode_Modulo_${currentModule+1}.csv`;
+  a.click();
+}
+
+
+// ======================================================================
+// INTERACTIVE CLICK & DRAG WIRING & THEVENIN PROBE REPOSITIONING (CANVAS)
+// ======================================================================
+let dragWireStart = null;
+let currentMousePos = { x: 0, y: 0 };
+
+function initInteractiveCanvasEvents() {
+  const c = document.getElementById('diag-canvas');
+  if (!c) return;
+
+  function getNodeAtPos(x, y) {
+    const cx = (c.clientWidth || 800) / 2;
+    const cy = ((c.clientHeight || 450) / 2) - 20;
+    const nodeCoords = {
+      0: { x: cx, y: cy + 90, id: 0 },
+      1: { x: cx - 240, y: cy - 60, id: 1 },
+      2: { x: cx - 80, y: cy - 60, id: 2 },
+      3: { x: cx + 80, y: cy - 60, id: 3 },
+      4: { x: cx + 240, y: cy - 60, id: 4 },
+      5: { x: cx + 160, y: cy + 30, id: 5 },
+      6: { x: cx - 160, y: cy + 30, id: 6 }
+    };
+    for (let id in nodeCoords) {
+      const nc = nodeCoords[id];
+      const dist = Math.hypot(x - nc.x, y - nc.y);
+      if (dist <= 22) return nc.id;
+    }
+    return null;
+  }
+
+  c.addEventListener('mousedown', (e) => {
+    if (currentModule !== 15) return;
+    const rect = c.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const nid = getNodeAtPos(x, y);
+
+    if (nid !== null) {
+      if (e.shiftKey) {
+        // Shift + Click: Mueve las sondas Thévenin A y B alternadas
+        if (CIRCUIT_STATE.probeA !== nid) {
+          CIRCUIT_STATE.probeA = nid;
+        } else {
+          CIRCUIT_STATE.probeB = nid;
+        }
+        solveCircuitAnalysis();
+        loadModuleUI();
+        renderCircuitSchematic();
+      } else {
+        // Drag normal: Inicia tendido de cable interactivo
+        dragWireStart = nid;
+      }
+    }
+  });
+
+  c.addEventListener('mousemove', (e) => {
+    if (currentModule !== 15) return;
+    const rect = c.getBoundingClientRect();
+    currentMousePos = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    if (dragWireStart !== null) {
+      renderCircuitSchematic();
+      // Dibujar línea elástica temporal de cable
+      const ctx = c.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      ctx.save(); ctx.scale(dpr, dpr);
+      const cx = (c.clientWidth || 800) / 2;
+      const cy = ((c.clientHeight || 450) / 2) - 20;
+      const nodeCoords = {
+        0: { x: cx, y: cy + 90 }, 1: { x: cx - 240, y: cy - 60 },
+        2: { x: cx - 80, y: cy - 60 }, 3: { x: cx + 80, y: cy - 60 },
+        4: { x: cx + 240, y: cy - 60 }, 5: { x: cx + 160, y: cy + 30 },
+        6: { x: cx - 160, y: cy + 30 }
+      };
+      const p1 = nodeCoords[dragWireStart];
+      if (p1) {
+        ctx.strokeStyle = '#34d399'; ctx.lineWidth = 2.5; ctx.setLineDash([6, 4]);
+        ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(currentMousePos.x, currentMousePos.y); ctx.stroke();
+      }
+      ctx.restore();
+    }
+  });
+
+  c.addEventListener('mouseup', (e) => {
+    if (currentModule !== 15 || dragWireStart === null) return;
+    const rect = c.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const targetNid = getNodeAtPos(x, y);
+
+    if (targetNid !== null && targetNid !== dragWireStart) {
+      addManualWire(dragWireStart, targetNid);
+      loadModuleUI();
+      build3DGeometry();
+      renderCircuitSchematic();
+    }
+    dragWireStart = null;
+    renderCircuitSchematic();
+  });
+}
+
+
+// ======================================================================
+// FAULT INJECTION & DIAGNOSTIC CHALLENGE ENGINE
+// ======================================================================
+const FAULT_STATE = {
+  active: false,
+  type: null,
+  targetComp: null,
+  originalVal: null,
+  blindAnswer: null
+};
+
+function openFaultModal() {
+  const modal = document.getElementById('modal-fault');
+  if (modal) modal.style.display = 'flex';
+  updateFaultModalUI();
+}
+
+function closeFaultModal() {
+  const modal = document.getElementById('modal-fault');
+  if (modal) modal.style.display = 'none';
+}
+
+function updateFaultModalUI() {
+  const msg = document.getElementById('fault-status-msg');
+  if (msg) {
+    if (FAULT_STATE.active) {
+      msg.innerHTML = `<span style="color:#f87171; font-weight:800;">FALLO ACTIVO:</span> ${FAULT_STATE.type} en ${FAULT_STATE.targetComp}. ¡Observa las lecturas anómalas en el DMM y Osciloscopio para diagnosticar!`;
+    } else {
+      msg.innerText = 'Circuito operando en condiciones nominales normales (sin averías inyectadas).';
+    }
+  }
+}
+
+function injectSpecificFault(type) {
+  FAULT_STATE.active = true;
+  FAULT_STATE.type = type;
+  FAULT_STATE.targetComp = 'R1';
+  updateFaultModalUI();
+  updateSimulation();
+  renderTekScope();
+}
+
+function generateBlindFaultChallenge() {
+  const types = ['OPEN', 'SHORT', 'DRIFT'];
+  const chosenType = types[Math.floor(Math.random() * types.length)];
+  const comps = ['R1', 'R2', 'RL'];
+  const chosenComp = comps[Math.floor(Math.random() * comps.length)];
+
+  FAULT_STATE.active = true;
+  FAULT_STATE.type = chosenType;
+  FAULT_STATE.targetComp = chosenComp;
+  FAULT_STATE.blindAnswer = { comp: chosenComp, type: chosenType };
+
+  const box = document.getElementById('blind-challenge-box');
+  const selComp = document.getElementById('fault-guess-comp');
+  if (box && selComp) {
+    box.style.display = 'block';
+    selComp.innerHTML = comps.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
+
+  const msg = document.getElementById('fault-status-msg');
+  if (msg) {
+    msg.innerHTML = '<span style="color:#fbbf24; font-weight:800;">🎯 RETO A CIEGAS GENERADO:</span> Una avería oculta ha sido introducida en el circuito. Usa el multímetro y osciloscopio para deducir qué componente falló.';
+  }
+  updateSimulation();
+  renderTekScope();
+}
+
+function verifyBlindFaultGuess() {
+  const gComp = document.getElementById('fault-guess-comp').value;
+  const gType = document.getElementById('fault-guess-type').value;
+  const fb = document.getElementById('fault-eval-feedback');
+  if (!fb || !FAULT_STATE.blindAnswer) return;
+
+  fb.style.display = 'block';
+  if (gComp === FAULT_STATE.blindAnswer.comp && gType === FAULT_STATE.blindAnswer.type) {
+    fb.style.background = 'rgba(34,197,94,0.2)';
+    fb.style.color = '#4ade80';
+    fb.style.border = '1px solid #16a34a';
+    fb.innerHTML = `✅ <b>¡EXACTO!</b> Diagnóstico certero. El componente averiado era <b>${gComp}</b> con fallo de tipo <b>${gType}</b>.`;
+  } else {
+    fb.style.background = 'rgba(239,68,68,0.2)';
+    fb.style.color = '#f87171';
+    fb.style.border = '1px solid #dc2626';
+    fb.innerHTML = `❌ <b>Incorrecto.</b> Vuelve a comprobar las tensiones de nudo y la atenuación de señal.`;
+  }
+}
+
+function repairAllFaults() {
+  FAULT_STATE.active = false;
+  FAULT_STATE.type = null;
+  FAULT_STATE.targetComp = null;
+  FAULT_STATE.blindAnswer = null;
+
+  const box = document.getElementById('blind-challenge-box');
+  if (box) box.style.display = 'none';
+  updateFaultModalUI();
+  updateSimulation();
+  renderTekScope();
+}
+
+
+// ======================================================================
+// MONTE CARLO PASSIVE TOLERANCE DISPERSION ENGINE
+// ======================================================================
+let TOLERANCE_STATE = {
+  applied: false,
+  tolerancePct: 0.05,
+  perturbedValues: {}
+};
+
+function openToleranceModal() {
+  const modal = document.getElementById('modal-tolerance');
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeToleranceModal() {
+  const modal = document.getElementById('modal-tolerance');
+  if (modal) modal.style.display = 'none';
+}
+
+function applyToleranceLevel(tolPct) {
+  TOLERANCE_STATE.applied = true;
+  TOLERANCE_STATE.tolerancePct = tolPct;
+  TOLERANCE_STATE.perturbedValues = {};
+
+  // Función de Gauss con corte a ±3 sigma
+  function gaussianRandom() {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random();
+    while (v === 0) v = Math.random();
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  }
+
+  let htmlList = '<table style="width:100%; text-align:left; border-collapse:collapse;"><tr><th>Componente</th><th>Nominal</th><th>Real Disperso</th><th>Desviación</th></tr>';
+
+  CIRCUIT_STATE.elements.forEach(el => {
+    if (el.type === 'R' || el.type === 'C' || el.type === 'L') {
+      const deltaFactor = (gaussianRandom() / 3.0) * tolPct;
+      const perturbed = el.val * (1.0 + deltaFactor);
+      TOLERANCE_STATE.perturbedValues[el.id] = perturbed;
+      const diffPct = (deltaFactor * 100).toFixed(2);
+      htmlList += `<tr style="border-bottom:1px solid #1e293b;">
+        <td style="color:#f8fafc; padding:3px;">${el.id}</td>
+        <td style="color:#94a3b8;">${el.val} ${el.unit}</td>
+        <td style="color:#38bdf8; font-weight:bold;">${perturbed.toFixed(2)} ${el.unit}</td>
+        <td style="color:${deltaFactor >= 0 ? '#34d399' : '#f87171'};">${deltaFactor >= 0 ? '+' : ''}${diffPct}%</td>
+      </tr>`;
+    }
+  });
+  htmlList += '</table>';
+
+  const disp = document.getElementById('tolerance-disp-list');
+  if (disp) disp.innerHTML = htmlList;
+
+  solveCircuitAnalysis();
+  updateSimulation();
+  renderCircuitSchematic();
+}
+
+function runMonteCarloRun(samples) {
+  let vthSum = 0;
+  let vthMin = 9999, vthMax = -9999;
+  for (let s = 0; s < samples; s++) {
+    applyToleranceLevel(TOLERANCE_STATE.tolerancePct || 0.05);
+    const v = CIRCUIT_STATE.results.Vth;
+    vthSum += v;
+    if (v < vthMin) vthMin = v;
+    if (v > vthMax) vthMax = v;
+  }
+  const mean = vthSum / samples;
+  const disp = document.getElementById('tolerance-disp-list');
+  if (disp) {
+    disp.innerHTML += `<div style="margin-top:10px; padding:6px; background:#0f172a; border-radius:4px; color:#fbbf24;">
+      <b>📊 Monte Carlo (${samples} simulaciones):</b><br>
+      V_th Media: ${mean.toFixed(3)} V | Rango: [${vthMin.toFixed(3)} V — ${vthMax.toFixed(3)} V] | Dispersión Δ = ${(vthMax - vthMin).toFixed(3)} V
+    </div>`;
+  }
+}
+
+function resetNominalValues() {
+  TOLERANCE_STATE.applied = false;
+  TOLERANCE_STATE.perturbedValues = {};
+  const disp = document.getElementById('tolerance-disp-list');
+  if (disp) disp.innerText = 'Componentes restaurados a tolerancias 0.00% (nominales perfectos).';
+  solveCircuitAnalysis();
+  updateSimulation();
+  renderCircuitSchematic();
+}
+
+
+// ======================================================================
+// EDA SCHEMATIC EXPORT: KICAD 8 (.kicad_sch) & LTSPICE (.asc)
+// ======================================================================
+function exportToKiCadSchematic() {
+  const elems = CIRCUIT_STATE.elements;
+  let sch = `(kicad_sch (version 20231120) (generator "UPC Virtual Lab v8.0")\n\n`;
+  sch += `  (paper "A4")\n`;
+  sch += `  (title_block\n    (title "Esquematico Circuital UPC - Modulo 16")\n    (company "Universitat Politecnica de Catalunya")\n  )\n\n`;
+
+  let xPos = 50.8, yPos = 50.8;
+  elems.forEach((el, idx) => {
+    const symName = el.type === 'R' ? 'Device:R' : (el.type === 'C' ? 'Device:C' : (el.type === 'L' ? 'Device:L' : 'Device:VDC'));
+    sch += `  (symbol (lib_id "${symName}") (at ${xPos.toFixed(2)} ${yPos.toFixed(2)} 0) (unit 1)\n`;
+    sch += `    (property "Reference" "${el.id}" (at ${(xPos+2).toFixed(2)} ${(yPos-2).toFixed(2)} 0))\n`;
+    sch += `    (property "Value" "${el.val}${el.unit}" (at ${(xPos+2).toFixed(2)} ${(yPos+2).toFixed(2)} 0))\n`;
+    sch += `  )\n`;
+    xPos += 25.4;
+    if (xPos > 200) { xPos = 50.8; yPos += 38.1; }
+  });
+
+  sch += `\n  (sheet_instances\n    (path "/" (page "1"))\n  )\n)`;
+
+  const blob = new Blob([sch], { type: 'application/x-kicad-schematic;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `esquematico_upc_kicad8.kicad_sch`;
+  a.click();
+}
+
+function exportToLTspiceAsc() {
+  const elems = CIRCUIT_STATE.elements;
+  let asc = `Version 4\nSHEET 1 880 680\n`;
+  let x = 100, y = 100;
+
+  elems.forEach((el) => {
+    if (el.type === 'R') {
+      asc += `SYMBOL res ${x} ${y} R0\nSYMATTR InstName ${el.id}\nSYMATTR Value ${el.val}\n`;
+    } else if (el.type === 'C') {
+      asc += `SYMBOL cap ${x} ${y} R0\nSYMATTR InstName ${el.id}\nSYMATTR Value ${el.val}n\n`;
+    } else if (el.type === 'L') {
+      asc += `SYMBOL ind ${x} ${y} R0\nSYMATTR InstName ${el.id}\nSYMATTR Value ${el.val}m\n`;
+    } else if (el.type === 'V_DC' || el.type === 'V_AC') {
+      asc += `SYMBOL voltage ${x} ${y} R0\nSYMATTR InstName ${el.id}\nSYMATTR Value ${el.val}\n`;
+    }
+    x += 120;
+    if (x > 700) { x = 100; y += 140; }
+  });
+  asc += `TEXT 50 500 Left 2 !.tran 10m\n`;
+
+  const blob = new Blob([asc], { type: 'text/plain;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `circuito_upc_ltspice.asc`;
+  a.click();
+}
+
+
+// ======================================================================
+// INTERACTIVE LAB WORKSHEETS (GUÍAS OFICIALES PASO A PASO)
+// ======================================================================
+const WORKSHEETS = [
+  {
+    mod: 0,
+    title: "Práctica 1: Calibración y Medida con Galgas Extensiométricas",
+    steps: [
+      "1. Conectar la viga de flexión mecánica al puente de Wheatstone.",
+      "2. Configurar una deformación de ε = 1500 με y excitación Vs = 10.0 V.",
+      "3. Medir con el Keysight 34465A la tensión diferencial de salida Vd.",
+      "4. Calcular la sensibilidad S = dVd / dε y verificar la linealidad."
+    ],
+    expected: "Vd ≈ 15.375 mV para puente cuarto de galga."
+  },
+  {
+    mod: 3,
+    title: "Práctica 4: Filtro Activo Paso Bajo Sallen-Key de 2º Orden",
+    steps: [
+      "1. Ajustar el generador Rigol DG1022Z a onda senoidal de 1.0 kHz y 5.0 Vpp.",
+      "2. Observar la atenuación y el desfase en el osciloscopio Tektronix TDS2024C.",
+      "3. Abrir el Analizador Bode para determinar la frecuencia de corte a -3 dB.",
+      "4. Verificar el factor de calidad Q y el amortiguamiento de Chebyshev/Butterworth."
+    ],
+    expected: "fc ≈ 1061 Hz con atenuación de -40 dB/década."
+  },
+  {
+    mod: 15,
+    title: "Práctica 16: Taller CAD, Teorema de Thévenin & Máxima Potencia",
+    steps: [
+      "1. Diseñar el cuadripolo en el lienzo interactivo arrastrando cables entre nodos.",
+      "2. Colocar la Sonda A (+) en el Nodo 2 y la Sonda B (-) en el Nodo 0 (GND).",
+      "3. Verificar el cálculo analítico de V_th y R_th frente al multímetro Keysight.",
+      "4. Conectar la resistencia de carga RL = R_th para verificar el teorema de Jacobi (PL_max)."
+    ],
+    expected: "PL_max ocurre exactamente cuando RL = R_th."
+  }
+];
+
+function openWorksheetModal() {
+  const modal = document.getElementById('modal-worksheet');
+  const body = document.getElementById('worksheet-body');
+  if (!modal || !body) return;
+
+  const ws = WORKSHEETS.find(w => w.mod === currentModule) || {
+    title: `Guía Experimental: ${MODULE_DATA[currentModule]?.title || 'Módulo Activo'}`,
+    steps: [
+      "1. Ajustar los parámetros en el panel de control izquierdo a valores nominales.",
+      "2. Registrar la lectura estabilizada en el Multímetro Keysight 34465A.",
+      "3. Inspeccionar las formas de onda en el Tektronix TDS2024C (CH1 y CH2).",
+      "4. Responder al reto oficial de examen y verificar la solución teórica."
+    ],
+    expected: "Verificar concordancia con la incertidumbre tipo B del instrumento."
+  };
+
+  let html = `<div style="font-size: 15px; font-weight: 800; color: #38bdf8;">${ws.title}</div>`;
+  html += `<div style="font-size: 12px; color: #94a3b8;">Sigue el protocolo metodológico de laboratorio de la UPC:</div>`;
+  html += `<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">`;
+  ws.steps.forEach(st => {
+    html += `<div style="background: #0b1120; border: 1px solid #1e293b; border-radius: 6px; padding: 10px; font-size: 12px; color: #f8fafc;">${st}</div>`;
+  });
+  html += `</div>`;
+  html += `<div style="background: #022c22; border: 1px solid #059669; border-radius: 6px; padding: 10px; font-size: 11px; color: #6ee7b7; font-family: monospace;">
+    <b>🎯 Resultado Esperado de Laboratorio:</b> ${ws.expected}
+  </div>`;
+
+  body.innerHTML = html;
+  modal.style.display = 'flex';
+}
+
+function closeWorksheetModal() {
+  const modal = document.getElementById('modal-worksheet');
+  if (modal) modal.style.display = 'none';
+}
+
+function copyWorksheetToClipboard() {
+  const body = document.getElementById('worksheet-body');
+  if (body) {
+    navigator.clipboard.writeText(body.innerText).then(() => alert('¡Guía copiada al portapapeles!'));
+  }
+}
+
 window.onload = () => {
   loadModuleUI();
+  initInteractiveCanvasEvents();
+  updatePsuDisplays();
   loop();
 };
 </script>

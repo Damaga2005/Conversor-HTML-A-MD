@@ -123,52 +123,56 @@
 ---
 
 #### 🔬 8. Laboratorio Virtual Interactivo de Sensores & Grado GREELEC (`Laboratorio_Virtual_Sensores.html`) — v8.0 Enterprise Workbench Edition
-- **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue / SPICE:** 100% autónomo, ejecutable en local sin internet ni CDNs, optimizado para los planes de estudio de la UPC (ETSETB / EEBE) y las asignaturas del Grado en Ingeniería Electrónica de Telecomunicación (GREELEC).
+- **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue / SPICE / KiCad:** 100% autónomo, ejecutable en local sin internet ni CDNs, optimizado para los planes de estudio de la UPC (ETSETB / EEBE) y las asignaturas del Grado en Ingeniería Electrónica de Telecomunicación (GREELEC).
 - **🔀 3 Modos de Visualización en Tiempo Real (60 FPS):**
   - **🌐 Vista 3D WebGL:** Renderizado volumétrico acelerado por GPU con control orbital 360°, iluminación Phong, materiales realistas y reconstrucción geométrica según la topología.
   - **📐 Esquemático 2D CAD:** Trazado circuital vectorial de alta precisión según normas internacionales **IEC 60617 / IEEE Std 315**, con nodos activos, caídas de tensión y flechas de corriente en tiempo real.
   - **🔀 Vista Dividida (3D + Esquemático):** Visualización dual simultánea (50% WebGL / 50% CAD) interactiva y sincronizada a 60 FPS, permitiendo manipular controles físicos y ver el esquema eléctrico responder al unísono.
 
-- **🌐 Motor WebGL 3D Nativo con Reconstrucción Dinámica por Topología (GPU 60 FPS):**
-  - **Rotación Orbital y Zoom Interactivos:** Control táctil y con ratón (arrastrar para orbitar, rueda para zoom, doble clic para centrar la cámara).
-  - **Iluminación Realista Phong:** Materiales metálicos (oro, cobre esmaltado, aluminio mecanizado, acero pulido) y dieléctricos con reflejos dinámicos y sombras.
-  - **Reconstrucción Geométrica 3D Dinámica por Topología Física:**
-    * *Módulo 11 (Banco RLC):* La protoboard 3D se reconstruye físicamente según la topología activa (Divisores resistivos con resistencias axiales y anillos de color calculados dinámicamente, Red serie/paralelo, Filtros de desacoplo de rieles con condensadores electrolíticos radiales de 10 µF y lentejas cerámicas de 100 nF, Filtros RC, Temporizador 555 astable en DIP-8 con LED pulsante, Driver de relé electromagnético con diodo volante 1N4007 y transistor 2N2222, y Resonador LC en toroide).
-    * *Módulo 12 (Fuentes Conmutadas Buck vs Boost):* MOSFET High-Side vs Low-Side con aletas disipadoras, diodos Schottky y bobinas de choque toroidales.
-    * *Módulo 13 (Líneas de Transmisión RF):* Cable coaxial RG-58 pelado por capas (PVC, malla, dieléctrico PTFE, vivo de cobre) con conector SMA y terminaciones intercambiables ($50\,\Omega$, cortocircuito, abierto, antena).
-    * *Módulo 14 (Semiconductores BJT vs MOSFET):* Encapsulados TO-92 vs TO-220 montados sobre disipadores de calor extruidos con mica aislante.
-    * *Módulo 15 (Control PID):* Servomotor DC con disco encoder ranurado, horno térmico de aluminio con vaina RTD y depósito hidráulico con flotador y nivel fluido animado.
-    * *Módulo 16 (Taller Libre CAD):* Gran protoboard de desarrollo libre donde se renderizan físicamente en 3D todos los componentes activos creados manualmente (resistencias, condensadores, bobinas, fuentes DC/AC y jumpers flexibles de interconexión con clips de prueba rojo y azul).
-
-- **🛠️ Módulo 16: Taller de Análisis de Circuitos & Equivalentes de Thévenin / Norton (MNA Solver & CAD):**
-  - **Motor MNA Nodal Modificado con Eliminación Gaussiana:** Resolución matricial rigurosa en tiempo real para redes lineales y activas de hasta 7 nodos.
-  - **Puntas de Prueba Móviles (Sondas de Test):** Selectores para la Sonda Roja A (+) y Sonda Azul B (-), calculando la diferencia de potencial $V_A - V_B$ y el circuito equivalente de Thévenin entre cualquier par de nodos de la red.
-  - **Cálculo Automático de Parámetros de Red:**
-    * *Tensión de Thévenin:* $V_{th} = V_A - V_B$ (tensión a circuito abierto).
-    * *Resistencia de Thévenin:* $R_{th} = (V_A^{\text{pas}} - V_B^{\text{pas}})/I_{\text{test}}$ mediante pasivación universal de fuentes independientes e inyección de corriente de prueba de $1.0\text{ A}$.
-    * *Corriente de Norton:* $I_N = V_{th} / R_{th}$ (corriente en cortocircuito).
-    * *Máxima Transferencia de Potencia:* $R_{L,\text{opt}} = R_{th} \implies P_{L,\max} = V_{th}^2 / (4 R_{th})$.
-    * *Ganancia y Cuadripolo:* Ganancia de tensión $A_v = V_o / V_i$ lineal y en dB, impedancia de entrada $Z_{in}$ e impedancia de salida $Z_{out}$.
-    * *Teorema de Tellegen:* Comprobación en tiempo real del balance de potencias $\sum P_{\text{generada}} = \sum P_{\text{disipada}}$ con exactitud analítica.
-  - **Editor Manual Interactivo:** Formulario para agregar resistencias ($R$), condensadores ($C$), bobinas ($L$), fuentes de tensión continua ($V_{DC}$), fuentes de alterna ($V_{AC}$) y cables de puente directo ($WIRE$, $0\,\Omega$).
-  - **Gestor de Ramas y Componentes:** Lista en vivo de todas las ramas con botón de eliminación instantánea `[✕]`.
-  - **6 Presets Canónicos UPC:** Divisor Thévenin clásico ($12\text{V}, 1\text{k}\Omega, 2.2\text{k}\Omega$), Puente de Wheatstone desequilibrado, Red Atenuadora en T ($Z_0 = 50\,\Omega$), Escalera DAC R-2R de 3 bits, Filtro RLC sintonizado de 2º Orden y Demostración de Máxima Transferencia de Potencia con $R_L = R_{th}$.
-  - **Reconstrucción Tridimensional Protoboard 3D:** Los componentes manuales y jumpers flexibles de colores se colocan dinámicamente sobre la placa de pruebas virtual junto a las sondas de test roja y azul.
-  - **Exportación e Importación SPICE:** Generación automática de código `.cir` estándar para LTspice y Ngspice con un clic.
-
-- **🎛️ Rack de Instrumentación Triple de Laboratorio (Keysight + Rigol + Tektronix):**
+- **🎛️ Rack Cuádruple de Instrumentación de Laboratorio (Keysight + Rigol AFG + Rigol DP832 + Tektronix):**
   - **1. Multímetro Digital Keysight 34465A Truevolt (6½ Dígitos):** Pantalla VFD de alta resolución, barra analógica bar-graph con rangos automáticos, conmutación DC/AC RMS y cálculo de incertidumbre metrológica $u_B$ en tiempo real según la guía GUM.
   - **2. Generador de Funciones Arbitrarias Rigol DG1022Z (AFG):**
     * Réplica del panel de instrumentos con pantalla LCD y controles de ajuste rápido para Frecuencia (1 Hz a 10 MHz), Amplitud (0.1 a 20.0 Vpp), Offset (-10 a +10 V), Ciclo de Trabajo (Duty Cycle) y Barrido de Frecuencia (Sweep).
     * 5 Formas de onda sintetizadas: Senoidal, Cuadrada, Triangular/Rampa, Pulso y DC pura.
     * Botón conmutable de salida con LED de activación (`Output ON/OFF`).
-  - **3. Osciloscopio Digital Tektronix TDS2024C de Doble Traza (Phosphor 60 FPS):**
-    * **Canal 1 (CH1 - Amarillo fosforescente `#facc15`):** Visualiza en tiempo real la señal inyectada por el Generador AFG Rigol DG1022Z.
-    * **Canal 2 (CH2 - Cian fosforescente `#38bdf8`):** Visualiza simultáneamente la respuesta de salida del circuito bajo prueba (filtrada, atenuada, recortada o con desfase $\Delta\phi$).
-    * **On-Screen Display (OSD) Calibrado:** Muestra en pantalla la tasa de muestreo `2.0 GS/s Trig'd`, badges con parámetros de canal (`CH1: SINE 1.0 kHz 5.0 Vpp`, `CH2: Vout Circuito Activo`), base de tiempos `M: 250 µs` y nivel de disparo `CH1 / 0.00 V`.
-    * **Modo FFT (Fast Fourier Transform):** Espectro de frecuencias de 0 a 500 Hz con detección de picos armónicos y suelo de ruido en dBV.
-    * **Cursores de Medición de Precisión:** Medición de $\Delta t$, $\Delta V$ y cálculo directo de frecuencia experimental $f = 1/\Delta t$.
-    * **Exportación de Telemetría a CSV:** Descarga inmediata de las trazas de tensión digitalizadas para su procesamiento en MATLAB, Python o Excel.
+  - **3. Fuente de Alimentación Triple Regulable Rigol DP832:**
+    * Canal 1: $+0\dots 30\text{ V}$ regulable con protección por limitación de corriente CC/CV ($3.0\text{ A}$).
+    * Canal 2: $-0\dots 30\text{ V}$ regulable simétrica con protección CC/CV.
+    * Canal 3: Riel conmutable de lógica digital ($+5.0\text{ V} / +3.3\text{ V}$).
+    * Telemetría de potencia total disipada en vatios y botón maestro de apagado/encendido (`ALL ON / ALL OFF`).
+  - **4. Osciloscopio Digital Tektronix TDS2024C (4 Modos Phosphor 60 FPS):**
+    * **Modo TIME:** Doble traza con Canal 1 (CH1 `#facc15` - Señal inyectada por AFG) y Canal 2 (CH2 `#38bdf8` - Respuesta de salida).
+    * **Modo MATH (CH1 - CH2):** Operación diferencial en tiempo real trazada en magenta `#e879f9` a escala calibrada para instrumentación analógica y rechazo en modo común.
+    * **Modo X-Y (Figuras de Lissajous):** Composición orbital para cálculo experimental del ángulo de desfase $\Delta\phi = \arcsin(Y_0 / Y_m)$.
+    * **Modo FFT (Espectro de Fourier):** Descomposición armónica con cálculo de distorsión y ruido.
+    * **Cursores $\Delta t / \Delta V$ y Exportación CSV:** Medición precisa y descarga de trazas para MATLAB o Python.
+
+- **📈 Analizador Automático de Respuesta en Frecuencia (Bode Plotter):**
+  - Barrido logarítmico continuo desde $10\text{ Hz}$ hasta $10\text{ MHz}$ (6 décadas).
+  - Trazado simultáneo de Magnitud ($+20\text{ dB}$ a $-60\text{ dB}$) y Fase ($+45^\circ$ a $-180^\circ$).
+  - Detección automática de la ganancia DC $A_0$, frecuencia de corte a $-3\text{ dB}$ ($f_c$), Margen de Fase ($\text{PM}$) y Producto Ganancia-Ancho de Banda ($\text{GBW}$).
+  - Exportación de la respuesta frecuencial a archivo CSV.
+
+- **🖱️ Cableado y Sondas Interactivas Click & Drag en el Lienzo CAD:**
+  - Tendido de cables y componentes simplemente haciendo clic y arrastrando el ratón entre nodos del circuito.
+  - Línea elástica animada con detección de proximidad magnética y validación de cortocircuitos.
+  - Recolocación de las puntas de prueba de Thévenin (Sonda A roja y Sonda B azul) mediante clic directo con tecla Shift.
+
+- **⚠️ Inyección de Fallos Circuitales & Modo Reto Diagnóstico:**
+  - Inyección instantánea de averías típicas de laboratorio: Circuito abierto ($R \to \infty$ por soldadura fría), Cortocircuito ($R \to 0$ por perforación dieléctrica) y Deriva térmica (+500%).
+  - Modo Examen a Ciegas: El simulador introduce una avería oculta aleatoria para que el alumno diagnostique el componente y tipo de fallo usando el DMM y Osciloscopio.
+
+- **🎲 Simulación Monte Carlo & Tolerancias de Componentes Pasivos:**
+  - Inyección de dispersión gaussiana real ($3\sigma$) según las series normalizadas E12 ($\pm 10\%$), E24 ($\pm 5\%$) y E96 ($\pm 1\%$).
+  - Ejecución en lote de 50 muestras Monte Carlo con cálculo de media empírica $\bar{V}_{th}$, rango extremo y desviación típica.
+
+- **📐 Exportación a Suites EDA Profesionales (KiCad 8 & LTspice):**
+  - **KiCad 8 (`.kicad_sch`):** Generación de esquemático vectorial nativo con formato s-expression de KiCad 8 listo para abrir en Eeschema y rutar placas PCB.
+  - **LTspice (`.asc`):** Archivo de captura esquemática nativa de Linear Technology / Analog Devices con directivas `.tran` y símbolos de componentes.
+  - **SPICE Netlist (`.cir`):** Código de red MNA con modelos y comandos de análisis listos para Ngspice o Multisim.
+
+- **📑 Guías Interactivas de Prácticas de Laboratorio (Worksheets):**
+  - Procedimientos paso a paso alineados con las guías docentes oficiales de la UPC, objetivos de medida, resultados esperados y botón para copiar en formato Markdown.
 
 - **🎨 Decodificador Interactivo de Código de Colores de Resistencias:**
   - Visualizador vectorial SVG interactivo de resistencias axiales con selector de bandas (4 y 5 anillos).
