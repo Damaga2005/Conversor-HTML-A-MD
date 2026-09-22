@@ -3508,8 +3508,8 @@ def run_gui():
 
     root = tk.Tk()
     root.title("Sistemes de Mesura · Conversor Pro (Apple Studio Edition)")
-    root.geometry("1020x840")
-    root.minsize(920, 720)
+    root.geometry("1060x780")
+    root.minsize(980, 660)
 
     # ------------------------------------------------------------------
     # PALETA APPLE.COM SPACE BLACK / TITANIUM PRO
@@ -3695,8 +3695,12 @@ def run_gui():
     # ==================================================================
     # PESTAÑA 1: CONVERSIÓN Y OPCIONES
     # ==================================================================
+    # Dock de acciones fijado en la base (estilo macOS) - Garantiza 100% visibilidad permanente
+    btn_frame = tk.Frame(tab_convert, bg=COLOR_HEADER, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, padx=14, pady=10)
+    btn_frame.pack(side="bottom", fill="x")
+
     p1 = tk.Frame(tab_convert, bg=COLOR_CANVAS, padx=4, pady=4)
-    p1.pack(fill="both", expand=True)
+    p1.pack(side="top", fill="both", expand=True)
 
     # ------------------------------------------------------------------
     # CARD 1: MODO Y PERFIL RÁPIDO (APPLE SEGMENTED CONTROLS)
@@ -3956,10 +3960,6 @@ def run_gui():
 
     progress_bar = ttk.Progressbar(cons_inner, orient="horizontal", mode="determinate", style="Modern.Horizontal.TProgressbar")
     progress_bar.pack(fill="x", pady=(0, 6))
-
-    # Botonera de acciones principales
-    btn_frame = tk.Frame(p1, bg=COLOR_CANVAS)
-    btn_frame.pack(fill="x", pady=(4, 0))
 
     def open_destination():
         dst = out_var.get().strip()
@@ -5518,6 +5518,7 @@ def run_gui():
     btn_all_course.pack(side="left", padx=(8, 0))
 
     btn_cancel.pack(side="left", padx=(8, 0))
+    update_mode()
 
     # Atajos de teclado globales (Spotlight Ctrl+K)
     root.bind_all("<Control-k>", lambda e: open_spotlight_modal())

@@ -276,6 +276,98 @@
     box-shadow: 0 4px 16px rgba(124, 58, 237, 0.5);
   }
 
+  /* Subject Filter Bar (GREELEC UPC Asignaturas) */
+  .subject-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(13, 17, 27, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .subject-bar-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #64748b;
+    white-space: nowrap;
+    margin-right: 4px;
+  }
+  .subject-tab {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: var(--spring-bounce);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .subject-tab:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  .subject-tab.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  }
+  .subject-tab.sub-sm.active { background: rgba(10, 132, 255, 0.3); border-color: #0a84ff; color: #93c5fd; }
+  .subject-tab.sub-cce.active { background: rgba(16, 185, 129, 0.3); border-color: #10b981; color: #6ee7b7; }
+  .subject-tab.sub-pee.active { background: rgba(245, 158, 11, 0.3); border-color: #f59e0b; color: #fcd34d; }
+  .subject-tab.sub-caf.active { background: rgba(139, 92, 246, 0.3); border-color: #8b5cf6; color: #c4b5fd; }
+  .subject-tab.sub-sc.active { background: rgba(236, 72, 153, 0.3); border-color: #ec4899; color: #f9a8d4; }
+  .pill-cnt {
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .sub-badge {
+    font-size: 9px;
+    font-weight: 800;
+    padding: 1px 4px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .sub-badge.sm { background: rgba(10, 132, 255, 0.25); color: #60a5fa; border: 1px solid rgba(10, 132, 255, 0.4); }
+  .sub-badge.cce { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+  .sub-badge.pee { background: rgba(245, 158, 11, 0.25); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+  .sub-badge.caf { background: rgba(139, 92, 246, 0.25); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.4); }
+  .sub-badge.sc { background: rgba(236, 72, 153, 0.25); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.4); }
+  .dock-divider {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #64748b;
+    padding: 0 4px;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .dock-divider::before {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.15);
+    margin-right: 4px;
+  }
+
   /* =========================================================================
      4. WORKSPACE THREE-COLUMN LAYOUT (SIDEBARS & CENTER STAGE)
      ========================================================================= */
@@ -722,25 +814,54 @@
   </div>
 </header>
 
-<!-- Floating Glass Dock (16 Modules Navigation) -->
+<!-- Asignaturas Filter Bar (Grau en Enginyeria Electrònica de Telecomunicació - UPC) -->
+<div class="subject-bar-container" id="subject-selector">
+  <span class="subject-bar-label">Assignatures UPC:</span>
+  <button class="subject-tab active" data-sub="ALL" onclick="filterBySubject('ALL')">🏛️ Totes <span class="pill-cnt">16</span></button>
+  <button class="subject-tab sub-sm" data-sub="SM" onclick="filterBySubject('SM')">📘 SM: Mesura <span class="pill-cnt">10</span></button>
+  <button class="subject-tab sub-cce" data-sub="CCE" onclick="filterBySubject('CCE')">⚡ CCE: Circuits <span class="pill-cnt">3</span></button>
+  <button class="subject-tab sub-pee" data-sub="PEE" onclick="filterBySubject('PEE')">🔋 PEE: Potència <span class="pill-cnt">1</span></button>
+  <button class="subject-tab sub-caf" data-sub="CAF" onclick="filterBySubject('CAF')">📡 CAF: Camps & RF <span class="pill-cnt">1</span></button>
+  <button class="subject-tab sub-sc" data-sub="SC" onclick="filterBySubject('SC')">🎯 SC: Control <span class="pill-cnt">1</span></button>
+</div>
+
+<!-- Floating Glass Dock (16 Modules Navigation categorized by subject) -->
 <nav class="macos-dock-container" id="modules-bar">
-  <button class="dock-item active" onclick="switchModule(0)">⚖️ 1. Galgues</button>
-  <button class="dock-item" onclick="switchModule(1)">🌡️ 2. Pt100</button>
-  <button class="dock-item" onclick="switchModule(2)">⚡ 3. INA3</button>
-  <button class="dock-item" onclick="switchModule(3)">〰️ 4. Sallen-Key</button>
-  <button class="dock-item" onclick="switchModule(4)">📊 5. ADC</button>
-  <button class="dock-item" onclick="switchModule(5)">🔥 6. Termoparell</button>
-  <button class="dock-item" onclick="switchModule(6)">📈 7. NTC Taylor</button>
-  <button class="dock-item" onclick="switchModule(7)">🔊 8. Soroll</button>
-  <button class="dock-item" onclick="switchModule(8)">💎 9. Piezo 3D</button>
-  <button class="dock-item" onclick="switchModule(9)">⚡ 10. Capacitiu</button>
-  <span style="height: 18px; width: 1px; background: rgba(255,255,255,0.15); margin: 0 4px;"></span>
-  <button class="dock-item greelec" onclick="switchModule(10)">🔌 11. Banc R-L-C</button>
-  <button class="dock-item greelec" onclick="switchModule(11)">⚡ 12. Buck/Boost</button>
-  <button class="dock-item greelec" onclick="switchModule(12)">📡 13. Línies RF & Smith</button>
-  <button class="dock-item greelec" onclick="switchModule(13)">🎛️ 14. BJT/MOSFET</button>
-  <button class="dock-item greelec" onclick="switchModule(14)">🎯 15. PID Feedback</button>
-  <button class="dock-item greelec" onclick="switchModule(15)" style="background: rgba(79, 70, 229, 0.25); border-color: #818cf8; color:#ffffff;">🛠️ 16. Taller CAD</button>
+  <!-- SM: Sistemes de Mesura -->
+  <button class="dock-item active" data-mod="0" data-sub="SM" onclick="switchModule(0)"><span class="sub-badge sm">SM</span> ⚖️ 1. Galgues</button>
+  <button class="dock-item" data-mod="1" data-sub="SM" onclick="switchModule(1)"><span class="sub-badge sm">SM</span> 🌡️ 2. Pt100</button>
+  <button class="dock-item" data-mod="2" data-sub="SM" onclick="switchModule(2)"><span class="sub-badge sm">SM</span> ⚡ 3. INA3</button>
+  <button class="dock-item" data-mod="3" data-sub="SM" onclick="switchModule(3)"><span class="sub-badge sm">SM</span> 〰️ 4. Sallen-Key</button>
+  <button class="dock-item" data-mod="4" data-sub="SM" onclick="switchModule(4)"><span class="sub-badge sm">SM</span> 📊 5. ADC</button>
+  <button class="dock-item" data-mod="5" data-sub="SM" onclick="switchModule(5)"><span class="sub-badge sm">SM</span> 🔥 6. Termoparell</button>
+  <button class="dock-item" data-mod="6" data-sub="SM" onclick="switchModule(6)"><span class="sub-badge sm">SM</span> 📈 7. NTC Taylor</button>
+  <button class="dock-item" data-mod="7" data-sub="SM" onclick="switchModule(7)"><span class="sub-badge sm">SM</span> 🔊 8. Soroll</button>
+  <button class="dock-item" data-mod="8" data-sub="SM" onclick="switchModule(8)"><span class="sub-badge sm">SM</span> 💎 9. Piezo 3D</button>
+  <button class="dock-item" data-mod="9" data-sub="SM" onclick="switchModule(9)"><span class="sub-badge sm">SM</span> ⚡ 10. Capacitiu</button>
+
+  <!-- CCE: Components i Circuits Electrònics -->
+  <div class="dock-divider" data-sub-group="CCE"><span class="sub-badge cce">CCE</span></div>
+  <button class="dock-item greelec" data-mod="10" data-sub="CCE" onclick="switchModule(10)"><span class="sub-badge cce">CCE</span> 🔌 11. Banc R-L-C</button>
+
+  <!-- PEE: Potència i Energia Elèctrica -->
+  <div class="dock-divider" data-sub-group="PEE"><span class="sub-badge pee">PEE</span></div>
+  <button class="dock-item greelec" data-mod="11" data-sub="PEE" onclick="switchModule(11)"><span class="sub-badge pee">PEE</span> ⚡ 12. Buck/Boost</button>
+
+  <!-- CAF: Camps i Ones / RF -->
+  <div class="dock-divider" data-sub-group="CAF"><span class="sub-badge caf">CAF</span></div>
+  <button class="dock-item greelec" data-mod="12" data-sub="CAF" onclick="switchModule(12)"><span class="sub-badge caf">CAF</span> 📡 13. Línies RF & Smith</button>
+
+  <!-- CCE: BJT/MOSFET -->
+  <div class="dock-divider" data-sub-group="CCE"><span class="sub-badge cce">CCE</span></div>
+  <button class="dock-item greelec" data-mod="13" data-sub="CCE" onclick="switchModule(13)"><span class="sub-badge cce">CCE</span> 🎛️ 14. BJT/MOSFET</button>
+
+  <!-- SC: Sistemes de Control -->
+  <div class="dock-divider" data-sub-group="SC"><span class="sub-badge sc">SC</span></div>
+  <button class="dock-item greelec" data-mod="14" data-sub="SC" onclick="switchModule(14)"><span class="sub-badge sc">SC</span> 🎯 15. PID Feedback</button>
+
+  <!-- CCE: Taller CAD -->
+  <div class="dock-divider" data-sub-group="CCE"><span class="sub-badge cce">CCE</span></div>
+  <button class="dock-item greelec" data-mod="15" data-sub="CCE" onclick="switchModule(15)" style="background: rgba(79, 70, 229, 0.25); border-color: #818cf8; color:#ffffff;"><span class="sub-badge cce">CCE</span> 🛠️ 16. Taller CAD</button>
 </nav>
 
 <div class="workspace">
@@ -2502,6 +2623,20 @@ let currentModule = 0;
 // ======================================================================
 // MOTOR DE TEORÍA DE CIRCUITOS, MNA & TALLER CAD (UPC CCE & ANÁLISIS)
 // ======================================================================
+const FAULT_STATE = {
+  active: false,
+  type: null,
+  targetComp: null,
+  originalVal: null,
+  blindAnswer: null
+};
+
+let TOLERANCE_STATE = {
+  applied: false,
+  tolerancePct: 0.05,
+  perturbedValues: {}
+};
+
 const CIRCUIT_STATE = {
   elements: [
     { id: 'V1', type: 'V_DC', n1: 1, n2: 0, val: 12.0, unit: 'V', name: 'Fuente DC' },
@@ -4238,7 +4373,26 @@ function loadModuleUI() {
 
   // Panel Izquierdo: Controles
   const pLeft = document.getElementById('panel-left');
-  let leftHTML = `<div class="section-title"><span>Parámetros Físicos</span><span>${m.title.split('.')[0]}</span></div>`;
+  const subMeta = {
+    SM: { code: 'SM', name: 'Sistemes de Mesura', badgeClass: 'sm', icon: '📘' },
+    CCE: { code: 'CCE', name: 'Components i Circuits Electrònics', badgeClass: 'cce', icon: '⚡' },
+    PEE: { code: 'PEE', name: 'Potència i Energia Elèctrica', badgeClass: 'pee', icon: '🔋' },
+    CAF: { code: 'CAF', name: 'Camps i Ones / Alta Freqüència', badgeClass: 'caf', icon: '📡' },
+    SC: { code: 'SC', name: 'Sistemes de Control', badgeClass: 'sc', icon: '🎯' }
+  };
+  let currentSubCode = 'SM';
+  if (currentModule === 10 || currentModule === 13 || currentModule === 15) currentSubCode = 'CCE';
+  else if (currentModule === 11) currentSubCode = 'PEE';
+  else if (currentModule === 12) currentSubCode = 'CAF';
+  else if (currentModule === 14) currentSubCode = 'SC';
+  const currentSub = subMeta[currentSubCode];
+
+  let leftHTML = `
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:6px 10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px;">
+      <span class="sub-badge ${currentSub.badgeClass}" style="font-size:10px; padding:2px 7px;">${currentSub.icon} ${currentSub.code}</span>
+      <span style="font-size:11px; font-weight:700; color:#cbd5e1;">${currentSub.name}</span>
+    </div>
+    <div class="section-title"><span>Parámetros Físicos</span><span>${m.title.split('.')[0]}</span></div>`;
   m.controls.forEach(c => {
     leftHTML += `
       <div class="control-group">
@@ -4514,13 +4668,44 @@ function verifyChallenge() {
   }
 }
 
+let currentSubjectFilter = 'ALL';
+
+function filterBySubject(sub) {
+  currentSubjectFilter = sub;
+  const tabs = document.querySelectorAll('.subject-tab');
+  tabs.forEach(t => {
+    if (t.getAttribute('data-sub') === sub) t.classList.add('active');
+    else t.classList.remove('active');
+  });
+
+  const dockItems = document.querySelectorAll('.dock-item');
+  const dividers = document.querySelectorAll('.dock-divider');
+  dockItems.forEach(item => {
+    const itemSub = item.getAttribute('data-sub');
+    if (sub === 'ALL' || itemSub === sub) {
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+  dividers.forEach(d => {
+    d.style.display = (sub === 'ALL') ? 'flex' : 'none';
+  });
+}
+
 function switchModule(idx) {
   currentModule = idx;
   const tabs = document.querySelectorAll('.dock-item');
-  tabs.forEach((t, i) => {
-    const isGreelec = i >= 10;
-    if (i === idx) {
+  tabs.forEach(t => {
+    const modIdx = parseInt(t.getAttribute('data-mod'));
+    const isGreelec = modIdx >= 10;
+    if (modIdx === idx) {
       t.className = isGreelec ? 'dock-item greelec active' : 'dock-item active';
+      // Si el elemento está oculto por el filtro de asignaturas, cambiar filtro para revelarlo
+      const itemSub = t.getAttribute('data-sub');
+      if (currentSubjectFilter !== 'ALL' && itemSub !== currentSubjectFilter) {
+        filterBySubject('ALL');
+      }
     } else {
       t.className = isGreelec ? 'dock-item greelec' : 'dock-item';
     }
@@ -5985,13 +6170,7 @@ function initInteractiveCanvasEvents() {
 // ======================================================================
 // FAULT INJECTION & DIAGNOSTIC CHALLENGE ENGINE
 // ======================================================================
-const FAULT_STATE = {
-  active: false,
-  type: null,
-  targetComp: null,
-  originalVal: null,
-  blindAnswer: null
-};
+// (FAULT_STATE definido arriba antes de CIRCUIT_STATE)
 
 function openFaultModal() {
   const modal = document.getElementById('modal-fault');
@@ -6087,11 +6266,7 @@ function repairAllFaults() {
 // ======================================================================
 // MONTE CARLO PASSIVE TOLERANCE DISPERSION ENGINE
 // ======================================================================
-let TOLERANCE_STATE = {
-  applied: false,
-  tolerancePct: 0.05,
-  perturbedValues: {}
-};
+// (TOLERANCE_STATE definido arriba antes de CIRCUIT_STATE)
 
 function openToleranceModal() {
   const modal = document.getElementById('modal-tolerance');
