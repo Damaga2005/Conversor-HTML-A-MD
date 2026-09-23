@@ -5,7 +5,7 @@
 ---
 
 ### 🎯 Prompt 1: Tribunal Examinador UPC (Simulacro de Examen con Corrección Oficial)
-`	ext
+```text
 Actúa como el tribunal examinador de la asignatura 'Sistemes de Mesura' de la UPC.
 Quiero que me hagas un examen de 5 preguntas tipo test, una a una.
 Reglas:
@@ -19,7 +19,7 @@ Comienza con la Pregunta 1.
 ---
 
 ### 📐 Prompt 2: Resolución y Deducción Rigurosa de Fórmulas
-`	ext
+```text
 Basándote en el archivo '_Formulario_Oficial_Examen.md' y los Cuadernos Maestros, resuelve el siguiente problema explicando cada paso:
 1. Enuncia la ley física y las fórmulas involucradas.
 2. Especifica las unidades en el Sistema Internacional de cada variable.
@@ -32,7 +32,7 @@ Problema a resolver: [Escribe aquí tu enunciado o pregunta numérica]
 ---
 
 ### 🔍 Prompt 3: Tabla Comparativa y Diferencias Críticas
-`	ext
+```text
 Genera una tabla comparativa exhaustiva entre los siguientes conceptos del temario: [Ejemplo: Filtro Butterworth vs Chebyshev vs Bessel / Puente de Wheatstone 1/4 vs Medio Puente vs Puente Completo / ADC Flash vs SAR vs Sigma-Delta].
 Incluye:
 - Principio físico de operación.
@@ -45,7 +45,7 @@ Incluye:
 ---
 
 ### 🧠 Prompt 4: Tutor Socrático de Conceptos Difíciles
-`	ext
+```text
 Actúa como mi profesor particular de instrumentación electrónica.
 Explícame el concepto de [Ejemplo: Relación de Rechazo al Modo Común (CMRR) / Ruido Johnson-Nyquist / Aperture Jitter / Guía GUM de Incertidumbres] como si tuviera que explicárselo a un ingeniero novato.
 Usa analogías intuitivas, muestra por qué surge físicamente en el circuito y concluye con una pregunta para comprobar si lo he entendido bien.

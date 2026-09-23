@@ -247,4 +247,63 @@ u_c^2(y) = \sum_{i=1}^{n} c_i^2 u^2(x_i) = \sum_{i=1}^{n} \left( \frac{\partial 
   \end{equation}$$
 
 ---
+
+## Tema 11: Instrumentación Industrial y Técnicas Avanzadas de Medida
+
+### 11.1 Amplificador de Aislamiento Galvánico (ISO124)
+- **Rechazo de Modo Común de Aislamiento (IMRR):**
+  $$\begin{equation}
+  \text{IMRR}_{\text{dB}} = 20 \log_{10} \left( \frac{V_{\text{ISO}}}{V_{\text{error\_out}}} \right)
+  \end{equation}$$
+- **Tensión de barrera dieléctrica:** $V_{\text{ISO}} \le 1500\text{ V}_{\text{rms}}$ continua (acoplo capacitivo diferencial modulado).
+- **Relación de transferencia unitaria:** $V_o = 1.000 \cdot V_{in} + V_{os,\text{iso}}$.
+
+### 11.2 Demodulador Coherente Síncrono (Lock-In PSD)
+- **Multiplicación Analógica de Señal y Referencia:**
+  $$\begin{equation}
+  v_m(t) = \left[ V_s \cos(\omega_0 t + \theta) + n(t) \right] \cdot \left[ V_r \cos(\omega_0 t + \phi) \right]
+  \end{equation}$$
+- **Salida Continua DC tras Filtro Paso Bajo Integrador ($f_c \ll \omega_0$):**
+  $$\begin{equation}
+  V_{\text{PSD}} = \frac{1}{2} V_s V_r \cos(\theta - \phi) = \frac{1}{2} V_s V_r \cos(\Delta \phi)
+  \end{equation}$$
+- **Mejora de Relación Señal/Ruido (SNR):**
+  $$\begin{equation}
+  \Delta \text{SNR}_{\text{dB}} \approx 10 \log_{10}\left(\frac{\Delta f_{\text{in}}}{B_{\text{LPF}}}\right)
+  \end{equation}$$
+
+### 11.3 Bucle de Corriente Industrial 4-20 mA (Transmisor a 2 Hilos)
+- **Ecuación de Conversión Lineal (Cero Vivo / Live Zero):**
+  $$\begin{equation}
+  I_{\text{loop}} = 4\text{ mA} + 16\text{ mA} \cdot \left( \frac{T - T_{\min}}{T_{\max} - T_{\min}} \right)
+  \end{equation}$$
+- **Resistencia Máxima de Carga admisible (Loop Compliance):**
+  $$\begin{equation}
+  R_{L,\max} = \frac{V_{\text{fuente}} - V_{\text{tx},\min}}{I_{\max}} = \frac{V_{\text{fuente}} - 12\text{ V}}{20\text{ mA}}
+  \end{equation}$$
+- **Diagnóstico de Fallos según Estándar NAMUR NE43:**
+  - $I_{\text{loop}} < 3.6\text{ mA}$ $\rightarrow$ Rotura de cable o fallo en sensor (circuito abierto).
+  - $I_{\text{loop}} > 21.0\text{ mA}$ $\rightarrow$ Cortocircuito o saturación destructiva.
+
+### 11.4 Roseta de Galgas Extensiométricas a 45° & Círculo de Mohr
+- **Lectura de Galgas:** $\epsilon_a$ (a $0^\circ$), $\epsilon_b$ (a $45^\circ$), $\epsilon_c$ (a $90^\circ$).
+- **Deformación Media (Centro de Mohr):**
+  $$\begin{equation}
+  \epsilon_{\text{avg}} = \frac{\epsilon_a + \epsilon_c}{2}
+  \end{equation}$$
+- **Radio de Mohr y Deformación de Cizalladura Máxima ($\gamma_{\max}$):**
+  $$\begin{equation}
+  R_{\text{Mohr}} = \frac{1}{\sqrt{2}} \sqrt{(\epsilon_a - \epsilon_b)^2 + (\epsilon_b - \epsilon_c)^2}, \quad \gamma_{\max} = 2 R_{\text{Mohr}}
+  \end{equation}$$
+- **Deformaciones Principales Biaxiales:**
+  $$\begin{equation}
+  \epsilon_1 = \epsilon_{\text{avg}} + R_{\text{Mohr}}, \quad \epsilon_2 = \epsilon_{\text{avg}} - R_{\text{Mohr}}
+  \end{equation}$$
+- **Orientación de los Planos Principales:**
+  $$\begin{equation}
+  \theta_p = \frac{1}{2} \arctan \left( \frac{2\epsilon_b - \epsilon_a - \epsilon_c}{\epsilon_a - \epsilon_c} \right)
+  \end{equation}$$
+
+---
 > 💡 **Consejo para NotebookLM:** Sube este documento como fuente prioritaria bajo el nombre `_Formulario_Oficial_Examen.md`. Cuando le pidas al modelo resolver problemas numéricos del examen, dile: *"Usa las fórmulas y constantes del Formulario Oficial para deducir y comprobar los resultados numéricos"*.
+

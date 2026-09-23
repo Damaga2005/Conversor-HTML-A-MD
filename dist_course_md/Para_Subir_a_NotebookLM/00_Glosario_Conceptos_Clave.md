@@ -403,6 +403,35 @@
 
 ---
 
+## ⚡ Conceptes Avançats d'Instrumentació & Laboratori Virtual (v8.5)
+
+### Amplificador d'Aïllament (ISO124)
+> Dispositiu de condicionament que interromp el bucle de massa galvànic mitjançant una barrera dielèctrica capacitiva diferencial interna d'alta tensió (fins a 1500 Vrms). Converteix el senyal analògic en modulació de cicle de treball a alta freqüència (500 kHz) a través de condensadors ceràmics de barrera, restaurant la tensió amb guany unitari precís i immunitat IMRR superior a 140 dB.
+>
+> 📖 *Font: [Laboratori Virtual de Sensors · Mòdul 17](Laboratorio_Virtual_Sensores.html)*
+
+### Demodulador Coherent Lock-In (PSD)
+> Instrument i tècnica de detecció sincrònica capaç de mesurar i extreure senyals d'amplitud extremadament petita (nanovolts o microvolts) enterrats sota nivells de soroll desenes de decibels superiors (SNR < -20 dB). Multiplica la tensió d'entrada per una portadora de referència de la mateixa freqüència $\omega_0$ i aplica un filtre passabaix integrador d'amplada de banda molt estreta ($B \ll 1\text{ Hz}$).
+>
+> 📖 *Font: [Laboratori Virtual de Sensors · Mòdul 18](Laboratorio_Virtual_Sensores.html)*
+
+### Transmissor Industrial 4-20 mA (Bucle de 2 Fils)
+> Estàndard de transmissió de senyals analògics en entorns industrials immunes a caigudes de tensió resistives del cablejat i interferències electromagnètiques. El nivell de 4 mA representa el zero de l'escala (cero viu) permetent alimentar el circuit del transmissor amb el propi corrent de línia, mentre que valors inferiors a 3.6 mA indiquen fallada de cable trencat segons la norma NAMUR NE43.
+>
+> 📖 *Font: [Laboratori Virtual de Sensors · Mòdul 19](Laboratorio_Virtual_Sensores.html)*
+
+### Roseta de Galgues a 45° & Cercle de Mohr Dinàmic
+> Conjunt de tres galgues extensiomètriques disposades sobre el mateix substrat a angles coneguts ($0^\circ, 45^\circ, 90^\circ$). Permet determinar completament l'estat pla de deformació en una superfície mecànica sotmesa a tracció/compressió biaxial i tallant, calculant les deformacions principals màximes $\epsilon_1, \epsilon_2$, la tensió de cisallament $\gamma_{\max}$ i l'angle d'orientació $\theta_p$ mitjançant la construcció geomètrica del Cercle de Mohr.
+>
+> 📖 *Font: [Laboratori Virtual de Sensors · Mòdul 20](Laboratorio_Virtual_Sensores.html)*
+
+### Analitzador Lògic Digital de 8 Canals
+> Instrument virtual per a la inspecció i descodificació de protocols sèrie asíncrons i síncrons (UART, I2C, SPI) utilitzats habitualment per a la lectura de transductors digitals i convertidors ADC en sistemes encastats (STM32, ESP32).
+>
+> 📖 *Font: [Laboratori Virtual de Sensors · Instrumentació](Laboratorio_Virtual_Sensores.html)*
+
+---
+
 ## 🤖 Com treure el màxim partit a aquest Glossari amb la IA (NotebookLM)
 
 Copia i enganxa aquests prompts directament al xat de NotebookLM o Claude:

@@ -115,3 +115,25 @@ Acceso directo al simulador web autónomo: [`Laboratorio_Virtual_Sensores.html`]
   - **6 Presets Canónicos UPC:** Divisor Thévenin clásico ($12\text{V}, 1\text{k}\Omega, 2.2\text{k}\Omega$), Puente de Wheatstone desequilibrado, Red Atenuadora en T ($Z_0 = 50\,\Omega$), Escalera DAC R-2R de 3 bits, Filtro RLC sintonizado de 2º Orden y Demostración de Máxima Transferencia de Potencia con $R_L = R_{th}$.
   - **Reconstrucción Tridimensional Protoboard 3D:** Los componentes manuales y jumpers flexibles de colores se colocan dinámicamente sobre la placa de pruebas virtual junto a las sondas de test roja y azul.
   - **Exportación e Importación SPICE:** Generación automática de código `.cir` estándar para LTspice y Ngspice con un clic.
+- **Módulo 17:** 🛡️ **Amplificador d'Aïllament Galvànic (ISO124):** Barrera dielèctrica capacitiva diferencial de 1500 Vrms, rebuig de mode comú d'aïllament IMRR > 140 dB i model 3D amb condensadors ceràmics de barrera.
+- **Módulo 18:** 🎛️ **Demodulador Coherent Síncron Lock-In (PSD):** Detecció de senyals dèbils enterrats en soroll profund (SNR < -20 dB), mesclador analògic amb portadora de referència i filtre passabaix integrador d'amplada de banda ultraneta.
+- **Módulo 19:** 🏭 **Transmissor Industrial 4-20 mA (Bucle de 2 Fils per a Pt100):** Estàndard de bucle de corrent amb zero viu, càlcul de loop compliance, resistència màxima de càrrega i diagnòstic automàtic de fallades per norma NAMUR NE43.
+- **Módulo 20:** 🌀 **Roseta de Galgues Extensiomètriques a 45° & Cercle de Mohr Dinàmic:** Anàlisi de deformació plana biaxial ($\epsilon_a, \epsilon_b, \epsilon_c$), deformacions principals $\epsilon_1, \epsilon_2$, deformació màxima de cisallament $\gamma_{\max}$, angle principal $\theta_p$ i dibuix interactiu del Cercle de Mohr en temps real.
+
+### 🔬 Nous Instruments Virtuals Integrats
+- **Analitzador Lògic Digital de 8 Canals:** Descodificador de busos I2C, SPI i UART amb tren de polsos dinàmic i inspecció de bytes transmesos.
+- **Injectador de Soroll Tèrmic Johnson-Nyquist:** Simulació interactiva de soroll blanc dependent de temperatura i resistència ($v_n = \sqrt{4kTR\Delta f}$) amb control de relació senyal/soroll (SNR) sobre l'oscil·loscopi.
+- **Generador de Firmware Encastat C/C++:** Generació de codi C99 optimitzat amb suport DMA per a STM32 HAL, ESP32 (Arduino framework) i Raspberry Pi Pico.
+
+---
+
+## 🔄 Suite de Conversores Universales de Archivos (`universal_converters.py`)
+La suite incluye un motor de conversión universal de alta fidelidad multi-formato:
+- **PDF a Markdown:** Extracción con preservación de tablas GFM y ecuaciones LaTeX (PyMuPDF).
+- **DOCX a Markdown:** Parseo XML nativo de OMML a LaTeX sin pérdida de símbolos matemáticos.
+- **Jupyter Notebook (`.ipynb`) a Markdown:** Celdas Markdown, celdas de código y extracción de imágenes base64 a `assets/`.
+- **Excel (`.xlsx`) y CSV a Markdown:** Tablas GFM estilizadas y tipadas.
+- **Markdown a HTML Imprimible / PDF Académico:** Maquetación lista para impresión A4 con MathJax 3.
+- **Extractor de Formulario Maestro:** Resumen consolidado de todas las ecuaciones matemáticas de un conjunto de archivos.
+- **Extractor de Netlists SPICE:** Generación de archivos `.cir` a partir de bloques de texto Markdown.
+- **Generador de Glosario Técnico A-Z:** Extracción e indexación alfabética de conceptos.

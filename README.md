@@ -1,224 +1,167 @@
-# 🍏 Conversor HTML a Markdown para Google NotebookLM & LLMs
+# 🍏 Conversor Universal de Documentación Técnica & Suite Metrológica UPC
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Interface: Apple Dark](https://img.shields.io/badge/UI-Apple%20Dark%20Mode-black.svg)]()
+[![Interface: Apple Dark](https://img.shields.io/badge/UI-Apple%20Liquid%20Glass%20Dark-black.svg)]()
 [![Target: NotebookLM](https://img.shields.io/badge/Optimized%20for-Google%20NotebookLM-4285F4.svg)]()
-[![LaTeX: MathML Supported](https://img.shields.io/badge/LaTeX-MathML%20%E2%86%92%20LaTeX-brightgreen.svg)]()
+[![LaTeX: MathML & OMML Supported](https://img.shields.io/badge/LaTeX-MathML%20%7C%20OMML%20%E2%86%92%20LaTeX-brightgreen.svg)]()
+[![Virtual Lab: 20 Modules 3D](https://img.shields.io/badge/Virtual%20Lab-20%20Modules%20WebGL%203D-orange.svg)]()
+[![Tests: Pytest Passing](https://img.shields.io/badge/tests-9%2F9%20passing-success.svg)]()
 
-> Suite integral de ingeniería documental y aplicación de escritorio diseñada para convertir contenidos educativos web e interactivos (HTML, MathML, scripts de autoevaluación) en **Markdown técnico de alta fidelidad**, 100% optimizado para la base de conocimiento de **Google NotebookLM**, Gemini, Claude y ChatGPT.
+> Suite integral de ingeniería documental, conversores universales de alta fidelidad y estación de trabajo virtual diseñada para transformar contenidos educativos, técnicos e interactivos (HTML, PDF, DOCX, IPYNB, MathML, scripts de examen) en **Markdown técnico estructurado de máxima pureza**, 100% optimizado para **Google NotebookLM**, Gemini, Claude, Obsidian y ChatGPT.
 > 
-> Incluye adaptación completa para la asignatura **Sistemes de Mesura (EEBE · Universitat Politècnica de Catalunya)** con 500 preguntas oficiales de examen, formulario consolidado de ecuaciones y simulador interactivo.
+> Incluye el **Laboratorio Virtual de Sensores e Instrumentación 3D (v8.5 Enterprise Workbench)** con 20 módulos circuitales organizados por asignaturas oficiales de la **Universitat Politècnica de Catalunya (UPC)**, calculadora metrológica GUM con simulación Monte Carlo, diseñador de filtros activos, banco de componentes R-L-C y gestor de flashcards con 500 preguntas de examen.
+
+---
+
+## 📑 Tabla de Contenidos
+- [✨ Características Principales](#-características-principales)
+  - [🔄 1. Conversores Universales de Archivos de Alta Fidelidad](#-1-conversores-universales-de-archivos-de-alta-fidelidad-universal_converterspy)
+  - [🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark)](#-2-interfaz-gráfica-de-escritorio-apple-liquid-glass-dark)
+  - [🔬 3. Laboratorio Virtual de Sensores e Instrumentación 3D](#-3-laboratorio-virtual-de-sensores-e-instrumentación-3d-v85-enterprise)
+  - [📐 4. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo](#-4-calculadora-metrológica-gum-isoiec-98-3--monte-carlo-supl-1)
+  - [🎛️ 5. Diseñador de Filtros Activos & Sensores](#-5-diseñador-de-filtros-activos-sensores--acondicionadores)
+  - [🔌 6. Banco R-L-C & Presets Canónicos GREELEC](#-6-banco-r-l-c--presets-canónicos-greelec)
+  - [🗂️ 7. Repaso Activo Anki & Gestor de Exámenes](#-7-repaso-activo-anki--gestor-de-exámenes)
+- [🚀 Instalación y Requisitos](#-instalación-y-requisitos)
+- [🖥️ Uso de la Aplicación (GUI y Terminal CLI)](#-uso-de-la-aplicación-gui-y-terminal-cli)
+- [📁 Estructura del Repositorio](#-estructura-del-repositorio)
+- [🤖 Integración con Google NotebookLM](#-integración-con-google-notebooklm)
+- [📄 Licencia](#-licencia)
 
 ---
 
 ## ✨ Características Principales
 
-### 🧠 1. Motor de Conversión de Alta Fidelidad (HTML → Markdown)
-- **Matemáticas en LaTeX puro:** Convierte MathML nativo (`<math>`, `<mrow>`, `<mfrac>`, `<msub>`, etc.) y etiquetas de notación técnica en $\LaTeX$ estándar (`$...$` inline y `$$...$$` display) perfectamente interpretables por NotebookLM y KaTeX.
-- **Extracción Inteligente de Imágenes:** Decodifica imágenes embebidas en Base64 y recursos enlazados, guardándolos ordenadamente en la subcarpeta `assets/` con nombres normalizados y hashing SHA-256 para prevenir duplicados.
-- **Callouts Semánticos Modernos:** Transforma bloques destacados y notas docentes en callouts de GitHub Flavored Markdown (`> [!NOTE]`, `> [!WARNING]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!CAUTION]`).
-- **Tablas Complejas y Código:** Limpia y preserva la alineación de tablas HTML, bloques de código preformateado y estructuras de listas anidadas.
-- **Reescritura de Enlaces Locales:** Convierte automáticamente referencias internas `.html` en sus correspondientes ficheros `.md`, garantizando una navegación cruzada fluida.
+### 🔄 1. Conversores Universales de Archivos de Alta Fidelidad (`universal_converters.py`)
+Módulo independiente de conversión universal con algoritmos especializados:
+- **PDF a Markdown (PyMuPDF):** Extracción inteligente con detección de encabezados jerárquicos, tablas estructuradas en formato GitHub Flavored Markdown (GFM) e inferencia de bloques matemáticos en $\LaTeX$.
+- **Word DOCX a Markdown (OMML a LaTeX):** Parseador de Office Math Markup Language (OMML) que traduce fórmulas matemáticas complejas nativas de Microsoft Word (`<m:oMath>`, `<m:f>`, `<m:sSup>`, `<m:rad>`) directamente a $\LaTeX$ puro sin pérdidas.
+- **Jupyter Notebook (`.ipynb`) a Markdown:** Extracción secuencial de celdas Markdown y código fuente Python, preservando salidas de consola, trazas de ejecución e imágenes gráficas generadas.
+- **Extractor Automático de Imágenes Base64:** Decodifica recursos gráficos embebidos y los almacena físicamente en la carpeta `assets/` con control de hash SHA-256 para evitar duplicaciones.
+- **Excel (`.xlsx`) y CSV a Tablas Markdown:** Conversor tipado con detección de números, porcentajes y alineación columnar automática.
+- **Markdown a HTML Imprimible / PDF Académico:** Motor de maquetación con estilos de alta legibilidad (Apple Pro / San Francisco), integración con MathJax 3 y reglas CSS `@media print` optimizadas para generar PDFs A4 con un solo clic.
+- **Extractor de Formulario Maestro:** Escaneo automatizado de repositorios documentales para recopilar todas las ecuaciones matemáticas en una hoja de referencia unificada.
+- **Extractor de Netlists SPICE:** Detección de esquemas y circuitos en notas técnicas para exportar archivos `.cir` listos para simulación en LTspice, NGSpice o KiCad.
+- **Generador de Glosario Técnico A-Z:** Indexación alfabética automática de acrónimos y definiciones con enlace a sus fuentes.
+- **Conversión Universal en Lote (`batch_convert_universal`):** Exploración recursiva de directorios para procesar simultáneamente colecciones de archivos heterogéneos (PDF, DOCX, IPYNB, CSV, XLSX, HTML).
 
 ---
 
-### 🎨 2. Interfaz Gráfica de Escritorio (Apple Dark Aesthetic)
-- **Diseño Apple macOS:** Paleta cromática oscura de alto contraste (`#000000`, `#1c1c1e`, `#2c2c2e`, acentos `#0a84ff` y `#30d158`), tipografía San Francisco / Segoe UI y tarjetas de profundidad visual.
-- **Drag & Drop Nativo en Windows:** Arrastra archivos HTML individuales o carpetas de cursos completas directamente a la ventana de la aplicación.
-- **Visor Markdown Integrado & Exportador HTML/PDF:** Lee los documentos generados directamente en la app con resaltado de sintaxis, conteo de palabras y buscador con resaltado en tiempo real. Incluye botón **"🌐 Exportar HTML / PDF"** para generar documentos web imprimibles con MathJax 3 y estilos de impresión para guardar en PDF con 1 clic.
-- **Barra de Productividad:** Controles de zoom tipográfico dinámico (**A-**, **100%**, **A+**) y badge de estadísticas en vivo con conteo de palabras, caracteres, fórmulas $\LaTeX$, tablas e imágenes, junto al tiempo estimado de lectura.
-- **Acceso Directo a la Nube & Exámenes:** Botón para abrir directamente [Google NotebookLM](https://notebooklm.google.com/) en tu navegador, y atajo **"🎓 Finales UPC"** para cargar de inmediato los exámenes oficiales resueltos.
+### 🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark)
+La aplicación de escritorio (`conversor_html_notebooklm.py`) cuenta con una interfaz organizada en **8 pestañas temáticas** navegables mediante un selector segmentado tipo macOS:
+1. **HTML a MD:** Conversor interactivo con previsualización, extracción de imágenes y perfiles preconfigurados.
+2. **Universal:** Panel de control de conversión multi-formato (PDF, DOCX, IPYNB, CSV, Excel) con selección de opciones avanzadas y consola asíncrona en tiempo real.
+3. **Visor Markdown:** Lector con resaltado de sintaxis, barra de productividad (zoom tipográfico A-/100%/A+, estadísticas en vivo de palabras, caracteres, fórmulas y tiempo de lectura) y exportador HTML/PDF.
+4. **Biblioteca:** Acceso directo a documentos maestros, exámenes resueltos y enlaces de estudio.
+5. **Calculadora GUM:** Presupuesto de incertidumbres según la norma ISO/IEC 98-3 con simulación Monte Carlo.
+6. **Filtros Activos:** Calculadora y sintetizador de filtros Sallen-Key con diagrama de Bode en tiempo real y acondicionadores analógicos.
+7. **Banco R-L-C:** Simulador de topologías canónicas y esquemáticos vectoriales dinámicos.
+8. **Flashcards Anki:** Visor de preguntas de autoevaluación, buscador interactivo en vivo, filtrado temático y exportador de mazos Anki (`.apkg` y `.tsv`).
+
+#### ⚡ Atajos de Teclado Globales:
+| Atajo | Acción |
+| :--- | :--- |
+| `Ctrl + 1` .. `Ctrl + 8` | Cambio instantáneo a cualquiera de las 8 pestañas |
+| `Ctrl + O` | Abrir diálogo de selección de archivo o carpeta de origen |
+| `Ctrl + S` | Guardar o exportar resultados de la pestaña activa |
+| `F5` / `Ctrl + R` | Recalcular parámetros activos (GUM, Filtros, RLC) |
+| `Drag & Drop` | Arrastrar archivos PDF, DOCX, IPYNB, XLSX o HTML conmuta y precarga la herramienta correspondiente |
 
 ---
 
-### 📐 3. Calculadora Metrológica GUM (ISO/IEC 98-3) & Motor Monte Carlo (Supl. 1)
-- **Pestaña Nativa en la Aplicación:** Sistema completo para resolución de problemas metrológicos según la Guía Internacional GUM.
-- **6 Plantillas de Modelos de Medida Reales de la UPC:**
-  - *Sensor AD590 & Acondicionador diferencial (Examen Final 2025)*
-  - *Puente de Wheatstone Completo con Galgas Extensométricas*
-  - *Termopar Tipo K con Compensación de Unión Fría (Pt100 / CJC)*
-  - *Acondicionador Inversor para Sensor Capacitivo*
-  - *Divisor de Tensión Resistivo*
-  - *Ley de Ohm (Disipación de Potencia)*
-- **Derivadas Numéricas Centrales Automáticas:** Obtención instantánea de los coeficientes de sensibilidad $c_i = \partial f / \partial x_i$ con perturbación simétrica óptima sin errores analíticos manuales.
-- **Distribuciones de Probabilidad Normalizadas:** Soporte para distribuciones Normales ($k=1, 2, 3$), Rectangulares ($\Delta x / \sqrt{3}$) y Triangulares ($\Delta x / \sqrt{6}$).
-- **Desglose de Contribución a la Varianza (Pareto):** Muestra el peso porcentual de cada magnitud de entrada en la incertidumbre combinada final $u_c(y)$ y calcula la incertidumbre expandida al 95% ($U_{95\%} = 2 \cdot u_c$).
-- **🎲 Motor de Simulación Monte Carlo (GUM Suplemento 1):** Propagación de distribuciones mediante $10,000$ iteraciones en menos de 100 ms, con media empírica $\bar{y}_{MC}$, desviación típica $s(y)_{MC}$, intervalo de cobertura empírico del 95%, histograma ASCII de densidad de probabilidad y verificación del teorema central del límite frente a la ley analítica lineal.
-- **Exportación en 1 Clic:** Botón para copiar la tabla completa del presupuesto de incertidumbres directamente en sintaxis Markdown lista para informes o exámenes.
+### 🔬 3. Laboratorio Virtual de Sensores e Instrumentación 3D (v8.5 Enterprise)
+Simulador web autónomo (`Laboratorio_Virtual_Sensores.html`) ejecutable localmente sin conexión a internet ni CDNs:
+- **Visualización Tridimensional Fluida (60 FPS):** Renderizado volumétrico WebGL acelerado por GPU con cámara orbital 360°, sombreado Phong y carga determinista de geometría (resolución definitiva de pantallas en negro).
+- **Esquemático 2D CAD Interactivo:** Representación vectorial de circuitos bajo normativa **IEC 60617 / IEEE Std 315**, con nodos activos, caídas de potencial y cableado dinámico click & drag.
+- **Barra de Asignaturas Oficiales UPC con Conteo en Vivo:**
+  - `🏛️ Totes (20)`: Catálogo completo de módulos.
+  - `📘 SM: Mesura (14)`: Sensores y sistemas de medida.
+  - `⚡ CCE: Circuits (3)`: Teoría de circuitos y electrónica analógica.
+  - `🔋 PEE: Potència (1)`: Electrónica de potencia y fuentes conmutadas.
+  - `📡 CAF: Camps & RF (1)`: Circuitos de alta frecuencia y líneas de transmisión.
+  - `🎯 SC: Control (1)`: Sistemas de control feedback y lazos PID.
+
+#### 🗂️ Los 20 Módulos de Simulación:
+1. **Puente de Wheatstone & Galgas Extensiométricas:** Viga en voladizo 3D con distribución de tensiones de von Mises.
+2. **Sensor Pt100 & Compensación Kelvin:** Conexiones a 2, 3 y 4 hilos en baño termostático 3D.
+3. **Amplificador de Instrumentación INA3:** Balanceo de modo común y análisis de CMRR real (AD620 / AD623).
+4. **Filtro Activo Sallen-Key Pasobajo:** Aproximaciones Butterworth, Chebyshev y Bessel con diagrama de Bode interactivo.
+5. **Muestreo Nyquist, Cuantización ADC & DAC R-2R:** Visualización temporal y espectral con analizador FFT.
+6. **Termopares K/J & Bloque Isotérmico:** Compensación electrónica de unión fría (CJC).
+7. **Termistor NTC:** Linealización analítica de Taylor en divisor de tensión o puente.
+8. **Ruido Térmico Johnson-Nyquist:** Blindaje electromagnético en jaula de Faraday 3D.
+9. **Sensor Piezoeléctrico:** Acondicionador de carga frente a amplificador de tensión.
+10. **Sensor Capacitivo Diferencial:** Detección síncrona coherente.
+11. **Banco R-L-C & Presets Canónicos:** Divisores ADC, desacoplo de rieles, oscilador NE555, driver con diodo volante y resonador LC.
+12. **Fuentes Conmutadas DC-DC (PEE):** Convertidores Buck (reductor) y Boost (elevador) en modos CCM y DCM.
+13. **Líneas de Transmisión RF & Carta de Smith (CAF):** Coaxial de 50 $\Omega$, cálculo de ROE/VSWR y pérdidas de retorno.
+14. **Transistores BJT & MOSFET:** Polarización en continua y amplificación en pequeña señal.
+15. **Sistemas de Control Feedback (SC):** Regulador PID continuo con análisis de estabilidad y tiempo de respuesta.
+16. **Taller Libre CAD & Simulador MNA:** Resolución matricial nodal con cálculo de equivalentes de Thévenin/Norton y balance de Tellegen.
+17. **Amplificador de Aislamiento ISO124:** Barrera dieléctrica capacitiva diferencial de 1500 Vrms, modo común de alta tensión y rechazo IMRR.
+18. **Demodulador Coherente Lock-In PSD:** Detección síncrona de señales ultradébiles bajo ruido extremo (SNR < -20 dB).
+19. **Transmisor Industrial 4-20 mA:** Bucle de corriente a 2 hilos para Pt100 y diagnóstico de fallos por estándar NAMUR NE43.
+20. **Roseta de Galgas a 45° & Círculo de Mohr Dinámico:** Deformaciones principales biaxiales ($\epsilon_1, \epsilon_2$), corte máximo $\gamma_{\max}$ y trazado gráfico del Círculo de Mohr en tiempo real.
+
+#### 🧰 Instrumentación Virtual de Laboratorio:
+- **Multímetro Digital Truevolt (6½ Dígitos):** Rangos automáticos y cálculo de incertidumbre Tipo B en tiempo real.
+- **Generador de Funciones Arbitrarias (AFG):** Salida de 1 Hz a 10 MHz con 5 formas de onda y modulación.
+- **Fuente de Alimentación Triple Regulable:** Canales independientes $\pm 0\dots 30\text{ V}$ con protección CC/CV y riel digital de 3.3V / 5V.
+- **Osciloscopio Digital de 4 Canales:** Modos TIME, MATH diferencial, X-Y (figuras de Lissajous) y espectro FFT.
+- **Analizador Lógico Digital de 8 Canales:** Decodificador de protocolos serie (I2C, SPI, UART) con tren de datos digital en tiempo real.
+- **Inyector de Ruido Térmico Johnson-Nyquist:** Generador de ruido blanco gaussiano calibrado por temperatura ($v_n = \sqrt{4kTR\Delta f}$) con control interactivo de SNR.
+- **Generador de Firmware Embebido C/C++:** Generación de código C99 optimizado con DMA para STM32 HAL y ESP32.
 
 ---
 
-### 🎛️ 4. Diseñador de Filtros Activos, Sensores & Acondicionadores de Señal
-- **5ª Pestaña Nativa en la Suite:** Herramienta interactiva para el cálculo, análisis circuital y exportación de etapas analógicas clásicas de la UPC:
-  - **Filtros Activos Sallen-Key (2º Orden Pasobajo / Pasoalto):** Síntesis de componentes para aproximaciones polinomiales Butterworth ($Q = 0.7071$), Chebyshev 0.5dB ($Q = 0.8637$), Chebyshev 3dB ($Q = 1.3049$) y Bessel ($Q = 0.577$).
-  - **Diagrama de Bode en Tiempo Real:** Curva de ganancia en dB renderizada nativamente con gráficos vectoriales acelerados en Tkinter `Canvas`, con retícula logarítmica y marcación visual de $f_c$ y el punto de $-3\text{ dB}$.
-  - **Sensores de Temperatura (Pt100, NTC Taylor, Termopar CJC):**
-    * *Termorresistencia Pt100 (IEC 60751):* Ecuación de Callendar-Van Dusen, inversión analítica exacta $R \to T$ y cálculo del error por resistencia de cable ($+2R_L / \alpha$) en 2, 3 y 4 hilos Kelvin.
-    * *Termistor NTC:* Resistencia óptima de linealización de Taylor ($R_{lin} = R_0 \frac{\beta - 2T_0}{\beta + 2T_0}$) en divisor o puente.
-    * *Termopares K/J:* Cálculo de fuerza electromotriz Seebeck y compensación electrónica de unión fría (CJC).
-    * *Curva de Calibración en Vivo:* Trazado continuo en Canvas y generación de netlist SPICE a 4 hilos.
-  - **Generador de Netlists SPICE / LTspice:** Código de circuito `.cir` completo con subcircuitos de amplificador operacional y directivas de simulación en corriente alterna (`.ac dec 100 ...`), copiable en 1 clic para validar en LTspice, Multisim o KiCad.
-  - **Puente de Wheatstone & INA (AD620 / AD623):** Cálculo de tensión diferencial, ajuste de resistencia de ganancia $R_g$, error inducido por tensión de modo común según CMRR en dB y disipación térmica en las galgas para evitar autocalentamiento.
----
-
-### 🔌 4b. Banco de Componentes R-L-C, Presets Canónicos & Asignaturas GREELEC
-- **Modelado de Circuitos Fundamentales y Topologías GREELEC (UPC ETSETB):**
-  * *Divisores resistivos de nivel (5V a 3.3V ADC / Level Shifter).*
-  * *Redes serie y paralelo de resistencias (series normalizadas E12 / E24).*
-  * *Redes de condensadores & desacoplo de rieles de alimentación (100nF cerámico + 10µF reserva).*
-  * *Circuitos resonantes LC sintonizados.*
-  * *Temporizador NE555 astable (oscilador de reloj con ciclo de trabajo ajustable).*
-  * *Driver NPN (2N2222) con diodo volante Schottky/Flyback (1N4007) para cargas inductivas.*
-  * *Limitador de corriente para diodos LED (cálculo de disipación y resistencia de polarización).*
-  * *Decodificador de código de colores de resistencias (4 y 5 bandas).*
-  * *Convertidor DC-DC Buck Reductor (PWM, CCM/DCM, cálculo de Lcrit y rizado de corriente).*
-  * *Convertidor DC-DC Boost Elevador (Step-Up con conmutación MOSFET y diodo de potencia).*
-  * *Línea de Transmisión RF Coaxial 50 Ω (ROE / VSWR, pérdidas de retorno y potencia reflejada).*
-  * *Amplificador BJT Emisor Común (polarización por divisor, recta de carga DC y ganancia $A_v$).*
-  * *Lazo de Control Feedback PID continuo (análisis de estabilidad, sobreoscilación $M_p$ y tiempo de establecimiento $t_s$).*
-- **Esquemáticos Vectoriales Dinámicos en Tkinter:** Dibujo paramétrico del esquema eléctrico en tiempo real en el lienzo de la aplicación de escritorio para todas las topologías.
-- **Generador Automático de Netlists SPICE (.cir):** Sintetiza archivos de simulación listos para ejecutar en LTspice, NGSpice, Micro-Cap y Multisim con un solo clic (incluyendo modelos de componentes, análisis transitorio `.tran`, puntos de operación `.op` y barridos en frecuencia `.ac`).
-
-### 🔍 5. Buscador Ultrarrápido estilo macOS Spotlight
-- Pulsa el botón **Spotlight** o el atajo de búsqueda para indexar en milisegundos todos los archivos Markdown de tu curso.
-- Búsqueda por palabras clave, fórmulas, conceptos o nombres de preguntas, con previsualización del fragmento y salto directo al visor.
+### 📐 4. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo (Supl. 1)
+- **Derivadas Numéricas Centrales:** Obtención automática de coeficientes de sensibilidad $c_i = \partial f / \partial x_i$ con perturbación simétrica óptima.
+- **Distribuciones de Probabilidad:** Normal ($k=1, 2, 3$), Rectangular ($a/\sqrt{3}$) y Triangular ($a/\sqrt{6}$).
+- **Presupuesto de Incertidumbres (Pareto):** Desglose porcentual de varianzas, cálculo de incertidumbre combinada $u_c(y)$ y expandida al 95% ($U_{95\%} = 2 \cdot u_c$).
+- **Motor Monte Carlo:** 10.000 iteraciones en menos de 100 ms con histograma de densidad empírico, media $\bar{y}_{MC}$, desviación típica $s(y)_{MC}$ e intervalo de cobertura.
+- **6 Plantillas Reales de Examen UPC:** Sensor AD590, Puente de Wheatstone, Termopar K con unión fría, sensor capacitivo, divisor resistivo y disipación en Ley de Ohm.
 
 ---
 
-### 🃏 6. Generador de Flashcards y Paquetes Anki (.apkg)
-- Extrae automáticamente los bancos de preguntas interactivas presentes en los scripts HTML (`BANC`, `DATA.items`, `ITEMS`).
-- Genera el mazo oficial empaquetado **`_Flashcards_Examen.apkg`** listo para importar en [Anki](https://apps.ankiweb.net/) con tarjetas de dos caras estilizadas (anverso con enunciado y tema, reverso con respuesta oficial, color condicional y justificación técnica).
-- Exporta en paralelo el fichero `_Flashcards_Examen.tsv` compatible con Quizlet y herramientas de repaso.
+### 🎛️ 5. Diseñador de Filtros Activos, Sensores & Acondicionadores
+- **Filtros Sallen-Key de 2º Orden:** Síntesis automática para aproximaciones Butterworth ($Q = 0.7071$), Chebyshev (0.5 dB y 3 dB) y Bessel ($Q = 0.577$).
+- **Diagrama de Bode Vectorial:** Trazado de ganancia y fase con retícula logarítmica y marcación visual de $f_c$ a $-3\text{ dB}$.
+- **Sensores de Temperatura:**
+  - Pt100 (IEC 60751): Ecuación de Callendar-Van Dusen y compensación de cable.
+  - Termistor NTC: Linealización óptima de Taylor ($R_{lin} = R_0 \frac{\beta - 2T_0}{\beta + 2T_0}$).
+  - Termopares K/J: Curvas termoeléctricas Seebeck y compensación electrónica CJC.
+- **Exportación SPICE en 1 Clic:** Sintetiza netlists `.cir` con modelos de amplificadores operacionales para LTspice y KiCad.
 
 ---
 
-### 🎯 7. Simulador Oficial de Examen UPC & Generador de Cuadernillos Impresos (PDF)
-- **Simulador de examen en pantalla:** Baremo oficial UPC ($\text{Nota} = [(\text{Aciertos} \times 1.00 - \text{Fallos} \times 0.33)/\text{Total}] \times 10.0$).
-- **📄 Generador de Cuadernillos de Examen Impresos:** Botón para crear al instante un examen en formato A4 formal imprimible con encabezado de la Universitat Politècnica de Catalunya (EEBE), cajetín de identificación del estudiante, casillas de respuesta `[ ] V   [ ] F` y **plantilla de corrección razonada** con fundamento matemático para el profesor o autoevaluación.
+### 🔌 6. Banco R-L-C & Presets Canónicos GREELEC
+- Simulación y trazado de esquemáticos vectoriales dinámicos para topologías electrónicas fundamentales:
+  - Divisores resistivos de nivel (Level Shifters 5V a 3.3V).
+  - Redes de resistencias normalizadas (E12 / E24 / E96).
+  - Redes de desacoplo de rieles de alimentación (100 nF + 10 µF).
+  - Circuitos resonantes LC sintonizados.
+  - Temporizador astable NE555.
+  - Etapas de conmutación de potencia con transistor NPN y diodo volante Schottky.
+  - Limitador de corriente para diodos LED con cálculo de potencia.
+  - Convertidores DC-DC conmutados (Buck y Boost).
+  - Líneas de transmisión RF coaxiales de 50 $\Omega$.
 
 ---
 
-### 📝 6. Banco Maestro de Problemas de Examen Resueltos (10 Problemas UPC Paso a Paso)
-- **Desarrollos analíticos exhaustivos en $\LaTeX$:** Resolución completa de 10 problemas numéricos de nivel de examen que cubren la totalidad del temario de la UPC (puente de Wheatstone, linealización de termistores NTC, acondicionamiento de Pt100 a 3 hilos, amplificador de instrumentación INA con CMRR real, filtro activo Sallen-Key, acondicionador para sensor piezoeléctrico de aceleración, balanceo de puentes AC para sensores capacitivos, y cuantización/muestreo ADC con aliasing).
-- **Generador Paramétrico de Problemas (`problem_generator.py`):** Motor de generación de problemas aleatorizados con comprobación matemática de tolerancia numérica para autoevaluación continua del estudiante.
-
----
-
-### 🎓 6b. Colección Oficial de Exámenes Finales Reales UPC (`_Examenes_Finales_Oficiales_UPC.md`)
-- **3 Convocatorias Oficiales Íntegras con Soluciones Oficiales en $\LaTeX$:**
-  1. **Convocatoria 8 de enero de 2021 (Prof. Miguel Ángel García González):**
-     - *Problema 1:* Tiempo de subida con osciloscopio ($R_{osc} = 1\text{ M}\Omega \parallel 13\text{ pF}$, cable coaxial $1.5\text{ m}$) y diseño de compensación de sonda pasiva $10\times$ ($C_p = 15.33\text{ pF}$) para elevar el ancho de banda a $230.7\text{ MHz}$ y reducir $t_{r,\min}$ de $30.04\text{ ns}$ a $3.3\text{ ns}$.
-     - *Problema 2:* Termopar tipo K con compensación electrónica de unión fría (Pt100 con $I = 100\,\mu\text{A}$) y amplificador AD623 con balanceo de ganancia para sensibilidad de $10\text{ mV/}^\circ\text{C}$ e insensibilidad total a $T_a$.
-     - *Problema 3:* Oscilador de relajación para sensor capacitivo $C(x) = \frac{330\text{ pF}}{1+x}$ con operacional rail-to-rail, e incertidumbre GUM con multímetro Keysight 34465A.
-  2. **Convocatoria 16 de enero de 2024 (Profs. M. Á. García González y J. Ramos Castro):**
-     - *Problema 1:* Tratamiento estadístico con 25 lecturas de multímetro: Criterio de Chauvenet ($D_{\max} = 3$) para descarte de outliers, función de autocorrelación ($r_1$) para independencia al $99.9\%$, e incertidumbres Tipo A ($97.6\,\mu\text{V}$), Tipo B ($94.6\,\mu\text{V}$) y combinada ($136\,\mu\text{V}$).
-     - *Problema 2:* Acondicionador lineal capacitivo con OPA134 ($30\text{ kHz}$), verificación de Slew-Rate, inmunidad por CMRR y análisis riguroso de interferencias por PSRR ($41\text{ mV}$) y acoplo capacitivo parásito de red de $230\text{ V}$ a $50\text{ Hz}$ ($0.84\text{ V}$).
-     - *Problema 3:* Termopar tipo K con NTC linealizada por Taylor ($R_{lin} = 10.06\text{ k}\Omega$), inyección de compensación en pin REF del AD620, e integración de ruido blanco + flicker $1/f$ ($0.01\text{ Hz} - 10\text{ Hz}$) resultando en $u(T_h) = 0.0014^\circ\text{C}$.
-  3. **Convocatoria 14 de enero de 2025 (Profs. M. Á. García González y J. Ramos Castro):**
-     - *Ejercicios Cortos (30%):* Impedancia y capacidad de aislamiento de multímetro a partir de CMRR ($1\text{ G}\Omega, 100.7\text{ pF}$), saturación por offset en TIA con red T ($V_{os} < 980.2\,\mu\text{V}$), CMRR mínimo para célula de carga ($89.9\text{ dB}$), y transmisión por lazo de corriente 4-20 mA.
-     - *Problema 1 (35%):* Sensor AD590 ($1\,\mu\text{A/K}$) con presupuesto de incertidumbres GUM completo: matriz de 5 coeficientes de sensibilidad analíticos $\partial V_o / \partial x_i$ e incertidumbre expandida $U(T)_{95\%} = 0.46^\circ\text{C}$.
-     - *Problema 2 (35%):* Termómetro termopar tipo J con Pt100 ($10\text{ mA}$), ajuste de ganancias y cálculo de ruido $1/f$ + banda ancha.
-
----
-
-#### 🔬 8. Laboratorio Virtual Interactivo de Sensores & Grado GREELEC (`Laboratorio_Virtual_Sensores.html`) — v8.0 Enterprise Workbench Edition
-- **Simulador Industrial Web de Categoría Multisim / Keysight BenchVue / SPICE / KiCad:** 100% autónomo, ejecutable en local sin internet ni CDNs, optimizado para los planes de estudio de la UPC (ETSETB / EEBE) y las asignaturas del Grado en Ingeniería Electrónica de Telecomunicación (GREELEC).
-- **🔀 3 Modos de Visualización en Tiempo Real (60 FPS):**
-  - **🌐 Vista 3D WebGL:** Renderizado volumétrico acelerado por GPU con control orbital 360°, iluminación Phong, materiales realistas y reconstrucción geométrica según la topología.
-  - **📐 Esquemático 2D CAD:** Trazado circuital vectorial de alta precisión según normas internacionales **IEC 60617 / IEEE Std 315**, con nodos activos, caídas de tensión y flechas de corriente en tiempo real.
-  - **🔀 Vista Dividida (3D + Esquemático):** Visualización dual simultánea (50% WebGL / 50% CAD) interactiva y sincronizada a 60 FPS, permitiendo manipular controles físicos y ver el esquema eléctrico responder al unísono.
-
-- **🎛️ Rack Cuádruple de Instrumentación de Laboratorio (Keysight + Rigol AFG + Rigol DP832 + Tektronix):**
-  - **1. Multímetro Digital Keysight 34465A Truevolt (6½ Dígitos):** Pantalla VFD de alta resolución, barra analógica bar-graph con rangos automáticos, conmutación DC/AC RMS y cálculo de incertidumbre metrológica $u_B$ en tiempo real según la guía GUM.
-  - **2. Generador de Funciones Arbitrarias Rigol DG1022Z (AFG):**
-    * Réplica del panel de instrumentos con pantalla LCD y controles de ajuste rápido para Frecuencia (1 Hz a 10 MHz), Amplitud (0.1 a 20.0 Vpp), Offset (-10 a +10 V), Ciclo de Trabajo (Duty Cycle) y Barrido de Frecuencia (Sweep).
-    * 5 Formas de onda sintetizadas: Senoidal, Cuadrada, Triangular/Rampa, Pulso y DC pura.
-    * Botón conmutable de salida con LED de activación (`Output ON/OFF`).
-  - **3. Fuente de Alimentación Triple Regulable Rigol DP832:**
-    * Canal 1: $+0\dots 30\text{ V}$ regulable con protección por limitación de corriente CC/CV ($3.0\text{ A}$).
-    * Canal 2: $-0\dots 30\text{ V}$ regulable simétrica con protección CC/CV.
-    * Canal 3: Riel conmutable de lógica digital ($+5.0\text{ V} / +3.3\text{ V}$).
-    * Telemetría de potencia total disipada en vatios y botón maestro de apagado/encendido (`ALL ON / ALL OFF`).
-  - **4. Osciloscopio Digital Tektronix TDS2024C (4 Modos Phosphor 60 FPS):**
-    * **Modo TIME:** Doble traza con Canal 1 (CH1 `#facc15` - Señal inyectada por AFG) y Canal 2 (CH2 `#38bdf8` - Respuesta de salida).
-    * **Modo MATH (CH1 - CH2):** Operación diferencial en tiempo real trazada en magenta `#e879f9` a escala calibrada para instrumentación analógica y rechazo en modo común.
-    * **Modo X-Y (Figuras de Lissajous):** Composición orbital para cálculo experimental del ángulo de desfase $\Delta\phi = \arcsin(Y_0 / Y_m)$.
-    * **Modo FFT (Espectro de Fourier):** Descomposición armónica con cálculo de distorsión y ruido.
-    * **Cursores $\Delta t / \Delta V$ y Exportación CSV:** Medición precisa y descarga de trazas para MATLAB o Python.
-
-- **📈 Analizador Automático de Respuesta en Frecuencia (Bode Plotter):**
-  - Barrido logarítmico continuo desde $10\text{ Hz}$ hasta $10\text{ MHz}$ (6 décadas).
-  - Trazado simultáneo de Magnitud ($+20\text{ dB}$ a $-60\text{ dB}$) y Fase ($+45^\circ$ a $-180^\circ$).
-  - Detección automática de la ganancia DC $A_0$, frecuencia de corte a $-3\text{ dB}$ ($f_c$), Margen de Fase ($\text{PM}$) y Producto Ganancia-Ancho de Banda ($\text{GBW}$).
-  - Exportación de la respuesta frecuencial a archivo CSV.
-
-- **🖱️ Cableado y Sondas Interactivas Click & Drag en el Lienzo CAD:**
-  - Tendido de cables y componentes simplemente haciendo clic y arrastrando el ratón entre nodos del circuito.
-  - Línea elástica animada con detección de proximidad magnética y validación de cortocircuitos.
-  - Recolocación de las puntas de prueba de Thévenin (Sonda A roja y Sonda B azul) mediante clic directo con tecla Shift.
-
-- **⚠️ Inyección de Fallos Circuitales & Modo Reto Diagnóstico:**
-  - Inyección instantánea de averías típicas de laboratorio: Circuito abierto ($R \to \infty$ por soldadura fría), Cortocircuito ($R \to 0$ por perforación dieléctrica) y Deriva térmica (+500%).
-  - Modo Examen a Ciegas: El simulador introduce una avería oculta aleatoria para que el alumno diagnostique el componente y tipo de fallo usando el DMM y Osciloscopio.
-
-- **🎲 Simulación Monte Carlo & Tolerancias de Componentes Pasivos:**
-  - Inyección de dispersión gaussiana real ($3\sigma$) según las series normalizadas E12 ($\pm 10\%$), E24 ($\pm 5\%$) y E96 ($\pm 1\%$).
-  - Ejecución en lote de 50 muestras Monte Carlo con cálculo de media empírica $\bar{V}_{th}$, rango extremo y desviación típica.
-
-- **📐 Exportación a Suites EDA Profesionales (KiCad 8 & LTspice):**
-  - **KiCad 8 (`.kicad_sch`):** Generación de esquemático vectorial nativo con formato s-expression de KiCad 8 listo para abrir en Eeschema y rutar placas PCB.
-  - **LTspice (`.asc`):** Archivo de captura esquemática nativa de Linear Technology / Analog Devices con directivas `.tran` y símbolos de componentes.
-  - **SPICE Netlist (`.cir`):** Código de red MNA con modelos y comandos de análisis listos para Ngspice o Multisim.
-
-- **📑 Guías Interactivas de Prácticas de Laboratorio (Worksheets):**
-  - Procedimientos paso a paso alineados con las guías docentes oficiales de la UPC, objetivos de medida, resultados esperados y botón para copiar en formato Markdown.
-
-- **🎨 Decodificador Interactivo de Código de Colores de Resistencias:**
-  - Visualizador vectorial SVG interactivo de resistencias axiales con selector de bandas (4 y 5 anillos).
-  - Cálculo instantáneo de valor nominal, tolerancia y rango admisible $[R_{\min}, R_{\max}]$, con botón para inyectar el valor directamente en el banco de simulación.
-
-- **16 Módulos de Simulación Física y Circuital (Temario Sistemes de Mesura + Plan de Estudios GREELEC UPC):**
-  1. *Puente de Wheatstone & Galgas (1/4, 1/2 y completo con viga 3D deformable y mapa de von Mises)*
-  2. *Pt100 y compensación a 4 hilos Kelvin con sonda DIN B 3D sumergida en baño termostático*
-  3. *INA3 & CMRR real con amplificadores AD623/AD620 y balanceo de modo común*
-  4. *Filtro activo Sallen-Key pasobajo de 2º orden con respuesta Butterworth/Chebyshev*
-  5. *Muestreo Nyquist & ADC con analizador FFT y DAC R-2R*
-  6. *Termopares K/J & compensación de unión fría (CJC) con bloque isotérmico*
-  7. *Termistor NTC & linealización analítica de Taylor*
-  8. *Ruido térmico Johnson-Nyquist & relación SNR con jaula de Faraday*
-  9. *Sensor piezoeléctrico & amplificador de carga vs tensión*
-  10. *Sensor capacitivo diferencial & detección síncrona lock-in (PSD)*
-  11. *🔌 Banco R-L-C & Presets Canónicos de Laboratorio (Divisores ADC, desacoplo digital 100nF+10µF, 555 astable con LED pulsante, driver relé con diodo flyback 1N4007, limitador LED, resonador LC)*
-  12. *⚡ Fuentes Conmutadas DC-DC: Buck (Reductor) & Boost (Elevador) — GREELEC PEE (Procesado de Energía Eléctrica)*
-  13. *📡 Líneas de Transmisión RF & Carta de Smith Vectorial — GREELEC CAF (Circuitos de Alta Frecuencia / Ondas)*
-  14. *🎛️ Transistores BJT & MOSFET: Polarización y Pequeña Señal — GREELEC DE/CA (Dispositivos & Circuitos Analógicos)*
-  15. *🎯 Sistemas de Control Feedback & Regulador PID Continuo — GREELEC SC (Sistemas de Control)*
-  16. *🛠️ Taller Libre CAD & Editor de Circuitos Manual con Motor Matricial MNA, Equivalente de Thévenin/Norton y Editor SPICE en vivo*
-
-- **🎯 16 Retos de Examen Oficiales UPC:** Problemas numéricos reales integrados en cada módulo con comprobación automática de tolerancia y desglose algebraico de la solución.
-- **📄 Exportador de Informes Experimentales:** Generador de informe estructurado en Markdown con todas las mediciones, métricas y ecuaciones, descargable o copiable al portapapeles en 1 clic.
-
----
-
-### 📚 8. Documentos Maestros Generados
-Al procesar el curso completo, la herramienta sintetiza automáticamente:
-1. **`_Examenes_Finales_Oficiales_UPC.md`:** 3 exámenes finales oficiales completos (2021, 2024, 2025) resueltos con 100% rigor analítico en LaTeX.
-2. **`_Problemas_Examen_Resueltos.md`:** 10 problemas numéricos de nivel de examen completamente resueltos y explicados.
-3. **`Laboratorio_Virtual_Sensores.html`:** Simulador industrial de física e instrumentación 3D (v7.5 Enterprise 3D Edition).
-4. **`_Cuaderno_Maestro_Tema_XX.md`:** 10 cuadernos maestros temáticos de alta densidad.
-5. **`_Formulario_Oficial_Examen.md`:** Formulario consolidado con todas las ecuaciones matemáticas del curso.
-6. **`_Glosario_Conceptos_Clave.md`:** Vocabulario técnico y definiciones operativas.
-7. **`_Gran_Indice_Sistemes_de_Mesura.md`:** Índice general jerárquico con enlaces directos.
-8. **`_Flashcards_Examen.apkg` y `.tsv`:** Mazo de 550 tarjetas didácticas para Anki (autoevaluación + preguntas de finales oficiales).
-9. **`_Instrucciones_Sistema_NotebookLM.md`:** Instrucciones de sistema recomendadas para tutor interactivo en NotebookLM.
+### 🗂️ 7. Repaso Activo Anki & Gestor de Exámenes
+- **Pestaña Flashcards Nativa:** Explorador de más de 500 afirmaciones y preguntas técnicas oficiales del curso clasificadas por unidad temática.
+- **Buscador en Vivo:** Filtrado instantáneo por texto, tema o términos técnicos.
+- **Exportación Dual:**
+  - Archivo TSV estándar (`_Flashcards_Examen.tsv`) compatible con AnkiWeb y Quizlet.
+  - Paquete binario nativo Anki (`_Flashcards_Examen.apkg`) con soporte para MathJax y tema oscuro integrado.
 
 ---
 
 ## 🚀 Instalación y Requisitos
 
 ### Requisitos Previos
-- **Python 3.10** o superior instalado en el sistema.
+- **Python 3.10** o superior en Windows, macOS o Linux.
 
 ### 1. Clonar el Repositorio
 ```bash
@@ -231,70 +174,100 @@ cd Conversor-HTML-A-MD
 pip install -r requirements.txt
 ```
 
-Las dependencias principales son:
-- `beautifulsoup4`: Análisis y manipulación del árbol DOM HTML.
-- `lxml`: Parser XML/HTML de alto rendimiento.
-- `mathml2latex`: Conversión de ecuaciones MathML a formato LaTeX.
-- `pyinstaller`: (Opcional) Compilación del script en binario independiente para Windows.
+Dependencias principales:
+- `beautifulsoup4`: Análisis y reestructuración del árbol HTML.
+- `lxml`: Parser XML de alto rendimiento.
+- `pymupdf` (fitz): Extracción de texto, geometría y tablas en documentos PDF.
+- `pandas` / `openpyxl`: Procesamiento de tablas tabuladas y hojas de cálculo.
+- `genanki`: Generación de paquetes binarios de tarjetas didácticas para Anki.
+- `pyinstaller`: Empaquetado en binario ejecutable portable para Windows.
 
 ---
 
-## 🖥️ Uso de la Aplicación
+## 🖥️ Uso de la Aplicación (GUI y Terminal CLI)
 
 ### Iniciar la Interfaz Gráfica
 ```bash
 python conversor_html_notebooklm.py
 ```
 
-### Modos de Operación:
-1. **Archivo Único (`Single File`):** Convierte un archivo `.html` específico a `.md`.
-2. **Carpeta de Archivos (`Batch Folder`):** Procesa recursivamente todos los `.html` de un directorio.
-3. **Curso Completo (`All Course`):** Procesa los 10 temas, genera los cuadernos maestros, extrae las 500 preguntas para Anki, compila el formulario de ecuaciones y genera el índice general.
+### Uso desde la Línea de Comandos (CLI)
+La aplicación incluye soporte completo por terminal:
+
+```bash
+# Ayuda y lista de opciones
+python conversor_html_notebooklm.py --help
+
+# 1. Conversión de archivo individual HTML a Markdown
+python conversor_html_notebooklm.py origen.html destino.md
+
+# 2. Conversión universal de documentos (PDF, DOCX, Notebooks)
+python conversor_html_notebooklm.py --pdf documento.pdf salida.md
+python conversor_html_notebooklm.py --docx documento.docx salida.md
+python conversor_html_notebooklm.py --ipynb practica.ipynb salida.md
+
+# 3. Conversión por lotes de una carpeta completa
+python conversor_html_notebooklm.py carpeta_origen/ carpeta_destino/ --preset notebooklm
+
+# 4. Procesamiento secuencial del curso completo (10 Temas + Documentos Maestros)
+python conversor_html_notebooklm.py --all-temas carpeta_curso/ dist_course_md/
+
+# 5. Generación de mazos Anki directamente por consola
+python conversor_html_notebooklm.py --anki dist_course_md/
+```
 
 ### Compilar a Ejecutable de Windows (.exe)
-Si deseas crear el binario ejecutable portable para Windows:
 ```bash
 pyinstaller --noconfirm conversor_html_notebooklm.spec
 ```
-El ejecutable se generará en la carpeta `dist/conversor_html_notebooklm/`.
+El ejecutable compilado estará disponible en `dist/conversor_html_notebooklm/conversor_html_notebooklm.exe`.
+
+### Ejecutar la Suite de Pruebas Automatizadas
+```bash
+pytest -v tests/test_universal_and_lab.py
+```
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del Repositorio
 
 ```text
 Conversor-HTML-A-MD/
-├── conversor_html_notebooklm.py     # Aplicación principal (GUI Apple Dark + Motor de conversión)
-├── conversor_html_notebooklm.spec   # Configuración de empaquetado PyInstaller
-├── requirements.txt                 # Dependencias del entorno Python
-├── LICENSE                          # Licencia de código abierto MIT
-├── README.md                        # Documentación completa del proyecto
-└── dist_course_md/                  # Material convertido del curso Sistemes de Mesura
-    ├── Para_Subir_a_NotebookLM/     # Archivos consolidados listos para subir a NotebookLM
-    ├── Tema_01/ a Tema_10/          # Carpetas de cada tema con sus MD individuales y assets
-    ├── _Problemas_Examen_Resueltos.md # 10 problemas numéricos completos con desarrollo en LaTeX
-    ├── Laboratorio_Virtual_Sensores.html # Simulador web interactivo en tiempo real (Apple Dark)
-    ├── _Cuaderno_Maestro_Tema_*.md  # 10 cuadernos maestros temáticos
-    ├── _Formulario_Oficial_Examen.md# Formulario oficial de fórmulas del curso
-    ├── _Glosario_Conceptos_Clave.md # Glosario de términos técnicos
-    ├── _Gran_Indice_*.md            # Índice navegable de todo el temario
-    ├── _Flashcards_Examen.apkg      # Mazo empaquetado para Anki (500 preguntas oficiales)
-    ├── _Flashcards_Examen.tsv       # Mazo en texto tabulado
-    └── _Instrucciones_Sistema_NotebookLM.md # Guía de prompts para NotebookLM
+├── conversor_html_notebooklm.py        # Aplicación GUI (8 pestañas) y CLI principal
+├── universal_converters.py             # Motor de conversores universales (PDF, DOCX, IPYNB, etc.)
+├── Laboratorio_Virtual_Sensores.html   # Simulador web 3D (20 módulos + instrumentos virtuales)
+├── conversor_html_notebooklm.spec      # Configuración de compilación PyInstaller
+├── requirements.txt                    # Dependencias Python del proyecto
+├── tests/
+│   └── test_universal_and_lab.py       # Pruebas automatizadas con Pytest (100% passing)
+├── dist_course_md/                     # Contenidos educativos del curso Sistemes de Mesura
+│   ├── Para_Subir_a_NotebookLM/        # Documentos maestros consolidados para NotebookLM
+│   ├── Tema 1/ a Tema 10/              # Carpetas individuales de cada unidad temática
+│   ├── _Examenes_Finales_Oficiales_UPC.md # Exámenes oficiales (2021, 2024, 2025) resueltos
+│   ├── _Problemas_Examen_Resueltos.md    # 10 problemas numéricos de examen paso a paso
+│   ├── _Formulario_Oficial_Examen.md     # Formulario consolidado de fórmulas matemáticas
+│   ├── _Glosario_Conceptos_Clave.md      # Glosario técnico A-Z
+│   ├── _Gran_Indice_Sistemes_de_Mesura.md# Índice general del curso y guía del laboratorio
+│   └── Laboratorio_Virtual_Sensores.html # Copia sincronizada del laboratorio virtual
+└── README.md                           # Documentación técnica completa
 ```
 
 ---
 
 ## 🤖 Integración con Google NotebookLM
 
-1. Accede a [Google NotebookLM](https://notebooklm.google.com/).
-2. Crea un nuevo cuaderno (por ejemplo, *"Sistemes de Mesura - UPC EEBE"*).
-3. Sube los archivos ubicados en `dist_course_md/Para_Subir_a_NotebookLM/` o los cuadernos maestros `_Cuaderno_Maestro_Tema_XX.md`.
-4. En el panel lateral derecho (**Studio**):
-   - Genera resúmenes ejecutivos.
-   - Crea automáticamente **Tarjetas didácticas** (flashcards).
-   - Crea un **Audio Overview** (Podcast de estudio interactivo con dos presentadores AI).
-5. En el chat, pega las instrucciones de `_Instrucciones_Sistema_NotebookLM.md` para que Gemini responda con el máximo rigor académico y matemático.
+1. Abre tu navegador y accede a [Google NotebookLM](https://notebooklm.google.com/).
+2. Crea un nuevo cuaderno de estudio (ej: *"Sistemes de Mesura - UPC EEBE"*).
+3. Añade como fuentes los archivos ubicados en `dist_course_md/Para_Subir_a_NotebookLM/`:
+   - `00_Formulario_Oficial_Examen.md`
+   - `00_Glosario_Conceptos_Clave.md`
+   - `00_Gran_Indice_Sistemes_de_Mesura.md`
+   - `01_Cuaderno_Maestro_Tema_1_Sensores.md` a `10_Cuaderno_Maestro_Tema_10_Calibracion_Incertidumbres.md`
+   - `_Examenes_Finales_Oficiales_UPC.md` y `_Problemas_Examen_Resueltos.md`
+4. En el panel **Studio**:
+   - Genera **Guías de estudio** y **Tarjetas de autoevaluación**.
+   - Genera un **Audio Overview** (Podcast didáctico de repaso con dos ponentes virtuales).
+5. Utiliza los prompts de `dist_course_md/Para_Subir_a_NotebookLM/_PROMPTS_MAESTROS_NOTEBOOKLM.md` en el chat para obtener respuestas con el máximo rigor académico y matemático.
 
 ---
 
@@ -304,4 +277,4 @@ Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICE
 
 ---
 
-Desarrollado con ❤️ para estudiantes y docentes universitarios.
+Desarrollado para estudiantes, investigadores y docentes universitarios de ingeniería electrónica y telecomunicaciones.

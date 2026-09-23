@@ -62,17 +62,27 @@ Cada tema dispone de un **Cuaderno Maestro Unificado** (`_Cuaderno_Maestro_*.md`
 
 ---
 
-## 🔬 4. Laboratorio Virtual de Sensores & Electrónica 3D (v7.5 Enterprise)
+## 🔬 4. Laboratorio Virtual de Sensores & Electrónica 3D (v8.0 Enterprise Workbench Edition)
 
 Acceso directo al simulador web autónomo: [`Laboratorio_Virtual_Sensores.html`](Laboratorio_Virtual_Sensores.html)
 
-### 🎛️ Instrumentación Triple de Grado Industrial
+### 🔀 3 Modos de Visualización en Tiempo Real (60 FPS)
+- **🌐 Vista 3D WebGL:** Renderizado volumétrico acelerado por GPU con control orbital 360°, iluminación Phong, materiales realistas y reconstrucción geométrica según la topología.
+- **📐 Esquemático 2D CAD:** Trazado circuital vectorial de alta precisión según normas internacionales **IEC 60617 / IEEE Std 315**, con nodos activos, caídas de tensión y flechas de corriente en tiempo real.
+- **🔀 Vista Dividida (3D + Esquemático):** Visualización dual simultánea (50% WebGL / 50% CAD) interactiva y sincronizada a 60 FPS.
+
+### 🎛️ Instrumentación Cuádruple de Grado Industrial & Analizadores
 1. **Multímetro Digital Keysight 34465A Truevolt (6½ Dígitos):** Pantalla VFD, barra analógica en tiempo real, medición True-RMS y cálculo de incertidumbre metrológica $u_B$ según la GUM.
 2. **Generador de Funciones Arbitrarias Rigol DG1022Z (AFG):** Salida de 1 Hz a 10 MHz, 0.1 a 20 Vpp, offset, duty cycle, barrido sweep y 5 formas de onda (seno, cuadrada, triangular, pulso, DC).
-3. **Osciloscopio Digital Tektronix TDS2024C de Doble Traza (Phosphor 60 FPS):**
-   - **Canal 1 (CH1 - Amarillo):** Monitoriza la señal inyectada por el Generador AFG en tiempo real.
-   - **Canal 2 (CH2 - Cian):** Monitoriza la respuesta de salida del circuito activo bajo prueba.
-   - **OSD y Cursores:** Tasa de muestreo `2.0 GS/s Trig'd`, cálculo de $\Delta t$, $\Delta V$ y frecuencia $f$, modo FFT de Fourier y modo XY (curvas de Lissajous).
+3. **Fuente de Alimentación Triple Rigol DP832:** Dos salidas regulables $\pm 0\dots 30\text{ V}$ con protección CC/CV ($3\text{ A}$), riel digital conmutable $+5\text{V} / +3.3\text{V}$ y monitor de potencia total disipada.
+4. **Osciloscopio Digital Tektronix TDS2024C (4 Modos Phosphor 60 FPS):**
+   - **Modo TIME:** Doble traza con CH1 (Amarillo - AFG) y CH2 (Cian - Salida).
+   - **Modo MATH (CH1 - CH2):** Operación diferencial analógica en traza magenta `#e879f9`.
+   - **Modo X-Y (Lissajous):** Medición de ángulo de desfase experimental $\Delta\phi = \arcsin(Y_0/Y_m)$.
+   - **Modo FFT:** Espectro de frecuencias de Fourier y cálculo de armónicos.
+5. **Analizador Automático de Frecuencia (Bode Plotter):** Barrido de 6 décadas ($10\text{ Hz} - 10\text{ MHz}$) con cálculo en vivo de $f_c$ ($-3\text{ dB}$), ganancia $A_0$, margen de fase y exportación CSV.
+6. **Simulación de Tolerancias Monte Carlo & Inyección de Fallos:** Dispersión gaussiana (E12, E24, E96), retos de diagnóstico a ciegas y cableado interactivo arrastrando el ratón en el lienzo CAD.
+7. **Exportación EDA Profesional:** Descarga directa de esquemáticos para KiCad 8 (`.kicad_sch`), LTspice (`.asc`) y SPICE (`.cir`).
 
 ### 📐 16 Módulos Físicos & Topologías de Circuitos (UPC EEBE & GREELEC)
 - **Módulo 1:** Puente de Wheatstone & Galgas Extensométricas con viga en voladizo 3D deformable y tensiones de von Mises.
@@ -90,9 +100,40 @@ Acceso directo al simulador web autónomo: [`Laboratorio_Virtual_Sensores.html`]
 - **Módulo 13:** 📡 Líneas de Transmisión RF & Carta de Smith Vectorial — *GREELEC CAF*.
 - **Módulo 14:** 🎛️ Transistores BJT & MOSFET: Polarización y Pequeña Señal — *GREELEC DE/CA*.
 - **Módulo 15:** 🎯 Sistemas de Control Feedback & Regulador PID Continuo — *GREELEC SC*.
-- **Módulo 16:** 🛠️ **Taller Libre CAD & Editor de Circuitos Manual (MNA Solver & SPICE):**
-  - Editor interactivo de netlists SPICE (`.cir`) con botones de inserción rápida (`+ R`, `+ C`, `+ L`, `+ D`, `+ OpAmp`).
-  - Motor de simulación nodal modificado (MNA) con resolución matricial en tiempo real.
-  - Esquemático CAD vectorial dinámico con normas IEC/IEEE y etiquetas de tensión nodales.
-  - Protoboard 3D viva con regeneración física de componentes y jumpers.
-  - Descarga de archivos `.cir` listos para importar en LTspice y Ngspice.
+- **Módulo 16:** 🛠️ **Taller Libre CAD & Simulador de Circuitos Manual (MNA Solver & Equivalentes de Thévenin/Norton):**
+  - **Motor MNA Nodal Modificado con Eliminación Gaussiana:** Resolución matricial rigurosa en tiempo real para redes lineales y activas de hasta 7 nodos.
+  - **Puntas de Prueba Móviles (Sondas de Test):** Selectores para la Sonda Roja A (+) y Sonda Azul B (-), calculando la diferencia de potencial $V_A - V_B$ y el circuito equivalente de Thévenin entre cualquier par de nodos de la red.
+  - **Cálculo Automático de Parámetros de Red:**
+    * *Tensión de Thévenin:* $V_{th} = V_A - V_B$ (tensión a circuito abierto).
+    * *Resistencia de Thévenin:* $R_{th} = (V_A^{\text{pas}} - V_B^{\text{pas}})/I_{\text{test}}$ mediante pasivación universal de fuentes independientes e inyección de corriente de prueba de $1.0\text{ A}$.
+    * *Corriente de Norton:* $I_N = V_{th} / R_{th}$ (corriente en cortocircuito).
+    * *Máxima Transferencia de Potencia:* $R_{L,\text{opt}} = R_{th} \implies P_{L,\max} = V_{th}^2 / (4 R_{th})$.
+    * *Ganancia y Cuadripolo:* Ganancia de tensión $A_v = V_o / V_i$ lineal y en dB, impedancia de entrada $Z_{in}$ e impedancia de salida $Z_{out}$.
+    * *Teorema de Tellegen:* Comprobación en tiempo real del balance de potencias $\sum P_{\text{generada}} = \sum P_{\text{disipada}}$ con exactitud analítica.
+  - **Editor Manual Interactivo:** Formulario para agregar resistencias ($R$), condensadores ($C$), bobinas ($L$), fuentes de tensión continua ($V_{DC}$), fuentes de alterna ($V_{AC}$) y cables de puente directo ($WIRE$, $0\,\Omega$).
+  - **Gestor de Ramas y Componentes:** Lista en vivo de todas las ramas con botón de eliminación instantánea `[✕]`.
+  - **6 Presets Canónicos UPC:** Divisor Thévenin clásico ($12\text{V}, 1\text{k}\Omega, 2.2\text{k}\Omega$), Puente de Wheatstone desequilibrado, Red Atenuadora en T ($Z_0 = 50\,\Omega$), Escalera DAC R-2R de 3 bits, Filtro RLC sintonizado de 2º Orden y Demostración de Máxima Transferencia de Potencia con $R_L = R_{th}$.
+  - **Reconstrucción Tridimensional Protoboard 3D:** Los componentes manuales y jumpers flexibles de colores se colocan dinámicamente sobre la placa de pruebas virtual junto a las sondas de test roja y azul.
+  - **Exportación e Importación SPICE:** Generación automática de código `.cir` estándar para LTspice y Ngspice con un clic.
+- **Módulo 17:** 🛡️ **Amplificador d'Aïllament Galvànic (ISO124):** Barrera dielèctrica capacitiva diferencial de 1500 Vrms, rebuig de mode comú d'aïllament IMRR > 140 dB i model 3D amb condensadors ceràmics de barrera.
+- **Módulo 18:** 🎛️ **Demodulador Coherent Síncron Lock-In (PSD):** Detecció de senyals dèbils enterrats en soroll profund (SNR < -20 dB), mesclador analògic amb portadora de referència i filtre passabaix integrador d'amplada de banda ultraneta.
+- **Módulo 19:** 🏭 **Transmissor Industrial 4-20 mA (Bucle de 2 Fils per a Pt100):** Estàndard de bucle de corrent amb zero viu, càlcul de loop compliance, resistència màxima de càrrega i diagnòstic automàtic de fallades per norma NAMUR NE43.
+- **Módulo 20:** 🌀 **Roseta de Galgues Extensiomètriques a 45° & Cercle de Mohr Dinàmic:** Anàlisi de deformació plana biaxial ($\epsilon_a, \epsilon_b, \epsilon_c$), deformacions principals $\epsilon_1, \epsilon_2$, deformació màxima de cisallament $\gamma_{\max}$, angle principal $\theta_p$ i dibuix interactiu del Cercle de Mohr en temps real.
+
+### 🔬 Nous Instruments Virtuals Integrats
+- **Analitzador Lògic Digital de 8 Canals:** Descodificador de busos I2C, SPI i UART amb tren de polsos dinàmic i inspecció de bytes transmesos.
+- **Injectador de Soroll Tèrmic Johnson-Nyquist:** Simulació interactiva de soroll blanc dependent de temperatura i resistència ($v_n = \sqrt{4kTR\Delta f}$) amb control de relació senyal/soroll (SNR) sobre l'oscil·loscopi.
+- **Generador de Firmware Encastat C/C++:** Generació de codi C99 optimitzat amb suport DMA per a STM32 HAL, ESP32 (Arduino framework) i Raspberry Pi Pico.
+
+---
+
+## 🔄 Suite de Conversores Universales de Archivos (`universal_converters.py`)
+La suite incluye un motor de conversión universal de alta fidelidad multi-formato:
+- **PDF a Markdown:** Extracción con preservación de tablas GFM y ecuaciones LaTeX (PyMuPDF).
+- **DOCX a Markdown:** Parseo XML nativo de OMML a LaTeX sin pérdida de símbolos matemáticos.
+- **Jupyter Notebook (`.ipynb`) a Markdown:** Celdas Markdown, celdas de código y extracción de imágenes base64 a `assets/`.
+- **Excel (`.xlsx`) y CSV a Markdown:** Tablas GFM estilizadas y tipadas.
+- **Markdown a HTML Imprimible / PDF Académico:** Maquetación lista para impresión A4 con MathJax 3.
+- **Extractor de Formulario Maestro:** Resumen consolidado de todas las ecuaciones matemáticas de un conjunto de archivos.
+- **Extractor de Netlists SPICE:** Generación de archivos `.cir` a partir de bloques de texto Markdown.
+- **Generador de Glosario Técnico A-Z:** Extracción e indexación alfabética de conceptos.
