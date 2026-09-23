@@ -96,6 +96,13 @@ def setup_upc_degree_tab(parent_frame: tk.Frame, root: tk.Tk) -> None:
         st.insert("1.0", engine.generate_degree_cheatsheet())
         st.config(state="disabled")
 
+    def open_engineering_tools_window():
+        et_win = tk.Toplevel(root)
+        et_win.title("🛠️ Suite de Ingeniería Especializada GREELEC (37 Solvers) - UPC ETSETB")
+        et_win.geometry("1100x750")
+        et_win.configure(bg=BG_CANVAS)
+        build_tools_workbench(et_win)
+
     def make_btn(p, txt, cmd, bg_col=BG_CARD, fg_col=TXT_PRIMARY, hover_col="#2a2a2e"):
         b = tk.Button(
             p, text=txt, command=cmd, font=(FONT_FAMILY, 9, "bold"),
@@ -106,6 +113,7 @@ def setup_upc_degree_tab(parent_frame: tk.Frame, root: tk.Tk) -> None:
         b.bind("<Leave>", lambda e: b.config(bg=bg_col))
         return b
 
+    make_btn(action_box, "🛠️ Suite 37 Solvers", open_engineering_tools_window, bg_col="#234229", hover_col="#2f5737").pack(side="left", padx=3)
     make_btn(action_box, "🔬 Laboratorio Virtual", open_virtual_lab, bg_col="#1a3b5c", hover_col="#205080").pack(side="left", padx=3)
     make_btn(action_box, "📋 Cheatsheet Fórmulas", open_cheatsheet_window).pack(side="left", padx=3)
     make_btn(action_box, "📚 Exportar 35 Guías .MD", export_all_md).pack(side="left", padx=3)
@@ -186,14 +194,225 @@ def setup_upc_degree_tab(parent_frame: tk.Frame, root: tk.Tk) -> None:
     tab_syllabus = tk.Frame(sub_nb, bg=BG_CANVAS)
     tab_formulas = tk.Frame(sub_nb, bg=BG_CANVAS)
     tab_calc = tk.Frame(sub_nb, bg=BG_CANVAS)
+    tab_tools = tk.Frame(sub_nb, bg=BG_CANVAS)
     tab_spice = tk.Frame(sub_nb, bg=BG_CANVAS)
     tab_quiz = tk.Frame(sub_nb, bg=BG_CANVAS)
 
     sub_nb.add(tab_syllabus, text="📋 Ficha & Temario")
     sub_nb.add(tab_formulas, text="📐 Fórmulas LaTeX")
     sub_nb.add(tab_calc, text="⚡ Calculadora")
+    sub_nb.add(tab_tools, text="🛠️ Herramientas de Ingeniería (37)")
     sub_nb.add(tab_spice, text="🔌 Banco SPICE / HDL")
     sub_nb.add(tab_quiz, text="🎯 Examen & Quiz (12)")
+
+    # --- Constructor de la Suite de Herramientas de Ingeniería ---
+    def build_tools_workbench(container, default_tool_name=None):
+        import engineering_tools_suite as ets
+        
+        wb_box = tk.Frame(container, bg=BG_CANVAS)
+        wb_box.pack(fill="both", expand=True, padx=6, pady=6)
+
+        # Top Control Bar
+        ctrl_bar = tk.Frame(wb_box, bg=BG_CARD, bd=1, relief="solid", highlightbackground=BG_BORDER, highlightthickness=1)
+        ctrl_bar.pack(fill="x", pady=(0, 6), ipady=5, padx=2)
+
+        tk.Label(ctrl_bar, text="📁 Rama:", font=(FONT_FAMILY, 9, "bold"), fg=TXT_PRIMARY, bg=BG_CARD).pack(side="left", padx=(10, 4))
+        
+        branch_options = [
+            "Todas las Ramas (37 herramientas)",
+            "RF, Microondas y Telecomunicación",
+            "Electrónica Analógica y Potencia",
+            "Sistemas Digitales y Embebidos",
+            "Tratamiento de Señal y Comunicaciones",
+            "Física, Sensores y Control"
+        ]
+        branch_var = tk.StringVar(value=branch_options[0])
+        branch_combo = ttk.Combobox(ctrl_bar, textvariable=branch_var, values=branch_options, state="readonly", width=30)
+        branch_combo.pack(side="left", padx=(0, 12), ipady=2)
+
+        tk.Label(ctrl_bar, text="🛠️ Herramienta:", font=(FONT_FAMILY, 9, "bold"), fg=TXT_PRIMARY, bg=BG_CARD).pack(side="left", padx=(0, 4))
+        
+        tool_names_all = list(ets.ALL_ENGINEERING_TOOLS.keys())
+        tool_var = tk.StringVar(value=default_tool_name or tool_names_all[0])
+        tool_combo = ttk.Combobox(ctrl_bar, textvariable=tool_var, state="readonly", width=36)
+        tool_combo.pack(side="left", padx=(0, 10), ipady=2)
+
+        # Split: Left (Inputs & Metadata) / Right (Outputs & Code)
+        paned_tool = tk.PanedWindow(wb_box, orient="horizontal", bg=BG_BORDER, sashwidth=4, bd=0)
+        paned_tool.pack(fill="both", expand=True)
+
+        left_side = tk.Frame(paned_tool, bg=BG_CARD, bd=1, relief="solid", highlightbackground=BG_BORDER, highlightthickness=1)
+        paned_tool.add(left_side, minsize=320)
+
+        right_side = tk.Frame(paned_tool, bg=BG_CARD, bd=1, relief="solid", highlightbackground=BG_BORDER, highlightthickness=1)
+        paned_tool.add(right_side, minsize=380)
+
+        # Left Info Header
+        info_header = tk.Frame(left_side, bg=BG_CARD)
+        info_header.pack(fill="x", padx=10, pady=(8, 4))
+
+        lbl_tool_title = tk.Label(info_header, text="", font=(FONT_FAMILY, 10, "bold"), fg=ACCENT_CYAN, bg=BG_CARD, wraplength=320, justify="left")
+        lbl_tool_title.pack(anchor="w")
+
+        lbl_tool_branch = tk.Label(info_header, text="", font=(FONT_FAMILY, 8, "bold"), fg=ACCENT_ORANGE, bg=BG_CARD)
+        lbl_tool_branch.pack(anchor="w", pady=(2, 0))
+
+        lbl_tool_courses = tk.Label(info_header, text="", font=(FONT_FAMILY, 8), fg=TXT_MUTED, bg=BG_CARD)
+        lbl_tool_courses.pack(anchor="w")
+
+        lbl_tool_desc = tk.Label(info_header, text="", font=(FONT_FAMILY, 8), fg=TXT_PRIMARY, bg=BG_CARD, wraplength=320, justify="left")
+        lbl_tool_desc.pack(anchor="w", pady=(4, 6))
+
+        tk.Label(left_side, text="Parámetros de Entrada:", font=(FONT_FAMILY, 9, "bold"), fg=TXT_PRIMARY, bg=BG_CARD).pack(anchor="w", padx=10, pady=(4, 2))
+
+        params_scroll_canvas = tk.Canvas(left_side, bg=BG_CARD, highlightthickness=0)
+        params_sb = ttk.Scrollbar(left_side, orient="vertical", command=params_scroll_canvas.yview)
+        params_inner = tk.Frame(params_scroll_canvas, bg=BG_CARD)
+
+        params_inner.bind("<Configure>", lambda e: params_scroll_canvas.configure(scrollregion=params_scroll_canvas.bbox("all")))
+        params_scroll_canvas.create_window((0, 0), window=params_inner, anchor="nw")
+        params_scroll_canvas.configure(yscrollcommand=params_sb.set)
+
+        params_scroll_canvas.pack(side="top", fill="both", expand=True, padx=6)
+        params_sb.pack(side="right", fill="y")
+
+        param_inputs: dict[str, tk.StringVar] = {}
+
+        # Button frame at bottom of left side
+        btn_calc_frame = tk.Frame(left_side, bg=BG_CARD)
+        btn_calc_frame.pack(fill="x", padx=10, pady=8)
+
+        # Right Side Output
+        out_top = tk.Frame(right_side, bg=BG_CARD)
+        out_top.pack(fill="x", padx=10, pady=(8, 4))
+
+        tk.Label(out_top, text="Resultados del Solver / Síntesis:", font=(FONT_FAMILY, 10, "bold"), fg=TXT_PRIMARY, bg=BG_CARD).pack(side="left")
+
+        def copy_tool_output():
+            txt = txt_tool_out.get("1.0", "end").strip()
+            if txt:
+                root.clipboard_clear()
+                root.clipboard_append(txt)
+                messagebox.showinfo("Portapapeles", "✅ Resultados copiados al portapapeles.")
+
+        def save_tool_output():
+            txt = txt_tool_out.get("1.0", "end").strip()
+            if not txt:
+                return
+            tname = tool_var.get()
+            fn = filedialog.asksaveasfilename(title="Guardar resultados de ingeniería", initialfile=f"{tname}_resultado.txt")
+            if fn:
+                with open(fn, "w", encoding="utf-8") as f:
+                    f.write(txt)
+                messagebox.showinfo("Guardado", f"✅ Fichero guardado en:\n{fn}")
+
+        make_btn(out_top, "📋 Copiar", copy_tool_output).pack(side="right", padx=2)
+        make_btn(out_top, "💾 Guardar...", save_tool_output).pack(side="right", padx=2)
+
+        txt_tool_out = ScrolledText(right_side, bg=BG_INSET, fg=ACCENT_GREEN, insertbackground="#fff", font=("Consolas", 10), wrap="word", padx=10, pady=10)
+        txt_tool_out.pack(fill="both", expand=True, padx=8, pady=(0, 8))
+
+        def execute_tool_solver():
+            tname = tool_var.get()
+            meta = ets.get_tool_metadata(tname)
+            if not meta:
+                return
+            p_dict = {}
+            for pk, pvar in param_inputs.items():
+                val_str = pvar.get().strip()
+                p_spec = meta["params"].get(pk, {})
+                ptype = p_spec.get("type", "float")
+                try:
+                    if ptype == "float":
+                        p_dict[pk] = float(val_str)
+                    elif ptype == "int":
+                        p_dict[pk] = int(val_str)
+                    elif ptype == "list":
+                        p_dict[pk] = json.loads(val_str)
+                    else:
+                        p_dict[pk] = val_str
+                except Exception:
+                    p_dict[pk] = val_str
+            
+            try:
+                res = ets.run_engineering_tool(tname, p_dict)
+                txt_tool_out.delete("1.0", "end")
+                txt_tool_out.insert("end", f"=== {meta['title'].upper()} ===\n")
+                txt_tool_out.insert("end", f"Rama: {meta['branch']} | Asignaturas: {', '.join(meta.get('courses', []))}\n")
+                txt_tool_out.insert("end", "-" * 55 + "\n\n")
+                
+                for rk, rv in res.items():
+                    if isinstance(rv, (dict, list)):
+                        txt_tool_out.insert("end", f"▶ {rk}:\n{json.dumps(rv, indent=2, ensure_ascii=False)}\n\n")
+                    elif isinstance(rv, str) and "\n" in rv:
+                        txt_tool_out.insert("end", f"▶ {rk}:\n{rv}\n\n")
+                    else:
+                        txt_tool_out.insert("end", f"  • {rk:<30}: {rv}\n")
+            except Exception as ex:
+                txt_tool_out.delete("1.0", "end")
+                txt_tool_out.insert("1.0", f"Error en solver: {ex}")
+
+        make_btn(btn_calc_frame, "⚡ Calcular / Sintetizar", execute_tool_solver, bg_col=ACCENT_BLUE, hover_col=ACCENT_HOVER).pack(fill="x")
+
+        def on_tool_change(new_tool_name):
+            meta = ets.get_tool_metadata(new_tool_name)
+            if not meta:
+                return
+            tool_var.set(new_tool_name)
+            lbl_tool_title.config(text=meta["title"])
+            lbl_tool_branch.config(text=f"RAMA: {meta['branch']}")
+            lbl_tool_courses.config(text=f"Asignaturas: {', '.join(meta.get('courses', []))}")
+            lbl_tool_desc.config(text=meta["description"])
+
+            # Clean and rebuild parameter inputs
+            for w in params_inner.winfo_children():
+                w.destroy()
+            param_inputs.clear()
+
+            for pk, p_spec in meta.get("params", {}).items():
+                p_row = tk.Frame(params_inner, bg=BG_CARD)
+                p_row.pack(fill="x", pady=2)
+                
+                p_lbl = tk.Label(p_row, text=f"{p_spec.get('label', pk)}:", font=(FONT_FAMILY, 8), fg=TXT_PRIMARY, bg=BG_CARD, anchor="w", wraplength=190, justify="left")
+                p_lbl.pack(side="left", fill="x", expand=True)
+
+                def_val = p_spec.get("default", "")
+                if isinstance(def_val, list):
+                    def_str = json.dumps(def_val)
+                else:
+                    def_str = str(def_val) if def_val is not None else ""
+
+                p_var = tk.StringVar(value=def_str)
+                param_inputs[pk] = p_var
+
+                p_entry = tk.Entry(p_row, textvariable=p_var, font=("Consolas", 9), bg=BG_INSET, fg=TXT_PRIMARY, insertbackground="#fff", bd=0, relief="flat", width=12)
+                p_entry.pack(side="right", padx=4, ipady=1)
+
+            execute_tool_solver()
+
+        def update_tool_dropdown(*_):
+            sel_b = branch_var.get()
+            if "Todas" in sel_b:
+                filtered_tools = list(ets.ALL_ENGINEERING_TOOLS.keys())
+            else:
+                filtered_tools = [k for k, v in ets.ENGINEERING_TOOLS_METADATA.items() if v.get("branch") == sel_b]
+            tool_combo["values"] = filtered_tools
+            if filtered_tools:
+                if tool_var.get() not in filtered_tools:
+                    tool_var.set(filtered_tools[0])
+                on_tool_change(tool_var.get())
+
+        branch_combo.bind("<<ComboboxSelected>>", update_tool_dropdown)
+        tool_combo.bind("<<ComboboxSelected>>", lambda e: on_tool_change(tool_var.get()))
+
+        update_tool_dropdown()
+        if default_tool_name and default_tool_name in ets.ALL_ENGINEERING_TOOLS:
+            tool_var.set(default_tool_name)
+            on_tool_change(default_tool_name)
+
+        return tool_var, on_tool_change
+
+    tool_var_subnb, on_tool_change_subnb = build_tools_workbench(tab_tools)
 
     # --- Pestaña 1: Ficha & Temario ---
     txt_syllabus = ScrolledText(tab_syllabus, bg=BG_INSET, fg=TXT_PRIMARY, insertbackground="#fff", font=(FONT_FAMILY, 9), wrap="word", padx=10, pady=10)
@@ -377,6 +596,22 @@ def setup_upc_degree_tab(parent_frame: tk.Frame, root: tk.Tk) -> None:
             e.pack(side="left", padx=4, ipady=2)
         make_btn(calc_entries_box, "⚡ Calcular Parámetros", execute_calc_action, bg_col=ACCENT_BLUE, hover_col=ACCENT_HOVER).pack(pady=(10, 4))
         execute_calc_action()
+
+        # Tab Herramientas de Ingeniería: auto-seleccionar solver relevante
+        try:
+            import engineering_tools_suite as ets
+            matching_tool = None
+            for t_name, t_meta in ets.ENGINEERING_TOOLS_METADATA.items():
+                for c_str in t_meta.get("courses", []):
+                    if s["code"] in c_str or s["acronym"] in c_str:
+                        matching_tool = t_name
+                        break
+                if matching_tool:
+                    break
+            if matching_tool and on_tool_change_subnb:
+                on_tool_change_subnb(matching_tool)
+        except Exception:
+            pass
 
         # Tab 4: SPICE / HDL
         txt_spice.delete("1.0", "end")

@@ -7,7 +7,8 @@
 [![LaTeX: MathML & OMML Supported](https://img.shields.io/badge/LaTeX-MathML%20%7C%20OMML%20%E2%86%92%20LaTeX-brightgreen.svg)]()
 [![UPC GREELEC: 35 Courses & 424 Questions](https://img.shields.io/badge/UPC%20GREELEC-35%20Courses%20%7C%20424%20Exam%20Questions-purple.svg)]()
 [![Virtual Lab: 20 Modules 3D](https://img.shields.io/badge/Virtual%20Lab-20%20Modules%20WebGL%203D-orange.svg)]()
-[![Tests: Pytest Passing](https://img.shields.io/badge/tests-17%2F17%20passing-success.svg)]()
+[![Engineering Solvers: 37 Tools](https://img.shields.io/badge/Engineering%20Solvers-37%20Computational%20Tools-blueviolet.svg)]()
+[![Tests: Pytest Passing](https://img.shields.io/badge/tests-27%2F27%20passing-success.svg)]()
 
 > Suite integral de ingeniería documental, conversores universales de alta fidelidad y estación de trabajo virtual diseñada para transformar contenidos educativos, técnicos e interactivos (HTML, PDF, DOCX, IPYNB, MathML, scripts de examen) en **Markdown técnico estructurado de máxima pureza**, 100% optimizado para **Google NotebookLM**, Gemini, Claude, Obsidian y ChatGPT.
 > 
@@ -20,11 +21,12 @@
   - [🔄 1. Conversores Universales de Archivos de Alta Fidelidad](#-1-conversores-universales-de-archivos-de-alta-fidelidad-universal_converterspy)
   - [🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark)](#-2-interfaz-gráfica-de-escritorio-apple-liquid-glass-dark)
   - [🎓 3. Plan de Estudios UPC GREELEC: 35 Asignaturas & 424 Preguntas de Examen](#-3-plan-de-estudios-upc-greelec-35-asignaturas--424-preguntas-de-examen)
-  - [🔬 4. Laboratorio Virtual de Sensores e Instrumentación 3D](#-4-laboratorio-virtual-de-sensores-e-instrumentación-3d-v85-enterprise)
-  - [📐 5. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo](#-5-calculadora-metrológica-gum-isoiec-98-3--monte-carlo-supl-1)
-  - [🎛️ 6. Diseñador de Filtros Activos & Sensores](#-6-diseñador-de-filtros-activos-sensores--acondicionadores)
-  - [🔌 7. Banco R-L-C & Presets Canónicos GREELEC](#-7-banco-r-l-c--presets-canónicos-greelec)
-  - [🗂️ 8. Repaso Activo Anki & Gestor de Exámenes](#-8-repaso-activo-anki--gestor-de-exámenes)
+  - [🛠️ 4. Suite de 37 Solvers y Herramientas Especializadas de Ingeniería](#-4-suite-de-37-solvers-y-herramientas-especializadas-de-ingeniería-engineering_tools_suitepy)
+  - [🔬 5. Laboratorio Virtual de Sensores e Instrumentación 3D](#-5-laboratorio-virtual-de-sensores-e-instrumentación-3d-v85-enterprise)
+  - [📐 6. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo](#-6-calculadora-metrológica-gum-isoiec-98-3--monte-carlo-supl-1)
+  - [🎛️ 7. Diseñador de Filtros Activos & Sensores](#-7-diseñador-de-filtros-activos-sensores--acondicionadores)
+  - [🔌 8. Banco R-L-C & Presets Canónicos GREELEC](#-8-banco-r-l-c--presets-canónicos-greelec)
+  - [🗂️ 9. Repaso Activo Anki & Gestor de Exámenes](#-9-repaso-activo-anki--gestor-de-exámenes)
 - [🚀 Instalación y Requisitos](#-instalación-y-requisitos)
 - [🖥️ Uso de la Aplicación (GUI y Terminal CLI)](#-uso-de-la-aplicación-gui-y-terminal-cli)
 - [📁 Estructura del Repositorio](#-estructura-del-repositorio)
@@ -92,7 +94,59 @@ El motor académico `upc_degree_engine.py` incorpora los datos y competencias of
 
 ---
 
-### 🔬 3. Laboratorio Virtual de Sensores e Instrumentación 3D (v8.5 Enterprise)
+### 🛠️ 4. Suite de 37 Solvers y Herramientas Especializadas de Ingeniería (`engineering_tools_suite.py`)
+Módulo integral de **37 herramientas de cálculo numérico, sintetizadores circuitales y generadores de código hardware/firmware** que cubren la totalidad del espectro técnico de las 35 asignaturas del grado GREELEC (UPC ETSETB). Se organizan en 5 ramas canónicas de ingeniería:
+
+#### 📡 Rama 1: RF, Microondas & Telecomunicaciones (10 Herramientas)
+- `microstrip_synthesizer`: Síntesis de ancho de pista $W/h$, $\varepsilon_{eff}$ y retardo $t_{pd}$ mediante ecuaciones de Hammerstad-Wheeler.
+- `smith_chart_stub_matcher`: Adaptador de impedancias por simple stub en derivación (cortocircuito / circuito abierto) con distancia $d$ y longitud $l$.
+- `quarter_wave_transformer`: Transformador de impedancias en cuarto de onda ($\lambda/4$) con cálculo de ancho de banda fraccional para un límite de ROE dado.
+- `friis_cascade_analyzer`: Análisis de cascada de receptores RF según fórmula de Friis (ganancia total, figura de ruido NF global y temperatura de ruido en Kelvin).
+- `wilkinson_divider_designer`: Dimensionamiento de divisor/combinador Wilkinson de potencia (ramas de $Z_0\sqrt{2}$ y resistencia de aislamiento $2Z_0$).
+- `coaxial_cable_solver`: Resolución analítica de cable coaxial ($Z_0$, capacidad por metro, inductancia por metro y frecuencia de corte del modo superior $TE_{11}$).
+- `link_budget_calculator`: Balance de enlace radioeléctrico con atenuación en espacio libre (FSPL) y margen de desvanecimiento contra umbral de sensibilidad $P_{rx}$.
+- `rectangular_waveguide_modes`: Espectro de frecuencias de corte para guía de ondas rectangular WR-90 / banda X con banda monomodo recomendada.
+- `shannon_channel_capacity`: Capacidad teórica de canal AWGN según teorema de Shannon-Hartley y eficiencia espectral en bit/s/Hz.
+- `pll_loop_filter_synthesizer`: Síntesis de filtro pasivo de 2º orden para PLL Charge-Pump ($C_1$, $C_2$, $R_2$, frecuencias de polo y cero, factor de división $N$).
+
+#### ⚡ Rama 2: Electrónica Analógica, Filtros & Potencia (8 Herramientas)
+- `bjt_amplifier_designer`: Dimensionamiento analítico de etapa de emisor común con polarización de 4 resistencias, transconductancia $g_m$, $r_\pi$, $A_v$, $R_{in}$ y $R_{out}$.
+- `mosfet_amplifier_designer`: Polarización y parámetros en pequeña señal de etapa Common-Source MOSFET en saturación ($V_{GS}$, $V_{OV}$, $R_D$, $g_m$, $r_o$ y ganancia).
+- `differential_pair_analyzer`: Par diferencial con carga resistiva (ganancia diferencial $A_d$, ganancia de modo común $A_{cm}$ y rechazo CMRR en dB).
+- `sallen_key_filter_synthesizer`: Filtros activos paso bajo/paso alto Sallen-Key con aproximaciones Butterworth, Chebyshev o Bessel y desnormalización de componentes.
+- `buck_converter_synthesizer`: Convertidor reductor DC-DC con inductancia crítica para modo de conducción continua (CCM), rizado de corriente y condensador de salida.
+- `boost_converter_synthesizer`: Convertidor elevador DC-DC en CCM con ciclo de trabajo $D$, inductancia de filtro y condensador para rizado de tensión.
+- `rlc_transient_solver`: Resolución del transitorio de circuito RLC serie/paralelo (frecuencia natural $\omega_0$, factor de amortiguamiento $\zeta$, polos $s_1, s_2$ y clasificación del régimen).
+- `opamp_error_budget_calculator`: Presupuesto de errores en continua en etapa amplificadora operacional ($V_{os}$, corrientes de polarización $I_b$ y desbalance $I_{os}$, CMRR finito).
+
+#### 💻 Rama 3: Sistemas Digitales, VHDL & Computación Embebida (7 Herramientas)
+- `arm_cortex_systick_timer`: Generador de recargas del timer de sistema ARM Cortex-M SysTick para intervalos periódicos de interrupción sin drift.
+- `usart_baud_rate_generator`: Divisor de baudios para periféricos USART/UART en microcontroladores (STM32 BRR register) con tasa de error porcentual.
+- `adc_sar_timing_calculator`: Temporización de convertidores analógico-digitales SAR (tiempo de muestreo, ciclos de conversión por aproximaciones sucesivas y tasa máxima en kSPS).
+- `vhdl_entity_generator`: Generador sintetizable de entidades y arquitecturas VHDL puras (contadores parametrizables, FIFOs síncronas, registros de desplazamiento, decodificadores).
+- `sta_timing_slack_analyzer`: Análisis estático de tiempos (Static Timing Analysis - STA) para caminos críticos síncronos con verificación de slack de Setup y Hold.
+- `rtos_schedulability_solver`: Test de planificabilidad en tiempo real RTOS bajo algoritmos Rate Monotonic (cota de Liu & Layland) y Earliest Deadline First (EDF).
+- `transmission_line_bounce_diagram`: Diagrama de rebotes en línea de transmisión digital de alta velocidad por diferencias de impedancia (reflexiones múltiples).
+
+#### 🎛️ Rama 4: Procesado Digital de Señal & DSP (6 Herramientas)
+- `fir_filter_window_designer`: Diseño de filtros digitales FIR por método de ventanas (Hamming, Hann, Blackman, Rectangular) con coeficientes normalizados.
+- `bilinear_transform_mapper`: Mapeo continuo-a-discreto por Transformada Bilineal con prewarping de frecuencias analógicas a frecuencias digitales $\omega$.
+- `fft_resolution_inspector`: Inspección de parámetros de la Transformada Rápida de Fourier (resolución en frecuencia $\Delta f$, límite de Nyquist y duración de ventana).
+- `lora_toa_and_energy_predictor`: Tiempo en el aire (Time-on-Air) y consumo de energía para nodos IoT LoRaWAN según Spreading Factor, ancho de banda y tamaño de payload.
+- `adc_quantization_noise_analyzer`: Relación señal a ruido de cuantización teórica (SQNR) según fórmula de Bennett, tensión de LSB y densidad de ruido.
+- `z_transform_pole_zero_analyzer`: Inspección de estabilidad en el plano Z para funciones racionales discretas $H(z)$, posición de polos y respuesta a frecuencia canónica.
+
+#### 🌡️ Rama 5: Física, Sensores, Confiabilidad & Control (6 Herramientas)
+- `solar_cell_single_diode_solver`: Modelo de célula fotovoltaica de 1 diodo (búsqueda del punto de máxima potencia MPP, tensión $V_{mp}$, corriente $I_{mp}$ y Fill Factor).
+- `rtd_pt100_temperature_solver`: Sensor de platino Pt100 según Callendar-Van Dusen (resolución inversa precisa de temperatura para cualquier resistencia $R(T)$).
+- `strain_gauge_rosette_solver`: Roseta de galgas extensiométricas a 0°/45°/90° (cálculo de deformaciones principales $\varepsilon_1, \varepsilon_2$, tensiones principales $\sigma_1, \sigma_2$ y ángulo de orientación).
+- `pcb_thermal_heatsink_dimensioner`: Dimensionador térmico de encapsulados electrónicos y disipadores (resistencia térmica máxima disipador-ambiente $R_{th,sa}$, análisis de convección pasiva).
+- `system_reliability_markov_solver`: Fiabilidad de sistemas redundantes y cadenas de Markov de fallo (MTTF global, probabilidad de supervivencia $R(t)$ en misión).
+- `second_order_system_step_response`: Respuesta al escalón de sistemas de 2º orden en lazo cerrado (sobreoscilación $M_p$, tiempo de pico $t_p$, tiempo de subida $t_r$ y establecimiento $t_s$).
+
+---
+
+### 🔬 5. Laboratorio Virtual de Sensores e Instrumentación 3D (v8.5 Enterprise)
 Simulador web autónomo (`Laboratorio_Virtual_Sensores.html`) ejecutable localmente sin conexión a internet ni CDNs:
 - **Visualización Tridimensional Fluida (60 FPS):** Renderizado volumétrico WebGL acelerado por GPU con cámara orbital 360°, sombreado Phong y carga determinista de geometría (resolución definitiva de pantallas en negro).
 - **Esquemático 2D CAD Interactivo:** Representación vectorial de circuitos bajo normativa **IEC 60617 / IEEE Std 315**, con nodos activos, caídas de potencial y cableado dinámico click & drag.
@@ -245,6 +299,16 @@ python upc_degree_engine.py --list
 python upc_degree_engine.py --subject CCE
 python upc_degree_engine.py --calc CCE --params '{"vs": 12.0, "r1": 2000, "r2": 4000}'
 python upc_degree_engine.py --cheatsheet
+
+# 7. Suite de 37 Solvers Especializados de Ingeniería
+# Listar las 37 herramientas agrupadas por rama técnica
+python conversor_html_notebooklm.py --tools
+python upc_degree_engine.py --tools
+
+# Ejecutar una herramienta con parámetros personalizados (JSON)
+python conversor_html_notebooklm.py --tool microstrip_synthesizer --params '{"z0_target": 50.0, "er": 4.4, "h_mm": 1.6}'
+python upc_degree_engine.py --tool buck_converter_synthesizer --params '{"vin_v": 24.0, "vout_v": 5.0, "iout_a": 3.0, "fs_khz": 200.0}'
+python upc_degree_engine.py --tool lora_toa_and_energy_predictor --params '{"sf": 10, "bw_khz": 125.0, "payload_bytes": 32}'
 ```
 
 ### Compilar a Ejecutable de Windows (.exe)
@@ -253,9 +317,9 @@ pyinstaller --noconfirm conversor_html_notebooklm.spec
 ```
 El ejecutable compilado estará disponible en `dist/conversor_html_notebooklm/conversor_html_notebooklm.exe`.
 
-### Ejecutar la Suite de Pruebas Automatizadas
+### Ejecutar la Suite Completa de Pruebas Automatizadas (27 Tests)
 ```bash
-pytest -v tests/test_universal_and_lab.py tests/test_upc_curriculum.py
+pytest -v tests/
 ```
 
 ---
@@ -266,7 +330,8 @@ pytest -v tests/test_universal_and_lab.py tests/test_upc_curriculum.py
 Conversor-HTML-A-MD/
 ├── conversor_html_notebooklm.py        # Aplicación GUI (9 pestañas) y CLI principal
 ├── upc_degree_engine.py                # Motor académico del grado GREELEC (35 asignaturas & 424 preguntas)
-├── upc_gui_tab.py                      # Pestaña interactiva de escritorio para el Plan UPC GREELEC
+├── engineering_tools_suite.py          # Suite de 37 solvers numéricos, sintetizadores y generadores de hardware
+├── upc_gui_tab.py                      # Pestaña interactiva de escritorio para el Plan UPC GREELEC & Workbench
 ├── universal_converters.py             # Motor de conversores universales (PDF, DOCX, IPYNB, etc.)
 ├── Laboratorio_Virtual_Sensores.html   # Simulador web 3D (20 módulos + instrumentos virtuales)
 ├── conversor_html_notebooklm.spec      # Configuración de compilación PyInstaller
@@ -278,8 +343,11 @@ Conversor-HTML-A-MD/
 │   ├── upc_anki_decks/                 # 35 Mazos Anki (.tsv) + Mazo maestro con 424 preguntas
 │   └── upc_pdf_raw/                    # 35 PDFs oficiales descargados de la web de la UPC
 ├── tests/
-│   ├── test_universal_and_lab.py       # Pruebas automatizadas de conversores y laboratorio (9 tests)
-│   └── test_upc_curriculum.py          # Pruebas de 35 asignaturas, 424 preguntas y calculadoras (8 tests)
+│   ├── test_engineering_tools.py      # Pruebas automatizadas de los 37 solvers especializados (8 tests)
+│   ├── test_upc_curriculum.py          # Pruebas de 35 asignaturas, 424 preguntas y calculadoras (8 tests)
+│   ├── test_universal_and_lab.py       # Pruebas de conversores universales y laboratorio (9 tests)
+│   ├── test_modern_gui.py              # Verificación de estructura moderna de componentes gráficos (1 test)
+│   └── test_modern_theme.py            # Verificación de estilos temáticos ttk y alta resolución DPI (1 test)
 ├── dist_course_md/                     # Contenidos educativos del curso Sistemes de Mesura
 │   ├── Para_Subir_a_NotebookLM/        # Documentos maestros consolidados para NotebookLM
 │   ├── Tema 1/ a Tema 10/              # Carpetas individuales de cada unidad temática

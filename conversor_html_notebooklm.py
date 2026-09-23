@@ -7585,6 +7585,8 @@ Opciones y Modos:
   --degree-stats          Muestra estadísticas del plan de estudios oficial.
   --degree-export-md <d>  Exporta las 35 guías de estudio completas en Markdown a una carpeta.
   --degree-export-anki <d> Exporta todos los mazos Anki de las 35 asignaturas a una carpeta.
+  --tools                 Lista las 37 herramientas y sintetizadores especializados de ingeniería.
+  --tool <nombre>         Ejecuta una herramienta de ingeniería (--params '<json>').
   -h, --help              Muestra este mensaje de ayuda.
 """)
 
@@ -7593,6 +7595,47 @@ if __name__ == "__main__":
         run_gui()
     elif "-h" in sys.argv or "--help" in sys.argv:
         print_help()
+    elif "--tools" in sys.argv or "--degree-tools" in sys.argv:
+        if HAS_UPC_DEGREE and upc_engine:
+            import engineering_tools_suite as ets
+            print("=== 37 Herramientas de Ingeniería Especializadas de GREELEC ===")
+            branches = {}
+            for name, meta in ets.ENGINEERING_TOOLS_METADATA.items():
+                b = meta.get("branch", "Otras")
+                if b not in branches:
+                    branches[b] = []
+                branches[b].append((name, meta))
+            for branch, tools in branches.items():
+                print(f"\n[{branch.upper()}] ({len(tools)} herramientas)")
+                for name, meta in tools:
+                    courses = ", ".join(meta.get("courses", []))
+                    print(f"  * {name:<35} | {meta['title']} ({courses})")
+                    print(f"    Desc: {meta['description']}")
+        else:
+            print("Módulo de herramientas de ingeniería no disponible.")
+        sys.exit(0)
+    elif "--tool" in sys.argv:
+        idx = sys.argv.index("--tool")
+        tool_name = sys.argv[idx + 1] if len(sys.argv) > idx + 1 else ""
+        params = None
+        if "--params" in sys.argv:
+            pidx = sys.argv.index("--params")
+            if len(sys.argv) > pidx + 1:
+                try:
+                    params = json.loads(sys.argv[pidx + 1])
+                except Exception as e:
+                    print(f"Error parseando JSON de parámetros: {e}")
+                    sys.exit(1)
+        if HAS_UPC_DEGREE and upc_engine:
+            try:
+                res = upc_engine.engine.run_engineering_tool(tool_name, params)
+                print(json.dumps(res, indent=2, ensure_ascii=False))
+            except Exception as e:
+                print(f"Error ejecutando herramienta '{tool_name}': {e}")
+                sys.exit(1)
+        else:
+            print("Módulo upc_degree_engine no disponible.")
+        sys.exit(0)
     elif "--degree-plan" in sys.argv or "--degree-list" in sys.argv:
         if HAS_UPC_DEGREE and upc_engine:
             print("=== Plan de Estudios GREELEC UPC (35 Asignaturas Obligatorias) ===")

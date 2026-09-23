@@ -17,6 +17,14 @@ import argparse
 from pathlib import Path
 from typing import Dict, List, Any, Tuple, Optional
 
+# Ensure standard output can handle utf-8 on Windows
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Path to master catalog data file
 MASTER_DATA_PATH = Path(__file__).resolve().parent / "data" / "upc_curriculum_master.json"
 
@@ -327,6 +335,27 @@ class UPCDegreeEngine:
             "department_breakdown": depts
         }
 
+    def get_engineering_tools(self) -> Dict[str, Any]:
+        """Returns all 37 specialized engineering solvers and tools."""
+        try:
+            import engineering_tools_suite as ets
+            return ets.get_all_engineering_tools()
+        except ImportError:
+            return {}
+
+    def get_engineering_tool_metadata(self, tool_name: str) -> Optional[Dict[str, Any]]:
+        """Returns metadata, specifications, and parameters for a tool."""
+        try:
+            import engineering_tools_suite as ets
+            return ets.get_tool_metadata(tool_name)
+        except ImportError:
+            return None
+
+    def run_engineering_tool(self, tool_name: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Executes one of the 37 degree-wide specialized engineering solvers."""
+        import engineering_tools_suite as ets
+        return ets.run_engineering_tool(tool_name, params)
+
 # Global singleton engine instance
 engine = UPCDegreeEngine()
 
@@ -338,6 +367,8 @@ def main():
     parser.add_argument("--subject", type=str, help="Display subject details by code or acronym")
     parser.add_argument("--calc", type=str, help="Run calculator for subject code/acronym")
     parser.add_argument("--params", type=str, help="JSON string of parameters for calculator")
+    parser.add_argument("--tools", action="store_true", help="List all 37 specialized engineering solvers and tools")
+    parser.add_argument("--tool", type=str, help="Run a specific engineering tool by name")
     parser.add_argument("--export-guides", type=str, help="Export all 35 study guides to target directory")
     parser.add_argument("--export-anki", type=str, help="Export Anki decks to target directory")
     parser.add_argument("--cheatsheet", action="store_true", help="Print degree formula cheatsheet")
@@ -353,6 +384,30 @@ def main():
     if args.stats:
         stats = engine.get_curriculum_statistics()
         print(json.dumps(stats, indent=2, ensure_ascii=False))
+        return
+
+    if args.tools:
+        import engineering_tools_suite as ets
+        print(f"=== 37 Herramientas de Ingeniería Especializadas de GREELEC ===")
+        branches = {}
+        for name, meta in ets.ENGINEERING_TOOLS_METADATA.items():
+            b = meta.get("branch", "Otras")
+            if b not in branches:
+                branches[b] = []
+            branches[b].append((name, meta))
+            
+        for branch, tools in branches.items():
+            print(f"\n📂 [{branch.upper()}] ({len(tools)} herramientas)")
+            for name, meta in tools:
+                courses = ", ".join(meta.get("courses", []))
+                print(f"  • {name:<35} | {meta['title']} ({courses})")
+                print(f"    Desc: {meta['description']}")
+        return
+
+    if args.tool:
+        params = json.loads(args.params) if args.params else None
+        res = engine.run_engineering_tool(args.tool, params)
+        print(json.dumps(res, indent=2, ensure_ascii=False))
         return
 
     if args.subject:
