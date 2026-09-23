@@ -1,0 +1,49 @@
+{
+  "code": "230917",
+  "acronym": "ICAF",
+  "title": "Introducción a los Circuitos de Alta Frecuencia",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "739 - TSC - Departamento de Teoría de la Señal y Comunicaciones.",
+  "responsible_professor": "Otros:",
+  "objectives": "A partir de los conocimientos en circuitos lineales en RPS y Campos Electromagnéticos, el estudiante ha de aprender los principios de\nfuncionamiento de los medios de transmisión, tanto de los basados en fenómenos de guiado como de radiación.\nResultado del aprendizaje:\nConoce los mecanismos de transmisión de ondas electromagnéticas. Analiza las líneas de transmisión en el dominio temporal y en\nRPS. Conoce la teoría de ondas guiadas. Conoce el principio de funcionamiento de las fibras ópticas. Sabe calcular parámetros de\nantenas. Conoce los mecanismos de propagación. Calcula los parámetros fundamentales de sistemas de comunicaciones. Comprenden\nel concepto de relación señal a ruido (SNR) y saben como calcularlo.\n\nFecha: 06/09/2026\nPágina: 2 / 4",
+  "contents": [
+    {
+      "title": "Tema 1. Introducción y conceptos básicos",
+      "description": "Energía y potencia eléctrica. Circuitos en régimen permanente sinusoidal (RPS). Relaciones logarítmicas y atenuación en cables eléctricos (dB i Neper). Actividades vinculadas: Práctica de Laboratorio I"
+    },
+    {
+      "title": "Tema 2. Líneas de Transmisión en Régimen Temporal",
+      "description": "Definición, geometrías más usuales y aplicaciones de las líneas de transmisión. Ondas de tensión y corriente, impedancia característica, coeficiente de reflexión, transitorios y pulsos. Actividades vinculadas: Práctica de Laboratorio II"
+    },
+    {
+      "title": "Tema 3. Líneas de Transmisión en Régimen Permanente Sinusoidal (RPS)",
+      "description": "Constante de propagación e impedancia característica. Tensión, corriente, impedancia y coeficiente de reflexión. Potencia. Impedancia de entrada. Ondas estacionarias. Representación grafica del coeficiente de reflexión. Actividades vinculadas: Práctica de Laboratorio III"
+    },
+    {
+      "title": "Tema 4. Medida y adaptación de impedancies",
+      "description": "Medida de impedancias. Concepto de red adaptadora. Adaptador lambda/4. Adaptadores con línea de transmisión y carga reactiva (stub). Redes de adaptación de circuitos en L."
+    },
+    {
+      "title": "Tema 5. Guías de onda conductoras",
+      "description": "Modos de propagación. Velocidades de grupo y de fase. Dispersión. El modo fundamental en la guia rectangular, ondas estacionarias y modelo de línea de transmisión equivalente. Actividades vinculadas: Práctica de Laboratorio IV"
+    },
+    {
+      "title": "Tema 6. Fibras Ópticas",
+      "description": "Introducción a la fibra, análisis modal, fibra multimodo y monomodo, dispersión en fibras y màxima velocidad de transmisión de datos."
+    },
+    {
+      "title": "Tema 7. Fundamentos de Antenas",
+      "description": "Modelo circuital. Parámetros de antenas en transmisión y recepción. Ecuación de transmisión. Ruido en la recepción: ruido térmico, temperatura de antena, temperatura equivalente de ruido y relación señal-ruido. Actividades vinculadas: Práctica de Laboratorio V"
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\n- Examen final: 60%\n- Evaluación continuada: 25%.\n- Prácticas de laboratori: 15%\nNORMAS PARA LA REALIZACIÓN DE LAS PRUEBAS.\nCalculadora: es imprescindible disponer de una calculadora que opere con números complejos. En los exámenes y ejercicios de\ncontrol está estrictamente prohibido utilizar ningún tipo de calculadora programable ni ningún dispositivo fotográfico o con conexión\ninalámbrica.",
+  "bibliography": [
+    "- Dios, F. ... [et al.]. Campos electromagnéticos [en línea]. Barcelona: Edicions UPC, 1998 [Consulta: 10/07/2019]. Disponible a:",
+    "http://hdl.handle.net/2099.3/36160. ISBN 8483012499.",
+    "- Bará, J. Circuitos de microondas con líneas de transmisión [en línea]. Barcelona: Edicions UPC, 1994 [Consulta: 10/07/2019].",
+    "Disponible a: http://hdl.handle.net/2099.3/36161. ISBN 9788489636552.",
+    "- Cardama, Á. ...[et al.]. Antenas [en línea]. 2a ed. Barcelona: Edicions UPC, 2002 [Consulta: 10/07/2019]. Disponible a:"
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230917/introduccion-a-los-circuitos-de-alta-frecuencia.pdf"
+}

@@ -1,0 +1,53 @@
+{
+  "code": "230928",
+  "acronym": "TEL",
+  "title": "Tecnología Electrónica",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "710 - EEL - Departamento de Ingeniería Electrónica.",
+  "responsible_professor": "Otros:",
+  "objectives": "Entender la tarea del ingeniero dentro del desarrollo de un producto electrónico desde las especificaciones al producto final incluyendo\nel diseño de circuitos PCB y las normativas de obligado cumplimiento.\nEntender la problemática asociada a la compatibilidad entre sistemas tanto a nivel de estandarización como de interferencias.\nEntender las problemáticas asociadas al diseño de Circuitos Impresos (PCB) tanto a nivel de su manufacturabilidad como de las\nproblemáticas asociadas a la gestión del calor o la integridad de las señales.\nConocer las problemáticas relacionadas con la seguridad de las personas y los equipos electrónicos.\nEntender los procesos actuales de fabricación de equipos electrónicos.",
+  "contents": [
+    {
+      "title": "Tema 1: Diseño de Circuitos impresos (PCB)",
+      "description": "Elementos de los circuitos impresos. Herramientas CAD para el diseño de circuitos impresos. Opciones de Stack-Up. Fases del diseño de un circuito impreso. Gestión de los retornos de corrientes y masas. Líneas diferenciales y de impedancia controlada. Consideraciones térmicas. Estándares y regulaciones."
+    },
+    {
+      "title": "Tema 2: Ensamblaje de PCBs",
+      "description": "Integración de componentes. Ensamblaje automático. Implicaciones en el diseño."
+    },
+    {
+      "title": "Tema 3: Introducción a la Compatibilidad Electromagnética",
+      "description": "Introducción a la EMC mediante casos y ejemplos reales. El margen EMC. Normativa."
+    },
+    {
+      "title": "Tema 4: Caminos de los acoplamientos y de los retornos de corriente",
+      "description": "Los conductores en radiofrecuencia. Acoplamientos inductivos y capacitivos. Tipologías de cables trenzados y con blindaje de protección. Estrategias para la distribución de las alimentaciones. Estrategias para referenciar la masa de los circuitos."
+    },
+    {
+      "title": "Tema 5: Interferencias radiadas",
+      "description": "Definiciones y ensayos de emisión e inmunidad radiada. Conceptos básicos en el diseño electrónico para: Blindaje de los productos electrónicos. Integridad de la señal. El condensador de desacoplo. Sistemas diferenciales. Dispositivos ferromagnéticos. Técnicas básicas de aislamiento."
+    },
+    {
+      "title": "Tema 6: Interferencias conducidas",
+      "description": "Definiciones y ensayo de emisión e inmunidad conducida. Conceptos básicos en el diseño de filtros en RF. Los filtros de red eléctrica."
+    },
+    {
+      "title": "Tema 7: Interferències transitòries",
+      "description": "Definiciones y ensayos de interferencias transitorias. Definiciones y ensayo de las descargas electrostáticas (ESD). Circuitos de protección frente a las sobretensiones de origen diverso."
+    },
+    {
+      "title": "Tema 8: Seguretat en equips electrònics",
+      "description": "Principios de la seguridad de los equipos y las personas. Análisis de riesgos. Elementos para la protección. Normativas asociadas."
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\n40% Examen Final\n35% Prácticas\n25% Evaluación continua\nEn el examen de reevaluación sólo se reevaluan los contenidos de teoria, por lo que la nota resultante de la reevaluación será:\n65% Examen de Reevaluación\n35% Prácticas previas",
+  "bibliography": [
+    "- Wilson, P. The circuit designer's companion. 4th ed. Oxford: Newnes, 2017. ISBN 9780081017647.",
+    "- Bogatin, E. Signal and power integrity: simplified. 3rd ed. Boston: Prentice Hall, 2018. ISBN 9780134513416.",
+    "- Montrose, M.I. Printed circuit board design techniques for EMC compliance. 2nd ed. New York: IEEE Press, 2000. ISBN 0780353765.",
+    "Complementaria:",
+    "- Joffe, E.B.; Lock, K.-S. Grounds for grounding: a circuit-to-system handbook. Oxford: John Wiley & Sons, 2010. ISBN"
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230928/tecnologia-electronica.pdf"
+}

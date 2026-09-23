@@ -1,0 +1,145 @@
+# -*- coding: utf-8 -*-
+"""
+Generate subject modules for Q7 and Q8 (4 subjects total, 13 questions each = 52 questions).
+Total across all 35 subjects: 132 + 120 + 120 + 52 = 424 questions!
+"""
+import json
+
+q7_q8_data = {
+    # 230930: DMIC (Diseño Microelectrónico)
+    "230930": {
+        "code": "230930", "acronym": "DMIC", "title": "Diseño Microelectrónico", "semester": 7, "ects": 6.0,
+        "department": "710 - EEL - Departamento de Ingeniería Electrónica",
+        "description": "Física y reglas de diseño físico (layout DRC, LVS, extracción parásita PEX) en tecnología CMOS nanométrica, el inversor CMOS (curva VTC, márgenes de ruido NMH/NML, tiempos de propagación tpHL/tpLH y potencia dinámica/estática), puertas lógicas estáticas y dinámicas (lógica dominó), bloques aritméticos y de memoria SRAM (célula 6T, márgenes de estabilidad SNM en lectura/escritura), y consideraciones de diseño analógico en circuito integrado (espejos cascodo, referencias de tensión Bandgap de Brokaw y técnicas de layout interdigitado/centroide común).",
+        "formulas": [
+            {"name": "Consumo de Potencia Dinámica de Conmutación en Inversor CMOS", "latex": r"P_{\text{dyn}} = \alpha \cdot C_L \cdot V_{DD}^2 \cdot f_{\text{clk}}"},
+            {"name": "Margen de Ruido en Nivel Alto (NMH) y Bajo (NML)", "latex": r"\text{NMH} = V_{OH} - V_{IH}, \quad \text{NML} = V_{IL} - V_{OL}"},
+            {"name": "Retardo de Propagación del Inversor CMOS (Modelo RC)", "latex": r"t_{p} = \frac{t_{pHL} + t_{pLH}}{2} \approx 0.69 \cdot R_{\text{on}} \cdot C_L"},
+            {"name": "Tensión de Referencia Bandgap de Brokaw", "latex": r"V_{\text{ref}} = V_{BE} + K \cdot V_T = V_{BE} + K \frac{k T}{q} \approx 1.25\,\text{V}"},
+            {"name": "Criterio de Dimensionado Simétrico Inversor CMOS", "latex": r"\frac{W_p}{W_n} \approx \frac{\mu_n}{\mu_p} \approx 2.0 \text{ a } 2.5 \text{ en Silicio}"}
+        ],
+        "calc_params": {"vdd": 1.2, "fclk_mhz": 500.0, "cl_ff": 15.0, "alpha_act": 0.1, "wn_nm": 120.0, "wp_nm": 270.0, "ron_ohm": 1200.0},
+        "calc_outputs": ["pdyn_uw", "prop_delay_ps", "wp_wn_ratio"],
+        "calc_fn": "def calc(p):\n    vdd = p.get('vdd', 1.2)\n    fclk = p.get('fclk_mhz', 500.0) * 1e6\n    cl = p.get('cl_ff', 15.0) * 1e-15\n    alpha = p.get('alpha_act', 0.1)\n    pdyn = alpha * cl * (vdd**2) * fclk * 1e6\n    ron = p.get('ron_ohm', 1200.0)\n    tp_ps = 0.693 * ron * cl * 1e12\n    wn = max(1.0, p.get('wn_nm', 120.0))\n    wp = p.get('wp_nm', 270.0)\n    ratio = wp / wn\n    return {'pdyn_uw': round(pdyn, 3), 'prop_delay_ps': round(tp_ps, 2), 'wp_wn_ratio': round(ratio, 2)}",
+        "spice_template": "* DMIC - Inversor CMOS Nanometrico (Curva de Transferencia VTC)\nVdd vdd 0 DC 1.2V\nVin in 0 DC 0\n* Transistores nMOS y pMOS\nM_n out in 0 0 NMOS_DMIC W=120n L=45n\nM_p out in vdd vdd PMOS_DMIC W=270n L=45n\n.model NMOS_DMIC NMOS(LEVEL=54 VERSION=4.5 VTO=0.35)\n.model PMOS_DMIC PMOS(LEVEL=54 VERSION=4.5 VTO=-0.35)\n.dc Vin 0 1.2 0.01\n.print dc V(out)\n.end\n",
+        "questions": [
+            {"q": "¿La disipación de potencia dinámica de conmutación en una puerta CMOS depende cuadráticamente de la tensión de alimentación Vdd (P = alpha * C * Vdd^2 * f)?", "a": "V", "j": "Verdadero. Razón fundamental por la cual la reducción de Vdd es el mecanismo más eficaz de ahorro de energía."},
+            {"q": "¿El dimensionado simétrico habitual Wp / Wn suele fijarse entre 2 y 2.5 en silicio debido a que la movilidad de los electrones mu_n es mayor que la de los huecos mu_p?", "a": "V", "j": "Verdadero. Compensa la menor conductividad del canal p para equilibrar los tiempos de subida y bajada (tpLH = tpHL)."},
+            {"q": "En el estado estacionario de una puerta lógica CMOS estática con salida en nivel alto o bajo, existe una corriente continua de conducción directa considerable entre Vdd y tierra.", "a": "F", "j": "Falso. Uno de los dos transistores (red de pull-up o pull-down) está completamente en corte, reduciendo la corriente estática a mera fuga subumbral (leakage)."},
+            {"q": "¿La verificación DRC (Design Rule Checking) comprueba que las geometrías dibujadas en el layout físico cumplan estrictamente las tolerancias dimensionales del proceso de fabricación (anchuras mínimas, separaciones)?", "a": "V", "j": "Verdadero. Evita defectos mecánicos y cortocircuitos por litografía."},
+            {"q": "¿La verificación LVS (Layout Versus Schematic) garantiza que la red eléctrica extraída del layout coincide topologicalmente con el esquemático de diseño?", "a": "V", "j": "Verdadero. Comprueba conectividad, transistores, nodos y propiedades geométricas."},
+            {"q": "La célula básica de memoria SRAM estática estándar está constituida por 1 transistor y 1 condensador de almacenamiento de carga.", "a": "F", "j": "Falso. Esa es la célula de DRAM (1T-1C) que requiere refresco periódico; la célula de SRAM estándar se compone de 6 transistores (6T) con dos inversores realimentados en lazo cerrado."},
+            {"q": "¿Una referencia de tensión de tipo Bandgap aprovecha la suma ponderada de una tensión con coeficiente de temperatura negativo (Vbe) y otra con coeficiente positivo (VT) para obtener una tensión constante independiente de la temperatura?", "a": "V", "j": "Verdadero. Proporciona típicamente una referencia extraordinariamente estable de approx 1.25 V."},
+            {"q": "¿La técnica de layout por 'centroide común' (common-centroid) e interdigitado minimiza las discrepancias de apareamiento (mismatch) causadas por gradientes térmicos y de proceso en el silicio?", "a": "V", "j": "Verdadero. Práctica imprescindible en diseño analógico de pares diferenciales y espejos de corriente."},
+            {"q": "La corriente de fuga subumbral en transistores CMOS disminuye drásticamente a medida que se reduce la longitud del canal por debajo de los 45 nm.", "a": "F", "j": "Falso. Aumenta exponencialmente debido a los efectos de canal corto (DIBL, disminución de la barrera de potencial por el drenador)."},
+            {"q": "¿El 'Latch-up' en circuitos integrados CMOS es un cortocircuito parásito de baja impedancia originado por la activación involuntaria de una estructura tiristor PNPN parásita?", "a": "V", "j": "Verdadero. Puede destruir el chip si no se previenen contactos de sustrato y pozos con anillos de guarda adecuados."},
+            {"q": "¿El método del esfuerzo lógico (Logical Effort) permite calcular y optimizar analíticamente el número de etapas y el dimensionado de inversores para minimizar el retardo de un camino combinacional?", "a": "V", "j": "Verdadero. Metodología de Sutherland-Sproull ampliamente utilizada en microelectrónica."},
+            {"q": "¿Los márgenes de ruido NMH y NML cuantifican la inmunidad del circuito frente a interferencias espurias superpuestas a las señales lógicas?", "a": "V", "j": "Verdadero. NMH = VOH - VIH y NML = VIL - VOL."},
+            {"q": "¿En la lógica dinámica dominó, la evaluación condicional de la función se realiza únicamente durante la fase activa tras una fase previa de precarga a Vdd?", "a": "V", "j": "Verdadero. Acelera la conmutación a costa de mayor sensibilidad a fugas y ruido en nodos flotantes."}
+        ]
+    },
+
+    # 230931: HIPS (Sistemas de Hardware de Procesado de la Señal)
+    "230931": {
+        "code": "230931", "acronym": "HIPS", "title": "Sistemas de Hardware de Procesado de la Señal", "semester": 7, "ects": 6.0,
+        "department": "710 - EEL / 739 - TSC",
+        "description": "Arquitecturas especializadas de procesadores digitales de señal (DSP: Harvard, VLIW, SIMD, direccionamiento circular e invertido bit-reverse), diseño e implementación hardware de algoritmos de procesado (arquitecturas sistólicas, algoritmos CORDIC en rotación y vectorización, filtros digitales en punto fijo, convertidores DDC/DUC de radio definida por software SDR), cuantización de coeficientes, y co-diseño hardware/software en plataformas heterogéneas SoC-FPGA (ARM + FPGA con interconexión AXI4).",
+        "formulas": [
+            {"name": "Algoritmo CORDIC en Modo Rotación", "latex": r"x_{i+1} = x_i - d_i y_i 2^{-i}, \quad y_{i+1} = y_i + d_i x_i 2^{-i}, \quad z_{i+1} = z_i - d_i \theta_i"},
+            {"name": "Ganancia de Escala Asintótica CORDIC", "latex": r"K_{\infty} = \prod_{i=0}^{\infty} \sqrt{1 + 2^{-2i}} \approx 1.64676"},
+            {"name": "Direccionamiento Bit-Reversed en FFT", "latex": r"\text{index}_{\text{rev}} = \text{reverse\_bits}(\text{index}, \log_2 N)"},
+            {"name": "Ancho de Banda de Bus AXI4", "latex": r"\text{BW}_{\text{AXI}} = \text{DataWidth}_{\text{bytes}} \times f_{\text{clk}} \quad [\text{Bytes/s}]"},
+            {"name": "Rango Dinámico en Punto Fijo Q(m.n)", "latex": r"\text{Rango} = [-2^{m-1}, 2^{m-1} - 2^{-n}], \quad \text{Resolución} = 2^{-n}"}
+        ],
+        "calc_params": {"cordic_iters": 12, "axi_width_bits": 64, "axi_clk_mhz": 200.0, "q_format_int": 4, "q_format_frac": 12},
+        "calc_outputs": ["cordic_scale_k", "axi_throughput_gbytes_s", "q_resolution", "q_max_val"],
+        "calc_fn": "def calc(p):\n    import math\n    iters = int(p.get('cordic_iters', 12))\n    k = 1.0\n    for i in range(iters):\n        k *= math.sqrt(1.0 + 2**(-2 * i))\n    w_bytes = p.get('axi_width_bits', 64) / 8.0\n    f = p.get('axi_clk_mhz', 200.0) * 1e6\n    bw_gb = (w_bytes * f) / 1e9\n    frac = p.get('q_format_frac', 12)\n    m = p.get('q_format_int', 4)\n    res = 2**(-frac)\n    max_val = 2**(m - 1) - res\n    return {'cordic_scale_k': round(k, 5), 'axi_throughput_gbytes_s': round(bw_gb, 3), 'q_resolution': round(res, 6), 'q_max_val': round(max_val, 4)}",
+        "spice_template": "-- HIPS - Iteracion Elemental del Algoritmo CORDIC en VHDL\nlibrary ieee;\nuse ieee.std_logic_1164.all;\nuse ieee.numeric_std.all;\nentity cordic_step is\n    generic (SHIFT : integer := 1);\n    port (clk : in std_logic; x_in, y_in, z_in : in signed(15 downto 0); angle : in signed(15 downto 0); x_out, y_out, z_out : out signed(15 downto 0));\nend entity;\narchitecture rtl of cordic_step is\nbegin\n    process(clk) begin\n        if rising_edge(clk) then\n            if z_in >= 0 then\n                x_out <= x_in - shift_right(y_in, SHIFT);\n                y_out <= y_in + shift_right(x_in, SHIFT);\n                z_out <= z_in - angle;\n            else\n                x_out <= x_in + shift_right(y_in, SHIFT);\n                y_out <= y_in - shift_right(x_in, SHIFT);\n                z_out <= z_in + angle;\n            end if;\n        end if;\n    end process;\nend architecture;\n",
+        "questions": [
+            {"q": "¿El algoritmo CORDIC permite calcular funciones trigonométricas, hiperbólicas y de rotación vectorial utilizando exclusivamente desplazamientos de bits (shifts) y sumas sin requerir multiplicadores hardware?", "a": "V", "j": "Verdadero. Ideal para arquitecturas digitales compactas y eficientes en FPGAs y ASICs."},
+            {"q": "¿La arquitectura Harvard de un procesador DSP dispone de buses y espacios de memoria separados e independientes para instrucciones y datos, permitiendo accesos simultáneos en el mismo ciclo?", "a": "V", "j": "Verdadero. Supera el cuello de botella de Von Neumann acelerando las instrucciones de Multiply-Accumulate (MAC)."},
+            {"q": "En el cálculo de la FFT mediante diezmado en el tiempo (DIT), las muestras de entrada deben ordenarse según la permutación de bits invertidos (bit-reversal).", "a": "V", "j": "Verdadero. Mapea la entrada para que la salida aparezca en orden natural de frecuencias."},
+            {"q": "En aritmética de punto fijo con signo Q(1.15), un número puede representar valores mayores que +10.0.", "a": "F", "j": "Falso. El formato Q(1.15) tiene 1 bit de signo y 15 de fracción, representando números en el intervalo estricto [-1.0, +0.999969]."},
+            {"q": "¿Una matriz sistólica es una red homogénea de celdas de procesamiento conectadas localmente que computan datos de forma rítmica y canalizada, muy eficiente para multiplicación de matrices y redes neuronales?", "a": "V", "j": "Verdadero. Maximiza la reutilización de datos sin saturar los buses globales."},
+            {"q": "¿El protocolo de bus en chip AMBA AXI4 soporta transferencias por ráfagas (burst transfers), canales independientes de lectura/escritura y transacciones fuera de orden (out-of-order)?", "a": "V", "j": "Verdadero. Estándar dominante de interconexión de alta velocidad en SoCs modernos."},
+            {"q": "El direccionamiento circular (buffer circular) en procesadores DSP requiere una verificación continua por software mediante instrucciones condicionales 'if' para reiniciar los punteros.", "a": "F", "j": "Falso. Se implementa de forma automática y transparente en el hardware de generación de direcciones (AGU) con coste cero de ciclos de CPU."},
+            {"q": "¿La arquitectura VLIW (Very Long Instruction Word) empaqueta múltiples operaciones independientes en una única palabra de instrucción muy ancha para ser ejecutadas en paralelo por múltiples unidades funcionales?", "a": "V", "j": "Verdadero. El compilador se encarga de planificar estáticamente el paralelismo a nivel de instrucción."},
+            {"q": "¿Un convertidor digital reductor DDC (Digital Down-Converter) traslada una señal de RF/IF muestreada a banda base compleja I/Q mediante un oscilador NCO, mezcladores y filtros diezmadores CIC/FIR?", "a": "V", "j": "Verdadero. Núcleo fundamental del procesamiento en receptores de Radio Definida por Software (SDR)."},
+            {"q": "Los filtros CIC (Cascaded Integrator-Comb) requieren multiplicadores de punto flotante de alta complejidad para cada etapa.", "a": "F", "j": "Falso. No emplean multiplicadores; solo utilizan integradores (acumuladores) y peines (diferenciadores) con operaciones de suma y resta de enteros."},
+            {"q": "¿El factor de escala asintótico K de CORDIC para rotaciones circulares converge aproximadamente a 1.64676?", "a": "V", "j": "Verdadero. Requiere una multiplicación final de compensación (o pre-escalado de la entrada por 1/K approx 0.60725)."},
+            {"q": "¿Las instrucciones SIMD (Single Instruction, Multiple Data) permiten procesar simultáneamente múltiples canales o muestras empaquetadas en un único registro vectorial?", "a": "V", "j": "Verdadero. Acelera masivamente el tratamiento de audio, imagen y vídeo."},
+            {"q": "¿El desbordamiento en acumuladores hardware de DSP suele configurarse con aritmética de saturación para prevenir discontinuidades catastróficas de signo?", "a": "V", "j": "Verdadero. Fija el valor al máximo o mínimo representable en lugar de envolver circularmente (wrap-around)."}
+        ]
+    },
+
+    # 230934: DIFO (Dispositivos Fotovoltaicos)
+    "230934": {
+        "code": "230934", "acronym": "DIFO", "title": "Dispositivos Fotovoltaicos", "semester": 7, "ects": 6.0,
+        "department": "710 - EEL - Departamento de Ingeniería Electrónica",
+        "description": "Física de la conversión fotovoltaica de energía solar, espectro solar de referencia (AM1.5G, constante solar), modelo eléctrico equivalente de célula solar (1 diodo con Rs y Rsh), parámetros característicos (corriente de cortocircuito Isc, tensión de circuito abierto Voc, punto de máxima potencia MPP, factor de llenado Fill Factor FF y rendimiento de conversión eta), tecnologías de células solares (silicio monocristalino PERC/TOPCon, heterounión HJT, perovskitas y tándem), algoritmos MPPT (Perturbar y Observar P&O, Conductancia Incremental INC), y sistemas fotovoltaicos conectados a red y aislados.",
+        "formulas": [
+            {"name": "Ecuación del Modelo de Célula Solar de 1 Diodo", "latex": r"I = I_{ph} - I_0 \left[ e^{\frac{q (V + I R_s)}{n k T}} - 1 \right] - \frac{V + I R_s}{R_{sh}}"},
+            {"name": "Tensión de Circuito Abierto (Voc)", "latex": r"V_{oc} = \frac{n k T}{q} \ln\left( \frac{I_{ph}}{I_0} + 1 \right) \approx n V_T \ln\left( \frac{I_{sc}}{I_0} \right)"},
+            {"name": "Factor de Llenado (Fill Factor FF)", "latex": r"\text{FF} = \frac{P_{\max}}{V_{oc} \cdot I_{sc}} = \frac{V_{mpp} \cdot I_{mpp}}{V_{oc} \cdot I_{sc}}"},
+            {"name": "Eficiencia de Conversión Fotovoltaica", "latex": r"\eta = \frac{P_{\max}}{P_{\text{in}}} = \frac{V_{oc} \cdot I_{sc} \cdot \text{FF}}{G \cdot A}"},
+            {"name": "Condición de Máxima Potencia (Conductancia Incremental)", "latex": r"\frac{dI}{dV} = -\frac{I}{V} \iff \frac{dP}{dV} = 0 \quad (\text{En el MPP})"}
+        ],
+        "calc_params": {"g_w_m2": 1000.0, "area_m2": 1.6, "isc_a": 9.5, "voc_v": 40.0, "vmpp_v": 33.0, "impp_a": 9.0},
+        "calc_outputs": ["pmax_w", "fill_factor", "efficiency_pct", "pin_solar_w"],
+        "calc_fn": "def calc(p):\n    g = p.get('g_w_m2', 1000.0)\n    area = p.get('area_m2', 1.6)\n    pin = g * area\n    vmpp = p.get('vmpp_v', 33.0)\n    impp = p.get('impp_a', 9.0)\n    pmax = vmpp * impp\n    voc = max(0.1, p.get('voc_v', 40.0))\n    isc = max(0.1, p.get('isc_a', 9.5))\n    ff = pmax / (voc * isc)\n    eff = (pmax / max(1.0, pin)) * 100.0\n    return {'pmax_w': round(pmax, 1), 'fill_factor': round(ff, 4), 'efficiency_pct': round(eff, 2), 'pin_solar_w': round(pin, 1)}",
+        "spice_template": "* DIFO - Curva Caracteristica I-V de Celula Solar Fotovoltaica\nI_ph 0 out DC 9.5\nD1 out 0 D_SOLAR\nR_sh out 0 1000\nR_s out term 0.05\nV_sweep term 0 DC 0\n.model D_SOLAR D(IS=1e-10 N=1.2)\n.dc V_sweep 0 45 0.1\n.print dc I(V_sweep)\n.end\n",
+        "questions": [
+            {"q": "¿El espectro solar normalizado estándar utilizado para ensayar y certificar módulos fotovoltaicos terrestres es el AM1.5G con irradiancia de 1000 W/m^2 a 25 grados Celsius?", "a": "V", "j": "Verdadero. Masa de aire AM = 1 / cos(48.2) approx 1.5; 'G' indica Global (directa más difusa)."},
+            {"q": "¿La corriente de cortocircuito (Isc) de una célula fotovoltaica es directamente proporcional a la irradiancia solar incidente G?", "a": "V", "j": "Verdadero. A mayor flujo de fotones con energía superior al bandgap, mayor generación de pares electrón-hueco."},
+            {"q": "La tensión de circuito abierto (Voc) de una célula solar aumenta fuertemente al incrementarse la temperatura de la célula.", "a": "F", "j": "Falso. La tensión Voc disminuye con la temperatura (típicamente -2 mV/K en silicio) debido al aumento exponencial de la corriente de recombinación térmica inversa I0."},
+            {"q": "¿El factor de llenado (Fill Factor FF) cuantifica la cuadratura de la curva I-V y la calidad de la célula, situándose típicamente entre 0.75 y 0.85 en células comerciales de alta calidad?", "a": "V", "j": "Verdadero. FF = (Vmpp * Impp) / (Voc * Isc)."},
+            {"q": "¿La resistencia serie parasitaria (Rs) degrada principalmente el factor de llenado a altas intensidades, mientras que una baja resistencia shunt (Rsh) provoca fugas de corriente a bajas tensiones?", "a": "V", "j": "Verdadero. Se busca minimizar Rs (contactos óhmicos óptimos) y maximizar Rsh (evitar defectos de recombinación periférica)."},
+            {"q": "El límite termodinámico teórico de Shockley-Queisser para una célula fotovoltaica de una única unión p-n bajo iluminación solar no concentrada es de aproximadamente el 85%.", "a": "F", "j": "Falso. El límite teórico de Shockley-Queisser es de aproximadamente el 33.7% (a Eg approx 1.34 eV) debido a pérdidas por termalización y fotones no absorbidos por debajo del bandgap."},
+            {"q": "¿El algoritmo MPPT de Perturbar y Observar (P&O) ajusta periódicamente la tensión de operación observando si la potencia aumenta o disminuye para rastrear el MPP?", "a": "V", "j": "Verdadero. Algoritmo clásico ampliamente implementado por su sencillez y eficacia."},
+            {"q": "¿En el algoritmo MPPT de Conductancia Incremental, el punto de máxima potencia (MPP) se alcanza exactamente cuando la conductancia incremental dI/dV es igual a la conductancia instantánea opuesta -I/V?", "a": "V", "j": "Verdadero. Deriva de dP/dV = d(V*I)/dV = I + V*(dI/dV) = 0."},
+            {"q": "Los diodos de bypass conectados en antiparalelo con grupos de células solares agravan el efecto destructivo de puntos calientes (hot-spots) causados por sombras parciales.", "a": "F", "j": "Falso. Protegen el módulo puenteando las células sombreadas e impidiendo que queden polarizadas en inversa disipando potencia de las demás células en forma de calor destructivo."},
+            {"q": "¿Las células de heterounión de silicio (HJT) combinan obleas de silicio cristalino con capas ultra-delgadas de silicio amorfo intrínseco pasivante para reducir drásticamente la recombinación superficial?", "a": "V", "j": "Verdadero. Alcanzan altos valores de Voc (> 730 mV) y coeficientes de temperatura muy favorables."},
+            {"q": "¿Las células solares en tándem de Perovskita sobre Silicio superan el límite de Shockley-Queisser al absorber fotones de alta energía en la perovskita superior y los de baja en el silicio inferior?", "a": "V", "j": "Verdadero. Tecnología emergente con eficiencias en laboratorio que superan el 33%."},
+            {"q": "¿La reflectividad de la superficie de silicio pulido (aprox. 35%) se reduce a menos del 1% mediante texturizado piramidal químico y recubrimientos antirreflectantes (como nitruro de silicio SiNx)?", "a": "V", "j": "Verdadero. Maximiza la absorción óptica de fotones incidentes."},
+            {"q": "¿La constante solar extraterrestre en el límite superior de la atmósfera terrestre es de aproximadamente 1367 W/m^2?", "a": "V", "j": "Verdadero. Valor medio de irradiancia solar en el espacio a 1 Unidad Astronómica."}
+        ]
+    },
+
+    # 230932: INT (Integración de Sistemas)
+    "230932": {
+        "code": "230932", "acronym": "INT", "title": "Integración de Sistemas", "semester": 8, "ects": 6.0,
+        "department": "710 - EEL / ETSETB",
+        "description": "Metodología de ingeniería de sistemas aplicada a proyectos complejos multidisciplinares: especificación de requisitos, arquitectura del sistema (descomposición en subsistemas hardware, firmware, software y mecánica), diseño de interfaces (ICD), gestión de riesgos técnicos y FMEA, planes de verificación y validación (V&V, matriz de trazabilidad de requisitos), integración continua de hardware (HIL - Hardware-in-the-Loop), ensayos de cualificación ambiental (climáticos, vibración, choque mecánico) y preparación técnica para el Trabajo de Fin de Grado (TFG).",
+        "formulas": [
+            {"name": "Número de Prioridad de Riesgo en FMEA", "latex": r"\text{RPN} = S \times O \times D \quad (S: \text{Severidad}, O: \text{Ocurrencia}, D: \text{Detección})"},
+            {"name": "Disponibilidad del Sistema (Availability)", "latex": r"A = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}}"},
+            {"name": "Tasa de Fallos en Curva de la Bañera", "latex": r"\lambda(t) = \frac{f(t)}{R(t)} \approx \text{constante} = \frac{1}{\text{MTBF}} \quad (\text{en vida útil})"},
+            {"name": "Fiabilidad de Sistema con Componentes en Serie", "latex": r"R_{\text{sys}}(t) = \prod_{i=1}^{n} R_i(t) = e^{-\left(\sum_{i=1}^n \lambda_i\right) t}"},
+            {"name": "Fiabilidad de Sistema Redundante en Paralelo", "latex": r"R_{\text{par}}(t) = 1 - \prod_{i=1}^{n} (1 - R_i(t))"}
+        ],
+        "calc_params": {"sev": 8, "occ": 4, "det": 3, "mtbf_hours": 50000.0, "mttr_hours": 4.0, "mission_time_h": 1000.0},
+        "calc_outputs": ["rpn_score", "availability_pct", "reliability_mission"],
+        "calc_fn": "def calc(p):\n    import math\n    s = p.get('sev', 8)\n    o = p.get('occ', 4)\n    d = p.get('det', 3)\n    rpn = s * o * d\n    mtbf = max(1.0, p.get('mtbf_hours', 50000.0))\n    mttr = p.get('mttr_hours', 4.0)\n    avail = (mtbf / (mtbf + mttr)) * 100.0\n    t_miss = p.get('mission_time_h', 1000.0)\n    rel = math.exp(-t_miss / mtbf)\n    return {'rpn_score': rpn, 'availability_pct': round(avail, 5), 'reliability_mission': round(rel, 5)}",
+        "spice_template": "# INT - Modelo de Confiabilidad y Disponibilidad de Sistema Redundante en Python\ndef system_availability(mtbf_h, mttr_h, redundancy_n=1):\n    unavail_single = mttr_h / (mtbf_h + mttr_h)\n    unavail_sys = unavail_single ** redundancy_n\n    return {'Disponibilidad': 1.0 - unavail_sys, 'Horas_Indisponibilidad_Anuales': unavail_sys * 8760}\n",
+        "questions": [
+            {"q": "¿El modelo en V de ingeniería de sistemas establece que cada fase de definición y descomposición del sistema a la izquierda se corresponde con una fase equivalente de prueba e integración a la derecha?", "a": "V", "j": "Verdadero. Relaciona requisitos de usuario con aceptación, arquitectura con integración, y diseño de detalle con verificación de componentes."},
+            {"q": "¿El análisis modal de fallos y efectos (FMEA/AMFE) calcula el Número de Prioridad de Riesgo (RPN) como el producto de Severidad x Ocurrencia x Detección?", "a": "V", "j": "Verdadero. RPN = S * O * D; permite jerarquizar las acciones mitigadoras prioritarias."},
+            {"q": "La disponibilidad técnica de un sistema depende únicamente del tiempo medio entre fallos (MTBF) y es independiente del tiempo medio de reparación (MTTR).", "a": "F", "j": "Falso. La disponibilidad es A = MTBF / (MTBF + MTTR); reducir el tiempo de diagnóstico y reparación (MTTR) eleva directamente la disponibilidad."},
+            {"q": "¿La matriz de trazabilidad de requisitos garantiza que todos y cada uno de los requisitos del cliente estén vinculados con elementos de diseño arquitectónico y con sus correspondientes casos de prueba de verificación?", "a": "V", "j": "Verdadero. Asegura la cobertura total del ciclo de desarrollo sin omisiones."},
+            {"q": "¿En un sistema redundante de dos canales en paralelo activo, el sistema falla únicamente si ambos canales fallan simultáneamente?", "a": "V", "j": "Verdadero. R_paralelo = 1 - (1 - R1)*(1 - R2) > R_individual."},
+            {"q": "En un sistema serie de N componentes independientes, la tasa de fallos total del sistema es menor que la tasa de fallos del componente más fiable.", "a": "F", "j": "Falso. En un sistema serie las tasas de fallo se suman (lambda_sys = sum(lambda_i)), por lo que la fiabilidad total es siempre inferior a la de cualquiera de sus componentes individuales."},
+            {"q": "¿La simulación Hardware-in-the-Loop (HIL) conecta la unidad de control electrónica real (ECU o placa embebida) a un simulador informático en tiempo real que emula el entorno físico y los actuadores?", "a": "V", "j": "Verdadero. Permite validar exhaustivamente el firmware ante condiciones límite y fallos sin riesgo de daños físicos."},
+            {"q": "¿El documento de control de interfaz (ICD - Interface Control Document) especifica con precisión los protocolos mecánicos, eléctricos, lógicos y térmicos entre dos subsistemas?", "a": "V", "j": "Verdadero. Evita incompatibilidades de integración entre equipos de diseño independientes."},
+            {"q": "La fase de verificación (Verification) responde a la pregunta '¿Hemos construido el producto correcto según las necesidades del usuario final?'.", "a": "F", "j": "Falso. Esa es la Validación (Validation: 'right product'); la Verificación (Verification: 'product right') responde a '¿Hemos construido el producto correctamente conforme a las especificaciones técnicas?'."},
+            {"q": "¿Los ensayos ambientales de choque térmico y vibración senoidal/aleatoria cualifican los equipos electrónicos frente a fatiga estructural previa a su despliegue operativo en campo?", "a": "V", "j": "Verdadero. Normativas MIL-STD, DO-160, ISO 16750 y CE."},
+            {"q": "¿La curva de la bañera (bathtub curve) describe tres periodos de tasa de fallos de un equipo: mortalidad infantil decreciente, vida útil con tasa de fallos constante, y desgaste por envejecimiento creciente?", "a": "V", "j": "Verdadero. Modelo clásico de ingeniería de fiabilidad."},
+            {"q": "¿La integración continua de hardware (Hardware CI) automatiza el flasheo de firmware y la ejecución de tests unitarios y de integración nocturnos en bancos de prueba reales?", "a": "V", "j": "Verdadero. Detecta regresiones de firmware y hardware con gran celeridad."},
+            {"q": "¿El Trabajo de Fin de Grado (TFG) sintetiza de forma integral las competencias científicas, tecnológicas, metodológicas y comunicativas adquiridas a lo largo de todo el grado en ingeniería?", "a": "V", "j": "Verdadero. Culminación académica oficial acreditada por la UPC y la ETSETB."}
+        ]
+    }
+}
+
+with open("data/subjects_q7_q8.json", "w", encoding="utf-8") as f:
+    json.dump(q7_q8_data, f, indent=2, ensure_ascii=False)
+
+print(f"Generated Q7-Q8 catalog with {len(q7_q8_data)} subjects and {sum(len(s['questions']) for s in q7_q8_data.values())} questions.")

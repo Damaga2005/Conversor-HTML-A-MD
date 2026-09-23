@@ -1,0 +1,12 @@
+[C] ¿El polinomio de Taylor de primer orden de sin(x) alrededor de x=0 es simplemente x?	<b>Verdadero (V)</b><br><br><i>Verdadero. f(0)=0, f'(0)=1 -> P1(x) = x.</i>
+[C] ¿Toda función derivable en un punto x0 es necesariamente continua en dicho punto?	<b>Verdadero (V)</b><br><br><i>Verdadero. La derivabilidad es una condición más fuerte que implica continuidad.</i>
+[C] La serie armónica sum(1/n) converge a un número real finito.	<b>Falso (F)</b><br><br><i>Falso. La serie armónica diverge logarítmicamente hacia infinito.</i>
+[C] ¿La derivada de e^(-x^2) respecto a x es igual a -2x * e^(-x^2)?	<b>Verdadero (V)</b><br><br><i>Verdadero. Por aplicación directa de la regla de la cadena.</i>
+[C] La integral definida de una función impar sobre un intervalo simétrico [-a, a] es siempre cero.	<b>Verdadero (V)</b><br><br><i>Verdadero. Las áreas bajo la curva en la mitad positiva y negativa se cancelan con signos opuestos.</i>
+[C] ¿La fórmula de Euler establece que e^(j*pi) + 1 = 0?	<b>Verdadero (V)</b><br><br><i>Verdadero. Con theta = pi, cos(pi) = -1 y sin(pi) = 0.</i>
+[C] La regla de L'Hôpital puede aplicarse a cualquier límite independientemente de si hay indeterminación.	<b>Falso (F)</b><br><br><i>Falso. Solo es válida ante formas indeterminadas 0/0 o inf/inf.</i>
+[C] ¿El límite de (sin x)/x cuando x tiende a 0 es estrictamente 1?	<b>Verdadero (V)</b><br><br><i>Verdadero. Es el límite trigonométrico fundamental.</i>
+[C] ¿El radio de convergencia de la serie de Taylor de e^x centrada en 0 es infinito?	<b>Verdadero (V)</b><br><br><i>Verdadero. El criterio del cociente da límite 0 para todo x, por lo que converge en todo R.</i>
+[C] La integral impropia de 1/x entre 1 e infinito converge a 1.	<b>Falso (F)</b><br><br><i>Falso. La primitiva es ln(x), y ln(inf) diverge hacia infinito.</i>
+[C] ¿El Teorema del Valor Medio garantiza que existe un punto donde la derivada instantánea coincide con la tasa media de variación?	<b>Verdadero (V)</b><br><br><i>Verdadero. f'(c) = (f(b) - f(a)) / (b - a).</i>
+[C] ¿El módulo de cualquier número complejo de la forma e^(j*theta) con theta real es siempre 1?	<b>Verdadero (V)</b><br><br><i>Verdadero. |cos(theta) + j*sin(theta)| = sqrt(cos^2 + sin^2) = 1.</i>

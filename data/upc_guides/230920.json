@@ -1,0 +1,65 @@
+{
+  "code": "230920",
+  "acronym": "SM",
+  "title": "Sistemas de Medida",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "710 - EEL - Departamento de Ingeniería Electrónica.",
+  "responsible_professor": "MIQUEL ANGEL GARCIA GONZALEZ",
+  "objectives": "Al finalizar el curso, el estudiante debe:\nPoder analizar, especificar y diseñar a nivel básico sistemas de medida.\nConocer los principales tipos de sensores y tener criterios para la comparación y elección de los diversos sensores que pueden medir\nuna determinada magnitud.\nUsar solventemente instrumentos de medida tanto en modo manual como bajo control por ordenador\nPoder estimar la incertidumbre en la medida siguiendo recomendaciones internacionales\nPoder valorar el efecto de interferencias y ruido en sistemas de medida e instrumentación.\nConocer los principios básicos de las normativas de obligado cumplimiento de Compatibilidad Electromagnética\nConocer técnicas básicas para el tratamiento y presentación de resultados de la medida",
+  "contents": [
+    {
+      "title": "Contenido General",
+      "description": "Introducción a la asignatura Descripción: Introducción a los contenidos y funcionamiento de la asignatura Dedicación: 3h Grupo grande/Teoría: 3h"
+    },
+    {
+      "title": "Unidad 1: Introducción a los sistemas de medida",
+      "description": "Descripción: Conceptos básicos: Definición de medida, sistema de medida, sensor, actuador, cadena de medida Características de sistemas de medida estáticas y dinámicas Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 5h Grupo grande/Teoría: 3h Aprendizaje autónomo: 2h Fecha: 06/09/2026 Página: 3 / 7"
+    },
+    {
+      "title": "Unidad 2: Evaluación de la incertidumbre en la medida",
+      "description": "Descripción: Recomendaciones para la estimación de la incertidumbre en la medida. Incertidumbres tipo A y tipo B Combinación de incertidumbres Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 5h Grupo grande/Teoría: 3h Aprendizaje autónomo: 2h"
+    },
+    {
+      "title": "Unidad 3: Interferencias en sistemas de medida",
+      "description": "Descripción: Tipos de interferencia Identificación de fuentes de interferencia Reducción de interferencias Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 5h Grupo grande/Teoría: 3h Aprendizaje autónomo: 2h"
+    },
+    {
+      "title": "Unidad 4: Ruido en sistemas de medida",
+      "description": "Descripción: Origen de ruido electrónico Modelos de ruido Técnicas de análisis de ruido Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 5h Grupo grande/Teoría: 3h Aprendizaje autónomo: 2h Fecha: 06/09/2026 Página: 4 / 7"
+    },
+    {
+      "title": "Unidad 5: Sensores Resistivos",
+      "description": "Descripción: Introducción a los sensores moduladores Fundamentos físicos de la resistencia variable Modelo general de un sensor resistivo Detectores de temperatura resistivos (RTD) Termistores Sensores piezorresistivos Magnetorresistencias Fotorresistencias (LDR) Higrómetros resistivos Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 6h Grupo grande/Teoría: 4h Aprendizaje autónomo: 2h"
+    },
+    {
+      "title": "Unidad 6: Acondicionamiento de Sensores en Continua",
+      "description": "Descripción: Principios de conversión de resistencia a voltaje Conversión de corriente a voltaje Amplificadores diferenciales e instrumentación Interruptores analógicos y multiplexores Amplificadores de ganancia variable y programable Amplificadores con realimentación de corriente Referencias de voltaje y corriente Mediciones ratiométricas Sensores de temperatura basados en uniones semiconductoras Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 6h Grupo grande/Teoría: 4h Aprendizaje autónomo: 2h"
+    },
+    {
+      "title": "Unidad 8: Sensores reactivos i electromagnéticos",
+      "description": "Descripción: Introducción Sensores capacitivos Sensores inductivos Sensores de efecto Hall Sensores magnetostrictivos Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 6h Grupo grande/Teoría: 4h Aprendizaje autónomo: 2h Fecha: 06/09/2026 Página: 5 / 7"
+    },
+    {
+      "title": "Unidad 8: Acondicionamiento de sensores en alterna",
+      "description": "Descripción: Conversión de impedancia a tensión Amplificadores de alterna (AC) Técnicas de estimación de amplitud Detección coherente Métodos de detección mediante osciladores de frecuencia variable Conversión de frecuencia a tensión Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 6h Grupo grande/Teoría: 4h Aprendizaje autónomo: 2h"
+    },
+    {
+      "title": "Unidad 9: Sensores Generadores y de Temperatura Basados en Uniones Semiconductoras",
+      "description": "Descripción: Introducción a los sensores generadores Termopares Sensores piezoeléctricos Sensores piroeléctricos Sensores de temperatura basados en uniones semiconductoras Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 6h Grupo grande/Teoría: 4h Aprendizaje autónomo: 2h"
+    },
+    {
+      "title": "Unidad 10: Acondicionadores singulares de sensores",
+      "description": "Descripción: Amplificadores de bajas derivas Amplificadores electrométricos y de transimpedancia Amplificadores de carga Actividades vinculadas: Entrega ejercicio asociado a los contenidos desarrollados en clase Dedicación: 6h Grupo grande/Teoría: 4h Aprendizaje autónomo: 2h Lab 0: Organización del laboratorio Descripción: Presentación del laboratorio, instrumentos y organización de las sesiones de laboratorio. Organización de los grupos de laboratorio Dedicación: 2h Grupo pequeño/Laboratorio: 2h Fecha: 06/09/2026 Página: 6 / 7 Desafío de Laboratorio Descripción: Diseño, implementación, caracterización y calibración de un sistema de medida de espirometría Actividades vinculadas: Propuesta de proyecto Desarrollo del proyecto en el laboratorio Informe final del proyecto Dedicación: 31h Grupo pequeño/Laboratorio: 24h Aprendizaje autónomo: 7h Examen final Descripción: Preparación de examen final y resolución en aula Dedicación: 11h Grupo grande/Teoría: 3h Aprendizaje autónomo: 8h"
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\n40% examen final\n25% evaluación continuada\n35% nota de laboratorio\nLos contenidos asociados a laboratorio no son reevaluables\nPara aprobar la asignatura es requisito realizar las tareas asociadas al laboratorio\nNORMAS PARA LA REALIZACIÓN DE LAS PRUEBAS.\nEl examen final consistirá en actividades similares a las presentadas en clase. Se podrán utilizar apuntes, ordenadores, software de\ntratamiento de datos y simulación, chatbots con inteligencia artificial, etc. No obstante, estará prohibida toda interacción con otras\npersonas. En caso de utilizar chatbots, el estudiante es el responsable de juzgar si las respuestas son correctas y precisas.",
+  "bibliography": [
+    "- Pallàs Areny, Ramon; Webster, John G. Sensors and signal conditioning. Second Edition. New York: John Wiley & Sons, Inc, [2001].",
+    "ISBN 9780471332329.",
+    "- Fraden, J. Handbook of modern sensors: physics, designs, and applications [en línea]. 5th ed. Cham: Springer International",
+    "Publishing, 2016 [Consulta: 15/07/2019]. Disponible a: http://dx.doi.org/10.1007/978-3-319-19303-8. ISBN 9783319193038.",
+    "Complementaria:"
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230920/sistemas-de-medida.pdf"
+}

@@ -1,0 +1,37 @@
+{
+  "code": "230911",
+  "acronym": "DD",
+  "title": "Diseño Digital",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "710 - EEL - Departamento de Ingeniería Electrónica.",
+  "responsible_professor": "DIEGO CESAR MATEO PEÑA",
+  "objectives": "El estudiante debe tener capacidad para analizar, diseñar y verificar experimentalmente subsistemas electrónicos digitales\ncombinacionales y secuenciales utilizando herramientas modernas. En esta asignatura se introduce y se utiliza el lenguaje de\ndescripción de hardware VHDL. También incluye una introducción a la família lógica CMOS, la utilización de dispositivos lógicos\nprogramables y una introducción a los sistemas digitales complejos.\nResultado del aprendizaje:\nEl estudiante es capaz de analizar y diseñar circuitos combinacionales y secuenciales síncronos, y de utilizar circuitos integrados.\nEl estudiante conoce y sabe aplicar los fundamentos de los lenguajes de descripción de hardware.\nAl trabajar en equipo. el estudiante identifica los objetivos del grupo y puede diseñar un plan de trabajo para conseguirlos, identificar\nlas responsabilidades de cada componente del grupo y asumir el compromiso de la tarea asignada.\nIdentifica, modela y plantea problemes a partir de situaciones abiertas. Explora y aplica las alternativas para su resolución. Maneja\naproximaciones.",
+  "contents": [
+    {
+      "title": "Tema 1. Introducción al diseño digital",
+      "description": "La abstracción digital, sistemas y señales digitales, comportamiento versus estructura, jerarquía. Funciones lógicas y álgebra de Boole. Sistemas de numeración y códigos. Bajo la abstracción digital: alimentación, retardos, consumos, niveles lógicos, alta impedancia."
+    },
+    {
+      "title": "Tema 2. Diseño combinacional",
+      "description": "Diseño canónico en SoP y PoS. Diseño con módulos combinacionales. Multiplexores, descodificadores, sumadores, comparadores, etc. Descripción de circuitos combinacionales en VHDL."
+    },
+    {
+      "title": "Tema 3. Diseño secuencial",
+      "description": "Sistemas asíncronos y síncronos, comportamiento temporal. Latchs y biestables. Análisis y síntesis a medida de máquinas de estados síncronas. Diseño modular secuencial, registros y contadores. Diseño secuencial con VHDL. Temporización: retardos, tiempos de setup de hold, skews, tratamiento de señales de reset y de reloj. Máquinas algorítmicas, unidades de datos y de control."
+    },
+    {
+      "title": "Tema 4. Circuitos digitales CMOS",
+      "description": "Tipos de CIs digitales y famílias lógicas. Transistores MOS. Inversor y puertas básicas CMOS. Prestaciones en circuitos CMOS: retardos, espúreos, consumos estáticos y dinámicos. Dispositivos de lógica programable, células lógicas y estilos de síntesis. Memorias."
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nCalificación final en función de las calificaciones respectivas de la parte de teoría (60%) y de la parte de laboratorio (40%). La parte\nde teoría consta en un 70% del examen final de teoría y un 30% proveniente del parcial de medio cuatrimestre y de la entrega de\nactividades que se hagan durante el curso. Si la nota que conforma el 30% es inferior a la del examen final de teoría, éste pasa a ser\nel 100% de la nota de teoría. La parte de laboratorio se obtiene a partir de la evolución de las prácticas realizadas (que se hace\nmediante una prueba individual en la última sesión de laboratorio y que representa el 50% de la parte de laboratorio) y del examen\nfinal de laboratorio (que representa el otro 50% y que se realiza al mismo tiempo que el examen final de teoría).\nLa reevaluación de la asignatura implica hacer otra vez el examen final, que incluye teoría y laboratorio. Las calificaciones obtenidas\nsustituyen a las anteriores. La evaluación de las prácticas no se reevalúa, se toma la obtenida durante el curso. La nota del parcial no\nse considera en la reevaluación.\nNORMAS PARA LA REALIZACIÓN DE LAS PRUEBAS.\nEn los exámenes no se permite utilizar dispositivos con conexión inalámbrica (teléfonos móviles, portátiles, tablets, etc.), ni\ncalculadoras programables. Además es necesario aportar algún documento identificativo (DNI, pasaporte, etc).\n\nFecha: 06/09/2026\nPágina: 4 / 4",
+  "bibliography": [
+    "- Harris, S.L.; Harris, D.M. Digital design and computer architecture. ARM ed. Waltham, MA: Morgan Kaufmann, 2016. ISBN",
+    "9780128000564.",
+    "- Pardo Carpio, F.; Boluda Grau, J.A. VHDL: lenguaje para síntesis y modelado de circuitos. 3a ed. act. Paracuellos de Jarama, Madrid:",
+    "Ra-ma, 2011. ISBN 9788499640402.",
+    "- Ercegovac, M.D.; Lang, T.; Moreno, J.H. Introduction to digital systems. Estats Units d'Amèrica: John Wiley and Sons, 1999. ISBN"
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230911/diseno-digital.pdf"
+}

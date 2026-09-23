@@ -1,0 +1,1230 @@
+# 230915 - Circuitos Analógicos (CA)
+**Grado en Ingeniería Electrónica de Telecomunicación (GREELEC)**  
+*Escuela Técnica Superior de Ingeniería de Telecomunicación de Barcelona (ETSETB - UPC)*
+
+## 1. Ficha Técnica y Metadatos Oficiales
+- **Código UPC**: `230915`
+- **Acrónimo Oficial**: `CA`
+- **Semestre**: Q4 (Fase Troncal / Especialización)
+- **Créditos ECTS**: 6.0 ECTS (150)
+- **Departamento Responsable**: 710 - EEL - Departamento de Ingeniería Electrónica
+- **Profesorado / Coordinación**: Otros:
+- **Guía Docente Oficial en PDF**: [230915_guia_docent.pdf](https://www.upc.edu/grau/guiadocent/pdf/esp/230915/circuitos-analogicos.pdf)
+
+## 2. Descripción General y Requisitos
+Etapas amplificadoras con BJT y MOSFET (emisor/fuente común, base/puerta común, colector/drenador común o seguidores), pares diferenciales con cargas activas (espejos de corriente Wilson y cascode), etapas de salida en potencia (Clase A, B, AB), respuesta en frecuencia (método de Miller, frecuencias de corte inferior y superior), realimentación negativa (topologías, estabilidad, margen de fase y compensación de Miller en amplificadores operacionales).
+
+## 3. Objetivos de Aprendizaje y Competencias
+- E
+- l
+-  
+- o
+- b
+- j
+- e
+- t
+- i
+- v
+- o
+-  
+- p
+- r
+- i
+- n
+- c
+- i
+- p
+- a
+- l
+-  
+- e
+- s
+-  
+- e
+- l
+-  
+- e
+- s
+- t
+- u
+- d
+- i
+- o
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- c
+- i
+- r
+- c
+- u
+- i
+- t
+- o
+- s
+-  
+- e
+- l
+- e
+- c
+- t
+- r
+- ó
+- n
+- i
+- c
+- o
+- s
+-  
+- q
+- u
+- e
+-  
+- r
+- e
+- a
+- l
+- i
+- z
+- a
+- n
+-  
+- l
+- a
+- s
+-  
+- f
+- u
+- n
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- b
+- á
+- s
+- i
+- c
+- a
+- s
+-  
+- d
+- e
+-  
+- p
+- r
+- o
+- c
+- e
+- s
+- a
+- m
+- i
+- e
+- n
+- t
+- o
+-  
+- a
+- n
+- a
+- l
+- ó
+- g
+- i
+- c
+- o
+-  
+- d
+- e
+-  
+- s
+- e
+- ñ
+- a
+- l
+- ,
+- 
+
+- d
+- e
+-  
+- g
+- e
+- n
+- e
+- r
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- s
+- e
+- ñ
+- a
+- l
+- e
+- s
+-  
+- y
+-  
+- d
+- e
+-  
+- c
+- o
+- n
+- v
+- e
+- r
+- s
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- s
+- e
+- ñ
+- a
+- l
+- e
+- s
+-  
+- e
+- n
+- t
+- r
+- e
+-  
+- l
+- o
+- s
+-  
+- d
+- o
+- m
+- i
+- n
+- i
+- o
+- s
+-  
+- a
+- n
+- a
+- l
+- ó
+- g
+- i
+- c
+- o
+-  
+- y
+-  
+- d
+- i
+- g
+- i
+- t
+- a
+- l
+- .
+-  
+- L
+- a
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- e
+- s
+- t
+- a
+- s
+-  
+- f
+- u
+- n
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- s
+- e
+- 
+
+- b
+- a
+- s
+- a
+- r
+- á
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- c
+- o
+- n
+- o
+- c
+- i
+- m
+- i
+- e
+- n
+- t
+- o
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- p
+- r
+- e
+- s
+- t
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- y
+-  
+- l
+- a
+- s
+-  
+- l
+- i
+- m
+- i
+- t
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- a
+- m
+- p
+- l
+- i
+- f
+- i
+- c
+- a
+- d
+- o
+- r
+- e
+- s
+-  
+- o
+- p
+- e
+- r
+- a
+- c
+- i
+- o
+- n
+- a
+- l
+- e
+- s
+-  
+- y
+-  
+- d
+- e
+-  
+- o
+- t
+- r
+- o
+- s
+-  
+- c
+- i
+- r
+- c
+- u
+- i
+- t
+- o
+- s
+-  
+- i
+- n
+- t
+- e
+- g
+- r
+- a
+- d
+- o
+- s
+- 
+
+- a
+- n
+- a
+- l
+- ó
+- g
+- i
+- c
+- o
+- s
+- .
+- 
+
+- U
+- n
+- a
+-  
+- v
+- e
+- z
+-  
+- s
+- u
+- p
+- e
+- r
+- a
+- d
+- a
+-  
+- l
+- a
+-  
+- a
+- s
+- i
+- g
+- n
+- a
+- t
+- u
+- r
+- a
+- ,
+-  
+- e
+- l
+-  
+- e
+- s
+- t
+- u
+- d
+- i
+- a
+- n
+- t
+- e
+-  
+- h
+- a
+-  
+- d
+- e
+-  
+- s
+- e
+- r
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+- :
+- 
+
+- -
+-  
+- A
+- n
+- a
+- l
+- i
+- z
+- a
+- r
+-  
+- y
+-  
+- d
+- i
+- s
+- e
+- ñ
+- a
+- r
+-  
+- l
+- o
+- s
+-  
+- c
+- i
+- r
+- c
+- u
+- i
+- t
+- o
+- s
+-  
+- e
+- l
+- e
+- c
+- t
+- r
+- ó
+- n
+- i
+- c
+- o
+- s
+-  
+- q
+- u
+- e
+-  
+- r
+- e
+- a
+- l
+- i
+- z
+- a
+- n
+-  
+- l
+- a
+- s
+-  
+- f
+- u
+- n
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- a
+- n
+- a
+- l
+- ó
+- g
+- i
+- c
+- a
+- s
+-  
+- b
+- á
+- s
+- i
+- c
+- a
+- s
+-  
+- y
+-  
+- q
+- u
+- e
+-  
+- u
+- t
+- i
+- l
+- i
+- z
+- a
+- n
+-  
+- l
+- o
+- s
+-  
+- c
+- i
+- r
+- c
+- u
+- i
+- t
+- o
+- s
+-  
+- i
+- n
+- t
+- e
+- g
+- r
+- a
+- d
+- o
+- s
+- 
+
+- a
+- n
+- a
+- l
+- ó
+- g
+- i
+- c
+- o
+- s
+-  
+- m
+- á
+- s
+-  
+- p
+- o
+- p
+- u
+- l
+- a
+- r
+- e
+- s
+- .
+- 
+
+- -
+-  
+- E
+- n
+- t
+- e
+- n
+- d
+- e
+- r
+-  
+- c
+- ó
+- m
+- o
+-  
+- s
+- e
+-  
+- a
+- p
+- l
+- i
+- c
+- a
+-  
+- l
+- a
+-  
+- t
+- é
+- c
+- n
+- i
+- c
+- a
+-  
+- d
+- e
+-  
+- l
+- a
+-  
+- r
+- e
+- a
+- l
+- i
+- m
+- e
+- n
+- t
+- a
+- c
+- i
+- ó
+- n
+-  
+- e
+- n
+-  
+- c
+- i
+- r
+- c
+- u
+- i
+- t
+- o
+- s
+-  
+- e
+- l
+- e
+- c
+- t
+- r
+- ó
+- n
+- i
+- c
+- o
+- s
+-  
+- y
+-  
+- l
+- a
+-  
+- i
+- n
+- f
+- l
+- u
+- e
+- n
+- c
+- i
+- a
+-  
+- e
+- n
+-  
+- s
+- u
+-  
+- e
+- s
+- t
+- a
+- b
+- i
+- l
+- i
+- d
+- a
+- d
+- .
+- 
+
+- -
+-  
+- U
+- t
+- i
+- l
+- i
+- z
+- a
+- r
+-  
+- d
+- e
+-  
+- f
+- o
+- r
+- m
+- a
+-  
+- a
+- u
+- t
+- ó
+- n
+- o
+- m
+- a
+-  
+- l
+- a
+- s
+-  
+- h
+- e
+- r
+- r
+- a
+- m
+- i
+- e
+- n
+- t
+- a
+- s
+-  
+- d
+- e
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+- ,
+-  
+- l
+- o
+- s
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- s
+-  
+- d
+- e
+-  
+- s
+- i
+- m
+- u
+- l
+- a
+- c
+- i
+- ó
+- n
+-  
+- y
+-  
+- l
+- o
+- s
+-  
+- i
+- n
+- s
+- t
+- r
+- u
+- m
+- e
+- n
+- t
+- o
+- s
+-  
+- e
+- m
+- p
+- l
+- e
+- a
+- d
+- o
+- s
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- d
+- e
+- s
+- a
+- r
+- r
+- o
+- l
+- l
+- o
+- 
+
+- d
+- e
+-  
+- e
+- l
+- e
+- c
+- t
+- r
+- ó
+- n
+- i
+- c
+- a
+-  
+- a
+- n
+- a
+- l
+- ó
+- g
+- i
+- c
+- a
+- .
+- 
+
+- -
+-  
+- R
+- e
+- a
+- l
+- i
+- z
+- a
+- r
+- ,
+-  
+- v
+- e
+- r
+- i
+- f
+- i
+- c
+- a
+- r
+-  
+- y
+-  
+- d
+- e
+- p
+- u
+- r
+- a
+- r
+-  
+- e
+- x
+- p
+- e
+- r
+- i
+- m
+- e
+- n
+- t
+- a
+- l
+- m
+- e
+- n
+- t
+- e
+-  
+- l
+- o
+- s
+-  
+- c
+- i
+- r
+- c
+- u
+- i
+- t
+- o
+- s
+-  
+- e
+- l
+- e
+- c
+- t
+- r
+- ó
+- n
+- i
+- c
+- o
+- s
+-  
+- q
+- u
+- e
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- n
+-  
+- l
+- a
+- s
+-  
+- f
+- u
+- n
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- a
+- n
+- a
+- l
+- ó
+- g
+- i
+- c
+- a
+- s
+-  
+- e
+- n
+-  
+- l
+- a
+- s
+- 
+
+- a
+- p
+- l
+- i
+- c
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- m
+- á
+- s
+-  
+- h
+- a
+- b
+- i
+- t
+- u
+- a
+- l
+- e
+- s
+- .
+
+## 4. Temario y Unidades de Contenido
+- {'title': 'Tema 1: Amplificación de señales eléctricas y circuitos integrados analógicos', 'description': '1. Amplificación Definición de un amplificador. Tipos de amplificadores. Circuito equivalente de un amplificador de tensión. Resistencias de entrada y salida y efectos de carga. 2. El amplificador operacional Definición. Símbolo. Circuito equivalente. El amplificador operacional ideal. Configuraciones básicas con amplificadores operacionales. 3. Otros circuitos integrados amplificadores Amplificador operacional de transconductancia. Amplificador realimentado en corriente.'}
+- {'title': 'Tema 2: Limitaciones de los amplificadores operacionales', 'description': '1. Limitaciones en continua del AO Característica de entrada-salida, margen dinámico y zonas de funcionamiento. Corrientes de polarización. Tensión de offset. Relación de rechazo al modo común (CMRR). Relación de rechazo a la alimentación (PSRR). Balance de errores. 2. Respuesta frecuencial y limitaciones en alterna del AO Función de transferencia, respuesta frecuencial y diagramas de Bode. Respuesta frecuencial del AO. Producto ganancia por ancho de banda. Tiempo de subida. Slew-rate.'}
+- {'title': 'Tema 3: Circuitos realimentados', 'description': '1. Realimentación Concepto de realimentación. Representación canónica. Flujograma del sistema realimentado canónico. Flujograma de circuitos con amplificadores operacionales. 2. Estabilidad en circuitos realimentados Concepto de estabilidad. Criterio de estabilidad de Routh. Lugar geométrico de las raíces (L.G.R.). Márgenes de estabilidad. Compensación frecuencial.'}
+- {'title': 'Tema 4: Funciones electrónicas analógicas', 'description': '1. Funciones lineales Convertidores I-V. Convertidores V-I. Amplificadores de corriente. Amplificadores diferenciales. Amplificadores de instrumentación. 2. Funciones no lineales Comparadores de tensión. Comparadores con histéresis. Rectificadores de precisión. Limitadores y recortadores de señal.'}
+- {'title': 'Tema 5: Generadores de señal', 'description': '1. Generadores de señal sinusoidal Condiciones necesarias para la oscilación. Condición de arranque y estabilización de amplitud. Oscilador en puente de Wien. Oscilador en cuadratura. 2. Generadores de relajación Astables. Monostables. Circuito integrado de temporización 555. Osciladores de onda cuadrada-triangular.'}
+- {'title': 'Tema 6: Conversión A/D i D/A', 'description': '1. Conexión entre el mundo analógico i el mundo digital 2. Convertidores D/A Especificaciones. Técnicas de conversión D/A. 3. Convertidores A/D Especificaciones. Muestreo y retención. Técnicas de conversión A/D.'}
+- {'title': 'Tema 7: Otros circuitos integrados analógicos', 'description': '1. Interruptores y multiplexores analógicos 2. Amplificadores logarítmicos 3. Multiplicadores analógicos 4. PLL'}
+
+## 5. Modelado Matemático y Fórmulas Clave (LaTeX)
+### 5.1 Ganancia Etapa Fuente Común con Carga Activa
+$$
+A_v = -g_m (r_o \parallel R_L)
+$$
+
+### 5.2 Efecto Miller en Capacidad Parásita
+$$
+C_{in,M} = C_{gd} (1 - A_v) \approx C_{gd} (1 + |A_v|)
+$$
+
+### 5.3 Relación de Rechazo al Modo Común (CMRR)
+$$
+\text{CMRR} = 20 \log_{10}\left( \frac{|A_d|}{|A_{cm}|} \right)
+$$
+
+### 5.4 Margen de Fase (PM)
+$$
+\text{PM} = 180^\circ + \angle T(j \omega_{0\text{dB}})
+$$
+
+### 5.5 Producto Ganancia-Ancho de Banda (GBW)
+$$
+\text{GBW} = A_0 \cdot f_{3\text{dB}} = \frac{g_m}{2\pi C_c}
+$$
+
+## 6. Banco de Ensayos / Laboratorio Virtual
+```spice
+* CA - Amplificador Fuente Comun NMOS con Respuesta en Frecuencia
+M1 out in 0 0 NMOS_CA W=20u L=0.5u
+RD vdd out 5k
+Vdd vdd 0 DC 5V
+Vin in 0 DC 1.2 AC 1m
+.model NMOS_CA NMOS(LEVEL=1 VTO=0.7 KP=150u CGDO=0.5n CGSO=0.5n)
+.ac dec 20 1k 1G
+.print ac V(out) VP(out)
+.end
+```
+
+## 7. Preguntas de Autoevaluación y Examen con Justificación Técnica
+#### Pregunta 1
+**¿El efecto Miller multiplica la capacidad parásita entre entrada y salida por un factor aproximadamente igual a 1 + |Av|?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Reduce significativamente la frecuencia de corte superior en etapas inversoras de alta ganancia.
+
+#### Pregunta 2
+**¿Una etapa seguidora de emisor (o fuente) presenta una ganancia de tensión cercana a la unidad (Av approx 1) y una baja impedancia de salida?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Se emplea comúnmente como etapa de acoplo (buffer).
+
+#### Pregunta 3
+**La distorsión por cruce por cero (crossover distortion) es típica de los amplificadores de salida en Clase A.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. Es característica de la Clase B pura; se corrige mediante una pequeña polarización en Clase AB.
+
+#### Pregunta 4
+**¿El par diferencial amplifica la diferencia entre sus dos entradas mientras rechaza las variaciones en modo común?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Caracterizado por una alta CMRR.
+
+#### Pregunta 5
+**¿Un margen de fase de al menos 45 a 60 grados garantiza un comportamiento estable con sobreoscilación moderada en bucle cerrado?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Criterio de estabilidad y amortiguamiento estándar en diseño analógico.
+
+#### Pregunta 6
+**¿La técnica de compensación por polo dominante de Miller en un op-amp consiste en intercalar un condensador Cc entre la entrada y salida de la segunda etapa?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Separa los polos (pole splitting) asegurando que la ganancia caiga por debajo de 0 dB antes del segundo polo.
+
+#### Pregunta 7
+**La impedancia de salida de una etapa en fuente común con carga de espejo de corriente cascode es extremadamente baja.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. El cascode incrementa drásticamente la resistencia de salida por un factor de gm*ro, logrando altísimas ganancias.
+
+#### Pregunta 8
+**¿La realimentación negativa reduce la sensibilidad a las variaciones térmicas y tecnológicas de los componentes?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. La ganancia en bucle cerrado queda fijada por la red pasiva de realimentación: Af = 1 / beta.
+
+#### Pregunta 9
+**¿El Slew Rate (SR) de un amplificador operacional define la máxima velocidad de variación temporal de la tensión de salida (dV/dt)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Limitado por la corriente máxima de la etapa diferencial para cargar el condensador de compensación Cc.
+
+#### Pregunta 10
+**El rendimiento energético teórico máximo de una etapa amplificadora en Clase A con acoplo resistivo es del 78.5%.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. El máximo en Clase A resistiva es solo del 25% (o 50% con transformador); el 78.5% corresponde a Clase B ideal.
+
+#### Pregunta 11
+**¿La resistencia de entrada de un amplificador MOSFET ideal en continua es prácticamente infinita debido al óxido de puerta?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Rin > 10^12 ohms gracias al dieléctrico aislante de SiO2/high-k.
+
+#### Pregunta 12
+**¿Un espejo de corriente proporciona una fuente de corriente de polarización constante con muy alta impedancia equivalente?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Copia la corriente de referencia en ramas secundarias de amplificación.
+
+## 8. Sistema de Evaluación y Bibliografía Recomendada
+**Evaluación**: Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de
+evaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la
+Universidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en
+el estado provisional de "pendiente de evaluación" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo
+de acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.
+Examen parcial de teoría a mitad de curso (EXPAR): 20%
+Examen final de teoría (EXFIN): 40%
+Prácticas de laboratorio (LAB): 20%
+Examen final de laboratorio (EXLAB): 20%
+La nota final (NF) es la mayor de las dos cantidades:
+NF = 0,2*LAB + 0,2*EXLAB + 0,2*EXPAR + 0,4*EXFIN , o bien,
+NF = 0,2*LAB + 0,2*EXLAB + 0,6*EXFIN , si el resultado de esta expresión es mayor que la anterior.
+Solamente es reevaluable la parte de teoría de la asignatura. Las notas, tanto de las prácticas como del examen de laboratorio, se
+mantienen de la evaluación anterior.
+
+**Bibliografía de Referencia**:
+- - Franco, S. Diseño con amplificadores operacionales y circuitos integrados analógicos. México: McGraw-Hill, 2005. ISBN 9701045955.
+- Complementaria:
+- - Floyd, T.L.; Buchla, D. Fundamentals of analog circuits. 2nd ed. Upper Saddle River, N.J.: Prentice Hall, 2002. ISBN 0130606197.
+- - Fiore, J.M. Amplificadores operacionales y circuitos integrados lineales: teoría y aplicación. Madrid: Thomson, 2002. ISBN
+- 8497320999.

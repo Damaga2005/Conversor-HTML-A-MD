@@ -1,0 +1,1799 @@
+# 230906 - Programación y Estructuras de Datos (PRD)
+**Grado en Ingeniería Electrónica de Telecomunicación (GREELEC)**  
+*Escuela Técnica Superior de Ingeniería de Telecomunicación de Barcelona (ETSETB - UPC)*
+
+## 1. Ficha Técnica y Metadatos Oficiales
+- **Código UPC**: `230906`
+- **Acrónimo Oficial**: `PRD`
+- **Semestre**: Q2 (Fase Inicial)
+- **Créditos ECTS**: 6.0 ECTS (150)
+- **Departamento Responsable**: 701 - DAC - Departamento de Arquitectura de Computadores
+- **Profesorado / Coordinación**: Otros:
+- **Guía Docente Oficial en PDF**: [230906_guia_docent.pdf](https://www.upc.edu/grau/guiadocent/pdf/esp/230906/programacion-y-estructuras-de-datos.pdf)
+
+## 2. Descripción General y Requisitos
+Estructuras de datos lineales (listas enlazadas, pilas, colas), no lineales (árboles binarios, árboles de búsqueda AVL, heaps), grafos (Dijkstra, BFS, DFS), tablas hash, y diseño modular orientado a objetos en C++.
+
+## 3. Objetivos de Aprendizaje y Competencias
+- O
+- b
+- j
+- e
+- t
+- i
+- v
+- o
+- s
+-  
+- d
+- e
+-  
+- l
+- a
+-  
+- a
+- s
+- i
+- g
+- n
+- a
+- t
+- u
+- r
+- a
+- :
+- 
+
+- 1
+- .
+-  
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- s
+- e
+- a
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- r
+- ,
+-  
+- d
+- e
+-  
+- f
+- o
+- r
+- m
+- a
+-  
+- e
+- f
+- i
+- c
+- i
+- e
+- n
+- t
+- e
+- ,
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- s
+-  
+- d
+- e
+-  
+- c
+- o
+- m
+- p
+- l
+- e
+- j
+- i
+- d
+- a
+- d
+-  
+- m
+- o
+- d
+- e
+- r
+- a
+- d
+- a
+-  
+- m
+- e
+- d
+- i
+- a
+- n
+- t
+- e
+-  
+- e
+- l
+-  
+- l
+- e
+- n
+- g
+- u
+- a
+- j
+- e
+-  
+- d
+- e
+- 
+
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- c
+- i
+- ó
+- n
+-  
+- C
+- ,
+-  
+- u
+- t
+- i
+- l
+- i
+- z
+- a
+- n
+- d
+- o
+-  
+- e
+- l
+-  
+- d
+- e
+- p
+- u
+- r
+- a
+- d
+- o
+- r
+-  
+- p
+- a
+- r
+- a
+-  
+- c
+- o
+- r
+- r
+- e
+- g
+- i
+- r
+-  
+- e
+- r
+- r
+- o
+- r
+- e
+- s
+-  
+- e
+- n
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- d
+- e
+-  
+- e
+- j
+- e
+- c
+- u
+- c
+- i
+- ó
+- n
+-  
+- e
+- n
+-  
+- c
+- a
+- s
+- o
+-  
+- n
+- e
+- c
+- e
+- s
+- a
+- r
+- i
+- o
+- .
+- 
+
+- 2
+- .
+-  
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- c
+- o
+- m
+- p
+- r
+- e
+- n
+- d
+- a
+-  
+- c
+- ó
+- m
+- o
+-  
+- s
+- e
+-  
+- u
+- t
+- i
+- l
+- i
+- z
+- a
+-  
+- l
+- a
+-  
+- m
+- e
+- m
+- o
+- r
+- i
+- a
+-  
+- d
+- e
+- l
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+-  
+- d
+- u
+- r
+- a
+- n
+- t
+- e
+-  
+- l
+- a
+-  
+- e
+- j
+- e
+- c
+- u
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- u
+- n
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+-  
+- e
+- n
+-  
+- C
+- ,
+-  
+- a
+- s
+- í
+-  
+- c
+- o
+- m
+- o
+-  
+- e
+- l
+-  
+- u
+- s
+- o
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+- 
+
+- f
+- u
+- n
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- d
+- e
+-  
+- l
+- i
+- b
+- r
+- e
+- r
+- í
+- a
+-  
+- e
+- x
+- i
+- s
+- t
+- e
+- n
+- t
+- e
+- s
+-  
+- p
+- a
+- r
+- a
+-  
+- l
+- a
+-  
+- g
+- e
+- s
+- t
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- m
+- e
+- m
+- o
+- r
+- i
+- a
+-  
+- d
+- i
+- n
+- á
+- m
+- i
+- c
+- a
+- .
+- 
+
+- 3
+- .
+-  
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- s
+- e
+- a
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- r
+-  
+- y
+-  
+- g
+- e
+- s
+- t
+- i
+- o
+- n
+- a
+- r
+-  
+- d
+- e
+-  
+- f
+- o
+- r
+- m
+- a
+-  
+- e
+- f
+- i
+- c
+- i
+- e
+- n
+- t
+- e
+-  
+- e
+- s
+- t
+- r
+- u
+- c
+- t
+- u
+- r
+- a
+- s
+-  
+- d
+- e
+-  
+- d
+- a
+- t
+- o
+- s
+-  
+- d
+- i
+- n
+- á
+- m
+- i
+- c
+- a
+- s
+-  
+- b
+- á
+- s
+- i
+- c
+- a
+- s
+- ,
+-  
+- t
+- a
+- n
+- t
+- o
+-  
+- l
+- i
+- n
+- e
+- a
+- l
+- e
+- s
+- 
+
+- (
+- l
+- i
+- s
+- t
+- a
+- s
+- ,
+-  
+- p
+- i
+- l
+- a
+- s
+- ,
+-  
+- c
+- o
+- l
+- a
+- s
+- )
+-  
+- c
+- o
+- m
+- o
+-  
+- n
+- o
+-  
+- l
+- i
+- n
+- e
+- a
+- l
+- e
+- s
+-  
+- (
+- t
+- a
+- b
+- l
+- a
+- s
+-  
+- h
+- a
+- s
+- h
+- )
+- .
+- 
+
+- 4
+- .
+-  
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- c
+- o
+- n
+- o
+- z
+- c
+- a
+-  
+- l
+- o
+- s
+-  
+- o
+- p
+- e
+- r
+- a
+- d
+- o
+- r
+- e
+- s
+-  
+- a
+-  
+- n
+- i
+- v
+- e
+- l
+-  
+- d
+- e
+-  
+- b
+- i
+- t
+-  
+- y
+-  
+- s
+- e
+- a
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- u
+- t
+- i
+- l
+- i
+- z
+- a
+- r
+- l
+- o
+- s
+-  
+- p
+- a
+- r
+- a
+-  
+- r
+- e
+- a
+- l
+- i
+- z
+- a
+- r
+-  
+- o
+- p
+- e
+- r
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- b
+- á
+- s
+- i
+- c
+- a
+- s
+-  
+- c
+- o
+- n
+-  
+- e
+- l
+- l
+- o
+- s
+- .
+- 
+
+- R
+- e
+- s
+- u
+- l
+- t
+- a
+- d
+- o
+-  
+- d
+- e
+- l
+-  
+- a
+- p
+- r
+- e
+- n
+- d
+- i
+- z
+- a
+- j
+- e
+- :
+- 
+
+- 1
+- .
+-  
+- E
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- c
+- o
+- n
+- o
+- c
+- e
+-  
+- l
+- a
+-  
+- s
+- i
+- n
+- t
+- a
+- x
+- i
+- s
+-  
+- b
+- á
+- s
+- i
+- c
+- a
+-  
+- d
+- e
+- l
+-  
+- l
+- e
+- n
+- g
+- u
+- a
+- j
+- e
+-  
+- d
+- e
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- c
+- i
+- ó
+- n
+-  
+- C
+-  
+- y
+-  
+- e
+- s
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- u
+- t
+- i
+- l
+- i
+- z
+- a
+- r
+- l
+- a
+-  
+- p
+- a
+- r
+- a
+-  
+- c
+- o
+- n
+- s
+- e
+- g
+- u
+- i
+- r
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- r
+-  
+- d
+- e
+-  
+- f
+- o
+- r
+- m
+- a
+- 
+
+- e
+- f
+- i
+- c
+- i
+- e
+- n
+- t
+- e
+-  
+- l
+- o
+- s
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- s
+-  
+- s
+- o
+- l
+- i
+- c
+- i
+- t
+- a
+- d
+- o
+- s
+- .
+- 
+
+- 2
+- .
+-  
+- E
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- t
+- o
+- m
+- a
+-  
+- c
+- o
+- n
+- s
+- c
+- i
+- e
+- n
+- c
+- i
+- a
+-  
+- d
+- e
+-  
+- l
+- a
+-  
+- i
+- m
+- p
+- o
+- r
+- t
+- a
+- n
+- c
+- i
+- a
+-  
+- d
+- e
+-  
+- l
+- a
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- c
+- i
+- ó
+- n
+-  
+- m
+- o
+- d
+- u
+- l
+- a
+- r
+-  
+- m
+- e
+- d
+- i
+- a
+- n
+- t
+- e
+-  
+- f
+- u
+- n
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- y
+-  
+- e
+- s
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- r
+- 
+
+- f
+- u
+- n
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- e
+- s
+- p
+- e
+- c
+- i
+- f
+- i
+- c
+- a
+- d
+- a
+- s
+-  
+- p
+- r
+- e
+- v
+- i
+- a
+- m
+- e
+- n
+- t
+- e
+- ,
+-  
+- m
+- e
+- d
+- i
+- a
+- n
+- t
+- e
+-  
+- r
+- e
+- f
+- e
+- r
+- e
+- n
+- c
+- i
+- a
+- s
+-  
+- (
+- p
+- u
+- n
+- t
+- e
+- r
+- o
+- s
+- )
+-  
+- e
+- n
+-  
+- c
+- a
+- s
+- o
+-  
+- n
+- e
+- c
+- e
+- s
+- a
+- r
+- i
+- o
+- .
+- 
+
+- 3
+- .
+-  
+- E
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- t
+- o
+- m
+- a
+-  
+- c
+- o
+- n
+- s
+- c
+- i
+- e
+- n
+- c
+- i
+- a
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- l
+- i
+- m
+- i
+- t
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- e
+- s
+- t
+- r
+- u
+- c
+- t
+- u
+- r
+- a
+- s
+-  
+- d
+- e
+-  
+- d
+- a
+- t
+- o
+- s
+-  
+- e
+- s
+- t
+- á
+- t
+- i
+- c
+- a
+- s
+-  
+- y
+-  
+- v
+- a
+- l
+- o
+- r
+- a
+-  
+- l
+- a
+- s
+-  
+- v
+- e
+- n
+- t
+- a
+- j
+- a
+- s
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- e
+- s
+- t
+- r
+- u
+- c
+- t
+- u
+- r
+- a
+- s
+-  
+- d
+- e
+- 
+
+- d
+- a
+- t
+- o
+- s
+-  
+- d
+- i
+- n
+- á
+- m
+- i
+- c
+- a
+- s
+- ,
+-  
+- c
+- o
+- n
+- o
+- c
+- i
+- e
+- n
+- d
+- o
+-  
+- s
+- u
+- s
+-  
+- c
+- a
+- r
+- a
+- c
+- t
+- e
+- r
+- í
+- s
+- t
+- i
+- c
+- a
+- s
+-  
+- p
+- r
+- i
+- n
+- c
+- i
+- p
+- a
+- l
+- e
+- s
+- .
+- 
+
+- 4
+- .
+-  
+- E
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- e
+- s
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- r
+-  
+- y
+-  
+- g
+- e
+- s
+- t
+- i
+- o
+- n
+- a
+- r
+-  
+- d
+- e
+-  
+- f
+- o
+- r
+- m
+- a
+-  
+- e
+- f
+- i
+- c
+- i
+- e
+- n
+- t
+- e
+-  
+- e
+- s
+- t
+- r
+- u
+- c
+- t
+- u
+- r
+- a
+- s
+-  
+- d
+- e
+-  
+- d
+- a
+- t
+- o
+- s
+-  
+- d
+- i
+- n
+- á
+- m
+- i
+- c
+- a
+- s
+-  
+- b
+- á
+- s
+- i
+- c
+- a
+- s
+- ,
+-  
+- t
+- a
+- n
+- t
+- o
+-  
+- l
+- i
+- n
+- e
+- a
+- l
+- e
+- s
+-  
+- (
+- l
+- i
+- s
+- t
+- a
+- s
+- ,
+- 
+
+- p
+- i
+- l
+- a
+- s
+- ,
+-  
+- c
+- o
+- l
+- a
+- s
+- )
+-  
+- c
+- o
+- m
+- o
+-  
+- n
+- o
+-  
+- l
+- i
+- n
+- e
+- a
+- l
+- e
+- s
+-  
+- (
+- t
+- a
+- b
+- l
+- a
+- s
+-  
+- h
+- a
+- s
+- h
+- )
+- .
+- 
+
+- 5
+- .
+-  
+- E
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- e
+- s
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- u
+- t
+- i
+- l
+- i
+- z
+- a
+- r
+-  
+- o
+- p
+- e
+- r
+- a
+- d
+- o
+- r
+- e
+- s
+-  
+- a
+-  
+- n
+- i
+- v
+- e
+- l
+-  
+- d
+- e
+-  
+- b
+- i
+- t
+-  
+- p
+- a
+- r
+- a
+-  
+- e
+- j
+- e
+- m
+- p
+- l
+- o
+- s
+-  
+- d
+- e
+-  
+- u
+- s
+- o
+-  
+- b
+- á
+- s
+- i
+- c
+- o
+- s
+- .
+
+## 4. Temario y Unidades de Contenido
+- {'title': 'Contenido General', 'description': '1. Iniciación al lenguaje de programación C Descripción: Definición de variables y constantes. Tipos de datos y modificadores de tipo. Operadores aritméticos, relacionales, lógicos y de asignación. Concepto de expresión y sentencia. Sentencias de control de flujo condicionales e iterativas. Tipos de datos estructurados. Ejemplos. Dedicación: 18h Grupo grande/Teoría: 9h Aprendizaje autónomo: 9h Fecha: 06/09/2026 Página: 3 / 5 2. Funciones Descripción: Introducción a la programación modular en C mediante funciones. Declaración y definición de funciones. Paso de parámetros por valor y por referencia. Punteros. Algoritmos de ordenamiento y búsqueda. Ejemplos. Dedicación: 19h Grupo grande/Teoría: 9h Aprendizaje autónomo: 10h 3. Gestión dinàmica de memoria Descripción: Tipos de memoria de un programa en C. Funciones de librería para la gestión de memoria dinámica. Ejemplos de uso básicos: vectores dinámicos, listas basadas en array. Dedicación: 10h 30m Grupo grande/Teoría: 4h 30m Aprendizaje autónomo: 6h 4. Estructuras de datos dinámicas Descripción: Presentación de estructuras de datos dinámicas básicas lineales (listas, pilas, colas) y no lineales (tablas hash). Implementación de listas enlazadas como componente básico para construir el resto de estructuras de datos dinámicas que se presentarán. Implementación de pilas y colas. Implementación de tablas hash. Concepto de función hash. Implementación de funciones hash básicas. Ejemplos. Dedicación: 25h Grupo grande/Teoría: 9h Aprendizaje autónomo: 16h 5. Operaciones a nivel de bit Descripción: Conversión de base (decimal a binaria, octal y hexadecimal). Operadores a nivel de bit. Máscaras de bits. Ejemplos básicos. Dedicación: 12h 30m Grupo grande/Teoría: 4h 30m Aprendizaje autónomo: 8h Fecha: 06/09/2026 Página: 4 / 5 Sesiones de laboratorio Descripción: Sesión 0.- Introducción e instalación del entorno de laboratorio Sesión 1.- Primeros programas en lenguaje C Sesión 2.- Sentencias condicionales e iterativas Sesión 3.- Estructuras de datos: structs, vectores y matrices Sesión 4.- Funciones con paso de parámetros por valor Sesión 5.- Funciones con paso de parámetros por referencia Sesión 6.- Gestión dinámica de memoria en C Sesión 7.- Listas doblemente enlazadas Proyecto de laboratorio: Primera sesión de trabajo Proyecto de laboratorio: Segunda sesión de trabajo Examen parcial de laboratorio Examen final laboratorio Dedicación: 60h Grupo pequeño/Laboratorio: 24h Aprendizaje autónomo: 36h Examen parcial de teoría de la asignatura Descripción: Examen parcial de teoría de la asignatura Dedicación: 2h Grupo pequeño/Laboratorio: 2h Examen final de la asignatura Descripción: Examen final de la asignatura. Dedicación: 3h Grupo grande/Teoría: 3h'}
+
+## 5. Modelado Matemático y Fórmulas Clave (LaTeX)
+### 5.1 Complejidad Búsqueda en Árbol Binario Equilibrado (AVL)
+$$
+T(N) \in \mathcal{O}(\log_2 N)
+$$
+
+### 5.2 Complejidad Búsqueda en Tabla Hash con Encadenamiento
+$$
+T_{\text{promedio}} \in \mathcal{O}(1), \quad T_{\text{peor}} \in \mathcal{O}(N)
+$$
+
+### 5.3 Algoritmo de Dijkstra con Min-Heap
+$$
+T(V, E) \in \mathcal{O}((V + E) \log V)
+$$
+
+### 5.4 Propiedad del Heap Binario (Min-Heap)
+$$
+\text{parent}(i) \le \text{node}(i) \quad \forall i > 0
+$$
+
+### 5.5 Factor de Carga de Tabla Hash
+$$
+\alpha = \frac{N}{M}
+$$
+
+## 6. Banco de Ensayos / Laboratorio Virtual
+```c
+// PRD - Implementación de Lista Enlazada Simple en C++
+#include <iostream>
+struct Node {
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+class LinkedList {
+    Node* head = nullptr;
+public:
+    void push_front(int val) {
+        Node* n = new Node(val);
+        n->next = head;
+        head = n;
+    }
+};
+```
+
+## 7. Preguntas de Autoevaluación y Examen con Justificación Técnica
+#### Pregunta 1
+**¿El acceso a un elemento de un array por su índice tiene complejidad temporal O(1)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Se calcula la dirección aritmética en tiempo constante.
+
+#### Pregunta 2
+**¿Insertar un elemento al frente de una lista simplemente enlazada tiene coste O(1)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Solo requiere actualizar el puntero de la nueva cabeza.
+
+#### Pregunta 3
+**En un árbol binario de búsqueda perfectamente equilibrado, la búsqueda de una clave tiene coste O(N).**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. La altura es log2(N), por lo que el coste es O(log N).
+
+#### Pregunta 4
+**¿La estructura de datos Pila (Stack) sigue el principio LIFO (Last In, First Out)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. El último elemento apilado es el primero en desapilarse.
+
+#### Pregunta 5
+**¿La estructura de datos Cola (Queue) sigue el principio FIFO (First In, First Out)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. El primer elemento encolado es el primero en desencolarse.
+
+#### Pregunta 6
+**¿El factor de carga alfa de una tabla hash se define como el número de elementos dividido entre el número de casillas?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. alpha = N / M.
+
+#### Pregunta 7
+**El recorrido en anchura (BFS) de un grafo se implementa habitualmente mediante una estructura de Pila.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. BFS utiliza una Cola (Queue); la Pila (Stack) se usa para recorrido en profundidad (DFS).
+
+#### Pregunta 8
+**¿El algoritmo de Dijkstra permite encontrar el camino más corto desde un origen en grafos con pesos no negativos?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Asume que la adición de aristas siempre incrementa la distancia acumulada.
+
+#### Pregunta 9
+**¿En un Min-Heap binario, la raíz contiene siempre el elemento de valor mínimo de todo el conjunto?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Es la propiedad estructural fundamental del min-heap.
+
+#### Pregunta 10
+**El borrado de un nodo cualquiera en un array dinámico (vector) siempre se realiza en tiempo O(1).**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. En el peor caso (borrar al inicio) requiere desplazar N-1 elementos en O(N).
+
+#### Pregunta 11
+**¿Los árboles AVL son árboles de búsqueda autobalanceados cuya diferencia de alturas entre subárboles no excede 1?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Garantiza altura O(log N) mediante rotaciones simples y dobles.
+
+#### Pregunta 12
+**¿La resolución de colisiones mediante encadenamiento abierto (chaining) almacena los elementos en listas ligadas por casilla?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Permite alojar múltiples claves con el mismo valor hash.
+
+## 8. Sistema de Evaluación y Bibliografía Recomendada
+**Evaluación**: Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de
+evaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la
+Universidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en
+el estado provisional de "pendiente de evaluación" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo
+de acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.
+Laboratorio: 35% (= 30% proyecto evaluable de laboratorio + 30% examen parcial de laboratorio + 40% examen final de
+laboratorio)
+Examen parcial de teoria: 15%
+Examen final de la asignatura: 50%
+La asistencia al laboratorio de la asignatura es obligatoria: las faltas de asistencia injustificadas podrán ponderar negativamente la
+nota de laboratorio del estudiante.
+Tan solo es reevaluable la parte de teoría de la asignatura. La calificación de la asignatura después de la reevaluación se obtendrá a
+partir de la nota del examen de reevaluación (65%) i de laboratorio de la evaluación anterior (35%).
+
+Fecha: 06/09/2026
+Página: 5 / 5
+NORMAS PARA LA REALIZACIÓN DE LAS PRUEBAS.
+No se permite traer apuntes ni dispositivos electrónicos propios (teléfono móvil, ordenador portátil, tablet, reloj inteligente, etc...) en
+ninguno de los exámenes de la asignatura.
+
+**Bibliografía de Referencia**:
+- - Jiménez, M.; Otero, B. Fundamentos de ordenadores: programación en C [en línea]. Barcelona: Iniciativa Digital Politècnica, 2013
+- [Consulta: 14/10/2022]. Disponible a: http://hdl.handle.net/2099.3/36593. ISBN 9788476539958.
+- - Joyanes, L.; Zahonero, I. Programación en C: metodología, algoritmos y estructuras de datos. 2a ed. Madrid: McGraw-Hill, 2005.
+- ISBN 8448198441.
+- Complementaria:

@@ -1,0 +1,22 @@
+{
+  "code": "230913",
+  "acronym": "SST",
+  "title": "Señales y Sistemas",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "739 - TSC - Departamento de Teoría de la Señal y Comunicaciones.",
+  "responsible_professor": "FRANCISCO VALLVERDU BAYES",
+  "objectives": "Caracterización de señales analógicas y digitales en tiempo y frecuencia\nTratamiento de señales analógicas con sistemas discretos\nImplementación en entornos de programación con Python o Matlab",
+  "contents": [
+    {
+      "title": "Contenido General",
+      "description": "Señales y sistemas en el dominio temporal Descripción: Caracterización de señales en tiempo continuo y discreto Sistemas lineales e invariantes Convolución Dedicación: 42h Grupo grande/Teoría: 9h Grupo pequeño/Laboratorio: 6h Aprendizaje autónomo: 27h Señales y sistema en el dominio transformado Descripción: Transformada de Fourier y transformada Z Respuesta frecuencial y función de transferència (ceros y pols) Respuesta en régimen permanente Modulación Enventanado Filtrado Dedicación: 42h Grupo grande/Teoría: 9h Grupo pequeño/Laboratorio: 6h Aprendizaje autónomo: 27h Fecha: 06/09/2026 Página: 3 / 3 Señales periódicas y muestreo Descripción: Caracterización en serie de Fourier de señales periódicas Transformada de señales periódicas Potencia media Muestreo Teorema de muestreo Muestreo ideal Muestreo real Conversores AD i DA Dedicación: 42h Grupo grande/Teoría: 9h Grupo pequeño/Laboratorio: 6h Aprendizaje autónomo: 27h Transformada discreta de Fourier, correlación y espectro Descripción: Transformada discreta de Fourier Relación con la transformada de señales analógicas muestreadas Aplicaciones Filtrado Análisis espectral y correlación Dedicación: 42h Grupo grande/Teoría: 9h Grupo pequeño/Laboratorio: 6h Aprendizaje autónomo: 27h"
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nControl a mitad del curso 30%\nLaboratori 10%\nExamen final 60%\nNORMAS PARA LA REALIZACIÓN DE LAS PRUEBAS.\nSolamente pueden ser reevaluados los contenidos teóricos",
+  "bibliography": [
+    "- Proakis, John G; Manolakis, Dimitris G. Digital signal processing. 4th ed. New Jersey: Prentice-Hall International, Inc, cop. 2007.",
+    "ISBN 0131873741."
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230913/senales-y-sistemas.pdf"
+}

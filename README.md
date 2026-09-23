@@ -5,12 +5,13 @@
 [![Interface: Apple Dark](https://img.shields.io/badge/UI-Apple%20Liquid%20Glass%20Dark-black.svg)]()
 [![Target: NotebookLM](https://img.shields.io/badge/Optimized%20for-Google%20NotebookLM-4285F4.svg)]()
 [![LaTeX: MathML & OMML Supported](https://img.shields.io/badge/LaTeX-MathML%20%7C%20OMML%20%E2%86%92%20LaTeX-brightgreen.svg)]()
+[![UPC GREELEC: 35 Courses & 424 Questions](https://img.shields.io/badge/UPC%20GREELEC-35%20Courses%20%7C%20424%20Exam%20Questions-purple.svg)]()
 [![Virtual Lab: 20 Modules 3D](https://img.shields.io/badge/Virtual%20Lab-20%20Modules%20WebGL%203D-orange.svg)]()
-[![Tests: Pytest Passing](https://img.shields.io/badge/tests-9%2F9%20passing-success.svg)]()
+[![Tests: Pytest Passing](https://img.shields.io/badge/tests-17%2F17%20passing-success.svg)]()
 
 > Suite integral de ingeniería documental, conversores universales de alta fidelidad y estación de trabajo virtual diseñada para transformar contenidos educativos, técnicos e interactivos (HTML, PDF, DOCX, IPYNB, MathML, scripts de examen) en **Markdown técnico estructurado de máxima pureza**, 100% optimizado para **Google NotebookLM**, Gemini, Claude, Obsidian y ChatGPT.
 > 
-> Incluye el **Laboratorio Virtual de Sensores e Instrumentación 3D (v8.5 Enterprise Workbench)** con 20 módulos circuitales organizados por asignaturas oficiales de la **Universitat Politècnica de Catalunya (UPC)**, calculadora metrológica GUM con simulación Monte Carlo, diseñador de filtros activos, banco de componentes R-L-C y gestor de flashcards con 500 preguntas de examen.
+> Incluye el **Plan de Estudios Completo GREELEC (UPC ETSETB)** con las **35 asignaturas obligatorias**, **424 preguntas técnicas de examen con justificación**, 35 calculadoras interactivas de parámetros y bancos de ensayo SPICE/VHDL/C; además del **Laboratorio Virtual de Sensores e Instrumentación 3D (v8.5 Enterprise Workbench)** con 20 módulos circuitales, calculadora metrológica GUM con simulación Monte Carlo, diseñador de filtros activos, banco R-L-C y gestor de flashcards Anki.
 
 ---
 
@@ -18,11 +19,12 @@
 - [✨ Características Principales](#-características-principales)
   - [🔄 1. Conversores Universales de Archivos de Alta Fidelidad](#-1-conversores-universales-de-archivos-de-alta-fidelidad-universal_converterspy)
   - [🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark)](#-2-interfaz-gráfica-de-escritorio-apple-liquid-glass-dark)
-  - [🔬 3. Laboratorio Virtual de Sensores e Instrumentación 3D](#-3-laboratorio-virtual-de-sensores-e-instrumentación-3d-v85-enterprise)
-  - [📐 4. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo](#-4-calculadora-metrológica-gum-isoiec-98-3--monte-carlo-supl-1)
-  - [🎛️ 5. Diseñador de Filtros Activos & Sensores](#-5-diseñador-de-filtros-activos-sensores--acondicionadores)
-  - [🔌 6. Banco R-L-C & Presets Canónicos GREELEC](#-6-banco-r-l-c--presets-canónicos-greelec)
-  - [🗂️ 7. Repaso Activo Anki & Gestor de Exámenes](#-7-repaso-activo-anki--gestor-de-exámenes)
+  - [🎓 3. Plan de Estudios UPC GREELEC: 35 Asignaturas & 424 Preguntas de Examen](#-3-plan-de-estudios-upc-greelec-35-asignaturas--424-preguntas-de-examen)
+  - [🔬 4. Laboratorio Virtual de Sensores e Instrumentación 3D](#-4-laboratorio-virtual-de-sensores-e-instrumentación-3d-v85-enterprise)
+  - [📐 5. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo](#-5-calculadora-metrológica-gum-isoiec-98-3--monte-carlo-supl-1)
+  - [🎛️ 6. Diseñador de Filtros Activos & Sensores](#-6-diseñador-de-filtros-activos-sensores--acondicionadores)
+  - [🔌 7. Banco R-L-C & Presets Canónicos GREELEC](#-7-banco-r-l-c--presets-canónicos-greelec)
+  - [🗂️ 8. Repaso Activo Anki & Gestor de Exámenes](#-8-repaso-activo-anki--gestor-de-exámenes)
 - [🚀 Instalación y Requisitos](#-instalación-y-requisitos)
 - [🖥️ Uso de la Aplicación (GUI y Terminal CLI)](#-uso-de-la-aplicación-gui-y-terminal-cli)
 - [📁 Estructura del Repositorio](#-estructura-del-repositorio)
@@ -49,7 +51,7 @@ Módulo independiente de conversión universal con algoritmos especializados:
 ---
 
 ### 🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark)
-La aplicación de escritorio (`conversor_html_notebooklm.py`) cuenta con una interfaz organizada en **8 pestañas temáticas** navegables mediante un selector segmentado tipo macOS:
+La aplicación de escritorio (`conversor_html_notebooklm.py`) cuenta con una interfaz organizada en **9 pestañas temáticas** navegables mediante un selector segmentado tipo macOS:
 1. **HTML a MD:** Conversor interactivo con previsualización, extracción de imágenes y perfiles preconfigurados.
 2. **Universal:** Panel de control de conversión multi-formato (PDF, DOCX, IPYNB, CSV, Excel) con selección de opciones avanzadas y consola asíncrona en tiempo real.
 3. **Visor Markdown:** Lector con resaltado de sintaxis, barra de productividad (zoom tipográfico A-/100%/A+, estadísticas en vivo de palabras, caracteres, fórmulas y tiempo de lectura) y exportador HTML/PDF.
@@ -58,15 +60,35 @@ La aplicación de escritorio (`conversor_html_notebooklm.py`) cuenta con una int
 6. **Filtros Activos:** Calculadora y sintetizador de filtros Sallen-Key con diagrama de Bode en tiempo real y acondicionadores analógicos.
 7. **Banco R-L-C:** Simulador de topologías canónicas y esquemáticos vectoriales dinámicos.
 8. **Flashcards Anki:** Visor de preguntas de autoevaluación, buscador interactivo en vivo, filtrado temático y exportador de mazos Anki (`.apkg` y `.tsv`).
+9. **Plan UPC GREELEC:** Estación de trabajo académica completa del grado con explorador de las 35 asignaturas obligatorias, temarios oficiales extraídos de guías docentes PDF, fórmulas $\LaTeX$, 35 calculadoras interactivas de parámetros, bancos SPICE/VHDL/C y 424 preguntas oficiales de autoevaluación con justificación.
 
 #### ⚡ Atajos de Teclado Globales:
 | Atajo | Acción |
 | :--- | :--- |
-| `Ctrl + 1` .. `Ctrl + 8` | Cambio instantáneo a cualquiera de las 8 pestañas |
+| `Ctrl + 1` .. `Ctrl + 9` | Cambio instantáneo a cualquiera de las 9 pestañas |
 | `Ctrl + O` | Abrir diálogo de selección de archivo o carpeta de origen |
 | `Ctrl + S` | Guardar o exportar resultados de la pestaña activa |
-| `F5` / `Ctrl + R` | Recalcular parámetros activos (GUM, Filtros, RLC) |
+| `F5` / `Ctrl + R` | Recalcular parámetros activos (GUM, Filtros, RLC, UPC) |
 | `Drag & Drop` | Arrastrar archivos PDF, DOCX, IPYNB, XLSX o HTML conmuta y precarga la herramienta correspondiente |
+
+---
+
+### 🎓 3. Plan de Estudios UPC GREELEC: 35 Asignaturas & 424 Preguntas de Examen
+El motor académico `upc_degree_engine.py` incorpora los datos y competencias oficiales de todas las asignaturas obligatorias del **Grado en Ingeniería Electrónica de Telecomunicación (ETSETB - UPC)**:
+- **Catálogo de 35 Asignaturas Obligatorias (210 ECTS Totales):**
+  - **Q1:** `230339` IMATEC · `230900` CCE · `230901` APR · `230902` F · `230903` C · `230904` ALN
+  - **Q2:** `230905` AC · `230906` PRD · `230907` EMG · `230908` CVEC · `230909` EDT
+  - **Q3:** `230910` DE · `230911` DD · `230912` EAFO · `230913` SST · `230914` PPE
+  - **Q4:** `230915` CA · `230916` EMB · `230917` ICAF · `230918` TRS · `230919` EP
+  - **Q5:** `230920` SM · `230921` SDC · `230922` CIAF · `230923` CEM · `230924` CTR
+  - **Q6:** `230925` IOT · `230926` RT · `230927` PEE · `230928` TEL · `230929` TEM
+  - **Q7:** `230930` DMIC · `230931` HIPS · `230934` DIFO
+  - **Q8:** `230932` INT
+- **424 Preguntas Oficiales con Justificación:** 12 a 13 cuestiones técnicas por asignatura con corrección automática y explicación teórica detallada.
+- **35 Calculadoras Paramétricas:** Simulación instantánea de divisores, impedancias, márgenes de estabilidad, inductancias Buck/Boost, enlaces LoRa, etc.
+- **35 Bancos de Ensayo SPICE / HDL / Firmware C:** Netlists listos para ejecución en simuladores circuitales.
+- **Exportación Automática:** Generación de guías de estudio en Markdown para NotebookLM y mazos Anki TSV/APKG individuales y combinados.
+- **Cheatsheet Maestro:** Compendio unificado de fórmulas matemáticas y modelos canónicos de todo el plan de estudios.
 
 ---
 
@@ -212,8 +234,17 @@ python conversor_html_notebooklm.py carpeta_origen/ carpeta_destino/ --preset no
 # 4. Procesamiento secuencial del curso completo (10 Temas + Documentos Maestros)
 python conversor_html_notebooklm.py --all-temas carpeta_curso/ dist_course_md/
 
-# 5. Generación de mazos Anki directamente por consola
-python conversor_html_notebooklm.py --anki dist_course_md/
+# 5. Plan de Estudios GREELEC UPC (35 Asignaturas & 424 Preguntas)
+python conversor_html_notebooklm.py --degree-plan
+python conversor_html_notebooklm.py --degree-stats
+python conversor_html_notebooklm.py --degree-export-md mis_guias_upc/
+python conversor_html_notebooklm.py --degree-export-anki mis_mazos_anki/
+
+# 6. Motor Independiente de Asignaturas y Calculadoras
+python upc_degree_engine.py --list
+python upc_degree_engine.py --subject CCE
+python upc_degree_engine.py --calc CCE --params '{"vs": 12.0, "r1": 2000, "r2": 4000}'
+python upc_degree_engine.py --cheatsheet
 ```
 
 ### Compilar a Ejecutable de Windows (.exe)
@@ -224,7 +255,7 @@ El ejecutable compilado estará disponible en `dist/conversor_html_notebooklm/co
 
 ### Ejecutar la Suite de Pruebas Automatizadas
 ```bash
-pytest -v tests/test_universal_and_lab.py
+pytest -v tests/test_universal_and_lab.py tests/test_upc_curriculum.py
 ```
 
 ---
@@ -233,13 +264,22 @@ pytest -v tests/test_universal_and_lab.py
 
 ```text
 Conversor-HTML-A-MD/
-├── conversor_html_notebooklm.py        # Aplicación GUI (8 pestañas) y CLI principal
+├── conversor_html_notebooklm.py        # Aplicación GUI (9 pestañas) y CLI principal
+├── upc_degree_engine.py                # Motor académico del grado GREELEC (35 asignaturas & 424 preguntas)
+├── upc_gui_tab.py                      # Pestaña interactiva de escritorio para el Plan UPC GREELEC
 ├── universal_converters.py             # Motor de conversores universales (PDF, DOCX, IPYNB, etc.)
 ├── Laboratorio_Virtual_Sensores.html   # Simulador web 3D (20 módulos + instrumentos virtuales)
 ├── conversor_html_notebooklm.spec      # Configuración de compilación PyInstaller
 ├── requirements.txt                    # Dependencias Python del proyecto
+├── data/
+│   ├── upc_curriculum_master.json      # Base de datos maestra de las 35 asignaturas con 424 preguntas
+│   ├── all_upc_compulsory_guides.json  # Guías docentes oficiales extraídas directamente de PDFs UPC
+│   ├── upc_study_guides_md/            # 35 Guías de estudio completas en Markdown para NotebookLM
+│   ├── upc_anki_decks/                 # 35 Mazos Anki (.tsv) + Mazo maestro con 424 preguntas
+│   └── upc_pdf_raw/                    # 35 PDFs oficiales descargados de la web de la UPC
 ├── tests/
-│   └── test_universal_and_lab.py       # Pruebas automatizadas con Pytest (100% passing)
+│   ├── test_universal_and_lab.py       # Pruebas automatizadas de conversores y laboratorio (9 tests)
+│   └── test_upc_curriculum.py          # Pruebas de 35 asignaturas, 424 preguntas y calculadoras (8 tests)
 ├── dist_course_md/                     # Contenidos educativos del curso Sistemes de Mesura
 │   ├── Para_Subir_a_NotebookLM/        # Documentos maestros consolidados para NotebookLM
 │   ├── Tema 1/ a Tema 10/              # Carpetas individuales de cada unidad temática

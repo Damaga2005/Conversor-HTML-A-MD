@@ -1,0 +1,1089 @@
+{
+  "230920": {
+    "code": "230920",
+    "acronym": "SM",
+    "title": "Sistemas de Medida",
+    "semester": 5,
+    "ects": 6.0,
+    "department": "710 - EEL - Departamento de Ingeniería Electrónica",
+    "description": "Metrología, incertidumbre y calibración (GUM), acondicionamiento analógico de sensores (puente de Wheatstone, amplificadores de instrumentación INA, amplificadores de aislamiento), sensores de temperatura (PT100/RTD, termopares con unión fría, termistores NTC/PTC), galgas extensométricas, sensores capacitivos e inductivos (LVDT), y convertidores A/D de alta resolución (Sigma-Delta).",
+    "formulas": [
+      {
+        "name": "Salida de Puente de Wheatstone Equilibrado",
+        "latex": "V_o = V_s \\left( \\frac{R_1}{R_1 + R_2} - \\frac{R_3}{R_3 + R_4} \\right) \\approx V_s \\frac{\\Delta R}{4 R_0}"
+      },
+      {
+        "name": "Ganancia de Amplificador de Instrumentación (3 Op-Amps)",
+        "latex": "A_d = \\left( 1 + \\frac{2 R_1}{R_G} \\right) \\frac{R_3}{R_2}"
+      },
+      {
+        "name": "Ecuación de Callendar-Van Dusen para RTD PT100",
+        "latex": "R(T) = R_0 (1 + A \\cdot T + B \\cdot T^2), \\quad R_0 = 100\\,\\Omega"
+      },
+      {
+        "name": "Factor de Galga Extensométrica (Gauge Factor)",
+        "latex": "\\text{GF} = \\frac{\\Delta R / R_0}{\\Delta L / L_0} = \\frac{\\Delta R / R_0}{\\varepsilon}"
+      },
+      {
+        "name": "Incertidumbre Combinada Estándar (GUM)",
+        "latex": "u_c(y) = \\sqrt{\\sum_{i=1}^{N} \\left( \\frac{\\partial f}{\\partial x_i} \\right)^2 u^2(x_i)}"
+      }
+    ],
+    "calc_params": {
+      "rg_ohm": 1000.0,
+      "r1_ohm": 25000.0,
+      "r2_ohm": 10000.0,
+      "r3_ohm": 10000.0,
+      "vs_bridge": 5.0,
+      "delta_r_rel": 0.005
+    },
+    "calc_outputs": [
+      "ina_gain",
+      "bridge_out_mv",
+      "amplified_out_v"
+    ],
+    "calc_fn": "def calc(p):\n    rg = max(1.0, p.get('rg_ohm', 1000.0))\n    r1 = p.get('r1_ohm', 25000.0)\n    r2 = p.get('r2_ohm', 10000.0)\n    r3 = p.get('r3_ohm', 10000.0)\n    gain = (1.0 + (2.0 * r1 / rg)) * (r3 / r2)\n    vs = p.get('vs_bridge', 5.0)\n    dr_rel = p.get('delta_r_rel', 0.005)\n    v_bridge = vs * (dr_rel / 4.0)\n    v_amp = v_bridge * gain\n    return {'ina_gain': round(gain, 2), 'bridge_out_mv': round(v_bridge * 1000, 3), 'amplified_out_v': round(v_amp, 4)}",
+    "spice_template": "* SM - Puente de Wheatstone con Galga y Amplificador de Instrumentacion\nVs vcc 0 DC 5V\nR1 vcc v1 1k\nR2 v1 0 1k\nR3 vcc v2 1k\nR4 v2 0 1.005k\nE_ina out 0 v1 v2 51.0\n.op\n.print dc V(v1) V(v2) V(out)\n.end\n",
+    "questions": [
+      {
+        "q": "¿El amplificador de instrumentación clásico de 3 operacionales permite fijar la ganancia diferencial total mediante una única resistencia externa Rg?",
+        "a": "V",
+        "j": "Verdadero. Ad = (1 + 2*R1/Rg) * (R3/R2)."
+      },
+      {
+        "q": "¿El factor de galga (Gauge Factor GF) de una galga extensométrica metálica convencional ronda un valor cercano a 2.0?",
+        "a": "V",
+        "j": "Verdadero. Relaciona la variación relativa de resistencia con la deformación mecánica unitaria."
+      },
+      {
+        "q": "La resistencia de un sensor PT100 a 0 grados Celsius es de 1000 ohms.",
+        "a": "F",
+        "j": "Falso. A 0 grados Celsius es exactamente 100 ohms (de ahí la denominación PT100; el de 1000 ohms es el PT1000)."
+      },
+      {
+        "q": "¿En un termopar, la tensión termoeléctrica de Seebeck se produce debido a la diferencia de temperatura entre la unión de medida y la unión de referencia?",
+        "a": "V",
+        "j": "Verdadero. Requiere compensación electrónica de unión fría."
+      },
+      {
+        "q": "¿Un termistor NTC (Negative Temperature Coefficient) disminuye su resistencia eléctrica al aumentar la temperatura?",
+        "a": "V",
+        "j": "Verdadero. Comportamiento semiconductor característico frente a los metales (PTC)."
+      },
+      {
+        "q": "La conexión a 2 hilos para una sonda RTD PT100 elimina completamente el error introducido por la resistencia de los cables de conexión lejanos.",
+        "a": "F",
+        "j": "Falso. La conexión a 2 hilos suma la resistencia del cable; para anularla se requiere conexión a 3 o 4 hilos (Kelvin)."
+      },
+      {
+        "q": "¿La norma GUM clasifica las incertidumbres en Tipo A (evaluadas estadísticamente) y Tipo B (obtenidas por certificados y especificaciones técnicas)?",
+        "a": "V",
+        "j": "Verdadero. Base metrológica internacional de estimación de incertidumbre."
+      },
+      {
+        "q": "¿Los convertidores analógico-digitales Sigma-Delta aprovechan el sobremuestreo y la modulación de ruido (noise shaping) para lograr altísima resolución a bajas frecuencias?",
+        "a": "V",
+        "j": "Verdadero. Desplazan la energía del ruido de cuantización hacia altas frecuencias donde se filtra digitalmente."
+      },
+      {
+        "q": "¿El sensor LVDT (Linear Variable Differential Transformer) mide desplazamientos mecánicos lineales con aislamiento galvánico y prácticamente nula fricción mecánica?",
+        "a": "V",
+        "j": "Verdadero. Transductor inductivo de núcleo móvil ferromagnético."
+      },
+      {
+        "q": "El rechazo al modo común (CMRR) de un amplificador de instrumentación es típicamente muy bajo (alrededor de 10 dB).",
+        "a": "F",
+        "j": "Falso. Es muy alto, típicamente entre 80 dB y 120 dB, para rechazar interferencias parásitas inducidas de red (50/60 Hz)."
+      },
+      {
+        "q": "¿La linealización analógica o por software de un sensor busca convertir una respuesta curva no lineal en una relación proporcional directa?",
+        "a": "V",
+        "j": "Verdadero. Facilita el procesamiento directo de la variable física."
+      },
+      {
+        "q": "¿Un puente de Wheatstone con 4 galgas activas (puente completo) cuadruplica la sensibilidad y compensa automáticamente las variaciones térmicas parásitas?",
+        "a": "V",
+        "j": "Verdadero. Vo = Vs * Delta_R / R0 con compensación térmica simétrica."
+      }
+    ]
+  },
+  "230921": {
+    "code": "230921",
+    "acronym": "SDC",
+    "title": "Sistemas Digitales Configurables",
+    "semester": 5,
+    "ects": 6.0,
+    "department": "710 - EEL - Departamento de Ingeniería Electrónica",
+    "description": "Arquitectura interna de FPGAs (Look-Up Tables LUT, Flip-Flops, bloques de memoria BRAM, DSP slices, matrices de interconexión programable), flujo de diseño completo (síntesis lógica, mapeo, place & route, análisis estático de temporización STA), restricciones de reloj (SDC/XDC), cruce de dominios de reloj (CDC), diseño de aceleradores hardware mediante HDL/SystemVerilog y síntesis de alto nivel (HLS).",
+    "formulas": [
+      {
+        "name": "Capacidad Combinacional de una LUT de K Entradas",
+        "latex": "M = 2^K \\text{ bits de SRAM} \\implies \\text{Cualquier función booleana de } K \\text{ variables}"
+      },
+      {
+        "name": "Análisis Estático de Temporización (Setup Slack)",
+        "latex": "\\text{Slack}_{\\text{setup}} = (T_{\\text{clk}} - t_{\\text{skew}}) - (t_{\\text{cq}} + t_{\\text{logic}} + t_{\\text{routing}} + t_{\\text{setup}})"
+      },
+      {
+        "name": "Hold Slack en STA",
+        "latex": "\\text{Slack}_{\\text{hold}} = (t_{\\text{cq}} + t_{\\text{logic,\\min}} + t_{\\text{routing,\\min}}) - (t_{\\text{hold}} + t_{\\text{skew}})"
+      },
+      {
+        "name": "Tiempo Medio Entre Fallos por Metaestabilidad (MTBF)",
+        "latex": "\\text{MTBF} = \\frac{e^{\\frac{t_{\\text{resolve}}}{\\tau}}}{T_w \\cdot f_{\\text{clk}} \\cdot f_{\\text{data}}}"
+      },
+      {
+        "name": "Throughput de Acelerador Hardware Segmentado (Pipelined)",
+        "latex": "\\text{Throughput} = \\frac{1}{\\max(t_{\\text{etapa}})} \\quad [\\text{muestras/s}]"
+      }
+    ],
+    "calc_params": {
+      "t_clk_req_ns": 5.0,
+      "t_cq_ns": 0.35,
+      "t_logic_ns": 2.1,
+      "t_net_ns": 1.4,
+      "t_setup_ns": 0.45,
+      "t_skew_ns": 0.1
+    },
+    "calc_outputs": [
+      "setup_slack_ns",
+      "max_freq_mhz",
+      "meets_timing"
+    ],
+    "calc_fn": "def calc(p):\n    t_clk = p.get('t_clk_req_ns', 5.0)\n    path_delay = p.get('t_cq_ns', 0.35) + p.get('t_logic_ns', 2.1) + p.get('t_net_ns', 1.4) + p.get('t_setup_ns', 0.45)\n    skew = p.get('t_skew_ns', 0.1)\n    slack = (t_clk - skew) - path_delay\n    t_min = path_delay + skew\n    fmax = (1000.0 / t_min) if t_min > 0 else 0.0\n    return {'setup_slack_ns': round(slack, 3), 'max_freq_mhz': round(fmax, 1), 'meets_timing': bool(slack >= 0.0)}",
+    "spice_template": "-- SDC - Sincronizador de Dos Biestables para Cruzar Dominios de Reloj (CDC)\nlibrary ieee;\nuse ieee.std_logic_1164.all;\nentity cdc_sync is\n    port (clk_dst, async_in : in std_logic; sync_out : out std_logic);\nend entity;\narchitecture rtl of cdc_sync is\n    signal meta_ff, sync_ff : std_logic := '0';\n    attribute async_reg : string;\n    attribute async_reg of meta_ff, sync_ff : signal is \"TRUE\";\nbegin\n    process(clk_dst) begin\n        if rising_edge(clk_dst) then\n            meta_ff <= async_in;\n            sync_ff <= meta_ff;\n        end if;\n    end process;\n    sync_out <= sync_ff;\nend architecture;\n",
+    "questions": [
+      {
+        "q": "¿Una LUT (Look-Up Table) de 6 entradas en una FPGA moderna puede implementar cualquier función lógica combinacional arbitraria de 6 variables?",
+        "a": "V",
+        "j": "Verdadero. Almacena en 64 bits de memoria estática la tabla de verdad completa de la función."
+      },
+      {
+        "q": "¿El análisis estático de temporización (STA) evalúa exhaustivamente todos los caminos temporales sin necesidad de aplicar vectores de test en simulación?",
+        "a": "V",
+        "j": "Verdadero. Verifica analíticamente que se cumplan las cotas de setup y hold en el peor caso tecnológico."
+      },
+      {
+        "q": "Si el Slack de Setup en un camino crítico es negativo, el circuito funcionará correctamente reduciendo el voltaje de alimentación.",
+        "a": "F",
+        "j": "Falso. Un slack negativo indica una violación de temporización; para subsanarlo debe reducirse la frecuencia de reloj o optimizar el camino lógico."
+      },
+      {
+        "q": "¿Para sincronizar una señal monocanal que cruza de un dominio de reloj a otro asíncrono (CDC), se emplea comúnmente una cadena de 2 biestables (2-FF synchronizer)?",
+        "a": "V",
+        "j": "Verdadero. Reduce exponencialmente la probabilidad de que la metaestabilidad se propague al circuito de destino."
+      },
+      {
+        "q": "¿Los bloques DSP embebidos en una FPGA integran multiplicadores hardware de alta velocidad y acumuladores optimizados para filtros FIR y FFT?",
+        "a": "V",
+        "j": "Verdadero. Realizan operaciones MAC (Multiply-Accumulate) en un único ciclo de reloj."
+      },
+      {
+        "q": "La memoria distribuida en una FPGA utiliza las memorias de bloque dedicadas BRAM en lugar de las tablas de búsqueda LUT.",
+        "a": "F",
+        "j": "Falso. La memoria distribuida aprovecha directamente la SRAM de las LUTs de la matriz lógica; las BRAMs son bloques físicos independientes."
+      },
+      {
+        "q": "¿La técnica de 'pipelining' o segmentación inserta registros intermedios para fragmentar caminos combinacionales largos y elevar la frecuencia máxima fmax?",
+        "a": "V",
+        "j": "Verdadero. Reduce el retardo crítico por etapa aumentando el throughput a costa de unos pocos ciclos de latencia inicial."
+      },
+      {
+        "q": "¿Un FIFO asíncrono permite transferir múltiples palabras de datos entre dos dominios de reloj distintos utilizando punteros codificados en código Gray?",
+        "a": "V",
+        "j": "Verdadero. El código Gray cambia solo 1 bit por transición, eliminando lecturas corruptas de punteros en el cruce de reloj."
+      },
+      {
+        "q": "En el flujo de diseño de FPGAs, la etapa de 'Place & Route' ocurre antes de la síntesis lógica RTL.",
+        "a": "F",
+        "j": "Falso. La síntesis lógica RTL y el mapeo a primitivas preceden obligatoriamente al emplazamiento y enrutado físico (Place & Route)."
+      },
+      {
+        "q": "¿Las restricciones físicas de reloj y temporización en herramientas modernas se definen habitualmente mediante archivos de formato SDC/XDC?",
+        "a": "V",
+        "j": "Verdadero. Synopsys Design Constraints / Xilinx Design Constraints."
+      },
+      {
+        "q": "¿El reloj de una FPGA se distribuye a través de una red de árboles de reloj globales dedicados de bajo skew (búferes BUFG)?",
+        "a": "V",
+        "j": "Verdadero. Garantiza mínima dispersión temporal de llegada a todos los biestables del chip."
+      },
+      {
+        "q": "¿La síntesis de alto nivel (HLS) permite generar descripciones hardware sintetizables en VHDL o Verilog a partir de código algorítmico escrito en C/C++?",
+        "a": "V",
+        "j": "Verdadero. Acelera drásticamente el desarrollo de algoritmos matemáticos complejos en hardware."
+      }
+    ]
+  },
+  "230922": {
+    "code": "230922",
+    "acronym": "CIAF",
+    "title": "Circuitos de Alta Frecuencia",
+    "semester": 5,
+    "ects": 6.0,
+    "department": "710 - EEL / 739 - TSC",
+    "description": "Diseño de subsistemas de radiofrecuencia y microondas: amplificadores de bajo ruido (LNA) optimizados para figura de ruido mínima Fmin, amplificadores de potencia RF (Clase A, AB, C, D, E y Doherty), osciladores de RF (Colpitts, Clapp, VCO varactor y ruido de fase de Leeson), mezcladores de frecuencia pasivos y activos (celda de Gilbert y compresión a 1 dB / IP3), y divisores/acopladores de potencia (Wilkinson, acoplador de cuadratura branch-line).",
+    "formulas": [
+      {
+        "name": "Fórmula de Friis para Figura de Ruido en Cascada",
+        "latex": "F_{\\text{total}} = F_1 + \\frac{F_2 - 1}{G_1} + \\frac{F_3 - 1}{G_1 G_2} + \\dots"
+      },
+      {
+        "name": "Punto de Intersección de Tercer Orden (OIP3)",
+        "latex": "\\text{OIP3}_{\\text{dBm}} \\approx P_{1\\text{dB},\\text{dBm}} + 10.6\\,\\text{dB}"
+      },
+      {
+        "name": "Ecuación de Ruido de Fase de Leeson",
+        "latex": "\\mathcal{L}(\\Delta f) = 10 \\log_{10}\\left[ \\frac{2 k T F}{P_{\\text{sig}}} \\left( 1 + \\left(\\frac{f_0}{2 Q_L \\Delta f}\\right)^2 \\right) \\left( 1 + \\frac{f_c}{\\Delta f} \\right) \\right]"
+      },
+      {
+        "name": "Criterio de Oscilación de Barkhausen",
+        "latex": "|A(j \\omega_0) \\beta(j \\omega_0)| \\ge 1, \\quad \\angle [A(j \\omega_0) \\beta(j \\omega_0)] = 0^\\circ \\text{ o } 360^\\circ"
+      },
+      {
+        "name": "Divisor de Potencia de Wilkinson",
+        "latex": "Z_{0,\\text{ramas}} = \\sqrt{2} Z_0 \\approx 70.7\\,\\Omega, \\quad R_{\\text{aislamiento}} = 2 Z_0 = 100\\,\\Omega"
+      }
+    ],
+    "calc_params": {
+      "f1_db": 1.5,
+      "g1_db": 15.0,
+      "f2_db": 6.0,
+      "g2_db": 10.0,
+      "p1db_dbm": 12.0
+    },
+    "calc_outputs": [
+      "ftotal_db",
+      "oip3_est_dbm",
+      "total_gain_db"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    f1_lin = 10.0**(p.get('f1_db', 1.5) / 10.0)\n    g1_lin = 10.0**(p.get('g1_db', 15.0) / 10.0)\n    f2_lin = 10.0**(p.get('f2_db', 6.0) / 10.0)\n    f_casc = f1_lin + (f2_lin - 1.0) / g1_lin\n    ftot_db = 10.0 * math.log10(f_casc)\n    oip3 = p.get('p1db_dbm', 12.0) + 10.6\n    gtot = p.get('g1_db', 15.0) + p.get('g2_db', 10.0)\n    return {'ftotal_db': round(ftot_db, 2), 'oip3_est_dbm': round(oip3, 2), 'total_gain_db': round(gtot, 2)}",
+    "spice_template": "* CIAF - Celda de Gilbert Mezcladora Balanceada de RF\nVcc vcc 0 DC 5V\nIee tail 0 DC 2mA\n* Par Diferencial RF\nM_rf1 d1 rf_in tail 0 NMOS_RF W=10u L=0.18u\nM_rf2 d2 rf_in_b tail 0 NMOS_RF W=10u L=0.18u\n.model NMOS_RF NMOS(LEVEL=1 VTO=0.5 KP=200u)\n.op\n.end\n",
+    "questions": [
+      {
+        "q": "¿La fórmula de Friis demuestra que la figura de ruido de la primera etapa (LNA) es el factor dominante en la figura de ruido total de una cadena receptora de RF?",
+        "a": "V",
+        "j": "Verdadero. El ruido de las etapas posteriores se divide por la ganancia acumulada G1*G2..."
+      },
+      {
+        "q": "¿El divisor de potencia de Wilkinson proporciona adaptación perfecta en todos sus puertos y aislamiento ideal entre las salidas a la frecuencia de diseño?",
+        "a": "V",
+        "j": "Verdadero. Gracias a las líneas de cuarto de onda de 70.7 ohms y la resistencia de aislamiento de 100 ohms."
+      },
+      {
+        "q": "El punto de compresión a 1 dB (P1dB) se produce a una potencia superior al punto de intersección de tercer orden (IP3).",
+        "a": "F",
+        "j": "Falso. OIP3 es una extrapolación teórica que se sitúa típicamente entre 10 y 12 dB por encima de P1dB."
+      },
+      {
+        "q": "¿El criterio de Barkhausen exige que la ganancia de bucle sea igual o superior a 1 con desfase neto de 0 grados para mantener oscilaciones estables?",
+        "a": "V",
+        "j": "Verdadero. Condición necesaria de realimentación positiva en osciladores."
+      },
+      {
+        "q": "¿La celda de Gilbert es una topología de mezclador doblemente balanceado que cancela el paso directo tanto de la señal de RF como del oscilador local (LO) a la salida de FI?",
+        "a": "V",
+        "j": "Verdadero. Alta supresión de productos espurios de intermodulación."
+      },
+      {
+        "q": "Un oscilador de microondas con alto factor de calidad QL en su circuito resonante presenta un elevado ruido de fase.",
+        "a": "F",
+        "j": "Falso. Según la ecuación de Leeson, el ruido de fase es inversamente proporcional a QL^2; a mayor Q, menor ruido de fase."
+      },
+      {
+        "q": "¿Los amplificadores de potencia en conmutación en Clase E o F alcanzan eficiencias teóricas cercanas al 100% minimizando el solapamiento simultáneo de V e I?",
+        "a": "V",
+        "j": "Verdadero. Conmutan a tensión nula (ZVS) o corriente nula (ZCS)."
+      },
+      {
+        "q": "¿En un LNA, la adaptación para mínima figura de ruido (Gamma_opt) no siempre coincide con la adaptación de potencia conjugada (S11*)?",
+        "a": "V",
+        "j": "Verdadero. Se debe buscar un compromiso de diseño entre ganancia, VSWR y figura de ruido."
+      },
+      {
+        "q": "¿Un diodo varactor se utiliza comúnmente en un oscilador controlado por tensión (VCO) como condensador variable mediante tensión inversa?",
+        "a": "V",
+        "j": "Verdadero. La variación de su capacidad modifica la frecuencia de resonancia del tanque LC."
+      },
+      {
+        "q": "Un acoplador directivo de cuadratura (branch-line de 90 grados) divide la potencia incidente a partes iguales con una diferencia de fase de 180 grados entre las salidas.",
+        "a": "F",
+        "j": "Falso. Introduce un desfase de exactamente 90 grados (de ahí el nombre cuadratura). El desfase de 180 grados es propio del anillo híbrido (rat-race)."
+      },
+      {
+        "q": "¿Los productos de intermodulación de tercer orden (2f1 - f2 y 2f2 - f1) son especialmente perjudiciales porque caen directamente dentro del ancho de banda del canal receptor?",
+        "a": "V",
+        "j": "Verdadero. No pueden eliminarse mediante filtrado pasobanda convencional."
+      },
+      {
+        "q": "¿El amplificador Doherty mejora sustancialmente la eficiencia energética a potencias medias frente a señales con alta relación de potencia pico a promedio (PAPR)?",
+        "a": "V",
+        "j": "Verdadero. Combina un amplificador portador (carrier) y uno de pico (peaking) con modulación activa de carga."
+      }
+    ]
+  },
+  "230923": {
+    "code": "230923",
+    "acronym": "CEM",
+    "title": "Ciencia e Ingeniería de Materiales",
+    "semester": 5,
+    "ects": 6.0,
+    "department": "702 - CMEM - Ciencia de Materiales e Ingeniería Metalúrgica",
+    "description": "Estructura cristalina y defectos en sólidos, conductores metálicos (cobre, oro, aluminio, aleaciones para soldadura SAC sin plomo), física de materiales dieléctricos y piezoeléctricos (ferroeléctricos, PZT, cuarzo), materiales magnéticos (ferromagnetismo, ferritas para alta frecuencia, ciclos de histéresis y pérdidas por corrientes de Foucault), mecanismos de degradación y fiabilidad (electromigración de Black, corrosión, fatiga térmica y fatiga mecánica en uniones soldadas).",
+    "formulas": [
+      {
+        "name": "Ecuación de Electromigración de Black (MTTF)",
+        "latex": "\\text{MTTF} = \\frac{A}{J^n} e^{\\frac{E_a}{k T}}, \\quad n \\approx 2"
+      },
+      {
+        "name": "Pérdidas Magnéticas por Corrientes de Foucault (Eddy)",
+        "latex": "P_{\\text{eddy}} = K_e \\cdot d^2 \\cdot f^2 \\cdot B_{\\max}^2 \\quad [\\text{W/kg}]"
+      },
+      {
+        "name": "Ecuación Constitutiva Piezoeléctrica",
+        "latex": "D = d \\cdot T + \\varepsilon^T E, \\quad S = s^E T + d \\cdot E"
+      },
+      {
+        "name": "Ley de Arrhenius para Tasa de Degradación",
+        "latex": "k_{\\text{reac}} = A e^{-\\frac{E_a}{k T}}"
+      },
+      {
+        "name": "Resistividad Eléctrica con Temperatura (Matthiessen)",
+        "latex": "\\rho(T) = \\rho_0 [1 + \\alpha (T - T_0)]"
+      }
+    ],
+    "calc_params": {
+      "current_dens_ma_um2": 2.0,
+      "temp_k": 378.0,
+      "ea_ev": 0.8,
+      "freq_khz": 100.0,
+      "b_max_t": 0.2
+    },
+    "calc_outputs": [
+      "mttf_relative_hours",
+      "eddy_losses_rel"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    j = max(0.1, p.get('current_dens_ma_um2', 2.0))\n    t = max(200.0, p.get('temp_k', 378.0))\n    ea = p.get('ea_ev', 0.8)\n    k_b = 8.617333e-5\n    mttf = (1.0 / (j**2)) * math.exp(ea / (k_b * t))\n    f = p.get('freq_khz', 100.0)\n    b = p.get('b_max_t', 0.2)\n    peddy = (f**2) * (b**2) * 1e-4\n    return {'mttf_relative_hours': round(mttf, 1), 'eddy_losses_rel': round(peddy, 4)}",
+    "spice_template": "* CEM - Modelo Circuital de Resonador Piezoelectrico de Cuarzo (BVD)\nL1 in 1 25mH\nC1 1 2 0.04pF\nR1 2 0 50\nC0 in 0 5pF\n.ac lin 500 4.99Meg 5.01Meg\n.print ac V(0) VP(0)\n.end\n",
+    "questions": [
+      {
+        "q": "¿La ecuación de Black modela el tiempo medio hasta el fallo (MTTF) de pistas de interconexión metálica por electromigración en función de la densidad de corriente J y temperatura T?",
+        "a": "V",
+        "j": "Verdadero. MTTF = (A / J^2) * exp(Ea / kT)."
+      },
+      {
+        "q": "¿Los materiales piezoeléctricos generan una carga eléctrica superficial en respuesta a una tensión mecánica aplicada?",
+        "a": "V",
+        "j": "Verdadero. Efecto piezoeléctrico directo, reversible con el inverso (deformación por campo E)."
+      },
+      {
+        "q": "Las pérdidas por corrientes de Foucault (Eddy currents) en núcleos magnéticos son independientes de la frecuencia de operación.",
+        "a": "F",
+        "j": "Falso. Crecen con el cuadrado de la frecuencia (f^2); por eso a alta frecuencia se usan ferritas cerámicas de alta resistividad eléctrica."
+      },
+      {
+        "q": "¿Las ferritas son óxidos cerámicos ferromagnéticos con alta permeabilidad magnética y muy baja conductividad eléctrica ideales para transformadores e inductores de alta frecuencia?",
+        "a": "V",
+        "j": "Verdadero. Su alta resistividad suprime drásticamente las corrientes parásitas de Foucault."
+      },
+      {
+        "q": "¿Las aleaciones de soldadura sin plomo SAC (Sn-Ag-Cu) sustituyen al plomo cumpliendo las normativas medioambientales RoHS?",
+        "a": "V",
+        "j": "Verdadero. Aleación estándar en la industria de ensamblaje superficial SMT."
+      },
+      {
+        "q": "El fenómeno de electromigración se ve mitigado a temperaturas operativas muy elevadas.",
+        "a": "F",
+        "j": "Falso. La difusión atómica se acelera exponencialmente con la temperatura según la ley de Arrhenius, agravando el fallo por vacancias o 'whiskers'."
+      },
+      {
+        "q": "¿El cobre presenta una conductividad eléctrica superior a la del aluminio pero tiene mayor masa específica y mayor coste?",
+        "a": "V",
+        "j": "Verdadero. sigma_Cu approx 5.8e7 S/m frente a sigma_Al approx 3.5e7 S/m."
+      },
+      {
+        "q": "¿Un material ferromagnético por encima de su temperatura de Curie (Tc) pierde su magnetización espontánea y se comporta como paramagnético?",
+        "a": "V",
+        "j": "Verdadero. La agitación térmica desordena los dominios magnéticos de Weiss."
+      },
+      {
+        "q": "¿El cuarzo monocristalino se utiliza en osciladores de precisión gracias a su altísimo factor de calidad mecánico Q y gran estabilidad térmica?",
+        "a": "V",
+        "j": "Verdadero. Q > 100,000 en cortes térmicamente compensados como el corte AT."
+      },
+      {
+        "q": "La fatiga térmica en uniones soldadas BGA se produce principalmente por el idéntico coeficiente de dilatación térmica (CTE) entre silicio y placa PCB.",
+        "a": "F",
+        "j": "Falso. Se produce precisamente por la discrepancia o desajuste de CTE (CTE mismatch) entre el chip y el sustrato orgánico FR4."
+      },
+      {
+        "q": "¿La resistividad de los metales puros aumenta linealmente con la temperatura debido al incremento de la dispersión de electrones por fonones (vibraciones reticulares)?",
+        "a": "V",
+        "j": "Verdadero. Regla de Matthiessen rho(T) = rho0*(1 + alpha*Delta_T)."
+      },
+      {
+        "q": "¿Los condensadores cerámicos dieléctricos de Clase 1 (como C0G/NP0) ofrecen capacitancia prácticamente invariable frente a temperatura y voltaje continuo aplicado?",
+        "a": "V",
+        "j": "Verdadero. Frente a los de Clase 2 (X7R, Y5V) que sufren fuerte degradación capacitiva con bias DC."
+      }
+    ]
+  },
+  "230924": {
+    "code": "230924",
+    "acronym": "CTR",
+    "title": "Sistemas de Control",
+    "semester": 5,
+    "ects": 6.0,
+    "department": "707 - ESAII - Ingeniería de Sistemas, Automática e Informática Industrial",
+    "description": "Modelado de sistemas dinámicos continuos y discretos mediante funciones de transferencia y variables de estado, análisis de estabilidad (criterio de Routh-Hurwitz, lugar geométrico de las raíces LGR, diagramas de Nyquist y márgenes de estabilidad en Bode), controladores clásicos PID analógicos y digitales (discretización trapezoidal y anti-windup), y respuesta temporal frente a entradas canónicas (tiempo de establecimiento ts, tiempo de pico tp y sobreoscilación Mp).",
+    "formulas": [
+      {
+        "name": "Ecuación del Controlador PID Continuo",
+        "latex": "u(t) = K_p e(t) + K_i \\int_{0}^{t} e(\\tau) d\\tau + K_d \\frac{de(t)}{dt}"
+      },
+      {
+        "name": "Sobreoscilación Máxima (Overshoot Mp)",
+        "latex": "M_p = e^{-\\frac{\\pi \\zeta}{\\sqrt{1 - \\zeta^2}}} \\times 100\\%"
+      },
+      {
+        "name": "Tiempo de Establecimiento al 2%",
+        "latex": "t_s \\approx \\frac{4}{\\zeta \\omega_n}"
+      },
+      {
+        "name": "Error en Régimen Permanente (Entrada Escalón)",
+        "latex": "e_{ss} = \\frac{1}{1 + K_p}, \\quad K_p = \\lim_{s \\to 0} G(s)"
+      },
+      {
+        "name": "Criterio de Estabilidad de Routh-Hurwitz",
+        "latex": "\\text{Número de raíces en semiplano derecho} = \\text{Número de cambios de signo en la 1ª columna de Routh}"
+      }
+    ],
+    "calc_params": {
+      "zeta": 0.6,
+      "wn_rad_s": 5.0,
+      "kp": 2.0,
+      "ki": 0.5,
+      "kd": 0.1
+    },
+    "calc_outputs": [
+      "overshoot_pct",
+      "ts_sec",
+      "tp_sec",
+      "peak_mag"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    zeta = max(0.01, min(0.99, p.get('zeta', 0.6)))\n    wn = max(0.1, p.get('wn_rad_s', 5.0))\n    mp = math.exp(-math.pi * zeta / math.sqrt(1.0 - zeta**2)) * 100.0\n    ts = 4.0 / (zeta * wn)\n    tp = math.pi / (wn * math.sqrt(1.0 - zeta**2))\n    return {'overshoot_pct': round(mp, 2), 'ts_sec': round(ts, 3), 'tp_sec': round(tp, 3), 'peak_mag': round(1.0 + mp / 100.0, 3)}",
+    "spice_template": "* CTR - Bucle de Control con Amplificador Operacional y Red PID\nVin in 0 PULSE(0 1 0 1u 1u 50m 100m)\n* Comparador / Restador de Error\nE_err err 0 in out 1.0\nR_prop err out_p 10k\nC_int err out_i 1uF\n.tran 100u 100m\n.end\n",
+    "questions": [
+      {
+        "q": "¿El término integral (Ki) en un controlador PID elimina de forma estricta el error en régimen permanente ante una entrada en escalón constante?",
+        "a": "V",
+        "j": "Verdadero. Introduce un polo en el origen (sistema Tipo 1) que fuerza error nulo en régimen permanente."
+      },
+      {
+        "q": "¿El término derivativo (Kd) aporta amortiguamiento anticipativo mejorando la estabilidad y reduciendo la sobreoscilación?",
+        "a": "V",
+        "j": "Verdadero. Actúa proporcionalmente a la velocidad de cambio del error."
+      },
+      {
+        "q": "El fenómeno de saturación del integrador ('integrator windup') se produce cuando el actuador opera holgadamente dentro de su rango lineal.",
+        "a": "F",
+        "j": "Falso. Ocurre cuando el actuador satura a su límite físico y el integrador sigue acumulando error sin poder corregirlo; exige técnicas anti-windup."
+      },
+      {
+        "q": "¿El criterio de Routh-Hurwitz permite conocer cuántas raíces de un polinomio característico tienen parte real positiva sin necesidad de factorizarlas explícitamente?",
+        "a": "V",
+        "j": "Verdadero. El número de polos inestables es igual al número de cambios de signo en la primera columna de la tabla de Routh."
+      },
+      {
+        "q": "¿Un coeficiente de amortiguamiento zeta = 0.707 (1/sqrt(2)) proporciona un compromiso excelente entre velocidad de subida y baja sobreoscilación (aprox. 4.3%)?",
+        "a": "V",
+        "j": "Verdadero. Valor de diseño ampliamente utilizado en ingeniería de control."
+      },
+      {
+        "q": "En el lugar de las raíces (Root Locus), los polos en bucle cerrado parten de los ceros y terminan en los polos en bucle abierto al aumentar la ganancia K.",
+        "a": "F",
+        "j": "Falso. Parten de los polos en bucle abierto (K=0) y terminan en los ceros (K -> infinito)."
+      },
+      {
+        "q": "¿Un sistema de fase no mínima contiene ceros o polos en el semiplano complejo derecho que limitan el ancho de banda alcanzable?",
+        "a": "V",
+        "j": "Verdadero. Los ceros en el semiplano derecho producen retraso de fase adicional y respuesta inversa inicial."
+      },
+      {
+        "q": "¿El Margen de Fase (PM) se mide a la frecuencia de cruce de ganancia donde el módulo de la función de bucle abierto es 0 dB?",
+        "a": "V",
+        "j": "Verdadero. PM = 180 + fase(L(j*w_0dB))."
+      },
+      {
+        "q": "¿El método de discretización trapezoidal (Tustin) mapea todo el semiplano izquierdo continuo s estrictamente dentro del círculo unidad discreto z?",
+        "a": "V",
+        "j": "Verdadero. Preserva fielmente la estabilidad del sistema analógico al pasar a digital."
+      },
+      {
+        "q": "Aumentar indefinidamente la ganancia proporcional Kp de un sistema de tercer orden continuo siempre incrementa la estabilidad del lazo.",
+        "a": "F",
+        "j": "Falso. Desplaza los polos hacia el semiplano derecho provocando oscilaciones inestables."
+      },
+      {
+        "q": "¿El teorema del valor final aplicado al error en Laplace requiere que los polos de s*E(s) tengan parte real negativa?",
+        "a": "V",
+        "j": "Verdadero. Requisito indispensable para que exista un valor asintótico estable en el tiempo."
+      },
+      {
+        "q": "¿La representación en variables de estado dx/dt = Ax + Bu, y = Cx + Du permite modelar sistemas multivariables (MIMO) e internamente no lineales?",
+        "a": "V",
+        "j": "Verdadero. Marco matemático unificado de la teoría de control moderna."
+      }
+    ]
+  },
+  "230925": {
+    "code": "230925",
+    "acronym": "IOT",
+    "title": "Internet de las Cosas",
+    "semester": 6,
+    "ects": 6.0,
+    "department": "710 - EEL / 739 - TSC",
+    "description": "Arquitecturas IoT de extremo a extremo (dispositivos de borde edge, puertas de enlace gateway y plataformas cloud), redes de área amplia de bajo consumo (LPWAN: LoRaWAN, NB-IoT, LTE-M), redes de corto alcance (BLE, Zigbee/802.15.4, Wi-Fi HaLow), protocolos de capa de aplicación ligeros (MQTT, CoAP/CBOR, HTTP/REST), seguridad en IoT (criptografía hardware, TLS 1.3, autenticación de dispositivos y provisionamiento seguro), y técnicas de recolección de energía (energy harvesting) y optimización de batería.",
+    "formulas": [
+      {
+        "name": "Tiempo en el Aire de Trama LoRa (Time-on-Air ToA)",
+        "latex": "T_{\\text{air}} = T_{\\text{preamble}} + T_{\\text{payload}} = \\left( N_{\\text{pre}} + 4.25 + N_{\\text{sym,pay}} \\right) \\cdot \\frac{2^{\\text{SF}}}{\\text{BW}}"
+      },
+      {
+        "name": "Balance de Enlace de Radio (Link Budget)",
+        "latex": "P_{\\text{rx}} = P_{\\text{tx}} + G_{\\text{tx}} + G_{\\text{rx}} - \\text{FSPL} - L_{\\text{misc}} \\ge S_{\\text{rx}}"
+      },
+      {
+        "name": "Pérdidas en Espacio Libre (FSPL en dB)",
+        "latex": "\\text{FSPL} = 20 \\log_{10}(d_{\\text{km}}) + 20 \\log_{10}(f_{\\text{MHz}}) + 32.44"
+      },
+      {
+        "name": "Autonomía Estimada de Batería en Dispositivo IoT",
+        "latex": "T_{\\text{vida}} = \\frac{C_{\\text{bat}}}{I_{\\text{activo}} \\cdot D + I_{\\text{sleep}} \\cdot (1 - D)}"
+      },
+      {
+        "name": "Sobrecarga de Paquete MQTT vs CoAP",
+        "latex": "\\text{Cabecera MQTT} \\ge 2\\,\\text{bytes (TCP)}, \\quad \\text{Cabecera CoAP} = 4\\,\\text{bytes (UDP)}"
+      }
+    ],
+    "calc_params": {
+      "sf": 7,
+      "bw_khz": 125.0,
+      "payload_bytes": 20,
+      "bat_mah": 2400.0,
+      "i_sleep_ua": 15.0,
+      "i_tx_ma": 40.0,
+      "tx_duration_ms": 60.0,
+      "tx_period_sec": 300.0
+    },
+    "calc_outputs": [
+      "toa_ms",
+      "avg_current_ua",
+      "battery_life_years"
+    ],
+    "calc_fn": "def calc(p):\n    sf = p.get('sf', 7)\n    bw = p.get('bw_khz', 125.0) * 1e3\n    t_sym = (2**sf) / bw\n    pl = p.get('payload_bytes', 20)\n    n_sym = 8 + max(0, int(((8 * pl - 4 * sf + 28) / (4.0 * sf)) * 5))\n    toa_ms = (12.25 + n_sym) * t_sym * 1000.0\n    bat = p.get('bat_mah', 2400.0)\n    i_sleep = p.get('i_sleep_ua', 15.0)\n    i_tx = p.get('i_tx_ma', 40.0) * 1000.0\n    t_tx = p.get('tx_duration_ms', 60.0) / 1000.0\n    period = max(1.0, p.get('tx_period_sec', 300.0))\n    duty = t_tx / period\n    i_avg = i_tx * duty + i_sleep * (1.0 - duty)\n    hours = (bat * 1000.0) / max(1.0, i_avg)\n    years = hours / (24.0 * 365.25)\n    return {'toa_ms': round(toa_ms, 2), 'avg_current_ua': round(i_avg, 2), 'battery_life_years': round(years, 2)}",
+    "spice_template": "// IOT - Publicacion de Telemetria de Sensor por MQTT en C Embebido\n#include <stdio.h>\ntypedef struct {\n    float temperature_c;\n    float humidity_pct;\n    uint16_t battery_mv;\n} SensorPayload;\nvoid serialize_payload(const SensorPayload *data, char *buffer) {\n    sprintf(buffer, \"{\\\"t\\\":%.1f,\\\"h\\\":%.1f,\\\"v\\\":%u}\", data->temperature_c, data->humidity_pct, data->battery_mv);\n}\n",
+    "questions": [
+      {
+        "q": "¿El factor de ensanchamiento (Spreading Factor SF) en modulación LoRa permite intercambiar mayor alcance de cobertura por menor velocidad binaria y mayor tiempo en el aire?",
+        "a": "V",
+        "j": "Verdadero. A mayor SF (de SF7 a SF12), mayor sensibilidad y robustez frente a interferencias."
+      },
+      {
+        "q": "¿El protocolo MQTT utiliza una arquitectura de publicación/suscripción mediante un servidor central (Broker) sobre transporte TCP?",
+        "a": "V",
+        "j": "Verdadero. Desacopla espacial y temporalmente los emisores de los receptores de datos."
+      },
+      {
+        "q": "El protocolo CoAP (Constrained Application Protocol) funciona sobre transporte TCP orientado a conexión pesada.",
+        "a": "F",
+        "j": "Falso. Opera sobre UDP con cabeceras binarias mínimas de 4 bytes optimizadas para nodos de muy bajos recursos."
+      },
+      {
+        "q": "¿La red LoRaWAN en Europa utiliza la banda ISM sub-GHz de 868 MHz sujeta a un límite de ciclo de trabajo (duty cycle) normativo del 1%?",
+        "a": "V",
+        "j": "Verdadero. Restringe el tiempo de transmisión para evitar saturar el canal común compartido."
+      },
+      {
+        "q": "¿El perfil BLE (Bluetooth Low Energy) organiza los datos en servicios y características mediante la arquitectura GATT (Generic Attribute Profile)?",
+        "a": "V",
+        "j": "Verdadero. Estructura estándar jerárquica de intercambio de telemetría y comandos."
+      },
+      {
+        "q": "En redes NB-IoT (Narrowband IoT), los dispositivos transmiten sobre frecuencias no reguladas sin licencia de operador móvil.",
+        "a": "F",
+        "j": "Falso. NB-IoT es un estándar 3GPP que opera sobre espectro licenciado celular dentro de bandas LTE."
+      },
+      {
+        "q": "¿El modo de reposo profundo (Deep Sleep) con consumo inferior a unos pocos microamperios es imprescindible para que un nodo IoT opere 5 a 10 años con una pila botón?",
+        "a": "V",
+        "j": "Verdadero. El dispositivo pasa más del 99% del tiempo en modo suspensión apagando radios y periféricos."
+      },
+      {
+        "q": "¿Un elemento seguro de hardware (Secure Element / HSM) almacena claves criptográficas privadas y protege contra ataques de extracción física y canal lateral?",
+        "a": "V",
+        "j": "Verdadero. Garantiza la identidad inmutable y la autenticidad del nodo frente a la nube."
+      },
+      {
+        "q": "El nivel de calidad de servicio QoS 0 en MQTT garantiza que el mensaje se entrega obligatoriamente al menos una vez al suscriptor.",
+        "a": "F",
+        "j": "Falso. QoS 0 es 'at most once' (como máximo una vez, sin retransmisiones ni acuse); QoS 1 es 'at least once' y QoS 2 es 'exactly once'."
+      },
+      {
+        "q": "¿La técnica de Edge Computing procesa e infiere datos preliminares en el propio nodo o gateway reduciendo el volumen de tráfico enviado a la nube?",
+        "a": "V",
+        "j": "Verdadero. Reduce la latencia y ahorra energía de transmisión de radio."
+      },
+      {
+        "q": "¿Las técnicas de Energy Harvesting permiten a dispositivos IoT autoalimentarse capturando energía residual del entorno (luz solar, vibraciones piezoeléctricas o gradientes térmicos Seebeck)?",
+        "a": "V",
+        "j": "Verdadero. Permite nodos completamente desatendidos sin recambio de baterías."
+      },
+      {
+        "q": "¿En el protocolo CoAP, el método 'Observe' permite a un cliente recibir actualizaciones automáticas del servidor cuando cambia el estado de un recurso sin hacer polling continuo?",
+        "a": "V",
+        "j": "Verdadero. Extensión pub/sub ligera sobre REST/CoAP."
+      }
+    ]
+  },
+  "230926": {
+    "code": "230926",
+    "acronym": "RT",
+    "title": "Sistemas en Tiempo Real",
+    "semester": 6,
+    "ects": 6.0,
+    "department": "710 - EEL / 701 - DAC",
+    "description": "Conceptos de tiempo real estricto (hard) y suave (soft), sistemas operativos en tiempo real (RTOS: FreeRTOS, Zephyr), planificación de tareas periódicas y aperiódicas (Rate Monotonic RM, Earliest Deadline First EDF), análisis de tiempos de respuesta (RTA), sincronización y exclusión mutua (semáforos, mutexes, colas de mensajes), inversión de prioridades y protocolos de herencia y techo de prioridad (PCP), e interrupciones deterministas.",
+    "formulas": [
+      {
+        "name": "Test de Utilización de Liu & Layland para Rate Monotonic",
+        "latex": "U = \\sum_{i=1}^{n} \\frac{C_i}{T_i} \\le n (2^{1/n} - 1) \\xrightarrow{n \\to \\infty} \\ln 2 \\approx 0.693"
+      },
+      {
+        "name": "Condición de Planificabilidad de EDF (Deadlines en Fin de Periodo)",
+        "latex": "U = \\sum_{i=1}^{n} \\frac{C_i}{T_i} \\le 1.0 \\quad (100\\%)"
+      },
+      {
+        "name": "Ecuación de Tiempo de Respuesta en el Peor Caso (WCRT)",
+        "latex": "R_i^{(k+1)} = C_i + B_i + \\sum_{j \\in hp(i)} \\left\\lceil \\frac{R_i^{(k)}}{T_j} \\right\\rceil C_j"
+      },
+      {
+        "name": "Utilización del Procesador",
+        "latex": "U = \\sum_{i=1}^{n} \\frac{C_i}{T_i}"
+      },
+      {
+        "name": "Cota Superior de Inversión de Prioridad con PIP",
+        "latex": "B_i \\le \\max_{j \\in lp(i), k \\in cs} \\{ C_{j,k} \\}"
+      }
+    ],
+    "calc_params": {
+      "c1": 1.0,
+      "t1": 4.0,
+      "c2": 2.0,
+      "t2": 6.0,
+      "c3": 1.0,
+      "t3": 10.0
+    },
+    "calc_outputs": [
+      "utilization",
+      "rm_bound_3tasks",
+      "is_rm_guaranteed",
+      "is_edf_schedulable"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    c1, t1 = p.get('c1', 1.0), p.get('t1', 4.0)\n    c2, t2 = p.get('c2', 2.0), p.get('t2', 6.0)\n    c3, t3 = p.get('c3', 1.0), p.get('t3', 10.0)\n    u = (c1 / t1) + (c2 / t2) + (c3 / t3)\n    n = 3\n    rm_bound = n * (2**(1.0 / n) - 1.0)\n    return {'utilization': round(u, 4), 'rm_bound_3tasks': round(rm_bound, 4), 'is_rm_guaranteed': bool(u <= rm_bound), 'is_edf_schedulable': bool(u <= 1.0)}",
+    "spice_template": "// RT - Tarea Periodica con Sincronizacion Mutex en FreeRTOS\n#include \"FreeRTOS.h\"\n#include \"task.h\"\n#include \"semphr.h\"\nSemaphoreHandle_t xMutex;\nvoid vTaskPeriodic(void *pvParameters) {\n    TickType_t xLastWakeTime = xTaskGetTickCount();\n    const TickType_t xFrequency = pdMS_TO_TICKS(100);\n    for (;;) {\n        vTaskDelayUntil(&xLastWakeTime, xFrequency);\n        if (xSemaphoreTake(xMutex, portMAX_DELAY) == pdTRUE) {\n            // Seccion critica protegida con herencia de prioridad\n            xSemaphoreGive(xMutex);\n        }\n    }\n}\n",
+    "questions": [
+      {
+        "q": "¿En un sistema de tiempo real estricto (Hard Real-Time), el incumplimiento de un único plazo de ejecución (deadline) supone un fallo catastrófico del sistema?",
+        "a": "V",
+        "j": "Verdadero. En sistemas críticos (aeroespacial, automoción, médico) la corrección temporal es tan vital como la lógica."
+      },
+      {
+        "q": "¿El algoritmo Rate Monotonic (RM) asigna prioridades estáticas de forma inversamente proporcional al periodo de la tarea (menor periodo = mayor prioridad)?",
+        "a": "V",
+        "j": "Verdadero. Algoritmo óptimo de prioridad estática para tareas periódicas independientes con deadlines implícitos."
+      },
+      {
+        "q": "El algoritmo dinámico Earliest Deadline First (EDF) solo puede garantizar planificabilidad si la utilización total es menor al 69.3%.",
+        "a": "F",
+        "j": "Falso. EDF puede alcanzar una utilización de hasta el 100% (U <= 1.0) para tareas con deadlines en fin de periodo."
+      },
+      {
+        "q": "¿El fenómeno de inversión de prioridades ocurre cuando una tarea de alta prioridad queda bloqueada esperando un recurso retenido por una de baja prioridad y desaloja una de prioridad intermedia?",
+        "a": "V",
+        "j": "Verdadero. Problema clásico que afectó al Mars Pathfinder en 1997."
+      },
+      {
+        "q": "¿El protocolo de herencia de prioridad (Priority Inheritance Protocol PIP) eleva temporalmente la prioridad de la tarea que posee el mutex a la prioridad de la tarea que lo reclama?",
+        "a": "V",
+        "j": "Verdadero. Evita que tareas intermedias no relacionadas retrasen la liberación del recurso crítico."
+      },
+      {
+        "q": "La función 'vTaskDelayUntil()' en FreeRTOS sufre de acumulación de derivas temporales (drift) a lo largo del tiempo.",
+        "a": "F",
+        "j": "Falso. 'vTaskDelayUntil' calcula el despertar de forma absoluta garantizando periodos exactos sin acumular jitter o deriva."
+      },
+      {
+        "q": "¿El análisis de tiempo de respuesta (Response Time Analysis RTA) permite verificar la planificabilidad de un conjunto de tareas incluso si superan la cota de Liu & Layland?",
+        "a": "V",
+        "j": "Verdadero. La cota de Liu & Layland es una condición suficiente pero no necesaria; el test RTA es exacto y necesario."
+      },
+      {
+        "q": "¿Un semáforo binario utilizado para sincronización pura evento-a-tarea no debe incorporar herencia de prioridad, reservándose ésta para mutexes de exclusión mutua?",
+        "a": "V",
+        "j": "Verdadero. En sincronización un hilo da la señal y otro la consume, no hay concepto de 'dueño' del recurso."
+      },
+      {
+        "q": "El cambio de contexto (Context Switch) en un microcontrolador se realiza en exactamente cero ciclos de instrucción sin consumir tiempo alguno.",
+        "a": "F",
+        "j": "Falso. Requiere apilar registros de la CPU en el stack, actualizar el puntero de pila y restaurar registros de la nueva tarea, consumiendo latencia determinista."
+      },
+      {
+        "q": "¿El protocolo de techo de prioridad (Priority Ceiling Protocol PCP) previene los bloqueos mutuos (deadlocks) además de acotar la inversión de prioridad a como máximo una sección crítica?",
+        "a": "V",
+        "j": "Verdadero. Bloquea el acceso si la prioridad del proceso no supera los techos de los mutexes activos."
+      },
+      {
+        "q": "¿El tiempo de ejecución en el peor caso (WCET) es la cota superior determinista del tiempo que tarda una tarea en completarse bajo cualquier circunstancia?",
+        "a": "V",
+        "j": "Verdadero. Parámetro de entrada fundamental para cualquier prueba de planificabilidad formal."
+      },
+      {
+        "q": "¿Una cola de mensajes (Message Queue) en un RTOS proporciona transferencia segura de datos e hilos sincronizados entre tareas e interrupciones?",
+        "a": "V",
+        "j": "Verdadero. Mecanismo canónico de paso de mensajes con gestión de buffering interno."
+      }
+    ]
+  },
+  "230927": {
+    "code": "230927",
+    "acronym": "PEE",
+    "title": "Procesado de la Energía Eléctrica",
+    "semester": 6,
+    "ects": 6.0,
+    "department": "710 - EEL - Departamento de Ingeniería Electrónica",
+    "description": "Convertidores estáticos conmutados de continua a continua (DC-DC: Buck reductor, Boost elevador, Buck-Boost), modos de conducción continua (CCM) y discontinua (DCM), dimensionado de bobinas y condensadores de filtro (rizado de tensión y corriente), interruptores de potencia modernos (MOSFETs de potencia Si, SiC, transistores GaN HEMT, diodos Schottky SiC), pérdidas por conmutación y conducción, inversores DC-AC modulados por PWM senoidal (SPWM), y rectificadores activos con corrección de factor de potencia (PFC).",
+    "formulas": [
+      {
+        "name": "Relación de Conversión del Convertidor Buck en CCM",
+        "latex": "V_o = D \\cdot V_g, \\quad D = \\frac{t_{\\text{on}}}{T_s}"
+      },
+      {
+        "name": "Relación de Conversión del Convertidor Boost en CCM",
+        "latex": "V_o = \\frac{V_g}{1 - D}"
+      },
+      {
+        "name": "Rizado de Corriente en la Inductancia del Buck",
+        "latex": "\\Delta i_L = \\frac{V_g - V_o}{L} D T_s = \\frac{V_o (1 - D)}{L f_s}"
+      },
+      {
+        "name": "Rizado de Tensión de Salida en el Convertidor Buck",
+        "latex": "\\Delta v_o = \\frac{\\Delta i_L}{8 C f_s} + \\Delta i_L \\cdot \\text{ESR}"
+      },
+      {
+        "name": "Pérdidas de Conmutación en MOSFET de Potencia",
+        "latex": "P_{\\text{sw}} = \\frac{1}{2} V_{\\text{ds}} I_d (t_r + t_f) f_s"
+      }
+    ],
+    "calc_params": {
+      "vg_in": 24.0,
+      "vo_out": 5.0,
+      "i_out": 3.0,
+      "fs_khz": 200.0,
+      "l_uh": 22.0,
+      "c_uf": 47.0,
+      "esr_mohm": 15.0
+    },
+    "calc_outputs": [
+      "duty_cycle_ccm",
+      "delta_il_a",
+      "il_ripple_pct",
+      "delta_vo_mv"
+    ],
+    "calc_fn": "def calc(p):\n    vg = max(0.1, p.get('vg_in', 24.0))\n    vo = p.get('vo_out', 5.0)\n    d = vo / vg\n    fs = p.get('fs_khz', 200.0) * 1e3\n    l = max(1e-7, p.get('l_uh', 22.0) * 1e-6)\n    c = max(1e-7, p.get('c_uf', 47.0) * 1e-6)\n    esr = p.get('esr_mohm', 15.0) * 1e-3\n    dil = (vo * (1.0 - d)) / (l * fs)\n    iout = max(0.1, p.get('i_out', 3.0))\n    rip_pct = (dil / iout) * 100.0\n    dvo_c = dil / (8.0 * c * fs)\n    dvo_esr = dil * esr\n    dvo_total = (dvo_c + dvo_esr) * 1000.0\n    return {'duty_cycle_ccm': round(d, 4), 'delta_il_a': round(dil, 3), 'il_ripple_pct': round(rip_pct, 1), 'delta_vo_mv': round(dvo_total, 2)}",
+    "spice_template": "* PEE - Convertidor DC-DC Reductor Buck a 200 kHz en CCM\nVin in 0 DC 24V\nS1 in mid gate 0 SW_IDEAL\nD1 0 mid D_SCHOTTKY\nL1 mid out 22uH IC=3A\nC1 out 0 47uF\nRL out 0 1.67\nVgate gate 0 PULSE(0 1 0 10n 10n 1.04u 5.0u)\n.model SW_IDEAL VSWITCH(RON=0.02 ROFF=1Meg VON=0.8 VOFF=0.2)\n.model D_SCHOTTKY D(IS=1u RS=0.015 N=1.05)\n.tran 50n 100u UIC\n.print tran V(out) I(L1)\n.end\n",
+    "questions": [
+      {
+        "q": "¿En un convertidor Buck ideal en modo de conducción continua (CCM), la relación entre tensión de salida y de entrada es Vo = D * Vg?",
+        "a": "V",
+        "j": "Verdadero. Donde D es el ciclo de trabajo comprendido entre 0 y 1."
+      },
+      {
+        "q": "¿En un convertidor elevador Boost ideal en CCM, la tensión de salida siempre es estrictamente mayor o igual a la tensión de entrada?",
+        "a": "V",
+        "j": "Verdadero. Vo = Vg / (1 - D) con D en [0, 1)."
+      },
+      {
+        "q": "La resistencia serie equivalente (ESR) del condensador de salida no influye en absoluto en el rizado de tensión en un convertidor Buck.",
+        "a": "F",
+        "j": "Falso. A frecuencias de conmutación altas, el rizado debido a Delta_IL * ESR suele dominar ampliamente sobre la componente capacitiva Delta_IL / (8*C*fs)."
+      },
+      {
+        "q": "¿Los semiconductores de banda ancha (Wide Bandgap WBG) como carburo de silicio (SiC) y nitruro de galio (GaN) permiten frecuencias de conmutación muy superiores con menores pérdidas?",
+        "a": "V",
+        "j": "Verdadero. Poseen campo de ruptura eléctrico y movilidad electrónica muy superiores al silicio tradicional."
+      },
+      {
+        "q": "¿El modo de conducción discontinua (DCM) aparece cuando la corriente por la inductancia cae a cero y se extingue durante una porción del ciclo de conmutación?",
+        "a": "V",
+        "j": "Verdadero. Ocurre a cargas ligeras cuando la corriente media es menor que Delta_IL / 2."
+      },
+      {
+        "q": "En un convertidor reductor Buck, la corriente de entrada demandada de la fuente es puramente continua sin ninguna componente pulsante.",
+        "a": "F",
+        "j": "Falso. La corriente de entrada es fuertemente discontinua y pulsante entre 0 e IL; por eso requiere un condensador de desacoplo de entrada robusto."
+      },
+      {
+        "q": "¿Un circuito de Corrección del Factor de Potencia (PFC) activo suele basarse en un convertidor Boost para hacer que la corriente consumida de la red senoidal sea sinusoidal y en fase con la tensión?",
+        "a": "V",
+        "j": "Verdadero. Logra factores de potencia superiores a 0.99 y minimiza la distorsión armónica total (THD)."
+      },
+      {
+        "q": "¿La modulación PWM senoidal (SPWM) en inversores de puente completo compara una onda senoidal de referencia con una portadora triangular de alta frecuencia?",
+        "a": "V",
+        "j": "Verdadero. Genera trenes de pulsos cuya anchura es proporcional a la amplitud de la sinusoide deseada."
+      },
+      {
+        "q": "¿Las pérdidas por conmutación en un interruptor crecen en proporción directa con la frecuencia de conmutación fs?",
+        "a": "V",
+        "j": "Verdadero. P_sw = 0.5 * Vds * Id * (tr + tf) * fs."
+      },
+      {
+        "q": "El convertidor Buck-Boost produce una tensión de salida de la misma polaridad que la tensión de entrada.",
+        "a": "F",
+        "j": "Falso. Es una topología inversora: produce una tensión de polaridad negativa respecto a masa (Vo = -D/(1-D) * Vg)."
+      },
+      {
+        "q": "¿Los diodos Schottky de carburo de silicio (SiC) carecen prácticamente de corriente de recuperación inversa (Qrr approx 0)?",
+        "a": "V",
+        "j": "Verdadero. Son dispositivos unipolares de portadores mayoritarios eliminando las pérdidas por recuperación inversa."
+      },
+      {
+        "q": "¿Un transformador de aislamiento galvánico en un convertidor Flyback almacena energía magnética en el entrehierro de su núcleo durante el tiempo de conducción del transistor?",
+        "a": "V",
+        "j": "Verdadero. Actúa como inductancias acopladas (inductor con doble devanado), no como transformador puro continuo."
+      }
+    ]
+  },
+  "230928": {
+    "code": "230928",
+    "acronym": "TEL",
+    "title": "Tecnología Electrónica",
+    "semester": 6,
+    "ects": 6.0,
+    "department": "710 - EEL - Departamento de Ingeniería Electrónica",
+    "description": "Tecnología de fabricación de circuitos impresos (PCB multicapa, apilado de capas stack-up, microvías ciegas y enterradas), integridad de señal (SI: reflexiones por desadaptación, diafonía capacitiva e inductiva crosstalk, pérdidas dieléctricas), integridad de potencia (PI: red de distribución PDN, planos de masa, condensadores de desacoplo cerámicos), diseño térmico (resistencia térmica unión-ambiente RthJA, disipadores, pads térmicos), y compatibilidad y normativas de compatibilidad electromagnética (EMC).",
+    "formulas": [
+      {
+        "name": "Resistencia Térmica en Régimen Permanente",
+        "latex": "T_J = T_A + P_{\\text{dis}} \\cdot \\theta_{JA}, \\quad \\theta_{JA} = \\theta_{JC} + \\theta_{CS} + \\theta_{SA}"
+      },
+      {
+        "name": "Impedancia Característica de Pista Microstrip",
+        "latex": "Z_0 \\approx \\frac{87}{\\sqrt{\\varepsilon_r + 1.41}} \\ln\\left( \\frac{5.98 h}{0.8 w + t} \\right)"
+      },
+      {
+        "name": "Tiempo de Propagación de Señal en FR4",
+        "latex": "t_{pd} \\approx \\frac{\\sqrt{\\varepsilon_{r,\\text{eff}}}}{c} \\approx 6.8\\,\\text{ps/mm}"
+      },
+      {
+        "name": "Longitud Crítica de Pista sin Adaptación",
+        "latex": "l_{\\text{crit}} \\approx \\frac{t_r}{2 t_{pd}} = \\frac{v_p \\cdot t_r}{2}"
+      },
+      {
+        "name": "Coeficiente de Acoplamiento de Diafonía (Crosstalk NEXT)",
+        "latex": "V_{\\text{NEXT}} \\approx K_C \\frac{C_m}{C_{tot}} + K_L \\frac{L_m}{L_{tot}}"
+      }
+    ],
+    "calc_params": {
+      "p_dis_w": 3.5,
+      "theta_jc": 1.8,
+      "theta_cs": 0.5,
+      "theta_sa": 12.0,
+      "t_amb": 40.0,
+      "tr_ns": 1.0,
+      "er_fr4": 4.2
+    },
+    "calc_outputs": [
+      "tj_degc",
+      "theta_ja_total",
+      "crit_length_cm",
+      "is_thermal_safe"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    pdis = p.get('p_dis_w', 3.5)\n    r_jc = p.get('theta_jc', 1.8)\n    r_cs = p.get('theta_cs', 0.5)\n    r_sa = p.get('theta_sa', 12.0)\n    r_ja = r_jc + r_cs + r_sa\n    ta = p.get('t_amb', 40.0)\n    tj = ta + pdis * r_ja\n    tr = p.get('tr_ns', 1.0) * 1e-9\n    er = p.get('er_fr4', 4.2)\n    c0 = 3e8\n    vp = c0 / math.sqrt(er)\n    lcrit_m = (vp * tr) / 2.0\n    return {'tj_degc': round(tj, 1), 'theta_ja_total': round(r_ja, 2), 'crit_length_cm': round(lcrit_m * 100.0, 2), 'is_thermal_safe': bool(tj < 125.0)}",
+    "spice_template": "* TEL - Circuito Termico Equivalente de Potencia\nI_pdis 0 junction DC 3.5\nR_jc junction case 1.8\nR_cs case heatsink 0.5\nR_sa heatsink ambient 12.0\nV_amb ambient 0 DC 40.0\n.op\n.print dc V(junction) V(case) V(heatsink)\n.end\n",
+    "questions": [
+      {
+        "q": "¿Una pista de PCB se debe tratar como línea de transmisión distribuida si el retardo de propagación a lo largo de la pista supera la mitad del tiempo de subida de la señal (t_delay > tr / 2)?",
+        "a": "V",
+        "j": "Verdadero. Criterio fundamental de integridad de señal para evitar reflexiones destructivas."
+      },
+      {
+        "q": "¿La resistencia térmica total unión-ambiente theta_JA es la suma en serie de theta_JC (unión-cápsula), theta_CS (cápsula-disipador) y theta_SA (disipador-ambiente)?",
+        "a": "V",
+        "j": "Verdadero. Modelo circuital térmico análogo a la ley de Ohm."
+      },
+      {
+        "q": "Un plano de masa continuo por debajo de las pistas de alta velocidad aumenta las emisiones radiadas y la inductancia del lazo de retorno.",
+        "a": "F",
+        "j": "Falso. Minimiza drásticamente el área del lazo de retorno, reduciendo la inductancia parásita y las emisiones de interferencia electromagnética (EMI)."
+      },
+      {
+        "q": "¿El desacoplo efectivo de la red de distribución de potencia (PDN) requiere condensadores cerámicos de varios valores colocados lo más cerca posible de los pines del circuito integrado?",
+        "a": "V",
+        "j": "Verdadero. Proporcionan corriente de alta frecuencia instantánea eludiendo la inductancia parásita de las pistas largas."
+      },
+      {
+        "q": "¿La diafonía (crosstalk) entre dos pistas paralelas disminuye cuadráticamente al aumentar la distancia de separación entre ellas (regla 3W)?",
+        "a": "V",
+        "j": "Verdadero. Alejar las pistas reduce tanto el acoplo capacitivo mutuo como el inductivo."
+      },
+      {
+        "q": "La pasta térmica aplicada entre la cápsula del componente y el disipador incrementa la resistencia térmica de contacto.",
+        "a": "F",
+        "j": "Falso. Rellena las microrrugosidades microscópicas de aire (pésimo conductor térmico) reduciendo notablemente theta_CS."
+      },
+      {
+        "q": "¿Las vías de retorno de masa junto a vías de señal de alta velocidad preservan la continuidad del camino de retorno reduciendo la discontinuidad de impedancia?",
+        "a": "V",
+        "j": "Verdadero. Mantienen la impedancia y evitan que la corriente de retorno busque caminos tortuosos."
+      },
+      {
+        "q": "¿Una terminación en serie colocada al inicio de la pista con valor R_term = Z0 - R_driver anula las reflexiones procedentes del receptor en circuito abierto?",
+        "a": "V",
+        "j": "Verdadero. Absorbe la onda reflejada evitando resonancias sucesivas."
+      },
+      {
+        "q": "En el apilado (stack-up) de una PCB de 4 capas estándar, es recomendable colocar las pistas de reloj sobre una ranura abierta en el plano de masa de referencia.",
+        "a": "F",
+        "j": "Falso. Cruzar una ranura (slot) en el plano de masa destruye el camino de retorno, causando un pico de EMI y severa distorsión de la señal."
+      },
+      {
+        "q": "¿El fenómeno de ringing (sobreoscilación y oscilación amortiguada) en conmutación rápida está originado por la resonancia entre la inductancia parásita de la pista y la capacidad de entrada del receptor?",
+        "a": "V",
+        "j": "Verdadero. Circuito RLC subamortiguado parásito."
+      },
+      {
+        "q": "¿El cobre con peso estándar de 1 oz/ft^2 equivale a un espesor de lámina de aproximadamente 35 micrómetros?",
+        "a": "V",
+        "j": "Verdadero. Grosor típico de capas exteriores e interiores en PCBs industriales."
+      },
+      {
+        "q": "¿La temperatura máxima de unión (Tj_max) típica permitida en componentes semiconductores de silicio suele situarse entre 125 y 150 grados Celsius?",
+        "a": "V",
+        "j": "Verdadero. Operar por encima compromete la fiabilidad y acelera la degradación física del silicio."
+      }
+    ]
+  },
+  "230929": {
+    "code": "230929",
+    "acronym": "TEM",
+    "title": "Técnicas para el Emprendimiento",
+    "semester": 6,
+    "ects": 6.0,
+    "department": "732 - OE - Organización de Empresas",
+    "description": "Metodología Lean Startup (ciclo Crear-Medir-Aprender, Producto Mínimo Viable MVP, pivotaje), lienzo de modelo de negocio (Business Model Canvas BMC), economía de la startup tecnológica (Coste de Adquisición de Cliente CAC, Valor de Vida del Cliente LTV, tasa de cancelación churn rate, consumo de caja burn rate y pista financiera runway), financiación (rondas pre-seed, seed, Serie A, business angels, venture capital), y validación de propuesta de valor mediante entrevistas de desarrollo de clientes (Customer Development de Steve Blank).",
+    "formulas": [
+      {
+        "name": "Ratio LTV a CAC para Sostenibilidad",
+        "latex": "\\text{Ratio} = \\frac{\\text{LTV}}{\\text{CAC}} \\ge 3.0"
+      },
+      {
+        "name": "Valor de Vida del Cliente (Customer Lifetime Value)",
+        "latex": "\\text{LTV} = \\frac{\\text{ARPU} \\times \\text{Margen Bruto}}{\\text{Churn Rate}}"
+      },
+      {
+        "name": "Pista Financiera (Runway en Meses)",
+        "latex": "\\text{Runway} = \\frac{\\text{Caja Disponible}}{\\text{Net Burn Rate Mensual}}"
+      },
+      {
+        "name": "Tasa de Cancelación (Churn Rate)",
+        "latex": "\\text{Churn} = \\frac{\\text{Clientes Perdidos en el Periodo}}{\\text{Clientes Totales al Inicio}} \\times 100\\%"
+      },
+      {
+        "name": "Coste de Adquisición de Clientes (CAC)",
+        "latex": "\\text{CAC} = \\frac{\\text{Gastos Totales de Marketing y Ventas}}{\\text{Nuevos Clientes Conseguidos}}"
+      }
+    ],
+    "calc_params": {
+      "caja_total": 250000.0,
+      "burn_rate_mes": 20000.0,
+      "gastos_mkt": 15000.0,
+      "nuevos_clientes": 50,
+      "arpu_mes": 40.0,
+      "churn_pct": 2.5,
+      "gross_margin": 0.8
+    },
+    "calc_outputs": [
+      "runway_meses",
+      "cac_eur",
+      "ltv_eur",
+      "ltv_cac_ratio",
+      "is_unit_economics_sound"
+    ],
+    "calc_fn": "def calc(p):\n    caja = p.get('caja_total', 250000.0)\n    burn = max(100.0, p.get('burn_rate_mes', 20000.0))\n    runway = caja / burn\n    mkt = p.get('gastos_mkt', 15000.0)\n    nuevos = max(1, p.get('nuevos_clientes', 50))\n    cac = mkt / float(nuevos)\n    arpu = p.get('arpu_mes', 40.0)\n    churn = max(0.001, (p.get('churn_pct', 2.5) / 100.0))\n    margin = p.get('gross_margin', 0.8)\n    ltv = (arpu * margin) / churn\n    ratio = ltv / max(1.0, cac)\n    return {'runway_meses': round(runway, 1), 'cac_eur': round(cac, 2), 'ltv_eur': round(ltv, 2), 'ltv_cac_ratio': round(ratio, 2), 'is_unit_economics_sound': bool(ratio >= 3.0)}",
+    "spice_template": "# TEM - Modelo de Simulación de Unit Economics para Startups SaaS en Python\ndef unit_economics(arpu, margin, churn_rate, marketing_spend, new_customers):\n    cac = marketing_spend / new_customers\n    ltv = (arpu * margin) / churn_rate\n    return {'CAC': cac, 'LTV': ltv, 'Ratio_LTV_CAC': ltv / cac, 'Saludable': (ltv / cac) >= 3.0}\n",
+    "questions": [
+      {
+        "q": "¿La metodología Lean Startup promueve ciclos cortos e iterativos de Crear-Medir-Aprender para validar hipótesis de negocio con el menor desperdicio de recursos?",
+        "a": "V",
+        "j": "Verdadero. Enfoque fundacional formulado por Eric Ries."
+      },
+      {
+        "q": "¿El Producto Mínimo Viable (MVP) es la versión preliminar de un nuevo producto que permite al equipo recolectar la máxima cantidad de aprendizaje validado sobre clientes con el mínimo esfuerzo?",
+        "a": "V",
+        "j": "Verdadero. No busca ser perfecto sino validar la propuesta de valor."
+      },
+      {
+        "q": "Un ratio LTV/CAC inferior a 1.0 indica un modelo de negocio altamente rentable y escalable.",
+        "a": "F",
+        "j": "Falso. Significa que captar a un cliente cuesta más que todo el beneficio que generará a lo largo de su vida; el negocio pierde dinero con cada venta (se busca LTV/CAC >= 3)."
+      },
+      {
+        "q": "¿El 'Runway' representa el número de meses que una startup puede continuar operando antes de agotar su saldo de tesorería disponible al ritmo actual de gasto neto (Burn Rate)?",
+        "a": "V",
+        "j": "Verdadero. Runway = Caja / Net Burn Rate mensual."
+      },
+      {
+        "q": "¿El Business Model Canvas (BMC) de Osterwalder desglosa el modelo de negocio en 9 bloques estratégicos interconectados en un único lienzo?",
+        "a": "V",
+        "j": "Verdadero. Propuesta de valor, segmentos de clientes, canales, ingresos, estructura de costes, recursos clave, etc."
+      },
+      {
+        "q": "Un pivotaje (pivot) en una startup consiste en liquidar la empresa y despedir al equipo directivo.",
+        "a": "F",
+        "j": "Falso. Pivotar es una corrección estructurada diseñada para probar una nueva hipótesis fundamental sobre el producto o modelo de negocio manteniendo la visión."
+      },
+      {
+        "q": "¿El encaje problema-solución (Problem-Solution Fit) se confirma cuando se demuestra empíricamente que los clientes potenciales tienen un problema real y la propuesta de valor lo resuelve efectivamente?",
+        "a": "V",
+        "j": "Verdadero. Precede al Product-Market Fit (escalabilidad en el mercado)."
+      },
+      {
+        "q": "¿El Churn Rate mide el porcentaje de clientes o suscriptores que se dan de baja o abandonan el servicio durante un periodo temporal dado?",
+        "a": "V",
+        "j": "Verdadero. Clave para calcular el ciclo de vida y la retención en modelos de ingresos recurrentes (SaaS)."
+      },
+      {
+        "q": "¿El pacto de socios regula los acuerdos y derechos entre fundadores e inversores antes de la entrada de capital de riesgo (cláusulas de vesting, drag-along y tag-along)?",
+        "a": "V",
+        "j": "Verdadero. Previene conflictos societarios graves y garantiza el compromiso a largo plazo."
+      },
+      {
+        "q": "Un inversor Business Angel solo invierte en empresas multinacionales consolidadas que cotizan en bolsa.",
+        "a": "F",
+        "j": "Falso. Los Business Angels son inversores particulares que aportan capital semilla, contactos y mentoría a startups en etapas muy tempranas (pre-seed y seed)."
+      },
+      {
+        "q": "¿El 'Product-Market Fit' (PMF) se alcanza cuando un producto satisface plenamente una fuerte demanda en un mercado con gran potencial de tracción orgánica?",
+        "a": "V",
+        "j": "Verdadero. Momento a partir del cual se justifica acelerar la inversión en marketing y ventas."
+      },
+      {
+        "q": "¿El proceso de Customer Development de Steve Blank propone 'salir del edificio' para verificar hipótesis directamente con clientes reales antes de escribir código definitivo?",
+        "a": "V",
+        "j": "Verdadero. Evita construir productos que nadie necesita o está dispuesto a pagar."
+      }
+    ]
+  }
+}

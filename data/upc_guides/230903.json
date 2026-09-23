@@ -1,0 +1,69 @@
+{
+  "code": "230903",
+  "acronym": "C",
+  "title": "Cálculo",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "749 - MAT - Departamento de Matemáticas.",
+  "responsible_professor": "JOSEFINA ANTONIJUAN RULL",
+  "objectives": "Alcanzar el nivel suficiente en cálculo de una variable para tratar, o fundamentar el tratamiento, de fenómenos que pueden\ndescribirse en estos términos. También sustentar las partes de las demás asignaturas que precisan dominio de funciones reales de\nuna variable. Introducción a las funciones definidas por series.\nResultado del aprendizaje:\nExpresa con claridad el proceso de planificación y resolución de ejercicios y problemas que precisen el uso del cálculo de una variable.\nComprende y domina los métodos más útiles para la resolución de problemas en el ámbito de una variable.\nEstá capacitado para afrontar la descripción numérica y en ecuaciones de problemas con enunciado descriptivo.\nHace uso de más de una fuente, y lo utiliza en forma complementaria, para observar los hechos descritos en el texto principal.\nIdentifica y modela problemas a partir de situaciones abiertas. Estudia alternativas para su resolución.",
+  "contents": [
+    {
+      "title": "Tema 1. Números reales",
+      "description": "Conjuntos numéricos (naturales, enteros y racionales). El cuerpo de los números reales. Relación de orden, desigualdades. Valor absoluto. Máximo, mínimo, supremo e ínfimo de subconjuntos de R. Intervalos."
+    },
+    {
+      "title": "Tema 2. Funciones",
+      "description": "Función real de variable real. Dominio y recorrido. Gráfica de una función. Funciones inyectivas, exhaustivas y biyectivas. Función inversa. Operaciones entre funciones. Funciones elementales: polinomios, racionales, potencial, exponencial, logaritmo, trigonométricas e hiperbólicas."
+    },
+    {
+      "title": "Tema 3. Límites de funciones",
+      "description": "Límite de una función en un punto. Propiedades del límite. Límites infinitos. Límites en el infinito. Álgebra de límites infinitos. Límites laterales. Indeterminaciones. Resolución de indeterminaciones: infinito/infinito (funciones racionales), infinito-infinito (diferencia de raíces o de logaritmos), 1^infinito (número e)."
+    },
+    {
+      "title": "Tema 4. Continuidad",
+      "description": "Funciones continuas: definición y propiedades. Tipos de discontinuidad. Cotas, máximo y mínimo de funciones. Teorema de Weierstrass. Teorema de Bolzano. Teorema del valor medio."
+    },
+    {
+      "title": "Tema 5. Derivabilidad",
+      "description": "Derivada de una función en un punto, función derivada. Recta tangente. Propiedades de la derivada (Leibnitz, regla de la cadena, función inversa). Derivada de las funciones elementales. Teorema de Rolle. Teoremas del valor medio. Teorema de l'Hôpital y aplicación al cálculo de límites. Infinitésimos. Infinitos."
+    },
+    {
+      "title": "Tema 6. Polinomios de Taylor",
+      "description": "Orden de contacto. Polinomios de Taylor de una función. Propiedades de los polinomios de Taylor. Residuo de Taylor. Fórmula de Taylor. Polinomios de Taylor de las funciones elementales. Aplicaciones: cálculos aproximados, cálculo de límites."
+    },
+    {
+      "title": "Tema 7. Análisis de la variación de funciones",
+      "description": "Crecimiento y decrecimiento. Extremos locales. Concavidad y convexidad. Puntos de inflexión. Caracterización a partir de los signos de las derivadas. Asíntotas. Estudio gráfico de funciones."
+    },
+    {
+      "title": "Tema 8. Primitivas",
+      "description": "Primitivas de una función. Cálculo de primitivas: inmediatas, por partes y mediante cambio de variable. Cálculo de primitivas de funciones racionales, trigonométricas e irracionales."
+    },
+    {
+      "title": "Tema 9. Integral de Riemann",
+      "description": "Definición de la integral de Riemann. Propiedades. Teorema fundamental del Cálculo. Aplicaciones de la integral definida."
+    },
+    {
+      "title": "Tema 10. Integrales impropias",
+      "description": "Funciones localmente integrables. Integrales impropias de primera especie. Integrales impropias de segunda especie. Criterios de convergencia. Convergència absoluta. Función gamma de Euler."
+    },
+    {
+      "title": "Tema 11. Series numéricas y de potencias",
+      "description": "Sucesiones. Series numericas. Ejemplos (geometricas, harmonicas). Criterios de convergencia (comparacion, raíz, cociente, integral). Series alternadas. Convergencia absoluta. Series de potencias. Radio e intervalo de convergencia. Derivacion y integracion de funciones definidas por series de potencias. Series de Taylor."
+    },
+    {
+      "title": "Tema 12. Métodos numéricos",
+      "description": "Resolución d’ecuaciones: método de la bisección, método de Newton, iteraciones y punto fijo. Interpolación de funciones: polinomios de Lagrange. Derivación e integración numéricas."
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nTipos de pruebas a realizar y peso en la nota final:\nExamen final: 60%\nEvaluación continua: 40%\nEn esta asignatura se evaluarán las competencias genéricas:\n- Aprenendizaje autónomo (Nivel elemental)\n- Capacidad para identificar, formular y resolver problemas de ingeniería (Nivel elemental)\nNORMAS PARA LA REALIZACIÓN DE LAS PRUEBAS.\nLas estandar en este tipo de pruebas",
+  "bibliography": [
+    "- Spivak, M. Calculus [en línea]. 3a. ed. Barcelona: Reverte, 2012 [Consulta: 04/05/2020]. Disponible a:",
+    "http://www.ingebook.com/ib/NPcd/IB_BooksVis?cod_primaria=1000187&codigo_libro=8020. ISBN 9788429151824.",
+    "- Gracia, I.; Padró, C. Apunts de teoria per a l'assignatura de càlcul. (Atenea) [en línea]. [Consulta: 13/05/2020]. Disponible a:",
+    "https://atenea.upc.edu/login/index.php.",
+    "- Aroca, Josep Maria. Càlcul infinitesimal: notes de classe [en línea]. Barcelona: Departament de Matemàtica Aplicada IV, Universitat"
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230903/calculo.pdf"
+}

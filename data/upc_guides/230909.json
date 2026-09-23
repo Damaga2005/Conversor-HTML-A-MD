@@ -1,0 +1,25 @@
+{
+  "code": "230909",
+  "acronym": "EDT",
+  "title": "Ecuaciones Diferenciales y Transformadas",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "749 - MAT - Departamento de Matemáticas.",
+  "responsible_professor": "Otros:",
+  "objectives": "El objetivo principal de la asignatura tal como se plantea es el estudio de las principales transformadas, las series de Fourier y su\naplicación a la resolución de ecuaciones y sistemas de ecuaciones diferenciales ordinarias lineales con coeficientes constantes, y de\nalguna ecuación en derivadas parciales (la ecuación de ondas unidimensionales). El temario elaborado tiene en cuenta la coordinación\nde esta asignatura con las correspondientes al ámbito de circuitos lineales y teoría de la señal, incorporando también los",
+  "contents": [
+    {
+      "title": "Contenido General",
+      "description": "mínimos sobre ecuaciones diferenciales que resultan de interés en otras asignaturas relacionadas con la electrónica y el electromagnetismo. Fecha: 05/09/2026 Página: 2 / 3 HORAS TOTALES DE DEDICACIÓN DEL ESTUDIANTADO Tipo Horas Porcentaje Horas grupo grande 65,0 43.33 Horas aprendizaje autónomo 85,0 56.67 Dedicación total: 150 h CONTENIDOS Transformada de Laplace Descripción: Definición, convergencia. Propiedades. Transformadas de funciones básicas. Inversión por descomposición en fracciones simples. Funciones definidas por trozos. Convolución. Delta de Dirac. Dedicación: 12h Grupo grande/Teoría: 12h Introducción a las ecuaciones diferenciales ordinarias Descripción: Ecuaciones diferenciales de primer orden. Problemas de valor inicial. Integración de algunos ejemplos. Ecuaciones diferenciales lineales homogéneas y no homogéneas. Ecuaciones lineales de orden superior y sistemas de ecuaciones diferenciales lineales. Resolución por la transformación de Laplace. Métodos numéricos para la resolución de ecuaciones diferenciales. Dedicación: 12h Grupo grande/Teoría: 12h Series de Fourier Descripción: Espacios euclídeos de funciones. Sucesiones ortogonales. Desigualdad de Bessel. Teorema de Parseval. Series de Fourier trigonométrica y de exponenciales complejas. Funciones pares e impares. Convergencia puntual. Derivación término a término. IntroduccioÌn a las ecuaciones diferenciales en derivadas parciales. Dedicación: 16h Grupo grande/Teoría: 16h Transformada de Fourier Descripción: Definición, convergencia. Propiedades. Inversión. Transformadas de funciones básicas, de la función escalón y de la delta de Dirac. Comportamiento asintótico. Teorema de Parseval. Teoremas de convolución. Funciones periódicas. Dedicación: 12h Grupo grande/Teoría: 12h Fecha: 05/09/2026 Página: 3 / 3 Transformada z Descripción: Transformada z. Propiedades unilateral y bilateral. Región de convergencia. Transformada de secuencias básicas. Inversión. Convolución de secuencias. Aplicaciones. Dedicación: 13h Grupo grande/Teoría: 13h"
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nExamenes parciales cortos (40%). Examen final (60%). La nota del curso será el máximo entre lo anterior y la nota del examen final.",
+  "bibliography": [
+    "- Boyce, W.E.; DiPrima, R.C. Ecuaciones diferenciales:y problemas con valores en la frontera. 5a ed. México: Limusa Wiley, 2010.",
+    "ISBN 9786070501517.",
+    "- Simmons, G.F; Krantz, S.G. Ecuaciones diferenciales : teoría, técnica y práctica [en línea]. Mèxic: McGrawHill, 2007 [Consulta:",
+    "16/11/2020]. Disponible a: http://www.ingebook.com/ib/NPcd/IB_BooksVis?cod_primaria=1000187&codigo_libro=4312. ISBN",
+    "9780072863154."
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230909/ecuaciones-diferenciales-y-transformadas.pdf"
+}

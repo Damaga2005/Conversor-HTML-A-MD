@@ -1,0 +1,41 @@
+{
+  "code": "230918",
+  "acronym": "TRS",
+  "title": "Tratamiento de la Señal",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "739 - TSC - Departamento de Teoría de la Señal y Comunicaciones.",
+  "responsible_professor": "Otros:",
+  "objectives": "- Caracterización de señales como procesos estocásticos.\n- Teoría de la detección.\n- Teoría de estimación.\n- Filtrado óptimo.\n- Filtrado adaptativo.\n\nFecha: 06/09/2026\nPágina: 2 / 4",
+  "contents": [
+    {
+      "title": "Tema 1. Caracterización de procesos en tiempo discreto.",
+      "description": "- Notación vectorial y variable aleatoria. - Caracterización de procesos estocásticos (estacionarios y ergódicos), matriz de correlación y propiedades, densidad espectral de potencia, procesos discretos y sistemas lineales."
+    },
+    {
+      "title": "Tema 2. Teoria de la detección",
+      "description": "- El problema de la toma de decisiones: verificación de hipótesis, terminología y ejemplos - Criterios MAP y Neyman-Pearson - Detección de señales deterministas y ROC"
+    },
+    {
+      "title": "Tema 3. Teoría de la estimación.",
+      "description": "- El problema de la estimación. - Estimación de parámetros y estimador MVUE. - Límite de Cramer-Rao y estimador eficiente. - Estimación de máxima verosimilitud, estimación MAP y MMSE."
+    },
+    {
+      "title": "Tema 4. Filtrado óptimo.",
+      "description": "- Estimación lineal cuadrático-media. - Tipos de filtrado: identificación de sistema, ecualización, cancelación, predicción e interpolación. - Regresión lineal y mínimos cuadrados."
+    },
+    {
+      "title": "Tema 5. Filtro adaptativo",
+      "description": "- Método de gradiente para regresión lineal. - Métodos de gradiente estocástico (LMS). - Convergencia y desajuste. LMS normalizado."
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nLa realización de todas las prácticas de laboratorio y presentación de los correspondientes informes durante el cuatrimestre en el que\nse cursa la asignatura son obligatorias y, por lo tanto, una condición necesaria para superar la asignatura. En caso de no hacerlo, el\nalumno obtendrá un No Presentado (NP) de la asignatura sin aplicársele los porcentajes que se detallan más abajo. Las prácticas no\nson reevaluables.\nUna prueba de control consistente en la realización de ejercicios. (20%)\nSeguimiento del trabajo realizado en el laboratorio (25%)\nExamen final (55%)",
+  "bibliography": [
+    "- Manolakis, D.G.; Ingle, V.K.; Kogon, S.M. Statistical and adaptive signal processing: spectral estimation, signal modeling, adaptive",
+    "filtering, and array processing. Boston: Artech House, 2005. ISBN 1580536107.",
+    "- Kay, S.M. Fundamentals of statistical signal processing. Englewood Cliffs: Prentice-Hall, 1993-2013. ISBN 0130422681.",
+    "Complementaria:",
+    "- Theodoridis, S. Machine learning : a bayesian and optimization perspective [en línea]. 2nd ed. London: Elsevier Academic Press,"
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230918/tratamiento-de-la-senal.pdf"
+}

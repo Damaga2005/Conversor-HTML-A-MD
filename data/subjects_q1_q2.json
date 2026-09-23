@@ -1,0 +1,1165 @@
+{
+  "230900": {
+    "code": "230900",
+    "acronym": "CCE",
+    "title": "Componentes y Circuitos Electrónicos",
+    "semester": 1,
+    "ects": 6.0,
+    "department": "710 - EEL - Departamento de Ingeniería Electrónica",
+    "description": "Variables eléctricas, KCL, KVL, teoremas de Thévenin/Norton, máxima transferencia de potencia, diodos semiconductores, transistores BJT y amplificadores operacionales en régimen lineal.",
+    "formulas": [
+      {
+        "name": "Leyes de Kirchhoff",
+        "latex": "\\sum I_{k} = 0 \\text{ (KCL)}, \\quad \\sum V_{k} = 0 \\text{ (KVL)}"
+      },
+      {
+        "name": "Divisor de Tensión Resistivo",
+        "latex": "V_o = V_s \\cdot \\frac{R_2}{R_1 + R_2}"
+      },
+      {
+        "name": "Resistencia de Thévenin",
+        "latex": "R_{th} = \\frac{V_{oc}}{I_{sc}}"
+      },
+      {
+        "name": "Máxima Transferencia de Potencia",
+        "latex": "R_L = R_{th} \\implies P_{max} = \\frac{V_{th}^2}{4 R_{th}}"
+      },
+      {
+        "name": "Ecuación de Shockley del Diodo",
+        "latex": "I_D = I_s \\left( e^{V_D / (n V_T)} - 1 \\right)"
+      }
+    ],
+    "calc_params": {
+      "vs": 10.0,
+      "r1": 1000.0,
+      "r2": 2000.0,
+      "rl": 2000.0
+    },
+    "calc_outputs": [
+      "v_div",
+      "r_th",
+      "p_max",
+      "i_load"
+    ],
+    "calc_fn": "def calc(p):\n    v_div = p.get('vs', 10.0) * p.get('r2', 2000.0) / (p.get('r1', 1000.0) + p.get('r2', 2000.0))\n    r_th = (p.get('r1', 1000.0) * p.get('r2', 2000.0)) / (p.get('r1', 1000.0) + p.get('r2', 2000.0))\n    p_max = (v_div**2) / (4.0 * r_th)\n    i_load = v_div / (r_th + p.get('rl', 2000.0))\n    return {'v_div': round(v_div, 4), 'r_th': round(r_th, 4), 'p_max': round(p_max, 6), 'i_load': round(i_load, 6)}",
+    "spice_template": "* CCE - Divisor Thevenin y Diodo de Union\nVs in 0 DC 10V\nR1 in out 1k\nR2 out 0 2k\nD1 out load 1N4148\nRL load 0 1k\n.model 1N4148 D(Is=2.52n Rs=0.568 N=1.752)\n.dc Vs 0 15 0.1\n.print dc V(out) V(load) I(RL)\n.end\n",
+    "questions": [
+      {
+        "q": "¿El teorema de máxima transferencia de potencia establece que la carga debe ser igual a Rth para maximizar la potencia disipada?",
+        "a": "V",
+        "j": "Verdadero. Al derivar P_L respecto a R_L e igualar a cero se obtiene R_L = R_th."
+      },
+      {
+        "q": "¿El principio de superposición es aplicable al cálculo directo de potencias?",
+        "a": "F",
+        "j": "Falso. La potencia es cuadrática (P = I^2*R); solo se pueden superponer tensiones y corrientes."
+      },
+      {
+        "q": "En un divisor de tensión con R1=1k y R2=3k alimentado a 12V, la tensión en bornes de R2 es 9V.",
+        "a": "V",
+        "j": "Verdadero. Vo = 12 * (3 / (1 + 3)) = 9.0 V."
+      },
+      {
+        "q": "¿La caída de tensión típica en directa de un diodo de silicio es de aproximadamente 0.7 V?",
+        "a": "V",
+        "j": "Verdadero. Debido al potencial de contacto y la banda prohibida del silicio a 300 K."
+      },
+      {
+        "q": "Si un circuito lineal tiene Voc = 10V y Isc = 2A, su resistencia de Thévenin es de 20 ohms.",
+        "a": "F",
+        "j": "Falso. Rth = Voc / Isc = 10V / 2A = 5 ohms."
+      },
+      {
+        "q": "¿La ley de corrientes de Kirchhoff (KCL) se fundamenta en la conservación de la carga eléctrica?",
+        "a": "V",
+        "j": "Verdadero. En régimen cuasiestacionario la carga neta en cualquier nodo cerrado permanece constante."
+      },
+      {
+        "q": "¿La ley de tensiones de Kirchhoff (KVL) se fundamenta en el carácter conservativo del campo electrostático?",
+        "a": "V",
+        "j": "Verdadero. La integral de línea del campo eléctrico sobre un lazo cerrado es nula."
+      },
+      {
+        "q": "En un transistor BJT en zona activa directa, la corriente de colector Ic depende fuertemente de Vce.",
+        "a": "F",
+        "j": "Falso. Ic = beta * Ib y es casi independiente de Vce (salvo por el efecto Early secundario)."
+      },
+      {
+        "q": "¿La resistencia dinámica de pequeña señal de un diodo polarizado con ID0 es rd = VT / ID0?",
+        "a": "V",
+        "j": "Verdadero. Derivando la ecuación de Shockley dVD/dID = VT / ID0."
+      },
+      {
+        "q": "¿Un amplificador operacional ideal con realimentación negativa mantiene un cortocircuito virtual entre sus entradas?",
+        "a": "V",
+        "j": "Verdadero. Como Aol -> infinito, (V+ - V-) = Vo / Aol = 0."
+      },
+      {
+        "q": "La resistencia equivalente de dos resistencias idénticas R en paralelo es 2R.",
+        "a": "F",
+        "j": "Falso. R_eq = (R * R) / (R + R) = R / 2."
+      },
+      {
+        "q": "¿El nudo de referencia o masa se define arbitrariamente con potencial de 0 voltios?",
+        "a": "V",
+        "j": "Verdadero. Sirve de origen de potenciales para todo el circuito."
+      }
+    ]
+  },
+  "230901": {
+    "code": "230901",
+    "acronym": "APR",
+    "title": "Algoritmia y Programación",
+    "semester": 1,
+    "ects": 6.0,
+    "department": "701 - DAC - Departamento de Arquitectura de Computadores",
+    "description": "Fundamentos de diseño algorítmico estructurado, programación imperativa en lenguaje C, tipos elementales, arrays, punteros, paso por valor y referencia, gestión de memoria y análisis asintótico.",
+    "formulas": [
+      {
+        "name": "Complejidad Búsqueda Binaria",
+        "latex": "T(N) = T(N/2) + O(1) \\implies T(N) \\in \\mathcal{O}(\\log_2 N)"
+      },
+      {
+        "name": "Complejidad Ordenación por Inserción",
+        "latex": "T(N) = \\sum_{i=1}^{N-1} i = \\frac{N(N-1)}{2} \\implies T(N) \\in \\mathcal{O}(N^2)"
+      },
+      {
+        "name": "Aritmética de Punteros",
+        "latex": "\\text{addr}(arr[i]) = \\text{addr}(arr[0]) + i \\cdot \\text{sizeof}(\\text{type})"
+      },
+      {
+        "name": "Cota Superior Asintótica (Big-O)",
+        "latex": "f(n) \\in \\mathcal{O}(g(n)) \\iff \\exists c > 0, n_0 > 0 : f(n) \\le c \\cdot g(n) \\; \\forall n \\ge n_0"
+      },
+      {
+        "name": "Ecuación de Recurrencia Master Theorem",
+        "latex": "T(n) = a T(n/b) + f(n)"
+      }
+    ],
+    "calc_params": {
+      "n_elements": 1000,
+      "step_time_ns": 10.0
+    },
+    "calc_outputs": [
+      "time_on_ms",
+      "time_on2_ms",
+      "time_ologn_us",
+      "binary_search_steps"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    n = p.get('n_elements', 1000)\n    dt = p.get('step_time_ns', 10.0) * 1e-9\n    t_on = n * dt * 1000\n    t_on2 = (n**2) * dt * 1000\n    steps = math.ceil(math.log2(max(1, n)))\n    t_ologn = steps * dt * 1e6\n    return {'time_on_ms': round(t_on, 6), 'time_on2_ms': round(t_on2, 4), 'time_ologn_us': round(t_ologn, 4), 'binary_search_steps': steps}",
+    "spice_template": "// APR - Algoritmo de Búsqueda Binaria y Gestión de Memoria en C\n#include <stdio.h>\n#include <stdlib.h>\nint binary_search(const int *arr, int n, int target) {\n    int l = 0, r = n - 1;\n    while (l <= r) {\n        int m = l + (r - l) / 2;\n        if (arr[m] == target) return m;\n        if (arr[m] < target) l = m + 1;\n        else r = m - 1;\n    }\n    return -1;\n}\n",
+    "questions": [
+      {
+        "q": "¿La búsqueda binaria sobre un array ordenado de N elementos tiene complejidad O(log N)?",
+        "a": "V",
+        "j": "Verdadero. En cada iteración el espacio de búsqueda se reduce a la mitad."
+      },
+      {
+        "q": "¿El operador '&' en C obtiene la dirección de memoria de una variable?",
+        "a": "V",
+        "j": "Verdadero. Es el operador address-of."
+      },
+      {
+        "q": "El algoritmo de ordenación Bubble Sort tiene complejidad en el mejor caso O(1).",
+        "a": "F",
+        "j": "Falso. Con optimización requiere O(N) para verificar que ya está ordenado."
+      },
+      {
+        "q": "¿El paso de parámetros por valor en C crea una copia local que no modifica la variable llamante?",
+        "a": "V",
+        "j": "Verdadero. Para modificar la variable externa debe pasarse un puntero a su dirección."
+      },
+      {
+        "q": "Si un puntero a int (4 bytes) apunta a 0x2000, p + 2 apunta a la dirección 0x2002.",
+        "a": "F",
+        "j": "Falso. La aritmética de punteros escala por el tamaño del tipo: 0x2000 + 2*4 = 0x2008."
+      },
+      {
+        "q": "¿La función 'malloc()' reserva memoria contigua en el segmento Heap?",
+        "a": "V",
+        "j": "Verdadero. El montículo (heap) gestiona memoria dinámica hasta la invocación de free()."
+      },
+      {
+        "q": "¿Una función recursiva sin caso base provoca un desbordamiento de pila (stack overflow)?",
+        "a": "V",
+        "j": "Verdadero. Se acumulan marcos de activación hasta agotar el espacio del stack."
+      },
+      {
+        "q": "En el estándar C, el tipo 'char' tiene un tamaño estrictamente dependiente de la arquitectura que puede ser 4 bytes.",
+        "a": "F",
+        "j": "Falso. sizeof(char) es siempre 1 byte por definición del estándar."
+      },
+      {
+        "q": "¿Las cadenas de texto en C deben finalizar obligatoriamente con el carácter nulo '\\0'?",
+        "a": "V",
+        "j": "Verdadero. Sirve como centinela de fin de cadena para todas las funciones estándar de <string.h>."
+      },
+      {
+        "q": "¿Un algoritmo con complejidad O(N log N) es asintóticamente más rápido que uno O(N^2) para N grande?",
+        "a": "V",
+        "j": "Verdadero. La tasa de crecimiento de N log N es muy inferior a la cuadrática."
+      },
+      {
+        "q": "El operador 'sizeof' en C se evalúa exclusivamente durante el tiempo de ejecución (runtime).",
+        "a": "F",
+        "j": "Falso. Es un operador evaluado en tiempo de compilación (salvo para VLA en C99)."
+      },
+      {
+        "q": "¿El bucle 'do-while' garantiza que su cuerpo de instrucciones se ejecute al menos una vez?",
+        "a": "V",
+        "j": "Verdadero. La condición booleana se evalúa al final de la iteración."
+      }
+    ]
+  },
+  "230902": {
+    "code": "230902",
+    "acronym": "F",
+    "title": "Física",
+    "semester": 1,
+    "ects": 6.0,
+    "department": "748 - FIS - Departamento de Física",
+    "description": "Mecánica del punto y oscilaciones armónicas, ondas mecánicas, termodinámica de sistemas cerrados, electrostática (Ley de Coulomb y Gauss), condensadores y dieléctricos.",
+    "formulas": [
+      {
+        "name": "Ecuación del Movimiento Armónico Simple",
+        "latex": "\\frac{d^2 x}{dt^2} + \\omega_0^2 x = 0, \\quad \\omega_0 = \\sqrt{\\frac{k}{m}}"
+      },
+      {
+        "name": "Ley de Gauss Electrostática",
+        "latex": "\\Phi_E = \\oint_S \\vec{E} \\cdot d\\vec{A} = \\frac{Q_{enc}}{\\varepsilon_0}"
+      },
+      {
+        "name": "Capacidad de Condensador Plano",
+        "latex": "C = \\varepsilon_r \\varepsilon_0 \\frac{A}{d}"
+      },
+      {
+        "name": "Energía Almacenada en Condensador",
+        "latex": "U_E = \\frac{1}{2} C V^2 = \\frac{1}{2} \\frac{Q^2}{C}"
+      },
+      {
+        "name": "Velocidad de Onda en Cuerda",
+        "latex": "v = \\sqrt{\\frac{T}{\\mu}}"
+      }
+    ],
+    "calc_params": {
+      "mass_kg": 0.5,
+      "spring_k": 200.0,
+      "area_m2": 0.01,
+      "distance_mm": 1.0,
+      "eps_r": 1.0
+    },
+    "calc_outputs": [
+      "w0_rad_s",
+      "freq_hz",
+      "cap_pf",
+      "energy_10v_nj"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    w0 = math.sqrt(p.get('spring_k', 200.0) / p.get('mass_kg', 0.5))\n    f0 = w0 / (2 * math.pi)\n    eps0 = 8.854187e-12\n    d = max(1e-6, p.get('distance_mm', 1.0) * 1e-3)\n    c = p.get('eps_r', 1.0) * eps0 * p.get('area_m2', 0.01) / d\n    cap_pf = c * 1e12\n    e_nj = 0.5 * c * (10.0**2) * 1e9\n    return {'w0_rad_s': round(w0, 3), 'freq_hz': round(f0, 3), 'cap_pf': round(cap_pf, 3), 'energy_10v_nj': round(e_nj, 3)}",
+    "spice_template": "* FIS - Circuito Resonante LC Equivalente al Oscilador Mecanico\nL1 in out 2.5mH\nC1 out 0 100nF\nIC V(out)=5V\n.tran 10n 100u UIC\n.print tran V(out)\n.end\n",
+    "questions": [
+      {
+        "q": "¿En un oscilador armónico simple, la aceleración es directamente proporcional a la posición pero de sentido contrario?",
+        "a": "V",
+        "j": "Verdadero. a(t) = -w0^2 * x(t)."
+      },
+      {
+        "q": "¿La velocidad de propagación de una onda mecánica transversal aumenta al incrementar la tensión del medio?",
+        "a": "V",
+        "j": "Verdadero. v = sqrt(T / mu)."
+      },
+      {
+        "q": "La energía cinética de una partícula se duplica cuando su velocidad se duplica.",
+        "a": "F",
+        "j": "Falso. La energía cinética es proporcional al cuadrado de la velocidad (Ec = 0.5 * m * v^2), por lo que se cuadruplica."
+      },
+      {
+        "q": "¿El campo electrostático en el interior de un conductor en equilibrio electrostático es nulo?",
+        "a": "V",
+        "j": "Verdadero. Las cargas libres superficiales se reorganizan cancelando cualquier campo interno."
+      },
+      {
+        "q": "La capacidad de un condensador plano depende del voltaje aplicado a sus placas.",
+        "a": "F",
+        "j": "Falso. C = eps * A / d; la capacidad depende de la geometría y del material dieléctrico, no de la tensión."
+      },
+      {
+        "q": "¿El primer principio de la termodinámica establece la conservación de la energía en la forma dU = dQ - dW?",
+        "a": "V",
+        "j": "Verdadero. La variación de energía interna es igual al calor neto recibido menos el trabajo realizado."
+      },
+      {
+        "q": "¿En un choque perfectamente elástico se conservan simultáneamente el momento lineal y la energía cinética?",
+        "a": "V",
+        "j": "Verdadero. Por definición no hay disipación de energía mecánica en calor o deformación permanente."
+      },
+      {
+        "q": "¿El efecto Doppler describe el cambio en la frecuencia observada debido al movimiento relativo entre la fuente y el receptor?",
+        "a": "V",
+        "j": "Verdadero. La frecuencia aparente aumenta al acercarse y disminuye al alejarse."
+      },
+      {
+        "q": "Un proceso termodinámico adiabático es aquel que ocurre a temperatura rigurosamente constante.",
+        "a": "F",
+        "j": "Falso. Ese es un proceso isotérmico; en un proceso adiabático no hay transferencia de calor con el exterior (dQ = 0)."
+      },
+      {
+        "q": "¿La ley de Gauss permite calcular el campo electrostático en distribuciones continuas con alta simetría?",
+        "a": "V",
+        "j": "Verdadero. Utilizando superficies gaussianas donde el módulo del campo es constante."
+      },
+      {
+        "q": "¿La frecuencia de resonancia mecánica coincide con la pulsación propia del oscilador libre no amortiguado?",
+        "a": "V",
+        "j": "Verdadero. Produce máxima transferencia de energía y máxima amplitud de respuesta."
+      },
+      {
+        "q": "La fuerza electrostática de Coulomb entre dos cargas puntuales decrece linealmente con la distancia.",
+        "a": "F",
+        "j": "Falso. Decrece con el cuadrado de la distancia (1 / r^2)."
+      }
+    ]
+  },
+  "230903": {
+    "code": "230903",
+    "acronym": "C",
+    "title": "Cálculo",
+    "semester": 1,
+    "ects": 6.0,
+    "department": "749 - MAT - Departamento de Matemáticas",
+    "description": "Límites, continuidad, derivación, polinomios de Taylor, integración univariada, series numéricas y de potencias, números complejos y fórmula de Euler.",
+    "formulas": [
+      {
+        "name": "Fórmula de Euler",
+        "latex": "e^{j \\theta} = \\cos \\theta + j \\sin \\theta"
+      },
+      {
+        "name": "Polinomio de Taylor de Orden n",
+        "latex": "P_n(x) = \\sum_{k=0}^{n} \\frac{f^{(k)}(x_0)}{k!} (x - x_0)^k"
+      },
+      {
+        "name": "Teorema Fundamental del Cálculo",
+        "latex": "\\frac{d}{dx} \\int_{a}^{x} f(t) dt = f(x)"
+      },
+      {
+        "name": "Serie Geométrica",
+        "latex": "\\sum_{n=0}^{\\infty} r^n = \\frac{1}{1 - r} \\quad (|r| < 1)"
+      },
+      {
+        "name": "Regla de L'Hôpital",
+        "latex": "\\lim_{x \\to c} \\frac{f(x)}{g(x)} = \\lim_{x \\to c} \\frac{f'(x)}{g'(x)} \\quad \\text{si } \\frac{0}{0} \\text{ o } \\frac{\\infty}{\\infty}"
+      }
+    ],
+    "calc_params": {
+      "x_val": 0.5,
+      "taylor_order": 4
+    },
+    "calc_outputs": [
+      "exp_exact",
+      "exp_taylor",
+      "taylor_error"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    x = p.get('x_val', 0.5)\n    n = int(p.get('taylor_order', 4))\n    exact = math.exp(x)\n    approx = sum((x**k) / math.factorial(k) for k in range(n + 1))\n    err = abs(exact - approx)\n    return {'exp_exact': round(exact, 8), 'exp_taylor': round(approx, 8), 'taylor_error': round(err, 8)}",
+    "spice_template": "// CALC - Aproximación Numérica de Taylor de e^x\n#include <stdio.h>\n#include <math.h>\ndouble taylor_exp(double x, int n) {\n    double sum = 1.0, term = 1.0;\n    for(int i = 1; i <= n; i++) {\n        term *= (x / i);\n        sum += term;\n    }\n    return sum;\n}\n",
+    "questions": [
+      {
+        "q": "¿El polinomio de Taylor de primer orden de sin(x) alrededor de x=0 es simplemente x?",
+        "a": "V",
+        "j": "Verdadero. f(0)=0, f'(0)=1 -> P1(x) = x."
+      },
+      {
+        "q": "¿Toda función derivable en un punto x0 es necesariamente continua en dicho punto?",
+        "a": "V",
+        "j": "Verdadero. La derivabilidad es una condición más fuerte que implica continuidad."
+      },
+      {
+        "q": "La serie armónica sum(1/n) converge a un número real finito.",
+        "a": "F",
+        "j": "Falso. La serie armónica diverge logarítmicamente hacia infinito."
+      },
+      {
+        "q": "¿La derivada de e^(-x^2) respecto a x es igual a -2x * e^(-x^2)?",
+        "a": "V",
+        "j": "Verdadero. Por aplicación directa de la regla de la cadena."
+      },
+      {
+        "q": "La integral definida de una función impar sobre un intervalo simétrico [-a, a] es siempre cero.",
+        "a": "V",
+        "j": "Verdadero. Las áreas bajo la curva en la mitad positiva y negativa se cancelan con signos opuestos."
+      },
+      {
+        "q": "¿La fórmula de Euler establece que e^(j*pi) + 1 = 0?",
+        "a": "V",
+        "j": "Verdadero. Con theta = pi, cos(pi) = -1 y sin(pi) = 0."
+      },
+      {
+        "q": "La regla de L'Hôpital puede aplicarse a cualquier límite independientemente de si hay indeterminación.",
+        "a": "F",
+        "j": "Falso. Solo es válida ante formas indeterminadas 0/0 o inf/inf."
+      },
+      {
+        "q": "¿El límite de (sin x)/x cuando x tiende a 0 es estrictamente 1?",
+        "a": "V",
+        "j": "Verdadero. Es el límite trigonométrico fundamental."
+      },
+      {
+        "q": "¿El radio de convergencia de la serie de Taylor de e^x centrada en 0 es infinito?",
+        "a": "V",
+        "j": "Verdadero. El criterio del cociente da límite 0 para todo x, por lo que converge en todo R."
+      },
+      {
+        "q": "La integral impropia de 1/x entre 1 e infinito converge a 1.",
+        "a": "F",
+        "j": "Falso. La primitiva es ln(x), y ln(inf) diverge hacia infinito."
+      },
+      {
+        "q": "¿El Teorema del Valor Medio garantiza que existe un punto donde la derivada instantánea coincide con la tasa media de variación?",
+        "a": "V",
+        "j": "Verdadero. f'(c) = (f(b) - f(a)) / (b - a)."
+      },
+      {
+        "q": "¿El módulo de cualquier número complejo de la forma e^(j*theta) con theta real es siempre 1?",
+        "a": "V",
+        "j": "Verdadero. |cos(theta) + j*sin(theta)| = sqrt(cos^2 + sin^2) = 1."
+      }
+    ]
+  },
+  "230904": {
+    "code": "230904",
+    "acronym": "ALN",
+    "title": "Álgebra Lineal",
+    "semester": 1,
+    "ects": 6.0,
+    "department": "749 - MAT - Departamento de Matemáticas",
+    "description": "Espacios vectoriales, bases, dimensión, aplicaciones lineales, matrices, determinantes, sistemas de ecuaciones lineales, autovalores, autovectores y diagonalización.",
+    "formulas": [
+      {
+        "name": "Ecuación de Autovalores",
+        "latex": "A \\vec{v} = \\lambda \\vec{v} \\iff \\det(A - \\lambda I) = 0"
+      },
+      {
+        "name": "Teorema de la Dimensión (Rango-Nulidad)",
+        "latex": "\\dim(\\text{Ker}(f)) + \\dim(\\text{Im}(f)) = \\dim(V)"
+      },
+      {
+        "name": "Diagonalización de Matrices",
+        "latex": "A = P D P^{-1}, \\quad D = \\text{diag}(\\lambda_1, \\dots, \\lambda_n)"
+      },
+      {
+        "name": "Proyección Ortogonal de Gram-Schmidt",
+        "latex": "\\vec{u}_k = \\vec{v}_k - \\sum_{j=1}^{k-1} \\frac{\\langle \\vec{v}_k, \\vec{u}_j \\rangle}{\\|\\vec{u}_j\\|^2} \\vec{u}_j"
+      },
+      {
+        "name": "Propiedad del Determinante del Producto",
+        "latex": "\\det(A \\cdot B) = \\det(A) \\cdot \\det(B)"
+      }
+    ],
+    "calc_params": {
+      "a11": 4.0,
+      "a12": 1.0,
+      "a21": 2.0,
+      "a22": 3.0
+    },
+    "calc_outputs": [
+      "det",
+      "trace",
+      "lambda_1",
+      "lambda_2"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    a = p.get('a11', 4.0)\n    b = p.get('a12', 1.0)\n    c = p.get('a21', 2.0)\n    d = p.get('a22', 3.0)\n    det_val = a * d - b * c\n    tr_val = a + d\n    disc = tr_val**2 - 4 * det_val\n    if disc >= 0:\n        l1 = (tr_val + math.sqrt(disc)) / 2.0\n        l2 = (tr_val - math.sqrt(disc)) / 2.0\n    else:\n        l1, l2 = tr_val / 2.0, tr_val / 2.0\n    return {'det': round(det_val, 4), 'trace': round(tr_val, 4), 'lambda_1': round(l1, 4), 'lambda_2': round(l2, 4)}",
+    "spice_template": "// ALN - Algoritmo de Diagonalización 2x2 en C\n#include <stdio.h>\n#include <math.h>\nvoid eigen_2x2(double a, double b, double c, double d) {\n    double tr = a + d;\n    double det = a * d - b * c;\n    double disc = tr * tr - 4 * det;\n    if (disc >= 0) {\n        printf(\"Autovalores: %.4f y %.4f\\n\", (tr + sqrt(disc))/2, (tr - sqrt(disc))/2);\n    }\n}\n",
+    "questions": [
+      {
+        "q": "¿Una matriz cuadrada es invertible si y solo si su determinante es no nulo?",
+        "a": "V",
+        "j": "Verdadero. det(A) != 0 equivale a tener rango completo y núcleo trivial."
+      },
+      {
+        "q": "¿El producto de los autovalores de una matriz es igual a su determinante?",
+        "a": "V",
+        "j": "Verdadero. det(A) = prod(lambda_i)."
+      },
+      {
+        "q": "¿La suma de los autovalores de una matriz coincide con la traza de la matriz?",
+        "a": "V",
+        "j": "Verdadero. tr(A) = sum(a_ii) = sum(lambda_i)."
+      },
+      {
+        "q": "¿Un conjunto de vectores ortogonales no nulos es siempre linealmente independiente?",
+        "a": "V",
+        "j": "Verdadero. El producto escalar mutuo nulo impide cualquier combinación lineal no trivial igual a cero."
+      },
+      {
+        "q": "El determinante de la suma de matrices siempre cumple det(A + B) = det(A) + det(B).",
+        "a": "F",
+        "j": "Falso. El determinante es una función multilineal, no aditiva con la suma de matrices."
+      },
+      {
+        "q": "¿La transpuesta del producto matricial satisface (A * B)^T = B^T * A^T?",
+        "a": "V",
+        "j": "Verdadero. El orden de los factores se invierte al transponer."
+      },
+      {
+        "q": "¿Toda matriz simétrica real tiene autovalores reales y es diagonalizable ortogonalmente?",
+        "a": "V",
+        "j": "Verdadero. Por el Teorema Espectral para operadores autoadjuntos."
+      },
+      {
+        "q": "¿El proceso de Gram-Schmidt permite construir una base ortonormal a partir de una base dada?",
+        "a": "V",
+        "j": "Verdadero. Restando las componentes proyectadas sucesivas."
+      },
+      {
+        "q": "Un sistema de 3 ecuaciones lineales con 4 incógnitas puede ser compatible determinado.",
+        "a": "F",
+        "j": "Falso. Tendrá al menos un grado de libertad (o será incompatible), nunca determinado único."
+      },
+      {
+        "q": "¿El rango de una matriz es el número máximo de filas linealmente independientes?",
+        "a": "V",
+        "j": "Verdadero. Coincide con la dimensión del espacio imagen."
+      },
+      {
+        "q": "¿Para cualquier matriz cuadrada A, la matriz A + A^T es siempre simétrica?",
+        "a": "V",
+        "j": "Verdadero. (A + A^T)^T = A^T + (A^T)^T = A^T + A = A + A^T."
+      },
+      {
+        "q": "¿El núcleo (Ker) de una aplicación lineal entre espacios vectoriales es un subespacio vectorial?",
+        "a": "V",
+        "j": "Verdadero. Contiene al vector cero y es cerrado bajo sumas y combinaciones lineales."
+      }
+    ]
+  },
+  "230339": {
+    "code": "230339",
+    "acronym": "IMATEC",
+    "title": "Introducción a las Matemáticas y a la Ingeniería de Telecomunicación",
+    "semester": 1,
+    "ects": 6.0,
+    "department": "749 - MAT / 739 - TSC",
+    "description": "Nivelación matemática para telecomunicación: números complejos, trigonometría fasorial, escalas logarítmicas (dB, dBm, dBW), modelado de señales elementales y cálculo numérico en Python/Matlab.",
+    "formulas": [
+      {
+        "name": "Conversión a dBm",
+        "latex": "P_{\\text{dBm}} = 10 \\log_{10}\\left( \\frac{P_{\\text{mW}}}{1\\,\\text{mW}} \\right)"
+      },
+      {
+        "name": "Conversión a dBW",
+        "latex": "P_{\\text{dBW}} = 10 \\log_{10}\\left( \\frac{P_{\\text{W}}}{1\\,\\text{W}} \\right) = P_{\\text{dBm}} - 30"
+      },
+      {
+        "name": "Ganancia de Tensión en dB",
+        "latex": "G_V = 20 \\log_{10}\\left( \\frac{V_{out}}{V_{in}} \\right)"
+      },
+      {
+        "name": "Multiplicación de Complejos en Polar",
+        "latex": "(r_1 e^{j \\theta_1}) \\cdot (r_2 e^{j \\theta_2}) = (r_1 r_2) e^{j (\\theta_1 + \\theta_2)}"
+      },
+      {
+        "name": "Ley de Ohm para Señal Sinusoidal",
+        "latex": "\\vec{V} = \\vec{I} \\cdot \\vec{Z}"
+      }
+    ],
+    "calc_params": {
+      "p_mw": 10.0,
+      "v_in": 1.0,
+      "v_out": 10.0
+    },
+    "calc_outputs": [
+      "p_dbm",
+      "p_dbw",
+      "gv_db"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    p_mw = max(1e-12, p.get('p_mw', 10.0))\n    p_dbm = 10.0 * math.log10(p_mw)\n    p_dbw = p_dbm - 30.0\n    gv = 20.0 * math.log10(max(1e-12, p.get('v_out', 10.0) / max(1e-12, p.get('v_in', 1.0))))\n    return {'p_dbm': round(p_dbm, 3), 'p_dbw': round(p_dbw, 3), 'gv_db': round(gv, 3)}",
+    "spice_template": "* IMATEC - Conversion de Niveles dBm en Carga de 50 Ohms\nVin in 0 AC 1.0 0\nRs in mid 50\nRL mid 0 50\n.ac dec 10 1k 100Meg\n.print ac V(mid) VP(mid)\n.end\n",
+    "questions": [
+      {
+        "q": "¿Una potencia física de 0 dBm equivale exactamente a 1 mW?",
+        "a": "V",
+        "j": "Verdadero. 10 * log10(1 mW / 1 mW) = 0 dBm."
+      },
+      {
+        "q": "¿Duplicar la potencia física de una señal representa un incremento de aproximadamente +3 dB?",
+        "a": "V",
+        "j": "Verdadero. 10 * log10(2) = 3.01 dB."
+      },
+      {
+        "q": "Una potencia de +30 dBm corresponde a una potencia de 100 W.",
+        "a": "F",
+        "j": "Falso. 30 dBm = 1000 mW = 1 W."
+      },
+      {
+        "q": "¿Una relación de ganancias de tensión de 20 dB multiplica la amplitud de la señal por un factor de 10?",
+        "a": "V",
+        "j": "Verdadero. 20 * log10(10) = 20 dB."
+      },
+      {
+        "q": "¿La multiplicación de números complejos en forma polar suma sus ángulos y multiplica sus módulos?",
+        "a": "V",
+        "j": "Verdadero. Identidad fasorial r1/_th1 * r2/_th2 = (r1*r2)/_(th1+th2)."
+      },
+      {
+        "q": "¿El prefijo pico (p) representa un factor de escala de 10^-12?",
+        "a": "V",
+        "j": "Verdadero. Sistema Internacional de Unidades."
+      },
+      {
+        "q": "Una atenuación de 3 dB reduce la potencia de la señal al 10% de su valor original.",
+        "a": "F",
+        "j": "Falso. Reduce la potencia exactamente a la mitad (50%)."
+      },
+      {
+        "q": "¿En telecomunicaciones la impedancia de 50 ohms es el compromiso estándar entre potencia máxima y pérdidas mínimas en cables coaxiales?",
+        "a": "V",
+        "j": "Verdadero. El compromiso entre 30 ohms (máxima potencia) y 77 ohms (mínima atenuación)."
+      },
+      {
+        "q": "¿La frecuencia f y el periodo T de una sinusoide cumplen la relación f = 1 / T?",
+        "a": "V",
+        "j": "Verdadero."
+      },
+      {
+        "q": "¿Un fasor representa la envolvente compleja y fase de una señal armónica a pulsación fija omega?",
+        "a": "V",
+        "j": "Verdadero. Permite convertir ecuaciones diferenciales en algebraicas en régimen permanente senoidal."
+      },
+      {
+        "q": "Un nivel de 0 dBW equivale exactamente a 0 dBm.",
+        "a": "F",
+        "j": "Falso. 0 dBW equivale a +30 dBm (1 W = 1000 mW)."
+      },
+      {
+        "q": "¿El producto escalar de dos fasores o vectores ortogonales en el plano complejo es cero?",
+        "a": "V",
+        "j": "Verdadero. Debido al ángulo de 90 grados cuyo coseno es cero."
+      }
+    ]
+  },
+  "230905": {
+    "code": "230905",
+    "acronym": "AC",
+    "title": "Análisis de Circuitos",
+    "semester": 2,
+    "ects": 6.0,
+    "department": "710 - EEL - Departamento de Ingeniería Electrónica",
+    "description": "Régimen transitorio de circuitos de primer (RC, RL) y segundo orden (RLC), régimen permanente senoidal (fasores e impedancias), resonancia serie y paralelo, potencia compleja (P, Q, S, factor de potencia), circuitos trifásicos y cuadripolos.",
+    "formulas": [
+      {
+        "name": "Respuesta Transitoria RC",
+        "latex": "v_c(t) = v_c(\\infty) + [v_c(0^+) - v_c(\\infty)] e^{-t / \\tau}, \\quad \\tau = R C"
+      },
+      {
+        "name": "Impedancia Fasorial de Bobina y Condensador",
+        "latex": "Z_L = j \\omega L, \\quad Z_C = \\frac{1}{j \\omega C} = -\\frac{j}{\\omega C}"
+      },
+      {
+        "name": "Frecuencia de Resonancia Serie RLC",
+        "latex": "\\omega_0 = \\frac{1}{\\sqrt{L C}}, \\quad Q = \\frac{\\omega_0 L}{R} = \\frac{1}{R} \\sqrt{\\frac{L}{C}}"
+      },
+      {
+        "name": "Potencia Compleja",
+        "latex": "S = P + j Q = \\vec{V}_{\\text{rms}} \\cdot \\vec{I}_{\\text{rms}}^* = V_{\\text{rms}} I_{\\text{rms}} \\cos \\varphi + j V_{\\text{rms}} I_{\\text{rms}} \\sin \\varphi"
+      },
+      {
+        "name": "Relación Tensión de Línea y Fase Trifásica",
+        "latex": "V_L = \\sqrt{3} V_{ph}, \\quad \\angle V_L = \\angle V_{ph} + 30^\\circ"
+      }
+    ],
+    "calc_params": {
+      "r_ohm": 100.0,
+      "l_mh": 10.0,
+      "c_uf": 1.0,
+      "v_rms": 230.0
+    },
+    "calc_outputs": [
+      "f0_hz",
+      "q_factor",
+      "z_res_ohm",
+      "tau_rc_ms"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    r = max(1e-3, p.get('r_ohm', 100.0))\n    l = max(1e-6, p.get('l_mh', 10.0) * 1e-3)\n    c = max(1e-12, p.get('c_uf', 1.0) * 1e-6)\n    w0 = 1.0 / math.sqrt(l * c)\n    f0 = w0 / (2 * math.pi)\n    q = (w0 * l) / r\n    tau = r * c * 1000\n    return {'f0_hz': round(f0, 2), 'q_factor': round(q, 3), 'z_res_ohm': round(r, 2), 'tau_rc_ms': round(tau, 3)}",
+    "spice_template": "* AC - Resonancia RLC Serie y Potencia Compleja\nVin in 0 AC 230 0\nR1 in 1 10\nL1 1 2 10mH\nC1 2 0 1uF\n.ac dec 100 500 5000\n.print ac V(2) I(R1) VP(2)\n.end\n",
+    "questions": [
+      {
+        "q": "¿En un circuito RC serie, el condensador alcanza el 63.2% de su tensión final en t = tau = R*C?",
+        "a": "V",
+        "j": "Verdadero. 1 - e^(-1) = 0.6321."
+      },
+      {
+        "q": "¿En resonancia serie RLC la impedancia total del circuito es mínima e igual a R?",
+        "a": "V",
+        "j": "Verdadero. Las reactancias inductiva jwL y capacitiva 1/(jwC) se cancelan."
+      },
+      {
+        "q": "La potencia reactiva consumida por un condensador ideal es positiva.",
+        "a": "F",
+        "j": "Falso. Los condensadores suministran potencia reactiva, por convenio Q < 0."
+      },
+      {
+        "q": "¿El factor de potencia de una carga inductiva pura es 0 inductivo con desfase de corriente retrasada 90 grados?",
+        "a": "V",
+        "j": "Verdadero. cos(90) = 0."
+      },
+      {
+        "q": "¿Un circuito RLC serie con coeficiente de amortiguamiento zeta < 1 presenta una respuesta transitoria subamortiguada y oscilatoria?",
+        "a": "V",
+        "j": "Verdadero. Los polos son complejos conjugados con parte real negativa."
+      },
+      {
+        "q": "¿En un sistema trifásico equilibrado en estrella, la tensión entre líneas es sqrt(3) veces la tensión simple de fase?",
+        "a": "V",
+        "j": "Verdadero. V_linea = sqrt(3) * V_fase con 30 grados de adelanto."
+      },
+      {
+        "q": "El teorema de Tellegen solo es aplicable a circuitos resistivos lineales en continua.",
+        "a": "F",
+        "j": "Falso. Es válido para cualquier circuito con cualquier tipo de componente lineal o no lineal."
+      },
+      {
+        "q": "¿La reactancia de una bobina ideal crece linealmente con la frecuencia angular omega?",
+        "a": "V",
+        "j": "Verdadero. X_L = omega * L."
+      },
+      {
+        "q": "¿La reactancia de un condensador tiende a cero cuando la frecuencia tiende a infinito (comportamiento de cortocircuito en alta frecuencia)?",
+        "a": "V",
+        "j": "Verdadero. X_C = 1 / (omega * C) -> 0."
+      },
+      {
+        "q": "Un transformador ideal elevador con relación de espiras 1:2 duplica la corriente en el devanado secundario.",
+        "a": "F",
+        "j": "Falso. Duplica la tensión pero reduce la corriente a la mitad para conservar la potencia."
+      },
+      {
+        "q": "¿La unidad de medida de la potencia aparente S es el voltiamperio (VA)?",
+        "a": "V",
+        "j": "Verdadero. Distingue S (VA) de P (W) y Q (var)."
+      },
+      {
+        "q": "¿El factor de calidad Q de un circuito resonante serie es inversamente proporcional a la resistencia de pérdidas R?",
+        "a": "V",
+        "j": "Verdadero. Q = (w0 * L) / R; a menor disipación resistiva, mayor agudeza en la resonancia."
+      }
+    ]
+  },
+  "230906": {
+    "code": "230906",
+    "acronym": "PRD",
+    "title": "Programación y Estructuras de Datos",
+    "semester": 2,
+    "ects": 6.0,
+    "department": "701 - DAC - Departamento de Arquitectura de Computadores",
+    "description": "Estructuras de datos lineales (listas enlazadas, pilas, colas), no lineales (árboles binarios, árboles de búsqueda AVL, heaps), grafos (Dijkstra, BFS, DFS), tablas hash, y diseño modular orientado a objetos en C++.",
+    "formulas": [
+      {
+        "name": "Complejidad Búsqueda en Árbol Binario Equilibrado (AVL)",
+        "latex": "T(N) \\in \\mathcal{O}(\\log_2 N)"
+      },
+      {
+        "name": "Complejidad Búsqueda en Tabla Hash con Encadenamiento",
+        "latex": "T_{\\text{promedio}} \\in \\mathcal{O}(1), \\quad T_{\\text{peor}} \\in \\mathcal{O}(N)"
+      },
+      {
+        "name": "Algoritmo de Dijkstra con Min-Heap",
+        "latex": "T(V, E) \\in \\mathcal{O}((V + E) \\log V)"
+      },
+      {
+        "name": "Propiedad del Heap Binario (Min-Heap)",
+        "latex": "\\text{parent}(i) \\le \\text{node}(i) \\quad \\forall i > 0"
+      },
+      {
+        "name": "Factor de Carga de Tabla Hash",
+        "latex": "\\alpha = \\frac{N}{M}"
+      }
+    ],
+    "calc_params": {
+      "n_elements": 10000,
+      "table_size": 20000
+    },
+    "calc_outputs": [
+      "load_factor",
+      "avl_height",
+      "dijkstra_ops_approx"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    n = p.get('n_elements', 10000)\n    m = max(1, p.get('table_size', 20000))\n    lf = n / float(m)\n    h = math.ceil(1.44 * math.log2(n + 2) - 0.328)\n    dijkstra = (n + 4 * n) * math.log2(max(2, n))\n    return {'load_factor': round(lf, 3), 'avl_height': h, 'dijkstra_ops_approx': int(dijkstra)}",
+    "spice_template": "// PRD - Implementación de Lista Enlazada Simple en C++\n#include <iostream>\nstruct Node {\n    int data;\n    Node* next;\n    Node(int val) : data(val), next(nullptr) {}\n};\nclass LinkedList {\n    Node* head = nullptr;\npublic:\n    void push_front(int val) {\n        Node* n = new Node(val);\n        n->next = head;\n        head = n;\n    }\n};\n",
+    "questions": [
+      {
+        "q": "¿El acceso a un elemento de un array por su índice tiene complejidad temporal O(1)?",
+        "a": "V",
+        "j": "Verdadero. Se calcula la dirección aritmética en tiempo constante."
+      },
+      {
+        "q": "¿Insertar un elemento al frente de una lista simplemente enlazada tiene coste O(1)?",
+        "a": "V",
+        "j": "Verdadero. Solo requiere actualizar el puntero de la nueva cabeza."
+      },
+      {
+        "q": "En un árbol binario de búsqueda perfectamente equilibrado, la búsqueda de una clave tiene coste O(N).",
+        "a": "F",
+        "j": "Falso. La altura es log2(N), por lo que el coste es O(log N)."
+      },
+      {
+        "q": "¿La estructura de datos Pila (Stack) sigue el principio LIFO (Last In, First Out)?",
+        "a": "V",
+        "j": "Verdadero. El último elemento apilado es el primero en desapilarse."
+      },
+      {
+        "q": "¿La estructura de datos Cola (Queue) sigue el principio FIFO (First In, First Out)?",
+        "a": "V",
+        "j": "Verdadero. El primer elemento encolado es el primero en desencolarse."
+      },
+      {
+        "q": "¿El factor de carga alfa de una tabla hash se define como el número de elementos dividido entre el número de casillas?",
+        "a": "V",
+        "j": "Verdadero. alpha = N / M."
+      },
+      {
+        "q": "El recorrido en anchura (BFS) de un grafo se implementa habitualmente mediante una estructura de Pila.",
+        "a": "F",
+        "j": "Falso. BFS utiliza una Cola (Queue); la Pila (Stack) se usa para recorrido en profundidad (DFS)."
+      },
+      {
+        "q": "¿El algoritmo de Dijkstra permite encontrar el camino más corto desde un origen en grafos con pesos no negativos?",
+        "a": "V",
+        "j": "Verdadero. Asume que la adición de aristas siempre incrementa la distancia acumulada."
+      },
+      {
+        "q": "¿En un Min-Heap binario, la raíz contiene siempre el elemento de valor mínimo de todo el conjunto?",
+        "a": "V",
+        "j": "Verdadero. Es la propiedad estructural fundamental del min-heap."
+      },
+      {
+        "q": "El borrado de un nodo cualquiera en un array dinámico (vector) siempre se realiza en tiempo O(1).",
+        "a": "F",
+        "j": "Falso. En el peor caso (borrar al inicio) requiere desplazar N-1 elementos en O(N)."
+      },
+      {
+        "q": "¿Los árboles AVL son árboles de búsqueda autobalanceados cuya diferencia de alturas entre subárboles no excede 1?",
+        "a": "V",
+        "j": "Verdadero. Garantiza altura O(log N) mediante rotaciones simples y dobles."
+      },
+      {
+        "q": "¿La resolución de colisiones mediante encadenamiento abierto (chaining) almacena los elementos en listas ligadas por casilla?",
+        "a": "V",
+        "j": "Verdadero. Permite alojar múltiples claves con el mismo valor hash."
+      }
+    ]
+  },
+  "230907": {
+    "code": "230907",
+    "acronym": "EMG",
+    "title": "Electromagnetismo",
+    "semester": 2,
+    "ects": 6.0,
+    "department": "748 - FIS - Departamento de Física",
+    "description": "Ecuaciones de Maxwell en forma integral y diferencial, electrostática y magnetostática en el vacío y medios materiales, ley de Faraday de inducción, ley de Ampère-Maxwell, corriente de desplazamiento, y ondas electromagnéticas planas en medios dieléctricos y conductores.",
+    "formulas": [
+      {
+        "name": "Ecuaciones de Maxwell (Forma Diferencial)",
+        "latex": "\\nabla \\cdot \\vec{D} = \\rho_v, \\quad \\nabla \\cdot \\vec{B} = 0, \\quad \\nabla \\times \\vec{E} = -\\frac{\\partial \\vec{B}}{\\partial t}, \\quad \\nabla \\times \\vec{H} = \\vec{J} + \\frac{\\partial \\vec{D}}{\\partial t}"
+      },
+      {
+        "name": "Vector de Poynting",
+        "latex": "\\vec{S} = \\vec{E} \\times \\vec{H} \\quad [\\text{W/m}^2]"
+      },
+      {
+        "name": "Velocidad de Propagación en Medios Dieléctricos",
+        "latex": "v_p = \\frac{1}{\\sqrt{\\mu \\varepsilon}} = \\frac{c}{\\sqrt{\\mu_r \\varepsilon_r}}"
+      },
+      {
+        "name": "Impedancia Característica del Medio",
+        "latex": "\\eta = \\sqrt{\\frac{\\mu}{\\varepsilon}} \\approx 377\\,\\Omega \\text{ en el vacío}"
+      },
+      {
+        "name": "Profundidad de Penetración (Skin Depth)",
+        "latex": "\\delta = \\sqrt{\\frac{2}{\\omega \\mu \\sigma}} = \\frac{1}{\\sqrt{\\pi f \\mu \\sigma}}"
+      }
+    ],
+    "calc_params": {
+      "freq_hz": 1000000000.0,
+      "eps_r": 4.0,
+      "mu_r": 1.0,
+      "sigma_copper": 58000000.0
+    },
+    "calc_outputs": [
+      "vp_m_s",
+      "eta_ohm",
+      "wavelength_m",
+      "skin_depth_um"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    c0 = 299792458.0\n    eps_r = p.get('eps_r', 4.0)\n    mu_r = p.get('mu_r', 1.0)\n    f = max(1.0, p.get('freq_hz', 1e9))\n    vp = c0 / math.sqrt(eps_r * mu_r)\n    eta = 376.73 * math.sqrt(mu_r / eps_r)\n    lam = vp / f\n    mu0 = 4 * math.pi * 1e-7\n    sigma = p.get('sigma_copper', 5.8e7)\n    delta = 1.0 / math.sqrt(math.pi * f * (mu_r * mu0) * sigma)\n    return {'vp_m_s': round(vp, 0), 'eta_ohm': round(eta, 2), 'wavelength_m': round(lam, 4), 'skin_depth_um': round(delta * 1e6, 3)}",
+    "spice_template": "* EMG - Linea de Transmision Coaxial sin Perdidas\nTline in 0 out 0 Z0=50 TD=5ns\nVin in 0 PULSE(0 5 0 100p 100p 10n 50n)\nRgen in in2 50\nRL out 0 50\n.tran 50p 30n\n.end\n",
+    "questions": [
+      {
+        "q": "¿La ley de Gauss para el campo magnético (div B = 0) implica la no existencia de monopolos magnéticos aislados?",
+        "a": "V",
+        "j": "Verdadero. Las líneas de campo B son siempre cerradas."
+      },
+      {
+        "q": "¿La corriente de desplazamiento de Maxwell (dD/dt) permite la propagación de ondas EM a través del vacío?",
+        "a": "V",
+        "j": "Verdadero. Garantiza la continuidad de la corriente en condensadores y origina el campo magnético variable en ondas EM."
+      },
+      {
+        "q": "¿El vector de Poynting S = E x H representa la densidad superficial de flujo de potencia electromagnética en W/m^2?",
+        "a": "V",
+        "j": "Verdadero. Dirección y sentido de la propagación energética."
+      },
+      {
+        "q": "La velocidad de una onda electromagnética en un medio con eps_r = 4 es el doble de la velocidad en el vacío.",
+        "a": "F",
+        "j": "Falso. vp = c / sqrt(eps_r) = c / 2 (la velocidad se reduce a la mitad)."
+      },
+      {
+        "q": "¿La impedancia de onda intrínseca del vacío es de aproximadamente 377 ohms (120*pi)?",
+        "a": "V",
+        "j": "Verdadero. eta0 = sqrt(mu0 / eps0) approx 376.73 ohms."
+      },
+      {
+        "q": "¿El efecto pelicular (skin effect) provoca que las corrientes de alta frecuencia circulen confinadas cerca de la superficie del conductor?",
+        "a": "V",
+        "j": "Verdadero. La densidad de corriente decae exponencialmente con la profundidad delta."
+      },
+      {
+        "q": "La ley de Faraday establece que una fem inducida se opone siempre a la variación del flujo magnético que la produce.",
+        "a": "V",
+        "j": "Verdadero. Expresado por el signo negativo de la ley de Lenz: fem = -dPhi/dt."
+      },
+      {
+        "q": "En una onda EM plana TEM en el vacío, los campos E y H son paralelos entre sí y a la dirección de propagación.",
+        "a": "F",
+        "j": "Falso. Son perpendiculares entre sí y perpendiculares a la dirección de propagación."
+      },
+      {
+        "q": "¿La profundidad de penetración delta disminuye a medida que aumenta la frecuencia de la señal?",
+        "a": "V",
+        "j": "Verdadero. delta es inversamente proporcional a sqrt(f)."
+      },
+      {
+        "q": "¿La fuerza de Lorentz total sobre una carga q es F = q * (E + v x B)?",
+        "a": "V",
+        "j": "Verdadero. Combina la fuerza electrostática y magnética."
+      },
+      {
+        "q": "Un dieléctrico perfecto sin pérdidas disipa energía electromagnética en forma de calor.",
+        "a": "F",
+        "j": "Falso. En un dieléctrico perfecto la conductividad sigma = 0 y la permitividad es puramente real, sin pérdidas disipativas."
+      },
+      {
+        "q": "¿El campo electrostático satisface rot(E) = 0, lo que permite definir un potencial escalar V tal que E = -grad(V)?",
+        "a": "V",
+        "j": "Verdadero. Condición de campo conservativo."
+      }
+    ]
+  },
+  "230908": {
+    "code": "230908",
+    "acronym": "CVEC",
+    "title": "Cálculo Vectorial",
+    "semester": 2,
+    "ects": 6.0,
+    "department": "749 - MAT - Departamento de Matemáticas",
+    "description": "Cálculo diferencial de funciones de varias variables (gradiente, divergencia, rotacional, Hessiano), optimización multivariable, integrales múltiples, integrales de línea y superficie, y los grandes teoremas del cálculo integral (Green, Stokes y Gauss-Divergencia).",
+    "formulas": [
+      {
+        "name": "Teorema de la Divergencia de Gauss",
+        "latex": "\\iiint_V (\\nabla \\cdot \\vec{F}) \\, dV = \\iint_S (\\vec{F} \\cdot \\hat{n}) \\, dS"
+      },
+      {
+        "name": "Teorema de Stokes",
+        "latex": "\\iint_S (\\nabla \\times \\vec{F}) \\cdot d\\vec{S} = \\oint_C \\vec{F} \\cdot d\\vec{r}"
+      },
+      {
+        "name": "Teorema de Green en el Plano",
+        "latex": "\\oint_C (P \\, dx + Q \\, dy) = \\iint_D \\left( \\frac{\\partial Q}{\\partial x} - \\frac{\\partial P}{\\partial y} \\right) dx \\, dy"
+      },
+      {
+        "name": "Operador Laplaciano Escalar",
+        "latex": "\\nabla^2 f = \\nabla \\cdot (\\nabla f) = \\frac{\\partial^2 f}{\\partial x^2} + \\frac{\\partial^2 f}{\\partial y^2} + \\frac{\\partial^2 f}{\\partial z^2}"
+      },
+      {
+        "name": "Matriz Hessiana y Puntos Críticos",
+        "latex": "H(f) = \\begin{bmatrix} f_{xx} & f_{xy} \\\\ f_{yx} & f_{yy} \\end{bmatrix}, \\quad \\det(H) > 0 \\land f_{xx} > 0 \\implies \\text{Mínimo}"
+      }
+    ],
+    "calc_params": {
+      "fxx": 2.0,
+      "fyy": 3.0,
+      "fxy": 1.0
+    },
+    "calc_outputs": [
+      "det_hessian",
+      "classification"
+    ],
+    "calc_fn": "def calc(p):\n    fxx = p.get('fxx', 2.0)\n    fyy = p.get('fyy', 3.0)\n    fxy = p.get('fxy', 1.0)\n    det_h = fxx * fyy - (fxy**2)\n    if det_h > 0:\n        cat = 'Minimo relativo' if fxx > 0 else 'Maximo relativo'\n    elif det_h < 0:\n        cat = 'Punto de silla'\n    else:\n        cat = 'Criterio no concluyente'\n    return {'det_hessian': round(det_h, 4), 'classification': cat}",
+    "spice_template": "// CVEC - Cálculo del Gradiente Numérico 2D en C\n#include <stdio.h>\n#include <math.h>\nvoid num_grad(double (*f)(double, double), double x, double y, double h, double *gx, double *gy) {\n    *gx = (f(x + h, y) - f(x - h, y)) / (2 * h);\n    *gy = (f(x, y + h) - f(x, y - h)) / (2 * h);\n}\n",
+    "questions": [
+      {
+        "q": "¿El vector gradiente grad(f) de un campo escalar apunta siempre en la dirección de máximo crecimiento de la función?",
+        "a": "V",
+        "j": "Verdadero. La derivada direccional máxima se produce en la dirección del gradiente."
+      },
+      {
+        "q": "¿El rotacional del gradiente de cualquier campo escalar dos veces diferenciable es idénticamente nulo: rot(grad(f)) = 0?",
+        "a": "V",
+        "j": "Verdadero. Identidad vectorial fundamental de campos conservativos."
+      },
+      {
+        "q": "¿La divergencia del rotacional de cualquier campo vectorial dos veces diferenciable es idénticamente nula: div(rot(F)) = 0?",
+        "a": "V",
+        "j": "Verdadero. Un campo solenoidal tiene divergencia nula."
+      },
+      {
+        "q": "El Teorema de Stokes relaciona la integral de flujo del rotacional sobre una superficie con la integral de línea a lo largo de su borde cerrado.",
+        "a": "V",
+        "j": "Verdadero. iint_S (rot F)*dS = oint_C F*dr."
+      },
+      {
+        "q": "Si la matriz Hessiana en un punto crítico tiene determinante negativo, el punto es un máximo local.",
+        "a": "F",
+        "j": "Falso. Si det(H) < 0, los autovalores tienen signos opuestos y se trata de un punto de silla."
+      },
+      {
+        "q": "¿El Teorema de Green es el caso particular bidimensional en el plano del Teorema de Stokes?",
+        "a": "V",
+        "j": "Verdadero. Al restringir el vector rotacional a la componente perpendicular al plano z."
+      },
+      {
+        "q": "¿El jacobiano de la transformación a coordenadas polares es r?",
+        "a": "V",
+        "j": "Verdadero. dx dy = r dr dtheta."
+      },
+      {
+        "q": "¿Un campo vectorial F es conservativo si y solo si la integral de línea de F entre dos puntos es independiente del camino?",
+        "a": "V",
+        "j": "Verdadero. Equivale a que la integral sobre cualquier curva cerrada sea cero."
+      },
+      {
+        "q": "La divergencia de un campo solenoidal es estrictamente positiva.",
+        "a": "F",
+        "j": "Falso. Por definición un campo solenoidal tiene divergencia exactamente cero (div F = 0)."
+      },
+      {
+        "q": "¿El laplaciano de una función escalar es la divergencia de su gradiente?",
+        "a": "V",
+        "j": "Verdadero. lapl(f) = div(grad(f))."
+      },
+      {
+        "q": "¿El Teorema de Gauss-Divergencia transforma una integral de volumen de div(F) en el flujo de F a través de la superficie cerrada que lo encierra?",
+        "a": "V",
+        "j": "Verdadero. iiint_V div(F) dV = iint_S F*n dS."
+      },
+      {
+        "q": "En coordenadas esféricas, el elemento de volumen diferencial es simplemente dr dtheta dphi.",
+        "a": "F",
+        "j": "Falso. Es dV = r^2 * sin(theta) dr dtheta dphi."
+      }
+    ]
+  },
+  "230909": {
+    "code": "230909",
+    "acronym": "EDT",
+    "title": "Ecuaciones Diferenciales y Transformadas",
+    "semester": 2,
+    "ects": 6.0,
+    "department": "749 - MAT - Departamento de Matemáticas",
+    "description": "Ecuaciones diferenciales ordinarias (EDO) de primer y segundo orden lineales, sistemas lineales acoplados, transformada de Laplace y sus propiedades (traslación, convolución, teoremas del valor inicial y final), series de Fourier y ecuaciones en derivadas parciales elementales (ecuación de calor y onda).",
+    "formulas": [
+      {
+        "name": "Transformada de Laplace Unilateral",
+        "latex": "\\mathcal{L}\\{f(t)\\} = F(s) = \\int_{0}^{\\infty} f(t) e^{-s t} dt"
+      },
+      {
+        "name": "Derivada en el Dominio Transformado de Laplace",
+        "latex": "\\mathcal{L}\\left\\{\\frac{df}{dt}\\right\\} = s F(s) - f(0^-)"
+      },
+      {
+        "name": "Teorema de Convolución de Laplace",
+        "latex": "\\mathcal{L}\\{f(t) * g(t)\\} = F(s) \\cdot G(s)"
+      },
+      {
+        "name": "Teorema del Valor Final",
+        "latex": "\\lim_{t \\to \\infty} f(t) = \\lim_{s \\to 0} s F(s) \\quad \\text{(si los polos de } sF(s) \\text{ están en el semiplano izquierdo)}"
+      },
+      {
+        "name": "Serie de Fourier Trigonométrica",
+        "latex": "f(t) = a_0 + \\sum_{n=1}^{\\infty} \\left[ a_n \\cos(n \\omega_0 t) + b_n \\sin(n \\omega_0 t) \\right]"
+      }
+    ],
+    "calc_params": {
+      "w0": 10.0,
+      "zeta": 0.5
+    },
+    "calc_outputs": [
+      "pole_real",
+      "pole_imag",
+      "wn_rad_s",
+      "final_step_value"
+    ],
+    "calc_fn": "def calc(p):\n    import math\n    w0 = max(1e-3, p.get('w0', 10.0))\n    zeta = p.get('zeta', 0.5)\n    sigma = -zeta * w0\n    if zeta < 1.0:\n        wd = w0 * math.sqrt(1.0 - zeta**2)\n    else:\n        wd = 0.0\n    return {'pole_real': round(sigma, 4), 'pole_imag': round(wd, 4), 'wn_rad_s': round(w0, 4), 'final_step_value': 1.0}",
+    "spice_template": "* EDT - Respuesta al Escalon de EDO Segundo Orden\nVin in 0 PULSE(0 1 0 1n 1n 10m 20m)\nR1 in out 1k\nL1 out mid 100mH\nC1 mid 0 100nF\n.tran 10u 5m\n.print tran V(mid)\n.end\n",
+    "questions": [
+      {
+        "q": "¿La transformada de Laplace de la delta de Dirac delta(t) es 1 para todo s?",
+        "a": "V",
+        "j": "Verdadero. integral(delta(t) * e^(-st) dt) de 0- a inf = 1."
+      },
+      {
+        "q": "¿La transformada de Laplace del escalón unitario u(t) es 1/s con región de convergencia Re(s) > 0?",
+        "a": "V",
+        "j": "Verdadero. integral(e^(-st) dt) = [-e^(-st)/s] = 1/s."
+      },
+      {
+        "q": "La convolución en el dominio del tiempo equivale a la adición directa en el dominio transformado de Laplace.",
+        "a": "F",
+        "j": "Falso. Equivale a la multiplicación algebraica F(s) * G(s)."
+      },
+      {
+        "q": "¿El Teorema del Valor Final requiere que todos los polos de s*F(s) se encuentren en el semiplano complejo izquierdo estricto?",
+        "a": "V",
+        "j": "Verdadero. De lo contrario f(t) no converge a un límite finito cuando t tiende a infinito."
+      },
+      {
+        "q": "Una ecuación diferencial lineal homogénea de segundo orden con coeficientes constantes con raíces complejas conjugadas tiene una respuesta aperiódica sin oscilación.",
+        "a": "F",
+        "j": "Falso. Produce términos sinusoidales amortiguados con oscilación propia e^(sigma*t)*cos(wd*t)."
+      },
+      {
+        "q": "¿La transformada de Laplace de e^(a*t) es 1 / (s - a) para Re(s) > a?",
+        "a": "V",
+        "j": "Verdadero. Por definición de integral transformadora."
+      },
+      {
+        "q": "¿La serie de Fourier de una función par periódica solo contiene términos cosenoidales (bn = 0)?",
+        "a": "V",
+        "j": "Verdadero. La simetría par anula todas las integrales de funciones senoidales impares."
+      },
+      {
+        "q": "¿El teorema de traslación temporal establece que L{f(t - T)*u(t - T)} = e^(-s*T) * F(s)?",
+        "a": "V",
+        "j": "Verdadero. El retraso temporal se mapea en una exponencial compleja en s."
+      },
+      {
+        "q": "El factor integrante mu(x) = exp(integral(P(x) dx)) permite resolver cualquier EDO lineal de primer orden y' + P(x)y = Q(x).",
+        "a": "V",
+        "j": "Verdadero. Convierte el miembro izquierdo en la derivada del producto d/dx [mu(x)*y]."
+      },
+      {
+        "q": "La transformada inversa de Laplace siempre genera funciones continuas sin singularidades.",
+        "a": "F",
+        "j": "Falso. Puede generar impulsos de Dirac, discontinuidades escalón y derivadas distribucionales."
+      },
+      {
+        "q": "¿El Teorema del Valor Inicial establece que f(0+) = lim_{s -> inf} s * F(s)?",
+        "a": "V",
+        "j": "Verdadero. Propiedad asintótica de alta frecuencia."
+      },
+      {
+        "q": "¿La solución general de una EDO lineal no homogénea es la suma de la solución de la homogénea más una solución particular?",
+        "a": "V",
+        "j": "Verdadero. Principio de superposición lineal."
+      }
+    ]
+  }
+}

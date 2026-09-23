@@ -1,0 +1,12 @@
+[CCE] ¿El teorema de máxima transferencia de potencia establece que la carga debe ser igual a Rth para maximizar la potencia disipada?	<b>Verdadero (V)</b><br><br><i>Verdadero. Al derivar P_L respecto a R_L e igualar a cero se obtiene R_L = R_th.</i>
+[CCE] ¿El principio de superposición es aplicable al cálculo directo de potencias?	<b>Falso (F)</b><br><br><i>Falso. La potencia es cuadrática (P = I^2*R); solo se pueden superponer tensiones y corrientes.</i>
+[CCE] En un divisor de tensión con R1=1k y R2=3k alimentado a 12V, la tensión en bornes de R2 es 9V.	<b>Verdadero (V)</b><br><br><i>Verdadero. Vo = 12 * (3 / (1 + 3)) = 9.0 V.</i>
+[CCE] ¿La caída de tensión típica en directa de un diodo de silicio es de aproximadamente 0.7 V?	<b>Verdadero (V)</b><br><br><i>Verdadero. Debido al potencial de contacto y la banda prohibida del silicio a 300 K.</i>
+[CCE] Si un circuito lineal tiene Voc = 10V y Isc = 2A, su resistencia de Thévenin es de 20 ohms.	<b>Falso (F)</b><br><br><i>Falso. Rth = Voc / Isc = 10V / 2A = 5 ohms.</i>
+[CCE] ¿La ley de corrientes de Kirchhoff (KCL) se fundamenta en la conservación de la carga eléctrica?	<b>Verdadero (V)</b><br><br><i>Verdadero. En régimen cuasiestacionario la carga neta en cualquier nodo cerrado permanece constante.</i>
+[CCE] ¿La ley de tensiones de Kirchhoff (KVL) se fundamenta en el carácter conservativo del campo electrostático?	<b>Verdadero (V)</b><br><br><i>Verdadero. La integral de línea del campo eléctrico sobre un lazo cerrado es nula.</i>
+[CCE] En un transistor BJT en zona activa directa, la corriente de colector Ic depende fuertemente de Vce.	<b>Falso (F)</b><br><br><i>Falso. Ic = beta * Ib y es casi independiente de Vce (salvo por el efecto Early secundario).</i>
+[CCE] ¿La resistencia dinámica de pequeña señal de un diodo polarizado con ID0 es rd = VT / ID0?	<b>Verdadero (V)</b><br><br><i>Verdadero. Derivando la ecuación de Shockley dVD/dID = VT / ID0.</i>
+[CCE] ¿Un amplificador operacional ideal con realimentación negativa mantiene un cortocircuito virtual entre sus entradas?	<b>Verdadero (V)</b><br><br><i>Verdadero. Como Aol -> infinito, (V+ - V-) = Vo / Aol = 0.</i>
+[CCE] La resistencia equivalente de dos resistencias idénticas R en paralelo es 2R.	<b>Falso (F)</b><br><br><i>Falso. R_eq = (R * R) / (R + R) = R / 2.</i>
+[CCE] ¿El nudo de referencia o masa se define arbitrariamente con potencial de 0 voltios?	<b>Verdadero (V)</b><br><br><i>Verdadero. Sirve de origen de potenciales para todo el circuito.</i>

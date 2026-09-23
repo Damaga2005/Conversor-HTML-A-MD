@@ -1,0 +1,19 @@
+{
+  "code": "230339",
+  "acronym": "IMATEC",
+  "title": "Introducción a las Matemáticas y a la",
+  "ects": 3.0,
+  "hours": 75,
+  "department": "749 - MAT - Departamento de Matemáticas.",
+  "responsible_professor": "GERMAN SAEZ MORENO",
+  "objectives": "El objetivo de este seminario es triple. En primer lugar, presentar los conocimientos y el nivel que conviene que tenga el estudiante\nantes de cursar las asignaturas de matemáticas del primer cuatrimestre. En segundo lugar, potenciar la metodología de estudio y de\ntrabajo necesaria para superar con éxito dichas asignaturas. Y, en tercer lugar, introducir a los estudiantes en las actividades propias\nde la Ingeniería de Telecomunicación.",
+  "contents": [
+    {
+      "title": "Contenido General",
+      "description": "Formalismo Descripción: Símbolos y cuantificadores, lenguaje formal, enunciados, técnicas de demostración, lenguaje de la teoría de conjuntos. Dedicación: 4h Grupo grande/Teoría: 4h Números Descripción: Campos numéricos (reales y complejos), manipulaciones algebraicas, sucesiones, desigualdades, números combinatorios. Sistematización de algunos cálculos en forma algorítmica. Dedicación: 4h Grupo grande/Teoría: 4h Matrices Descripción: Manipulaciones matriciales y operaciones con matrices (cálculos e interpretaciones), determinantes, sistemas de ecuaciones lineales. Algoritmo asociado al teorema de Rouché-Frobenius. Dedicación: 4h Grupo grande/Teoría: 4h Polinomios y funciones elementales Descripción: Expresiones polinómicas, gráficas y propiedades de las funciones elementales, funciones racionales. Dedicación: 4h Grupo grande/Teoría: 4h Funciones: derivación e integración Descripción: Cálculo de límites y de derivadas, representaciones gráficas, cálculo de integrales y cálculo de áreas. Dedicación: 4h Grupo grande/Teoría: 4h Fecha: 06/09/2026 Página: 3 / 3 Actividades de introducción a la Ingeniería de Telecomunicación Descripción: Asistencia a las presentaciones iniciales de los proyectos de la asignatura Proyecto Avanzado de Ingeniería (PAE) de 4.º curso. Actividades de identificación y validación de necesidades en torno a los retos del PAE. Actividades de ideación y validación de soluciones a los retos del PAE. Participación en las presentaciones finales de los proyectos de la asignatura PAE de 4.º curso. Dedicación: 10h Grupo grande/Teoría: 4h Grupo pequeño/Laboratorio: 6h"
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nLa nota se obtendrá a partir de la valoración de actividades realizadas durante el curso (participación activa durante las sesiones,\nentrega de ejercicios o realización de actividades guiadas). En su caso, la nota así obtenida podrá mejorarse con una prueba al final\ndel seminario.",
+  "bibliography": [],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230339/introduccion-a-las-matematicas-y-a-la-ingenieria-de-las-telecomunicaciones.pdf"
+}

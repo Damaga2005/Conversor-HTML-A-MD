@@ -1,0 +1,320 @@
+[
+  {
+    "code": "230904",
+    "name": "Álgebra Lineal",
+    "slug": "algebra-lineal",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230904/algebra-lineal.pdf"
+  },
+  {
+    "code": "230901",
+    "name": "Algoritmia y Programación",
+    "slug": "algoritmia-y-programacion",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230901/algoritmia-y-programacion.pdf"
+  },
+  {
+    "code": "230903",
+    "name": "Cálculo",
+    "slug": "calculo",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230903/calculo.pdf"
+  },
+  {
+    "code": "230900",
+    "name": "Componentes y Circuitos Electrónicos",
+    "slug": "componentes-y-circuitos-electronicos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230900/componentes-y-circuitos-electronicos.pdf"
+  },
+  {
+    "code": "230902",
+    "name": "Física",
+    "slug": "fisica",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230902/fisica.pdf"
+  },
+  {
+    "code": "230339",
+    "name": "Introducción a las Matemáticas y a la Ingeniería de las Telecomunicaciones",
+    "slug": "introduccion-a-las-matematicas-y-a-la-ingenieria-de-las-telecomunicaciones",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230339/introduccion-a-las-matematicas-y-a-la-ingenieria-de-las-telecomunicaciones.pdf"
+  },
+  {
+    "code": "230905",
+    "name": "Análisis de Circuitos",
+    "slug": "analisis-de-circuitos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230905/analisis-de-circuitos.pdf"
+  },
+  {
+    "code": "230908",
+    "name": "Cálculo Vectorial",
+    "slug": "calculo-vectorial",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230908/calculo-vectorial.pdf"
+  },
+  {
+    "code": "230909",
+    "name": "Ecuaciones Diferenciales y Transformadas",
+    "slug": "ecuaciones-diferenciales-y-transformadas",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230909/ecuaciones-diferenciales-y-transformadas.pdf"
+  },
+  {
+    "code": "230907",
+    "name": "Electromagnetismo",
+    "slug": "electromagnetismo",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230907/electromagnetismo.pdf"
+  },
+  {
+    "code": "230906",
+    "name": "Programación y Estructuras de Datos",
+    "slug": "programacion-y-estructuras-de-datos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230906/programacion-y-estructuras-de-datos.pdf"
+  },
+  {
+    "code": "230911",
+    "name": "Diseño Digital",
+    "slug": "diseno-digital",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230911/diseno-digital.pdf"
+  },
+  {
+    "code": "230910",
+    "name": "Dispositivos Electrónicos",
+    "slug": "dispositivos-electronicos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230910/dispositivos-electronicos.pdf"
+  },
+  {
+    "code": "230912",
+    "name": "Electromagnetismo Aplicado y Fotónica",
+    "slug": "electromagnetismo-aplicado-y-fotonica",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230912/electromagnetismo-aplicado-y-fotonica.pdf"
+  },
+  {
+    "code": "230914",
+    "name": "Probabilidad y Procesos Estocásticos",
+    "slug": "probabilidad-y-procesos-estocasticos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230914/probabilidad-y-procesos-estocasticos.pdf"
+  },
+  {
+    "code": "230913",
+    "name": "Señales y Sistemas",
+    "slug": "senales-y-sistemas",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230913/senales-y-sistemas.pdf"
+  },
+  {
+    "code": "230312",
+    "name": "Administración de Sistemas Linux",
+    "slug": "administracion-de-sistemas-linux",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230312/administracion-de-sistemas-linux.pdf"
+  },
+  {
+    "code": "230300",
+    "name": "Álgebra Lineal, Códigos Lineales y Esquemas de Compartición de Secretos",
+    "slug": "algebra-lineal-codigos-lineales-y-esquemas-de-comparticion-de-secretos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230300/algebra-lineal-codigos-lineales-y-esquemas-de-comparticion-de-secretos.pdf"
+  },
+  {
+    "code": "230311",
+    "name": "Crear Tu Futuro: un Simple Trabajo o Tu Auténtica Pasión",
+    "slug": "crear-tu-futuro-un-simple-trabajo-o-tu-autentica-pasion",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230311/crear-tu-futuro-un-simple-trabajo-o-tu-autentica-pasion.pdf"
+  },
+  {
+    "code": "230340",
+    "name": "Ética para la Ingeniería",
+    "slug": "etica-para-la-ingenieria",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230340/etica-para-la-ingenieria.pdf"
+  },
+  {
+    "code": "230320",
+    "name": "La Ingeniería Financiera en la Planificación Económica de Inversiones",
+    "slug": "la-ingenieria-financiera-en-la-planificacion-economica-de-inversiones",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230320/la-ingenieria-financiera-en-la-planificacion-economica-de-inversiones.pdf"
+  },
+  {
+    "code": "230332",
+    "name": "Liderazgo y Técnicas de Desarrollo Profesional en la Ingeniería",
+    "slug": "liderazgo-y-tecnicas-de-desarrollo-profesional-en-la-ingenieria",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230332/liderazgo-y-tecnicas-de-desarrollo-profesional-en-la-ingenieria.pdf"
+  },
+  {
+    "code": "230318",
+    "name": "Proyecto de Cooperación con Tecnologías Wifi",
+    "slug": "proyecto-de-cooperacion-con-tecnologias-wifi",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230318/proyecto-de-cooperacion-con-tecnologias-wifi.pdf"
+  },
+  {
+    "code": "230301",
+    "name": "Simulación y Análisis de Circuitos Mediante PSpice",
+    "slug": "simulacion-y-analisis-de-circuitos-mediante-pspice",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230301/simulacion-y-analisis-de-circuitos-mediante-pspice.pdf"
+  },
+  {
+    "code": "230915",
+    "name": "Circuitos Analógicos",
+    "slug": "circuitos-analogicos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230915/circuitos-analogicos.pdf"
+  },
+  {
+    "code": "230919",
+    "name": "Empresa y Proyectos",
+    "slug": "empresa-y-proyectos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230919/empresa-y-proyectos.pdf"
+  },
+  {
+    "code": "230917",
+    "name": "Introducción a los Circuitos de Alta Frecuencia",
+    "slug": "introduccion-a-los-circuitos-de-alta-frecuencia",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230917/introduccion-a-los-circuitos-de-alta-frecuencia.pdf"
+  },
+  {
+    "code": "230916",
+    "name": "Sistemas Embebidos",
+    "slug": "sistemas-embebidos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230916/sistemas-embebidos.pdf"
+  },
+  {
+    "code": "230918",
+    "name": "Tratamiento de la Señal",
+    "slug": "tratamiento-de-la-senal",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230918/tratamiento-de-la-senal.pdf"
+  },
+  {
+    "code": "230923",
+    "name": "Ciencia e Ingenieria de Materiales",
+    "slug": "ciencia-e-ingenieria-de-materiales",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230923/ciencia-e-ingenieria-de-materiales.pdf"
+  },
+  {
+    "code": "230922",
+    "name": "Circuitos de Alta Frecuencia",
+    "slug": "circuitos-de-alta-frecuencia",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230922/circuitos-de-alta-frecuencia.pdf"
+  },
+  {
+    "code": "230924",
+    "name": "Sistemas de Control",
+    "slug": "sistemas-de-control",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230924/sistemas-de-control.pdf"
+  },
+  {
+    "code": "230920",
+    "name": "Sistemas de Medida",
+    "slug": "sistemas-de-medida",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230920/sistemas-de-medida.pdf"
+  },
+  {
+    "code": "230921",
+    "name": "Sistemas Digitales Configurables",
+    "slug": "sistemas-digitales-configurables",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230921/sistemas-digitales-configurables.pdf"
+  },
+  {
+    "code": "230338",
+    "name": "Aprendizaje Automático: de la Teoría a la Práctica",
+    "slug": "aprendizaje-automatico-de-la-teoria-a-la-practica",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230338/aprendizaje-automatico-de-la-teoria-a-la-practica.pdf"
+  },
+  {
+    "code": "230325",
+    "name": "Introducción al Aprendizaje Profundo",
+    "slug": "introduccion-al-aprendizaje-profundo",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230325/introduccion-al-aprendizaje-profundo.pdf"
+  },
+  {
+    "code": "230337",
+    "name": "Resolución de Problemas con Inteligencia Artificial: un Enfoque Práctico",
+    "slug": "resolucion-de-problemas-con-inteligencia-artificial-un-enfoque-practico",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230337/resolucion-de-problemas-con-inteligencia-artificial-un-enfoque-practico.pdf"
+  },
+  {
+    "code": "230925",
+    "name": "Internet de las Cosas",
+    "slug": "internet-de-las-cosas",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230925/internet-de-las-cosas.pdf"
+  },
+  {
+    "code": "230927",
+    "name": "Procesado de la Energía Eléctrica",
+    "slug": "procesado-de-la-energia-electrica",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230927/procesado-de-la-energia-electrica.pdf"
+  },
+  {
+    "code": "230926",
+    "name": "Sistemas en Tiempo Real",
+    "slug": "sistemas-en-tiempo-real",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230926/sistemas-en-tiempo-real.pdf"
+  },
+  {
+    "code": "230929",
+    "name": "Técnicas para el Emprendimiento",
+    "slug": "tecnicas-para-el-emprendimiento",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230929/tecnicas-para-el-emprendimiento.pdf"
+  },
+  {
+    "code": "230928",
+    "name": "Tecnología Electrónica",
+    "slug": "tecnologia-electronica",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230928/tecnologia-electronica.pdf"
+  },
+  {
+    "code": "230334",
+    "name": "Sistemas Electrónicos en Automoción",
+    "slug": "sistemas-electronicos-en-automocion",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230334/sistemas-electronicos-en-automocion.pdf"
+  },
+  {
+    "code": "230930",
+    "name": "Diseño Microelectrónico",
+    "slug": "diseno-microelectronico",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230930/diseno-microelectronico.pdf"
+  },
+  {
+    "code": "230932",
+    "name": "Integración de Sistemas",
+    "slug": "integracion-de-sistemas",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230932/integracion-de-sistemas.pdf"
+  },
+  {
+    "code": "230931",
+    "name": "Sistemas de Hardware de Procesado de la Información",
+    "slug": "sistemas-de-hardware-de-procesado-de-la-informacion",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230931/sistemas-de-hardware-de-procesado-de-la-informacion.pdf"
+  },
+  {
+    "code": "230817",
+    "name": "Aprendizaje por Refuerzo y Aprendizaje Profundo",
+    "slug": "aprendizaje-por-refuerzo-y-aprendizaje-profundo",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230817/aprendizaje-por-refuerzo-y-aprendizaje-profundo.pdf"
+  },
+  {
+    "code": "230934",
+    "name": "Dispositivos Fotovoltaicos",
+    "slug": "dispositivos-fotovoltaicos",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230934/dispositivos-fotovoltaicos.pdf"
+  },
+  {
+    "code": "230115",
+    "name": "Electrónica Inteligente",
+    "slug": "electronica-inteligente",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230115/electronica-inteligente.pdf"
+  },
+  {
+    "code": "230206",
+    "name": "Matlab y sus Aplicaciones en Ingeniería",
+    "slug": "matlab-y-sus-aplicaciones-en-ingenieria",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230206/matlab-y-sus-aplicaciones-en-ingenieria.pdf"
+  },
+  {
+    "code": "230157",
+    "name": "Seguridad y Privacidad de la Información",
+    "slug": "seguridad-y-privacidad-de-la-informacion",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230157/seguridad-y-privacidad-de-la-informacion.pdf"
+  },
+  {
+    "code": "230105",
+    "name": "Sensores, Actuadores y Microcontroladores en Robots Móviles",
+    "slug": "sensores-actuadores-y-microcontroladores-en-robots-moviles",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230105/sensores-actuadores-y-microcontroladores-en-robots-moviles.pdf"
+  },
+  {
+    "code": "230257",
+    "name": "Telecomunicación Espacial",
+    "slug": "telecomunicacion-espacial",
+    "url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230257/telecomunicacion-espacial.pdf"
+  }
+]

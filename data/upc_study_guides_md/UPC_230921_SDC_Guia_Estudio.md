@@ -1,0 +1,1658 @@
+# 230921 - Sistemas Digitales Configurables (SDC)
+**Grado en Ingeniería Electrónica de Telecomunicación (GREELEC)**  
+*Escuela Técnica Superior de Ingeniería de Telecomunicación de Barcelona (ETSETB - UPC)*
+
+## 1. Ficha Técnica y Metadatos Oficiales
+- **Código UPC**: `230921`
+- **Acrónimo Oficial**: `SDC`
+- **Semestre**: Q5 (Fase Troncal / Especialización)
+- **Créditos ECTS**: 6.0 ECTS (150)
+- **Departamento Responsable**: 710 - EEL - Departamento de Ingeniería Electrónica
+- **Profesorado / Coordinación**: JOAN PONS NIN
+- **Guía Docente Oficial en PDF**: [230921_guia_docent.pdf](https://www.upc.edu/grau/guiadocent/pdf/esp/230921/sistemas-digitales-configurables.pdf)
+
+## 2. Descripción General y Requisitos
+Arquitectura interna de FPGAs (Look-Up Tables LUT, Flip-Flops, bloques de memoria BRAM, DSP slices, matrices de interconexión programable), flujo de diseño completo (síntesis lógica, mapeo, place & route, análisis estático de temporización STA), restricciones de reloj (SDC/XDC), cruce de dominios de reloj (CDC), diseño de aceleradores hardware mediante HDL/SystemVerilog y síntesis de alto nivel (HLS).
+
+## 3. Objetivos de Aprendizaje y Competencias
+- D
+- i
+- s
+- e
+- ñ
+- a
+- r
+-  
+- e
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- r
+-  
+- s
+- o
+- b
+- r
+- e
+-  
+- d
+- i
+- s
+- p
+- o
+- s
+- i
+- t
+- i
+- v
+- o
+- s
+-  
+- d
+- e
+-  
+- l
+- ó
+- g
+- i
+- c
+- a
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- b
+- l
+- e
+-  
+- c
+- i
+- r
+- c
+- u
+- i
+- t
+- o
+- s
+-  
+- s
+- í
+- n
+- c
+- r
+- o
+- n
+- o
+- s
+-  
+- d
+- e
+-  
+- m
+- e
+- d
+- i
+- a
+- n
+- a
+-  
+- y
+-  
+- a
+- l
+- t
+- a
+-  
+- c
+- o
+- m
+- p
+- l
+- e
+- j
+- i
+- d
+- a
+- d
+-  
+- p
+- a
+- r
+- a
+-  
+- a
+- p
+- l
+- i
+- c
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+- 
+
+- p
+- r
+- e
+- f
+- e
+- r
+- e
+- n
+- t
+- e
+- m
+- e
+- n
+- t
+- e
+-  
+- d
+- e
+-  
+- c
+- o
+- m
+- u
+- n
+- i
+- c
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- y
+-  
+- d
+- e
+-  
+- p
+- r
+- o
+- c
+- e
+- s
+- a
+- d
+- o
+-  
+- d
+- e
+-  
+- s
+- e
+- ñ
+- a
+- l
+-  
+- e
+- n
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- r
+- e
+- a
+- l
+- .
+- 
+
+- E
+- l
+-  
+- p
+- r
+- o
+- t
+- o
+- t
+- i
+- p
+- a
+- d
+- o
+-  
+- r
+- á
+- p
+- i
+- d
+- o
+-  
+- s
+- e
+- r
+- á
+-  
+- e
+- l
+-  
+- e
+- j
+- e
+-  
+- d
+- e
+-  
+- l
+- a
+-  
+- a
+- s
+- i
+- g
+- n
+- a
+- t
+- u
+- r
+- a
+- .
+-  
+- I
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- r
+-  
+- e
+- f
+- i
+- c
+- i
+- e
+- n
+- t
+- e
+- m
+- e
+- n
+- t
+- e
+-  
+- l
+- o
+- s
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+- s
+-  
+- r
+- e
+- q
+- u
+- i
+- e
+- r
+- e
+-  
+- u
+- n
+-  
+- b
+- u
+- e
+- n
+- a
+-  
+- f
+- o
+- r
+- m
+- a
+- c
+- i
+- ó
+- n
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- l
+- e
+- n
+- g
+- u
+- a
+- j
+- e
+- 
+
+- d
+- e
+-  
+- d
+- e
+- s
+- c
+- r
+- i
+- p
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- h
+- a
+- r
+- d
+- w
+- a
+- r
+- e
+-  
+- V
+- H
+- D
+- L
+- ,
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- c
+- o
+- n
+- o
+- c
+- i
+- m
+- i
+- e
+- n
+- t
+- o
+-  
+- y
+-  
+- u
+- s
+- o
+-  
+- d
+- e
+-  
+- h
+- e
+- r
+- r
+- a
+- m
+- i
+- e
+- n
+- t
+- a
+- s
+-  
+- d
+- e
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+- ,
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- a
+- r
+- q
+- u
+- i
+- t
+- e
+- c
+- t
+- u
+- r
+- a
+- s
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- F
+- P
+- G
+- A
+- s
+-  
+- y
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+- 
+
+- c
+- o
+- m
+- p
+- o
+- n
+- e
+- n
+- t
+- e
+- s
+-  
+- q
+- u
+- e
+-  
+- l
+- a
+- s
+-  
+- i
+- n
+- t
+- e
+- g
+- r
+- a
+- n
+- ,
+-  
+- a
+- s
+- í
+-  
+- c
+- o
+- m
+- o
+-  
+- d
+- e
+-  
+- n
+- o
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- d
+- e
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+-  
+- d
+- i
+- g
+- i
+- t
+- a
+- l
+-  
+- a
+- v
+- a
+- n
+- z
+- a
+- d
+- o
+- .
+- 
+
+- T
+- a
+- m
+- b
+- i
+- é
+- n
+-  
+- s
+- e
+- r
+- á
+-  
+- i
+- m
+- p
+- o
+- r
+- t
+- a
+- n
+- t
+- e
+-  
+- e
+- l
+-  
+- e
+- s
+- t
+- u
+- d
+- i
+- o
+-  
+- y
+-  
+- c
+- a
+- r
+- a
+- c
+- t
+- e
+- r
+- i
+- z
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- p
+- r
+- e
+- s
+- t
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+- ,
+-  
+- e
+- n
+-  
+- e
+- s
+- p
+- e
+- c
+- i
+- a
+- l
+-  
+- e
+- l
+-  
+- c
+- o
+- m
+- p
+- o
+- r
+- t
+- a
+- m
+- i
+- e
+- n
+- t
+- o
+-  
+- t
+- e
+- m
+- p
+- o
+- r
+- a
+- l
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+- s
+- .
+- 
+
+- C
+- o
+- n
+- o
+- c
+- e
+- r
+-  
+- l
+- a
+- s
+-  
+- l
+- i
+- m
+- i
+- t
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- f
+- í
+- s
+- i
+- c
+- a
+- s
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- d
+- i
+- s
+- p
+- o
+- s
+- i
+- t
+- i
+- v
+- o
+- s
+-  
+- e
+- s
+-  
+- p
+- r
+- i
+- o
+- r
+- i
+- t
+- a
+- r
+- i
+- o
+-  
+- p
+- a
+- r
+- a
+-  
+- c
+- a
+- l
+- c
+- u
+- l
+- a
+- r
+-  
+- l
+- o
+- s
+-  
+- p
+- a
+- r
+- á
+- m
+- e
+- t
+- r
+- o
+- s
+-  
+- f
+- u
+- n
+- d
+- a
+- m
+- e
+- n
+- t
+- a
+- l
+- e
+- s
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- c
+- i
+- r
+- c
+- u
+- i
+- t
+- o
+- s
+- :
+- 
+
+- f
+- r
+- e
+- c
+- u
+- e
+- n
+- c
+- i
+- a
+-  
+- m
+- á
+- x
+- i
+- m
+- a
+-  
+- d
+- e
+-  
+- f
+- u
+- n
+- c
+- i
+- o
+- n
+- a
+- m
+- i
+- e
+- n
+- t
+- o
+- ,
+-  
+- d
+- i
+- s
+- i
+- p
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- p
+- o
+- t
+- e
+- n
+- c
+- i
+- a
+- ,
+-  
+- á
+- r
+- e
+- a
+-  
+- o
+- c
+- u
+- p
+- a
+- d
+- a
+-  
+- y
+-  
+- c
+- o
+- s
+- t
+- e
+- .
+- 
+
+- L
+- a
+-  
+- a
+- s
+- i
+- m
+- i
+- l
+- a
+- c
+- i
+- ó
+- n
+-  
+- y
+-  
+- l
+- a
+-  
+- c
+- o
+- n
+- s
+- o
+- l
+- i
+- d
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- c
+- o
+- n
+- o
+- c
+- i
+- m
+- i
+- e
+- n
+- t
+- o
+- s
+-  
+- s
+- e
+-  
+- h
+- a
+- r
+- á
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- n
+- d
+- o
+-  
+- l
+- o
+- s
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+- s
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- l
+- a
+- b
+- o
+- r
+- a
+- t
+- o
+- r
+- i
+- o
+-  
+- c
+- o
+- n
+- 
+
+- h
+- e
+- r
+- r
+- a
+- m
+- i
+- e
+- n
+- t
+- a
+- s
+-  
+- d
+- e
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+-  
+- y
+-  
+- d
+- i
+- s
+- p
+- o
+- s
+- i
+- t
+- i
+- v
+- o
+- s
+-  
+- c
+- o
+- m
+- e
+- r
+- c
+- i
+- a
+- l
+- e
+- s
+- .
+- 
+
+- L
+- i
+- s
+- t
+- a
+-  
+- d
+- e
+-  
+- o
+- b
+- j
+- e
+- t
+- i
+- v
+- o
+- s
+-  
+- c
+- o
+- n
+- c
+- r
+- e
+- t
+- o
+- s
+-  
+- d
+- e
+-  
+- l
+- a
+-  
+- a
+- s
+- i
+- g
+- n
+- a
+- t
+- u
+- r
+- a
+- :
+- 
+
+- *
+-  
+- U
+- t
+- i
+- l
+- i
+- z
+- a
+- r
+-  
+- m
+- e
+- t
+- o
+- d
+- o
+- l
+- o
+- g
+- í
+- a
+- s
+-  
+- y
+-  
+- h
+- e
+- r
+- r
+- a
+- m
+- i
+- e
+- n
+- t
+- a
+- s
+-  
+- d
+- e
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+-  
+- d
+- e
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+- s
+-  
+- d
+- i
+- g
+- i
+- t
+- a
+- l
+- e
+- s
+-  
+- s
+- e
+- c
+- u
+- e
+- n
+- c
+- i
+- a
+- l
+- e
+- s
+-  
+- c
+- o
+- m
+- p
+- l
+- e
+- j
+- o
+- s
+- .
+- 
+
+- *
+-  
+- A
+- n
+- a
+- l
+- i
+- z
+- a
+- r
+-  
+- a
+- l
+- g
+- u
+- n
+- a
+- s
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- p
+- r
+- o
+- b
+- l
+- e
+- m
+- á
+- t
+- i
+- c
+- a
+- s
+-  
+- d
+- e
+-  
+- m
+- á
+- s
+-  
+- i
+- n
+- c
+- i
+- d
+- e
+- n
+- c
+- i
+- a
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- d
+- i
+- s
+- e
+- ñ
+- o
+-  
+- d
+- i
+- g
+- i
+- t
+- a
+- l
+- .
+- 
+
+- *
+-  
+- C
+- o
+- n
+- o
+- c
+- e
+- r
+-  
+- y
+-  
+- e
+- v
+- a
+- l
+- u
+- a
+- r
+-  
+- l
+- a
+- s
+-  
+- a
+- l
+- t
+- e
+- r
+- n
+- a
+- t
+- i
+- v
+- a
+- s
+-  
+- d
+- e
+-  
+- i
+- m
+- p
+- l
+- e
+- m
+- e
+- n
+- t
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+- s
+-  
+- d
+- i
+- g
+- i
+- t
+- a
+- l
+- e
+- s
+- ,
+-  
+- e
+- n
+-  
+- p
+- a
+- r
+- t
+- i
+- c
+- u
+- l
+- a
+- r
+-  
+- l
+- o
+- s
+-  
+- d
+- i
+- s
+- p
+- o
+- s
+- i
+- t
+- i
+- v
+- o
+- s
+-  
+- l
+- ó
+- g
+- i
+- c
+- o
+- s
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- b
+- l
+- e
+- s
+- .
+- 
+
+- *
+-  
+- C
+- o
+- n
+- o
+- c
+- e
+- r
+-  
+- y
+-  
+- u
+- t
+- i
+- l
+- i
+- z
+- a
+- r
+-  
+- l
+- e
+- n
+- g
+- u
+- a
+- j
+- e
+- s
+-  
+- d
+- e
+-  
+- d
+- e
+- s
+- c
+- r
+- i
+- p
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- h
+- a
+- r
+- d
+- w
+- a
+- r
+- e
+- ,
+-  
+- e
+- n
+-  
+- p
+- a
+- r
+- t
+- i
+- c
+- u
+- l
+- a
+- r
+-  
+- e
+- l
+-  
+- V
+- H
+- D
+- L
+- .
+
+## 4. Temario y Unidades de Contenido
+- {'title': 'Contenido General', 'description': 'Diseño de sistemas electrónicos digitales Descripción: 1.1. Estrategias de diseño. 1.2. Dispositivos lógicos programables: CPLDs, FPGAs. 1.3. Herramientas de prototipado rápido. 1.3.1. Lenguajes de descripción de hardware, tipos y niveles de descripción. 1.3.2. Síntesis. 1.3.3. Simulación. Restricciones temporales y verificación de prestaciones. 1.3.4. Pautas de test para fabricación. Dedicación: 37h Grupo grande/Teoría: 9h 45m Grupo pequeño/Laboratorio: 6h 30m Aprendizaje autónomo: 20h 45m Fecha: 06/09/2026 Página: 3 / 4 Síntesis con VHDL Descripción: 2.1. Recordatorio de las principales características. 2.2. Bibliotecas. 2.3. Funciones y procedimientos. 2.4. Inferencia de bloques específicos 2.4.1. Generación y distribución de señales de reloj. 2.4.2. Bloques aritméticos. 2.4.3. Bloques de memoria. Implementación de pilas Dedicación: 37h Grupo grande/Teoría: 9h 45m Grupo pequeño/Laboratorio: 6h 30m Aprendizaje autónomo: 20h 45m Técnicas de diseño Descripción: 3.1. Máquinas de estados concurrentes. 3.2. Máquinas algorítmicas: 3.2.1. Subsistema de datos. Pipelining. 3.2.2. Subsistema de control. 3.2.3. Sistemas microprogramados. 3.3. Métodos de reducción de consumo. 3.4. Estructuras y estándares de test. 3.5. IP cores. Dedicación: 38h Grupo grande/Teoría: 9h 45m Grupo pequeño/Laboratorio: 6h 30m Aprendizaje autónomo: 21h 45m Problemáticas de diseño Descripción: 4.1. Temporización de circuitos digitales 4.1.1. Anàlisi temporal 4.1.2. Metastabilidad. 4.1.3. Espurios. 4.1.4. Síncrono versus asíncrono. 4.2. Síntesis de frecuencia. 4.3. Interficie con memorias y periféricos. 4.4. Test Dedicación: 38h Grupo grande/Teoría: 9h 45m Grupo pequeño/Laboratorio: 6h 30m Aprendizaje autónomo: 21h 45m Fecha: 06/09/2026 Página: 4 / 4'}
+
+## 5. Modelado Matemático y Fórmulas Clave (LaTeX)
+### 5.1 Capacidad Combinacional de una LUT de K Entradas
+$$
+M = 2^K \text{ bits de SRAM} \implies \text{Cualquier función booleana de } K \text{ variables}
+$$
+
+### 5.2 Análisis Estático de Temporización (Setup Slack)
+$$
+\text{Slack}_{\text{setup}} = (T_{\text{clk}} - t_{\text{skew}}) - (t_{\text{cq}} + t_{\text{logic}} + t_{\text{routing}} + t_{\text{setup}})
+$$
+
+### 5.3 Hold Slack en STA
+$$
+\text{Slack}_{\text{hold}} = (t_{\text{cq}} + t_{\text{logic,\min}} + t_{\text{routing,\min}}) - (t_{\text{hold}} + t_{\text{skew}})
+$$
+
+### 5.4 Tiempo Medio Entre Fallos por Metaestabilidad (MTBF)
+$$
+\text{MTBF} = \frac{e^{\frac{t_{\text{resolve}}}{\tau}}}{T_w \cdot f_{\text{clk}} \cdot f_{\text{data}}}
+$$
+
+### 5.5 Throughput de Acelerador Hardware Segmentado (Pipelined)
+$$
+\text{Throughput} = \frac{1}{\max(t_{\text{etapa}})} \quad [\text{muestras/s}]
+$$
+
+## 6. Banco de Ensayos / Laboratorio Virtual
+```vhdl
+-- SDC - Sincronizador de Dos Biestables para Cruzar Dominios de Reloj (CDC)
+library ieee;
+use ieee.std_logic_1164.all;
+entity cdc_sync is
+    port (clk_dst, async_in : in std_logic; sync_out : out std_logic);
+end entity;
+architecture rtl of cdc_sync is
+    signal meta_ff, sync_ff : std_logic := '0';
+    attribute async_reg : string;
+    attribute async_reg of meta_ff, sync_ff : signal is "TRUE";
+begin
+    process(clk_dst) begin
+        if rising_edge(clk_dst) then
+            meta_ff <= async_in;
+            sync_ff <= meta_ff;
+        end if;
+    end process;
+    sync_out <= sync_ff;
+end architecture;
+```
+
+## 7. Preguntas de Autoevaluación y Examen con Justificación Técnica
+#### Pregunta 1
+**¿Una LUT (Look-Up Table) de 6 entradas en una FPGA moderna puede implementar cualquier función lógica combinacional arbitraria de 6 variables?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Almacena en 64 bits de memoria estática la tabla de verdad completa de la función.
+
+#### Pregunta 2
+**¿El análisis estático de temporización (STA) evalúa exhaustivamente todos los caminos temporales sin necesidad de aplicar vectores de test en simulación?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Verifica analíticamente que se cumplan las cotas de setup y hold en el peor caso tecnológico.
+
+#### Pregunta 3
+**Si el Slack de Setup en un camino crítico es negativo, el circuito funcionará correctamente reduciendo el voltaje de alimentación.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. Un slack negativo indica una violación de temporización; para subsanarlo debe reducirse la frecuencia de reloj o optimizar el camino lógico.
+
+#### Pregunta 4
+**¿Para sincronizar una señal monocanal que cruza de un dominio de reloj a otro asíncrono (CDC), se emplea comúnmente una cadena de 2 biestables (2-FF synchronizer)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Reduce exponencialmente la probabilidad de que la metaestabilidad se propague al circuito de destino.
+
+#### Pregunta 5
+**¿Los bloques DSP embebidos en una FPGA integran multiplicadores hardware de alta velocidad y acumuladores optimizados para filtros FIR y FFT?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Realizan operaciones MAC (Multiply-Accumulate) en un único ciclo de reloj.
+
+#### Pregunta 6
+**La memoria distribuida en una FPGA utiliza las memorias de bloque dedicadas BRAM en lugar de las tablas de búsqueda LUT.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. La memoria distribuida aprovecha directamente la SRAM de las LUTs de la matriz lógica; las BRAMs son bloques físicos independientes.
+
+#### Pregunta 7
+**¿La técnica de 'pipelining' o segmentación inserta registros intermedios para fragmentar caminos combinacionales largos y elevar la frecuencia máxima fmax?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Reduce el retardo crítico por etapa aumentando el throughput a costa de unos pocos ciclos de latencia inicial.
+
+#### Pregunta 8
+**¿Un FIFO asíncrono permite transferir múltiples palabras de datos entre dos dominios de reloj distintos utilizando punteros codificados en código Gray?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. El código Gray cambia solo 1 bit por transición, eliminando lecturas corruptas de punteros en el cruce de reloj.
+
+#### Pregunta 9
+**En el flujo de diseño de FPGAs, la etapa de 'Place & Route' ocurre antes de la síntesis lógica RTL.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. La síntesis lógica RTL y el mapeo a primitivas preceden obligatoriamente al emplazamiento y enrutado físico (Place & Route).
+
+#### Pregunta 10
+**¿Las restricciones físicas de reloj y temporización en herramientas modernas se definen habitualmente mediante archivos de formato SDC/XDC?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Synopsys Design Constraints / Xilinx Design Constraints.
+
+#### Pregunta 11
+**¿El reloj de una FPGA se distribuye a través de una red de árboles de reloj globales dedicados de bajo skew (búferes BUFG)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Garantiza mínima dispersión temporal de llegada a todos los biestables del chip.
+
+#### Pregunta 12
+**¿La síntesis de alto nivel (HLS) permite generar descripciones hardware sintetizables en VHDL o Verilog a partir de código algorítmico escrito en C/C++?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Acelera drásticamente el desarrollo de algoritmos matemáticos complejos en hardware.
+
+## 8. Sistema de Evaluación y Bibliografía Recomendada
+**Evaluación**: Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de
+evaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la
+Universidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en
+el estado provisional de "pendiente de evaluación" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo
+de acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.
+Evaluación continuada de teoría: controles, ejercicios y/o trabajos a realizar durante el curso (CT)
+Examen final teoría (EFT)
+Nota final de teoría (NFT): máximo (EFT, 0.5EFT+0.5CT)
+Evaluación continuada de laboratorio (CL): seguimiento de actividad
+Examen final de laboratorio (EFL)
+Nota final de laboratorio (NFL): 0.75CL + 0.25 EFL
+Nota final asignatura = 0.5NFT + 0.5 NFL
+------------------
+La reevaluación consiste en hacer de nuevo los exámenes finales de teoría (nota EFTR) i de laboratorio (nota EFLR).
+Nota reevaluación de laboratoro (NRL): 0.75CL + 0.25 EFLR
+Nota final reevaluación = 0.5 EFTR + 0.5 NRL
+NORMAS PARA LA REALIZACIÓN DE LAS PRUEBAS.
+Examen final y controles: individual
+Trabajos individuales: Individual
+Laboratorio: grupos de máximo dos estudiantes
+En los exámenes no se permite el uso de dispositivos con conexión inalámbrica (móviles, portátiles, tablets, etc.) ni de calculadoras
+programables. Además, es necesario disponer de algún documento identificativo (DNI, pasaporte, etc.)
+
+**Bibliografía de Referencia**:
+- - Gajski, D.D. Principles of digital design. Upper Saddle River, N.J.: Prentice Hall, 1997. ISBN 0132423979.
+- - Brown, S.; Vranesic, Z. Fundamentals of digital logic with VHDL design. 3rd ed. Boston: McGraw-Hill, 2009. ISBN 9780077221430.
+- - Skahill, K.; Legenhausen, J. VHDL for programmable logic. Reading: Addison-Wesley, 1996. ISBN 0201895730.
+- - Ashenden, P.J. The designer's guide to VHDL [en línea]. 3rd ed. Burlington: Morgan Kaufmann, 2008 [Consulta: 15/07/2019].
+- Disponible a: https://www.sciencedirect.com/science/book/9780120887859. ISBN 9780120887859.

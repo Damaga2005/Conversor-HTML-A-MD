@@ -1,0 +1,45 @@
+{
+  "code": "230901",
+  "acronym": "APR",
+  "title": "Algoritmia y Programación",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "701 - DAC - Departamento de Arquitectura de Computadores.",
+  "responsible_professor": "EVA RODRIGUEZ LUNA",
+  "objectives": "1. Ser capaz de utilizar técnicas algorítmicas para la resolución de problemas de cálculo de complejidad pequeña y mediana.\n2. Construir (escribir, probar y depurar) programas de ordenadores que resuelvan problemas de pequeña y mediana envergadura\nutilizando el lenguaje de programación Python.\n3. Utilizar adecuadamente el entorno de programación: herramientas de edición, compilación, ejecución y depuración para desarrollar\ny corregir programas\n4. Trabajar en grupo. Definir las tareas a realizar, distribuirlas equitativamente, e integrar el trabajo realizado. Gestionar conflictos.\n\nFecha: 06/09/2026\nPágina: 2 / 3",
+  "contents": [
+    {
+      "title": "Tema 1. Conceptos básicos de programación",
+      "description": "Términos básicos de programación: Algoritmos, programas y lenguajes de programación. Etapas en el desarrollo de un programa. Estructura de un programa. Tipos, constantes, variables, expresiones, asignaciones. Operadores lógicos y relacionales. Prioridad operadores. Clases, objetos y métodos."
+    },
+    {
+      "title": "Tema 2. Algoritmia básica",
+      "description": "Algoritmos básicos de cálculo. Sentencias condicionales. Sentencias iterativas."
+    },
+    {
+      "title": "Tema 3. Funciones",
+      "description": "Llamadas a funciones. Diseño recursivo. Módulos específicos de Python."
+    },
+    {
+      "title": "Tema 4. Tipos estructurados de datos",
+      "description": "Representación de estructuras de datos con tipos nativos en Python: Listas, Tuplas, Diccionarios. Diseño de estructuras de datos."
+    },
+    {
+      "title": "Tema 5. Algoritmia de tipos estructurados",
+      "description": "Algoritmos básicos de recorrido, búsqueda, inserción y extracción. Problemas avanzados: matrices, pilas y colas."
+    },
+    {
+      "title": "Tema 6. Ficheros y entrada/salida",
+      "description": "Manipulación (creación, edición). Recorrido."
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nNota final = MAX (0.7*Examen_final, 0.5*Examen_final + 0.2*Examen_parcial) + 0.3*Examen_laboratorio",
+  "bibliography": [
+    "- Lutz, Mark. Learning Python [en línea]. 6th ed. Sebastopol, CA: O'Reilly, 2025 [Consulta: 02/09/2025]. Disponible a:",
+    "https://ebookcentral-proquest-com.recursos.biblioteca.upc.edu/lib/upcatalunya-ebooks/detail.action?pq-origsite=primo&docID=3192",
+    "6500. ISBN 9781098171278.",
+    "- Downey, Allen. Think Python: How To Think Like a Computer Scientist [en línea]. 3rd ed. Sebastopol, CA: O'Reilly Media, 2024",
+    "[ C o n s u l t a :"
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230901/algoritmia-y-programacion.pdf"
+}

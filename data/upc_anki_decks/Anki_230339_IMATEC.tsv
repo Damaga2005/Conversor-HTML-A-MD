@@ -1,0 +1,12 @@
+[IMATEC] ¿Una potencia física de 0 dBm equivale exactamente a 1 mW?	<b>Verdadero (V)</b><br><br><i>Verdadero. 10 * log10(1 mW / 1 mW) = 0 dBm.</i>
+[IMATEC] ¿Duplicar la potencia física de una señal representa un incremento de aproximadamente +3 dB?	<b>Verdadero (V)</b><br><br><i>Verdadero. 10 * log10(2) = 3.01 dB.</i>
+[IMATEC] Una potencia de +30 dBm corresponde a una potencia de 100 W.	<b>Falso (F)</b><br><br><i>Falso. 30 dBm = 1000 mW = 1 W.</i>
+[IMATEC] ¿Una relación de ganancias de tensión de 20 dB multiplica la amplitud de la señal por un factor de 10?	<b>Verdadero (V)</b><br><br><i>Verdadero. 20 * log10(10) = 20 dB.</i>
+[IMATEC] ¿La multiplicación de números complejos en forma polar suma sus ángulos y multiplica sus módulos?	<b>Verdadero (V)</b><br><br><i>Verdadero. Identidad fasorial r1/_th1 * r2/_th2 = (r1*r2)/_(th1+th2).</i>
+[IMATEC] ¿El prefijo pico (p) representa un factor de escala de 10^-12?	<b>Verdadero (V)</b><br><br><i>Verdadero. Sistema Internacional de Unidades.</i>
+[IMATEC] Una atenuación de 3 dB reduce la potencia de la señal al 10% de su valor original.	<b>Falso (F)</b><br><br><i>Falso. Reduce la potencia exactamente a la mitad (50%).</i>
+[IMATEC] ¿En telecomunicaciones la impedancia de 50 ohms es el compromiso estándar entre potencia máxima y pérdidas mínimas en cables coaxiales?	<b>Verdadero (V)</b><br><br><i>Verdadero. El compromiso entre 30 ohms (máxima potencia) y 77 ohms (mínima atenuación).</i>
+[IMATEC] ¿La frecuencia f y el periodo T de una sinusoide cumplen la relación f = 1 / T?	<b>Verdadero (V)</b><br><br><i>Verdadero.</i>
+[IMATEC] ¿Un fasor representa la envolvente compleja y fase de una señal armónica a pulsación fija omega?	<b>Verdadero (V)</b><br><br><i>Verdadero. Permite convertir ecuaciones diferenciales en algebraicas en régimen permanente senoidal.</i>
+[IMATEC] Un nivel de 0 dBW equivale exactamente a 0 dBm.	<b>Falso (F)</b><br><br><i>Falso. 0 dBW equivale a +30 dBm (1 W = 1000 mW).</i>
+[IMATEC] ¿El producto escalar de dos fasores o vectores ortogonales en el plano complejo es cero?	<b>Verdadero (V)</b><br><br><i>Verdadero. Debido al ángulo de 90 grados cuyo coseno es cero.</i>

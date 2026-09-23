@@ -1,0 +1,12 @@
+[AC] ¿En un circuito RC serie, el condensador alcanza el 63.2% de su tensión final en t = tau = R*C?	<b>Verdadero (V)</b><br><br><i>Verdadero. 1 - e^(-1) = 0.6321.</i>
+[AC] ¿En resonancia serie RLC la impedancia total del circuito es mínima e igual a R?	<b>Verdadero (V)</b><br><br><i>Verdadero. Las reactancias inductiva jwL y capacitiva 1/(jwC) se cancelan.</i>
+[AC] La potencia reactiva consumida por un condensador ideal es positiva.	<b>Falso (F)</b><br><br><i>Falso. Los condensadores suministran potencia reactiva, por convenio Q < 0.</i>
+[AC] ¿El factor de potencia de una carga inductiva pura es 0 inductivo con desfase de corriente retrasada 90 grados?	<b>Verdadero (V)</b><br><br><i>Verdadero. cos(90) = 0.</i>
+[AC] ¿Un circuito RLC serie con coeficiente de amortiguamiento zeta < 1 presenta una respuesta transitoria subamortiguada y oscilatoria?	<b>Verdadero (V)</b><br><br><i>Verdadero. Los polos son complejos conjugados con parte real negativa.</i>
+[AC] ¿En un sistema trifásico equilibrado en estrella, la tensión entre líneas es sqrt(3) veces la tensión simple de fase?	<b>Verdadero (V)</b><br><br><i>Verdadero. V_linea = sqrt(3) * V_fase con 30 grados de adelanto.</i>
+[AC] El teorema de Tellegen solo es aplicable a circuitos resistivos lineales en continua.	<b>Falso (F)</b><br><br><i>Falso. Es válido para cualquier circuito con cualquier tipo de componente lineal o no lineal.</i>
+[AC] ¿La reactancia de una bobina ideal crece linealmente con la frecuencia angular omega?	<b>Verdadero (V)</b><br><br><i>Verdadero. X_L = omega * L.</i>
+[AC] ¿La reactancia de un condensador tiende a cero cuando la frecuencia tiende a infinito (comportamiento de cortocircuito en alta frecuencia)?	<b>Verdadero (V)</b><br><br><i>Verdadero. X_C = 1 / (omega * C) -> 0.</i>
+[AC] Un transformador ideal elevador con relación de espiras 1:2 duplica la corriente en el devanado secundario.	<b>Falso (F)</b><br><br><i>Falso. Duplica la tensión pero reduce la corriente a la mitad para conservar la potencia.</i>
+[AC] ¿La unidad de medida de la potencia aparente S es el voltiamperio (VA)?	<b>Verdadero (V)</b><br><br><i>Verdadero. Distingue S (VA) de P (W) y Q (var).</i>
+[AC] ¿El factor de calidad Q de un circuito resonante serie es inversamente proporcional a la resistencia de pérdidas R?	<b>Verdadero (V)</b><br><br><i>Verdadero. Q = (w0 * L) / R; a menor disipación resistiva, mayor agudeza en la resonancia.</i>

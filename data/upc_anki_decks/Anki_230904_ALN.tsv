@@ -1,0 +1,12 @@
+[ALN] ¿Una matriz cuadrada es invertible si y solo si su determinante es no nulo?	<b>Verdadero (V)</b><br><br><i>Verdadero. det(A) != 0 equivale a tener rango completo y núcleo trivial.</i>
+[ALN] ¿El producto de los autovalores de una matriz es igual a su determinante?	<b>Verdadero (V)</b><br><br><i>Verdadero. det(A) = prod(lambda_i).</i>
+[ALN] ¿La suma de los autovalores de una matriz coincide con la traza de la matriz?	<b>Verdadero (V)</b><br><br><i>Verdadero. tr(A) = sum(a_ii) = sum(lambda_i).</i>
+[ALN] ¿Un conjunto de vectores ortogonales no nulos es siempre linealmente independiente?	<b>Verdadero (V)</b><br><br><i>Verdadero. El producto escalar mutuo nulo impide cualquier combinación lineal no trivial igual a cero.</i>
+[ALN] El determinante de la suma de matrices siempre cumple det(A + B) = det(A) + det(B).	<b>Falso (F)</b><br><br><i>Falso. El determinante es una función multilineal, no aditiva con la suma de matrices.</i>
+[ALN] ¿La transpuesta del producto matricial satisface (A * B)^T = B^T * A^T?	<b>Verdadero (V)</b><br><br><i>Verdadero. El orden de los factores se invierte al transponer.</i>
+[ALN] ¿Toda matriz simétrica real tiene autovalores reales y es diagonalizable ortogonalmente?	<b>Verdadero (V)</b><br><br><i>Verdadero. Por el Teorema Espectral para operadores autoadjuntos.</i>
+[ALN] ¿El proceso de Gram-Schmidt permite construir una base ortonormal a partir de una base dada?	<b>Verdadero (V)</b><br><br><i>Verdadero. Restando las componentes proyectadas sucesivas.</i>
+[ALN] Un sistema de 3 ecuaciones lineales con 4 incógnitas puede ser compatible determinado.	<b>Falso (F)</b><br><br><i>Falso. Tendrá al menos un grado de libertad (o será incompatible), nunca determinado único.</i>
+[ALN] ¿El rango de una matriz es el número máximo de filas linealmente independientes?	<b>Verdadero (V)</b><br><br><i>Verdadero. Coincide con la dimensión del espacio imagen.</i>
+[ALN] ¿Para cualquier matriz cuadrada A, la matriz A + A^T es siempre simétrica?	<b>Verdadero (V)</b><br><br><i>Verdadero. (A + A^T)^T = A^T + (A^T)^T = A^T + A = A + A^T.</i>
+[ALN] ¿El núcleo (Ker) de una aplicación lineal entre espacios vectoriales es un subespacio vectorial?	<b>Verdadero (V)</b><br><br><i>Verdadero. Contiene al vector cero y es cerrado bajo sumas y combinaciones lineales.</i>

@@ -1,0 +1,12 @@
+[CVEC] ¿El vector gradiente grad(f) de un campo escalar apunta siempre en la dirección de máximo crecimiento de la función?	<b>Verdadero (V)</b><br><br><i>Verdadero. La derivada direccional máxima se produce en la dirección del gradiente.</i>
+[CVEC] ¿El rotacional del gradiente de cualquier campo escalar dos veces diferenciable es idénticamente nulo: rot(grad(f)) = 0?	<b>Verdadero (V)</b><br><br><i>Verdadero. Identidad vectorial fundamental de campos conservativos.</i>
+[CVEC] ¿La divergencia del rotacional de cualquier campo vectorial dos veces diferenciable es idénticamente nula: div(rot(F)) = 0?	<b>Verdadero (V)</b><br><br><i>Verdadero. Un campo solenoidal tiene divergencia nula.</i>
+[CVEC] El Teorema de Stokes relaciona la integral de flujo del rotacional sobre una superficie con la integral de línea a lo largo de su borde cerrado.	<b>Verdadero (V)</b><br><br><i>Verdadero. iint_S (rot F)*dS = oint_C F*dr.</i>
+[CVEC] Si la matriz Hessiana en un punto crítico tiene determinante negativo, el punto es un máximo local.	<b>Falso (F)</b><br><br><i>Falso. Si det(H) < 0, los autovalores tienen signos opuestos y se trata de un punto de silla.</i>
+[CVEC] ¿El Teorema de Green es el caso particular bidimensional en el plano del Teorema de Stokes?	<b>Verdadero (V)</b><br><br><i>Verdadero. Al restringir el vector rotacional a la componente perpendicular al plano z.</i>
+[CVEC] ¿El jacobiano de la transformación a coordenadas polares es r?	<b>Verdadero (V)</b><br><br><i>Verdadero. dx dy = r dr dtheta.</i>
+[CVEC] ¿Un campo vectorial F es conservativo si y solo si la integral de línea de F entre dos puntos es independiente del camino?	<b>Verdadero (V)</b><br><br><i>Verdadero. Equivale a que la integral sobre cualquier curva cerrada sea cero.</i>
+[CVEC] La divergencia de un campo solenoidal es estrictamente positiva.	<b>Falso (F)</b><br><br><i>Falso. Por definición un campo solenoidal tiene divergencia exactamente cero (div F = 0).</i>
+[CVEC] ¿El laplaciano de una función escalar es la divergencia de su gradiente?	<b>Verdadero (V)</b><br><br><i>Verdadero. lapl(f) = div(grad(f)).</i>
+[CVEC] ¿El Teorema de Gauss-Divergencia transforma una integral de volumen de div(F) en el flujo de F a través de la superficie cerrada que lo encierra?	<b>Verdadero (V)</b><br><br><i>Verdadero. iiint_V div(F) dV = iint_S F*n dS.</i>
+[CVEC] En coordenadas esféricas, el elemento de volumen diferencial es simplemente dr dtheta dphi.	<b>Falso (F)</b><br><br><i>Falso. Es dV = r^2 * sin(theta) dr dtheta dphi.</i>

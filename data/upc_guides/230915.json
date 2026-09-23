@@ -1,0 +1,49 @@
+{
+  "code": "230915",
+  "acronym": "CA",
+  "title": "Circuitos Analógicos",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "710 - EEL - Departamento de Ingeniería Electrónica.",
+  "responsible_professor": "Otros:",
+  "objectives": "El objetivo principal es el estudio de los circuitos electrónicos que realizan las funciones básicas de procesamiento analógico de señal,\nde generación de señales y de conversión de señales entre los dominios analógico y digital. La implementación de estas funciones se\nbasará en el conocimiento de las prestaciones y las limitaciones de los amplificadores operacionales y de otros circuitos integrados\nanalógicos.\nUna vez superada la asignatura, el estudiante ha de ser capaz de:\n- Analizar y diseñar los circuitos electrónicos que realizan las funciones analógicas básicas y que utilizan los circuitos integrados\nanalógicos más populares.\n- Entender cómo se aplica la técnica de la realimentación en circuitos electrónicos y la influencia en su estabilidad.\n- Utilizar de forma autónoma las herramientas de diseño, los programas de simulación y los instrumentos empleados en el desarrollo\nde electrónica analógica.\n- Realizar, verificar y depurar experimentalmente los circuitos electrónicos que implementan las funciones analógicas en las\naplicaciones más habituales.",
+  "contents": [
+    {
+      "title": "Tema 1: Amplificación de señales eléctricas y circuitos integrados analógicos",
+      "description": "1. Amplificación Definición de un amplificador. Tipos de amplificadores. Circuito equivalente de un amplificador de tensión. Resistencias de entrada y salida y efectos de carga. 2. El amplificador operacional Definición. Símbolo. Circuito equivalente. El amplificador operacional ideal. Configuraciones básicas con amplificadores operacionales. 3. Otros circuitos integrados amplificadores Amplificador operacional de transconductancia. Amplificador realimentado en corriente."
+    },
+    {
+      "title": "Tema 2: Limitaciones de los amplificadores operacionales",
+      "description": "1. Limitaciones en continua del AO Característica de entrada-salida, margen dinámico y zonas de funcionamiento. Corrientes de polarización. Tensión de offset. Relación de rechazo al modo común (CMRR). Relación de rechazo a la alimentación (PSRR). Balance de errores. 2. Respuesta frecuencial y limitaciones en alterna del AO Función de transferencia, respuesta frecuencial y diagramas de Bode. Respuesta frecuencial del AO. Producto ganancia por ancho de banda. Tiempo de subida. Slew-rate."
+    },
+    {
+      "title": "Tema 3: Circuitos realimentados",
+      "description": "1. Realimentación Concepto de realimentación. Representación canónica. Flujograma del sistema realimentado canónico. Flujograma de circuitos con amplificadores operacionales. 2. Estabilidad en circuitos realimentados Concepto de estabilidad. Criterio de estabilidad de Routh. Lugar geométrico de las raíces (L.G.R.). Márgenes de estabilidad. Compensación frecuencial."
+    },
+    {
+      "title": "Tema 4: Funciones electrónicas analógicas",
+      "description": "1. Funciones lineales Convertidores I-V. Convertidores V-I. Amplificadores de corriente. Amplificadores diferenciales. Amplificadores de instrumentación. 2. Funciones no lineales Comparadores de tensión. Comparadores con histéresis. Rectificadores de precisión. Limitadores y recortadores de señal."
+    },
+    {
+      "title": "Tema 5: Generadores de señal",
+      "description": "1. Generadores de señal sinusoidal Condiciones necesarias para la oscilación. Condición de arranque y estabilización de amplitud. Oscilador en puente de Wien. Oscilador en cuadratura. 2. Generadores de relajación Astables. Monostables. Circuito integrado de temporización 555. Osciladores de onda cuadrada-triangular."
+    },
+    {
+      "title": "Tema 6: Conversión A/D i D/A",
+      "description": "1. Conexión entre el mundo analógico i el mundo digital 2. Convertidores D/A Especificaciones. Técnicas de conversión D/A. 3. Convertidores A/D Especificaciones. Muestreo y retención. Técnicas de conversión A/D."
+    },
+    {
+      "title": "Tema 7: Otros circuitos integrados analógicos",
+      "description": "1. Interruptores y multiplexores analógicos 2. Amplificadores logarítmicos 3. Multiplicadores analógicos 4. PLL"
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nExamen parcial de teoría a mitad de curso (EXPAR): 20%\nExamen final de teoría (EXFIN): 40%\nPrácticas de laboratorio (LAB): 20%\nExamen final de laboratorio (EXLAB): 20%\nLa nota final (NF) es la mayor de las dos cantidades:\nNF = 0,2*LAB + 0,2*EXLAB + 0,2*EXPAR + 0,4*EXFIN , o bien,\nNF = 0,2*LAB + 0,2*EXLAB + 0,6*EXFIN , si el resultado de esta expresión es mayor que la anterior.\nSolamente es reevaluable la parte de teoría de la asignatura. Las notas, tanto de las prácticas como del examen de laboratorio, se\nmantienen de la evaluación anterior.",
+  "bibliography": [
+    "- Franco, S. Diseño con amplificadores operacionales y circuitos integrados analógicos. México: McGraw-Hill, 2005. ISBN 9701045955.",
+    "Complementaria:",
+    "- Floyd, T.L.; Buchla, D. Fundamentals of analog circuits. 2nd ed. Upper Saddle River, N.J.: Prentice Hall, 2002. ISBN 0130606197.",
+    "- Fiore, J.M. Amplificadores operacionales y circuitos integrados lineales: teoría y aplicación. Madrid: Thomson, 2002. ISBN",
+    "8497320999."
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230915/circuitos-analogicos.pdf"
+}

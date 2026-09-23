@@ -1,0 +1,1273 @@
+# 230926 - Sistemas en Tiempo Real (RT)
+**Grado en Ingeniería Electrónica de Telecomunicación (GREELEC)**  
+*Escuela Técnica Superior de Ingeniería de Telecomunicación de Barcelona (ETSETB - UPC)*
+
+## 1. Ficha Técnica y Metadatos Oficiales
+- **Código UPC**: `230926`
+- **Acrónimo Oficial**: `RT`
+- **Semestre**: Q6 (Fase Troncal / Especialización)
+- **Créditos ECTS**: 6.0 ECTS (150)
+- **Departamento Responsable**: 710 - EEL / 701 - DAC
+- **Profesorado / Coordinación**: Otros:
+- **Guía Docente Oficial en PDF**: [230926_guia_docent.pdf](https://www.upc.edu/grau/guiadocent/pdf/esp/230926/sistemas-en-tiempo-real.pdf)
+
+## 2. Descripción General y Requisitos
+Conceptos de tiempo real estricto (hard) y suave (soft), sistemas operativos en tiempo real (RTOS: FreeRTOS, Zephyr), planificación de tareas periódicas y aperiódicas (Rate Monotonic RM, Earliest Deadline First EDF), análisis de tiempos de respuesta (RTA), sincronización y exclusión mutua (semáforos, mutexes, colas de mensajes), inversión de prioridades y protocolos de herencia y techo de prioridad (PCP), e interrupciones deterministas.
+
+## 3. Objetivos de Aprendizaje y Competencias
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- c
+- o
+- n
+- o
+- z
+- c
+- a
+-  
+- l
+- a
+-  
+- n
+- e
+- c
+- e
+- s
+- i
+- d
+- a
+- d
+-  
+- d
+- e
+-  
+- u
+- n
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+-  
+- r
+- e
+- a
+- l
+-  
+- a
+- s
+- í
+-  
+- c
+- o
+- m
+- o
+-  
+- d
+- e
+-  
+- e
+- n
+- u
+- m
+- e
+- r
+- a
+- r
+-  
+- l
+- o
+- s
+-  
+- d
+- i
+- f
+- e
+- r
+- e
+- n
+- t
+- e
+- s
+-  
+- t
+- i
+- p
+- o
+- s
+-  
+- d
+- e
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+- s
+-  
+- r
+- e
+- a
+- l
+- e
+- s
+-  
+- q
+- u
+- e
+-  
+- e
+- x
+- i
+- s
+- t
+- e
+- n
+- .
+- 
+
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- c
+- o
+- n
+- o
+- z
+- c
+- a
+-  
+- l
+- a
+-  
+- n
+- e
+- c
+- e
+- s
+- i
+- d
+- a
+- d
+-  
+- d
+- e
+-  
+- p
+- l
+- a
+- n
+- i
+- f
+- i
+- c
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- t
+- a
+- r
+- e
+- a
+- s
+-  
+- e
+- n
+-  
+- u
+- n
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+-  
+- d
+- e
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- r
+- e
+- a
+- l
+- .
+- 
+
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- s
+- e
+- a
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- c
+- o
+- n
+- s
+- t
+- r
+- u
+- i
+- r
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- s
+-  
+- c
+- o
+- n
+- c
+- u
+- r
+- r
+- e
+- n
+- t
+- e
+- s
+-  
+- s
+- i
+- m
+- p
+- l
+- e
+- s
+-  
+- c
+- o
+- r
+- r
+- e
+- c
+- t
+- a
+- s
+-  
+- e
+- v
+- i
+- t
+- a
+- n
+- d
+- o
+-  
+- d
+- e
+- a
+- d
+- l
+- o
+- c
+- k
+- s
+- ,
+-  
+- S
+- t
+- a
+- r
+- v
+- a
+- t
+- i
+- o
+- n
+- ,
+-  
+- a
+- s
+- í
+-  
+- c
+- o
+- m
+- o
+-  
+- d
+- e
+-  
+- r
+- e
+- s
+- o
+- l
+- v
+- e
+- r
+- 
+
+- m
+- e
+- d
+- i
+- a
+- n
+- t
+- e
+-  
+- d
+- i
+- f
+- e
+- r
+- e
+- n
+- t
+- e
+- s
+-  
+- e
+- s
+- t
+- r
+- a
+- t
+- e
+- g
+- i
+- a
+- s
+-  
+- l
+- o
+- s
+-  
+- p
+- r
+- o
+- b
+- l
+- e
+- m
+- a
+- s
+-  
+- p
+- o
+- t
+- e
+- n
+- c
+- i
+- a
+- l
+- e
+- s
+-  
+- d
+- e
+-  
+- s
+- i
+- n
+- c
+- r
+- o
+- n
+- i
+- z
+- a
+- c
+- i
+- ó
+- n
+-  
+- e
+- n
+- t
+- r
+- e
+-  
+- t
+- a
+- r
+- e
+- a
+- s
+-  
+- c
+- o
+- n
+- c
+- u
+- r
+- r
+- e
+- n
+- t
+- e
+- s
+-  
+- c
+- u
+- a
+- n
+- d
+- o
+-  
+- e
+- l
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+-  
+- d
+- i
+- s
+- p
+- o
+- n
+- e
+-  
+- d
+- e
+- 
+
+- m
+- e
+- m
+- o
+- r
+- i
+- a
+-  
+- c
+- o
+- m
+- p
+- a
+- r
+- t
+- i
+- d
+- a
+-  
+- y
+-  
+- q
+- u
+- e
+-  
+- c
+- u
+- m
+- p
+- l
+- a
+-  
+- l
+- o
+- s
+-  
+- r
+- e
+- q
+- u
+- i
+- s
+- i
+- t
+- o
+- s
+-  
+- p
+- a
+- r
+- a
+-  
+- s
+- e
+- r
+-  
+- u
+- n
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+-  
+- d
+- e
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- r
+- e
+- a
+- l
+- .
+- 
+
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- s
+- e
+- a
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- d
+- i
+- s
+- e
+- ñ
+- a
+- r
+-  
+- u
+- n
+- a
+-  
+- p
+- l
+- a
+- n
+- i
+- f
+- i
+- c
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- t
+- a
+- r
+- e
+- a
+- s
+-  
+- b
+- a
+- s
+- a
+- d
+- a
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- c
+- o
+- n
+- t
+- r
+- o
+- l
+-  
+- d
+- e
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- a
+- s
+- i
+- g
+- n
+- a
+- d
+- o
+-  
+- a
+-  
+- c
+- a
+- d
+- a
+-  
+- t
+- a
+- r
+- e
+- a
+-  
+- d
+- e
+-  
+- f
+- o
+- r
+- m
+- a
+- 
+
+- m
+- í
+- n
+- i
+- m
+- a
+- m
+- e
+- n
+- t
+- e
+-  
+- e
+- f
+- i
+- c
+- i
+- e
+- n
+- t
+- e
+-  
+- p
+- a
+- r
+- a
+-  
+- u
+- n
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+-  
+- d
+- e
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- r
+- e
+- a
+- l
+- .
+- 
+
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- s
+- e
+- a
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- d
+- i
+- s
+- e
+- ñ
+- a
+- r
+-  
+- u
+- n
+- a
+-  
+- p
+- l
+- a
+- n
+- i
+- f
+- i
+- c
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- t
+- a
+- r
+- e
+- a
+- s
+-  
+- b
+- a
+- s
+- a
+- d
+- a
+-  
+- e
+- n
+-  
+- p
+- r
+- i
+- o
+- r
+- i
+- d
+- a
+- d
+- e
+- s
+-  
+- p
+- a
+- r
+- a
+-  
+- t
+- a
+- r
+- e
+- a
+-  
+- d
+- e
+-  
+- f
+- o
+- r
+- m
+- a
+-  
+- m
+- í
+- n
+- i
+- m
+- a
+- m
+- e
+- n
+- t
+- e
+-  
+- e
+- f
+- i
+- c
+- i
+- e
+- n
+- t
+- e
+- 
+
+- p
+- a
+- r
+- a
+-  
+- u
+- n
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+-  
+- d
+- e
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- r
+- e
+- a
+- l
+- .
+- 
+
+- Q
+- u
+- e
+-  
+- e
+- l
+-  
+- a
+- l
+- u
+- m
+- n
+- o
+-  
+- s
+- e
+- a
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- c
+- o
+- n
+- s
+- t
+- r
+- u
+- i
+- r
+-  
+- p
+- r
+- o
+- g
+- r
+- a
+- m
+- a
+- s
+-  
+- c
+- o
+- n
+- c
+- u
+- r
+- r
+- e
+- n
+- t
+- e
+- s
+-  
+- c
+- o
+- r
+- r
+- e
+- c
+- t
+- a
+- s
+-  
+- c
+- u
+- a
+- n
+- d
+- o
+-  
+- s
+- u
+- s
+-  
+- t
+- a
+- r
+- e
+- a
+- s
+-  
+- s
+- e
+-  
+- c
+- o
+- m
+- u
+- n
+- i
+- c
+- a
+- n
+-  
+- a
+-  
+- t
+- r
+- a
+- v
+- é
+- s
+-  
+- d
+- e
+-  
+- p
+- a
+- s
+- o
+-  
+- d
+- e
+- 
+
+- m
+- e
+- n
+- s
+- a
+- j
+- e
+- s
+-  
+- s
+- o
+- b
+- r
+- e
+-  
+- m
+- e
+- m
+- o
+- r
+- i
+- a
+-  
+- d
+- i
+- s
+- t
+- r
+- i
+- b
+- u
+- í
+- d
+- a
+-  
+- y
+-  
+- q
+- u
+- e
+-  
+- c
+- u
+- m
+- p
+- l
+- a
+-  
+- l
+- o
+- s
+-  
+- r
+- e
+- q
+- u
+- i
+- s
+- i
+- t
+- o
+- s
+-  
+- d
+- e
+-  
+- u
+- n
+-  
+- s
+- i
+- s
+- t
+- e
+- m
+- a
+-  
+- e
+- n
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- r
+- e
+- a
+- l
+- .
+
+## 4. Temario y Unidades de Contenido
+- {'title': 'Contenido General', 'description': 'Introducció i conceptes bàsics Descripción: ¿Qué es un sistema en tiempo real? ¿Para qué RT? ¿Qué implica RT? RTOS Características de un sistema de tiempo real: determinismo, confiabilidad, control, tiempo de respuesta (deadline) Clasificación de sistemas de tiempo real según: Tiempo límite para cumplir una tarea: hard, soft, firm Escala de tiempo: basados en reloj: tareas periódicas basados en eventos: tareas aperiódicas interactivos: tareas esporádicas Procesamiento de los datos: sistemas centralizados y sistemas distribuidos Estrategia de planificación: sistemas estáticos y dinámicos Diseño del entorno para ejecutar el sistema: embedded (máquina dedicada) y no embedded (máquina de propósito general) Dedicación: 8h Grupo grande/Teoría: 3h Grupo pequeño/Laboratorio: 2h Aprendizaje autónomo: 3h Fecha: 06/09/2026 Página: 3 / 5 Gestión de tareas Descripción: Conceptos básicos Procesos y threads Necesidad de la planificación Concurrencia, estados de un proceso, multiprogramación, multiproceso, planificación (scheduling) Servicios básicos de gestión (creación, destrucción) gestión interna Vista general los algoritmos de planificación Dedicación: 16h Grupo grande/Teoría: 6h Grupo pequeño/Laboratorio: 4h Aprendizaje autónomo: 6h Comunicación y sincronización de tareas en memoria compartida Descripción: Necesidad de la sincronización y problemas potenciales (deadlock, Starvation, ...) Regiones críticas Espera activa Exclusión Mutua Semáforos Dedicación: 11h Grupo grande/Teoría: 3h Grupo pequeño/Laboratorio: 2h Aprendizaje autónomo: 6h Comunicación y sincronización de tareas en memoria distribuida Descripción: Signals Paso de mensajes Pipes Sockets Colas de mensajes Dedicación: 27h Grupo grande/Teoría: 9h Grupo pequeño/Laboratorio: 6h Aprendizaje autónomo: 12h Fecha: 06/09/2026 Página: 4 / 5 Algoritmos de planificación basados en tiempo Descripción: Definición y suposiciones Planificación estáticos y cíclica Planificación aperiódica (slack Stealing) Planificación esporádica Ventajas y desventajas de la planificación basada con tiempo Dedicación: 14h Grupo grande/Teoría: 6h Aprendizaje autónomo: 8h Algoritmos de planificación basados en prioridades Descripción: Asunción estática Prioridades fijas (rate-monotónico y deadline-monotónico) Prioridades dinámicas Algoritmo Earliest-Deadline-First Sistemas sobrecargados Ventajas y desventajas de la planificación basada en prioridades Dedicación: 23h Grupo grande/Teoría: 9h Aprendizaje autónomo: 14h'}
+
+## 5. Modelado Matemático y Fórmulas Clave (LaTeX)
+### 5.1 Test de Utilización de Liu & Layland para Rate Monotonic
+$$
+U = \sum_{i=1}^{n} \frac{C_i}{T_i} \le n (2^{1/n} - 1) \xrightarrow{n \to \infty} \ln 2 \approx 0.693
+$$
+
+### 5.2 Condición de Planificabilidad de EDF (Deadlines en Fin de Periodo)
+$$
+U = \sum_{i=1}^{n} \frac{C_i}{T_i} \le 1.0 \quad (100\%)
+$$
+
+### 5.3 Ecuación de Tiempo de Respuesta en el Peor Caso (WCRT)
+$$
+R_i^{(k+1)} = C_i + B_i + \sum_{j \in hp(i)} \left\lceil \frac{R_i^{(k)}}{T_j} \right\rceil C_j
+$$
+
+### 5.4 Utilización del Procesador
+$$
+U = \sum_{i=1}^{n} \frac{C_i}{T_i}
+$$
+
+### 5.5 Cota Superior de Inversión de Prioridad con PIP
+$$
+B_i \le \max_{j \in lp(i), k \in cs} \{ C_{j,k} \}
+$$
+
+## 6. Banco de Ensayos / Laboratorio Virtual
+```c
+// RT - Tarea Periodica con Sincronizacion Mutex en FreeRTOS
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
+SemaphoreHandle_t xMutex;
+void vTaskPeriodic(void *pvParameters) {
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    const TickType_t xFrequency = pdMS_TO_TICKS(100);
+    for (;;) {
+        vTaskDelayUntil(&xLastWakeTime, xFrequency);
+        if (xSemaphoreTake(xMutex, portMAX_DELAY) == pdTRUE) {
+            // Seccion critica protegida con herencia de prioridad
+            xSemaphoreGive(xMutex);
+        }
+    }
+}
+```
+
+## 7. Preguntas de Autoevaluación y Examen con Justificación Técnica
+#### Pregunta 1
+**¿En un sistema de tiempo real estricto (Hard Real-Time), el incumplimiento de un único plazo de ejecución (deadline) supone un fallo catastrófico del sistema?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. En sistemas críticos (aeroespacial, automoción, médico) la corrección temporal es tan vital como la lógica.
+
+#### Pregunta 2
+**¿El algoritmo Rate Monotonic (RM) asigna prioridades estáticas de forma inversamente proporcional al periodo de la tarea (menor periodo = mayor prioridad)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Algoritmo óptimo de prioridad estática para tareas periódicas independientes con deadlines implícitos.
+
+#### Pregunta 3
+**El algoritmo dinámico Earliest Deadline First (EDF) solo puede garantizar planificabilidad si la utilización total es menor al 69.3%.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. EDF puede alcanzar una utilización de hasta el 100% (U <= 1.0) para tareas con deadlines en fin de periodo.
+
+#### Pregunta 4
+**¿El fenómeno de inversión de prioridades ocurre cuando una tarea de alta prioridad queda bloqueada esperando un recurso retenido por una de baja prioridad y desaloja una de prioridad intermedia?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Problema clásico que afectó al Mars Pathfinder en 1997.
+
+#### Pregunta 5
+**¿El protocolo de herencia de prioridad (Priority Inheritance Protocol PIP) eleva temporalmente la prioridad de la tarea que posee el mutex a la prioridad de la tarea que lo reclama?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Evita que tareas intermedias no relacionadas retrasen la liberación del recurso crítico.
+
+#### Pregunta 6
+**La función 'vTaskDelayUntil()' en FreeRTOS sufre de acumulación de derivas temporales (drift) a lo largo del tiempo.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. 'vTaskDelayUntil' calcula el despertar de forma absoluta garantizando periodos exactos sin acumular jitter o deriva.
+
+#### Pregunta 7
+**¿El análisis de tiempo de respuesta (Response Time Analysis RTA) permite verificar la planificabilidad de un conjunto de tareas incluso si superan la cota de Liu & Layland?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. La cota de Liu & Layland es una condición suficiente pero no necesaria; el test RTA es exacto y necesario.
+
+#### Pregunta 8
+**¿Un semáforo binario utilizado para sincronización pura evento-a-tarea no debe incorporar herencia de prioridad, reservándose ésta para mutexes de exclusión mutua?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. En sincronización un hilo da la señal y otro la consume, no hay concepto de 'dueño' del recurso.
+
+#### Pregunta 9
+**El cambio de contexto (Context Switch) en un microcontrolador se realiza en exactamente cero ciclos de instrucción sin consumir tiempo alguno.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. Requiere apilar registros de la CPU en el stack, actualizar el puntero de pila y restaurar registros de la nueva tarea, consumiendo latencia determinista.
+
+#### Pregunta 10
+**¿El protocolo de techo de prioridad (Priority Ceiling Protocol PCP) previene los bloqueos mutuos (deadlocks) además de acotar la inversión de prioridad a como máximo una sección crítica?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Bloquea el acceso si la prioridad del proceso no supera los techos de los mutexes activos.
+
+#### Pregunta 11
+**¿El tiempo de ejecución en el peor caso (WCET) es la cota superior determinista del tiempo que tarda una tarea en completarse bajo cualquier circunstancia?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Parámetro de entrada fundamental para cualquier prueba de planificabilidad formal.
+
+#### Pregunta 12
+**¿Una cola de mensajes (Message Queue) en un RTOS proporciona transferencia segura de datos e hilos sincronizados entre tareas e interrupciones?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Mecanismo canónico de paso de mensajes con gestión de buffering interno.
+
+## 8. Sistema de Evaluación y Bibliografía Recomendada
+**Evaluación**: Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de
+evaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la
+Universidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en
+el estado provisional de "pendiente de evaluación" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo
+de acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.
+Evaluación continua (EC) = 50% Control + 50% Examen final
+Laboratorio (Lab): ejercicios evaluables
+Nota final (F): F = 0.6 x EC + 0.4 x Lab
+En el examen de reevaluación (ReAval) solo se reevaluarán los contenidos
+teóricos, por lo tanto, la nota final resultante de la reevaluación será:
+F = 0.6 x ReAval + 0.4 x Lab
+
+**Bibliografía de Referencia**:
+- - Burns, Alan; Wellings, Andrew J. Real-time systems and programming languages : Ada, Real-Time Java and C/Real-Time POSIX. 4th
+- ed. Harlow [etc.]: Addison-Wesley, 2009. ISBN 9780321417459.
+- Complementaria:
+- - Harder, D.W.; Zarnett, J.; Montaghami, V.; Giannikouris, A. A practical introduction to real-time systems for undergraduate
+- engineering [en línea]. Versió 0.2018.07.31. Canada: The authors, 2014 [Consulta: 19/02/2021]. Disponible a:

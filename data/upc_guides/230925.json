@@ -1,0 +1,41 @@
+{
+  "code": "230925",
+  "acronym": "IOT",
+  "title": "Internet de las Cosas",
+  "ects": 6.0,
+  "hours": 150,
+  "department": "744 - ENTEL - Departamento de Ingeniería Telemática.",
+  "responsible_professor": "Otros:",
+  "objectives": "El objetivo de esta asignatura es que los estudiantes de ingeniería electrónica dispongan de los conceptos básicos que permiten\nconectar de forma eficiente y segura los dispositivos electrónicos a través de diferentes redes de comunicaciones, especialmente bajo\nel paradigma de Internet de las Cosas. Para ello, durante la primera parte del curso se introducen los conceptos fundamentales de los\nsistemas de transmisión, redes de área local y redes IP, combinando las clases teóricas con ejercicios y prácticas de laboratorio. En la\nsegunda parte del curso, se abordan tecnologías más específicas de IoT y los protocolos de aplicación mas comúnmente utilizados. De\nesta forma, los estudiantes serán capaces de escribir aplicaciones para controlar dispositivos de forma remota, y comprenderán las\ninfraestructuras de comunicaciones que utilizan.",
+  "contents": [
+    {
+      "title": "Tema 1. Introducción a las redes telemáticas",
+      "description": "Multiplexación determinista y estadística. Clasificación de redes por topologías, cobertura y tecnología de conmutación. Arquitecturas de protocolos."
+    },
+    {
+      "title": "Tema 2. Enlace de datos.",
+      "description": "Control de enlace lógico: Entramado, control de flujo y control de errores. Control de acceso al medio: Sin contención y con contención."
+    },
+    {
+      "title": "Tema 3. Redes de área local.",
+      "description": "Redes cableadas: Ethernet (IEEE 802.3). Redes inalámbricas: WiFi (IEEE 802.11)."
+    },
+    {
+      "title": "Tema 4. Arquitectura de protocolos TCP/IP.",
+      "description": "Protocolos básicos de red (IP, ARP, ICMP). Protocolos de transporte (UDP, TCP). Ejemplos de protocolos de aplicación. Intranets y NAT."
+    },
+    {
+      "title": "Tema 5. Tecnologías y protocolos IoT.",
+      "description": "Redes inalámbricas de área personal de baja tasa (IEEE 802.15.4). Redes de área extendida de bajo consumo (LoRa, Sigfox, NBIoT). Protocolos de aplicación (CoAP, MQTT)."
+    }
+  ],
+  "evaluation": "Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de\nevaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la\nUniversidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en\nel estado provisional de \"pendiente de evaluación\" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo\nde acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.\nEsta asignatura se evalúa de forma continua de la siguiente manera:\n- Teoría (60% nota de la asignatura): dos controles parciales, cada uno con peso del 50% de la teoría.\n- Laboratorio (40% nota de la asignatura): pruebas de corta duración (85% de laboratorio) y memorias de prácticas (15% de\nlaboratorio).\n- La asistencia a clase de laboratorio ha de ser del 100% para poder aprobar la asignatura, excepto casos justificados por escrito.\nEn caso de no aprobar la asignatura en la convocatoria ordinaria, se podrá ir al examen de reevaluación.\nEn el examen de reevaluación se evalúa la parte de teoría (60%) de todo el temario de la asignatura.\nEl laboratorio (40%) no es reevalúa y, por tanto, se conserva la nota obtenida en la convocatoria ordinaria.",
+  "bibliography": [
+    "- Forouzan, B. A. Data communications and networking with TCP/IP protocol suite. 6th ed. New York: McGraw-Hill, 2022. ISBN",
+    "9781260597820.",
+    "Complementaria:",
+    "- LoRa Alliance Technical Committee. LoRaWAN Specification [en línea]. 1.0.3. 2018 [Consulta: 10/07/2019]. Disponible a:",
+    "https://lora-alliance.org/resource-hub/lorawanr-specification-v103."
+  ],
+  "pdf_url": "https://www.upc.edu/grau/guiadocent/pdf/esp/230925/internet-de-las-cosas.pdf"
+}

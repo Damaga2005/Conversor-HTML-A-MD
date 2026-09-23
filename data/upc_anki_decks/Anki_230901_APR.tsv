@@ -1,0 +1,12 @@
+[APR] ¿La búsqueda binaria sobre un array ordenado de N elementos tiene complejidad O(log N)?	<b>Verdadero (V)</b><br><br><i>Verdadero. En cada iteración el espacio de búsqueda se reduce a la mitad.</i>
+[APR] ¿El operador '&' en C obtiene la dirección de memoria de una variable?	<b>Verdadero (V)</b><br><br><i>Verdadero. Es el operador address-of.</i>
+[APR] El algoritmo de ordenación Bubble Sort tiene complejidad en el mejor caso O(1).	<b>Falso (F)</b><br><br><i>Falso. Con optimización requiere O(N) para verificar que ya está ordenado.</i>
+[APR] ¿El paso de parámetros por valor en C crea una copia local que no modifica la variable llamante?	<b>Verdadero (V)</b><br><br><i>Verdadero. Para modificar la variable externa debe pasarse un puntero a su dirección.</i>
+[APR] Si un puntero a int (4 bytes) apunta a 0x2000, p + 2 apunta a la dirección 0x2002.	<b>Falso (F)</b><br><br><i>Falso. La aritmética de punteros escala por el tamaño del tipo: 0x2000 + 2*4 = 0x2008.</i>
+[APR] ¿La función 'malloc()' reserva memoria contigua en el segmento Heap?	<b>Verdadero (V)</b><br><br><i>Verdadero. El montículo (heap) gestiona memoria dinámica hasta la invocación de free().</i>
+[APR] ¿Una función recursiva sin caso base provoca un desbordamiento de pila (stack overflow)?	<b>Verdadero (V)</b><br><br><i>Verdadero. Se acumulan marcos de activación hasta agotar el espacio del stack.</i>
+[APR] En el estándar C, el tipo 'char' tiene un tamaño estrictamente dependiente de la arquitectura que puede ser 4 bytes.	<b>Falso (F)</b><br><br><i>Falso. sizeof(char) es siempre 1 byte por definición del estándar.</i>
+[APR] ¿Las cadenas de texto en C deben finalizar obligatoriamente con el carácter nulo '\0'?	<b>Verdadero (V)</b><br><br><i>Verdadero. Sirve como centinela de fin de cadena para todas las funciones estándar de <string.h>.</i>
+[APR] ¿Un algoritmo con complejidad O(N log N) es asintóticamente más rápido que uno O(N^2) para N grande?	<b>Verdadero (V)</b><br><br><i>Verdadero. La tasa de crecimiento de N log N es muy inferior a la cuadrática.</i>
+[APR] El operador 'sizeof' en C se evalúa exclusivamente durante el tiempo de ejecución (runtime).	<b>Falso (F)</b><br><br><i>Falso. Es un operador evaluado en tiempo de compilación (salvo para VLA en C99).</i>
+[APR] ¿El bucle 'do-while' garantiza que su cuerpo de instrucciones se ejecute al menos una vez?	<b>Verdadero (V)</b><br><br><i>Verdadero. La condición booleana se evalúa al final de la iteración.</i>

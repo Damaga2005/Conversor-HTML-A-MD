@@ -1,0 +1,1733 @@
+# 230907 - Electromagnetismo (EMG)
+**Grado en Ingeniería Electrónica de Telecomunicación (GREELEC)**  
+*Escuela Técnica Superior de Ingeniería de Telecomunicación de Barcelona (ETSETB - UPC)*
+
+## 1. Ficha Técnica y Metadatos Oficiales
+- **Código UPC**: `230907`
+- **Acrónimo Oficial**: `EMG`
+- **Semestre**: Q2 (Fase Inicial)
+- **Créditos ECTS**: 6.0 ECTS (150)
+- **Departamento Responsable**: 748 - FIS - Departamento de Física
+- **Profesorado / Coordinación**: Otros:
+- **Guía Docente Oficial en PDF**: [230907_guia_docent.pdf](https://www.upc.edu/grau/guiadocent/pdf/esp/230907/electromagnetismo.pdf)
+
+## 2. Descripción General y Requisitos
+Ecuaciones de Maxwell en forma integral y diferencial, electrostática y magnetostática en el vacío y medios materiales, ley de Faraday de inducción, ley de Ampère-Maxwell, corriente de desplazamiento, y ondas electromagnéticas planas en medios dieléctricos y conductores.
+
+## 3. Objetivos de Aprendizaje y Competencias
+- E
+- n
+- t
+- e
+- n
+- d
+- e
+- r
+-  
+- l
+- o
+- s
+-  
+- p
+- r
+- i
+- n
+- c
+- i
+- p
+- i
+- o
+- s
+-  
+- y
+-  
+- l
+- e
+- y
+- e
+- s
+-  
+- f
+- u
+- n
+- d
+- a
+- m
+- e
+- n
+- t
+- a
+- l
+- e
+- s
+-  
+- d
+- e
+- l
+-  
+- E
+- l
+- e
+- c
+- t
+- r
+- o
+- m
+- a
+- g
+- n
+- e
+- t
+- i
+- s
+- m
+- o
+-  
+- y
+-  
+- a
+- d
+- q
+- u
+- i
+- r
+- i
+- r
+-  
+- l
+- a
+-  
+- h
+- a
+- b
+- i
+- l
+- i
+- d
+- a
+- d
+-  
+- d
+- e
+-  
+- r
+- e
+- s
+- o
+- l
+- v
+- e
+- r
+-  
+- p
+- r
+- o
+- b
+- l
+- e
+- m
+- a
+- s
+-  
+- r
+- e
+- l
+- a
+- c
+- i
+- o
+- n
+- a
+- d
+- o
+- s
+-  
+- c
+- o
+- n
+- 
+
+- e
+- s
+- t
+- a
+- s
+-  
+- l
+- e
+- y
+- e
+- s
+- ,
+-  
+- t
+- a
+- n
+- t
+- o
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- v
+- a
+- c
+- i
+- o
+-  
+- c
+- o
+- m
+- o
+-  
+- e
+- n
+-  
+- l
+- o
+- s
+-  
+- m
+- e
+- d
+- i
+- o
+- s
+-  
+- m
+- a
+- t
+- e
+- r
+- i
+- a
+- l
+- e
+- s
+- .
+-  
+- F
+- o
+- r
+- m
+- u
+- l
+- a
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- l
+- a
+- s
+-  
+- l
+- e
+- y
+- e
+- s
+-  
+- e
+- n
+-  
+- f
+- o
+- r
+- m
+- a
+-  
+- i
+- n
+- t
+- e
+- g
+- r
+- a
+- l
+-  
+- y
+-  
+- d
+- i
+- f
+- e
+- r
+- e
+- n
+- c
+- i
+- a
+- l
+-  
+- (
+- e
+- c
+- u
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- d
+- e
+- 
+
+- M
+- a
+- x
+- w
+- e
+- l
+- l
+- )
+- .
+-  
+- S
+- e
+-  
+- p
+- r
+- e
+- t
+- e
+- n
+- d
+- e
+-  
+- a
+- l
+- c
+- a
+- n
+- z
+- a
+- r
+-  
+- e
+- l
+-  
+- n
+- i
+- v
+- e
+- l
+-  
+- n
+- e
+- c
+- e
+- s
+- a
+- r
+- i
+- o
+-  
+- p
+- a
+- r
+- a
+-  
+- p
+- o
+- d
+- e
+- r
+-  
+- c
+- u
+- r
+- s
+- a
+- r
+-  
+- c
+- o
+- n
+-  
+- g
+- a
+- r
+- a
+- n
+- t
+- í
+- a
+-  
+- d
+- e
+-  
+- é
+- x
+- i
+- t
+- o
+-  
+- a
+- s
+- i
+- g
+- n
+- a
+- t
+- u
+- r
+- a
+- s
+-  
+- d
+- e
+-  
+- c
+- u
+- r
+- s
+- o
+- s
+-  
+- s
+- u
+- p
+- e
+- r
+- i
+- o
+- r
+- e
+- s
+- .
+- 
+
+- E
+- n
+-  
+- c
+- o
+- n
+- c
+- r
+- e
+- t
+- o
+-  
+- s
+- e
+-  
+- t
+- r
+- a
+- c
+- t
+- a
+-  
+- d
+- e
+-  
+- q
+- u
+- e
+-  
+- e
+- l
+-  
+- e
+- s
+- t
+- u
+- d
+- i
+- a
+- n
+- t
+- e
+-  
+- f
+- i
+- n
+- a
+- l
+- m
+- e
+- n
+- t
+- e
+- :
+- 
+
+- -
+-  
+- C
+- o
+- m
+- p
+- r
+- e
+- n
+- d
+- a
+-  
+- y
+-  
+- d
+- o
+- m
+- i
+- n
+- e
+-  
+- l
+- o
+- s
+-  
+- c
+- o
+- n
+- c
+- e
+- p
+- t
+- o
+- s
+-  
+- b
+- á
+- s
+- i
+- c
+- o
+- s
+-  
+- r
+- e
+- l
+- a
+- c
+- i
+- o
+- n
+- a
+- d
+- o
+- s
+-  
+- c
+- o
+- n
+-  
+- l
+- a
+- s
+-  
+- l
+- e
+- y
+- e
+- s
+-  
+- g
+- e
+- n
+- e
+- r
+- a
+- l
+- e
+- s
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- c
+- a
+- m
+- p
+- o
+- s
+-  
+- e
+- l
+- e
+- c
+- t
+- r
+- o
+- m
+- a
+- g
+- n
+- é
+- t
+- i
+- c
+- o
+- s
+- .
+- 
+
+- -
+-  
+- S
+- e
+- p
+- a
+-  
+- a
+- p
+- l
+- i
+- c
+- a
+- r
+-  
+- l
+- o
+- s
+-  
+- p
+- r
+- i
+- n
+- c
+- i
+- p
+- i
+- o
+- s
+-  
+- f
+- í
+- s
+- i
+- c
+- o
+- s
+-  
+- b
+- á
+- s
+- i
+- c
+- o
+- s
+-  
+- a
+-  
+- l
+- a
+-  
+- r
+- e
+- s
+- o
+- l
+- u
+- c
+- i
+- ó
+- n
+-  
+- d
+- e
+-  
+- p
+- r
+- o
+- b
+- l
+- e
+- m
+- a
+- s
+-  
+- p
+- r
+- o
+- p
+- i
+- o
+- s
+-  
+- d
+- e
+-  
+- l
+- a
+-  
+- i
+- n
+- g
+- e
+- n
+- i
+- e
+- r
+- í
+- a
+-  
+- y
+-  
+- l
+- a
+-  
+- f
+- í
+- s
+- i
+- c
+- a
+- .
+- 
+
+- -
+-  
+- P
+- l
+- a
+- n
+- t
+- e
+- e
+-  
+- l
+- o
+- s
+-  
+- p
+- r
+- o
+- b
+- l
+- e
+- m
+- a
+- s
+-  
+- c
+- o
+- r
+- r
+- e
+- c
+- t
+- a
+- m
+- e
+- n
+- t
+- e
+-  
+- a
+-  
+- p
+- a
+- r
+- t
+- i
+- r
+-  
+- d
+- e
+- l
+-  
+- e
+- n
+- u
+- n
+- c
+- i
+- a
+- d
+- o
+-  
+- p
+- r
+- o
+- p
+- u
+- e
+- s
+- t
+- o
+-  
+- i
+-  
+- i
+- d
+- e
+- n
+- t
+- i
+- f
+- i
+- q
+- u
+- e
+-  
+- s
+- u
+- s
+-  
+- o
+- p
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- d
+- e
+-  
+- r
+- e
+- s
+- o
+- l
+- u
+- c
+- i
+- ó
+- n
+- .
+-  
+- A
+- p
+- l
+- i
+- q
+- u
+- e
+-  
+- e
+- l
+-  
+- m
+- é
+- t
+- o
+- d
+- o
+-  
+- d
+- e
+- 
+
+- r
+- e
+- s
+- o
+- l
+- u
+- c
+- i
+- ó
+- n
+-  
+- a
+- d
+- e
+- c
+- u
+- a
+- d
+- o
+-  
+- y
+-  
+- r
+- e
+- c
+- t
+- i
+- f
+- i
+- q
+- u
+- e
+-  
+- s
+- i
+-  
+- f
+- u
+- e
+- r
+- a
+-  
+- n
+- e
+- c
+- e
+- s
+- a
+- r
+- i
+- o
+- .
+- 
+
+- -
+-  
+- S
+- e
+- a
+-  
+- c
+- a
+- p
+- a
+- z
+-  
+- d
+- e
+-  
+- m
+- a
+- n
+- e
+- j
+- a
+- r
+-  
+- b
+- i
+- b
+- l
+- i
+- o
+- g
+- r
+- a
+- f
+- í
+- a
+-  
+- e
+- n
+-  
+- i
+- n
+- g
+- l
+- é
+- s
+- .
+- 
+
+- -
+-  
+- D
+- o
+- m
+- i
+- n
+- e
+-  
+- l
+- a
+-  
+- b
+- ú
+- s
+- q
+- u
+- e
+- d
+- a
+-  
+- d
+- e
+-  
+- i
+- n
+- f
+- o
+- r
+- m
+- a
+- c
+- i
+- ó
+- n
+-  
+- e
+- n
+-  
+- r
+- e
+- c
+- u
+- r
+- s
+- o
+- s
+-  
+- o
+- n
+- -
+- l
+- i
+- n
+- e
+-  
+- e
+- n
+-  
+- i
+- n
+- g
+- l
+- é
+- s
+- .
+- 
+
+- -
+-  
+- I
+- d
+- e
+- n
+- t
+- i
+- f
+- i
+- q
+- u
+- e
+-  
+- l
+- o
+- s
+-  
+- o
+- b
+- j
+- e
+- t
+- i
+- v
+- o
+- s
+-  
+- d
+- e
+-  
+- u
+- n
+-  
+- t
+- r
+- a
+- b
+- a
+- j
+- o
+-  
+- d
+- e
+-  
+- g
+- r
+- u
+- p
+- o
+-  
+- y
+-  
+- p
+- u
+- e
+- d
+- a
+-  
+- e
+- l
+- a
+- b
+- o
+- r
+- a
+- r
+-  
+- u
+- n
+-  
+- p
+- l
+- a
+- n
+-  
+- d
+- e
+-  
+- t
+- r
+- a
+- b
+- a
+- j
+- o
+-  
+- p
+- a
+- r
+- a
+-  
+- a
+- s
+- u
+- m
+- i
+- r
+- l
+- o
+- s
+- .
+-  
+- I
+- d
+- e
+- n
+- t
+- i
+- f
+- i
+- q
+- u
+- e
+-  
+- l
+- a
+- s
+- 
+
+- r
+- e
+- s
+- p
+- o
+- n
+- s
+- a
+- b
+- i
+- l
+- i
+- d
+- a
+- d
+- e
+- s
+-  
+- d
+- e
+-  
+- c
+- a
+- d
+- a
+-  
+- c
+- o
+- m
+- p
+- o
+- n
+- e
+- n
+- t
+- e
+-  
+- d
+- e
+- l
+-  
+- g
+- r
+- u
+- p
+- o
+-  
+- y
+-  
+- a
+- s
+- u
+- m
+- a
+-  
+- e
+- l
+-  
+- c
+- o
+- m
+- p
+- r
+- o
+- m
+- i
+- s
+- o
+-  
+- d
+- e
+-  
+- l
+- a
+-  
+- t
+- a
+- r
+- e
+- a
+-  
+- a
+- s
+- i
+- g
+- n
+- a
+- d
+- a
+- .
+- 
+
+- -
+-  
+- T
+- e
+- r
+- m
+- i
+- n
+- e
+-  
+- l
+- a
+- s
+-  
+- t
+- a
+- r
+- e
+- a
+- s
+-  
+- e
+- n
+- c
+- o
+- m
+- e
+- n
+- d
+- a
+- d
+- a
+- s
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- t
+- i
+- e
+- m
+- p
+- o
+-  
+- p
+- r
+- e
+- v
+- i
+- s
+- t
+- o
+- ,
+-  
+- d
+- e
+-  
+- a
+- c
+- u
+- e
+- r
+- d
+- o
+-  
+- c
+- o
+- n
+-  
+- l
+- a
+- s
+-  
+- p
+- a
+- u
+- t
+- a
+- s
+-  
+- m
+- a
+- r
+- c
+- a
+- d
+- a
+- s
+-  
+- p
+- o
+- r
+-  
+- e
+- l
+-  
+- p
+- r
+- o
+- f
+- e
+- s
+- o
+- r
+-  
+- o
+-  
+- t
+- u
+- t
+- o
+- r
+- .
+-  
+- I
+- d
+- e
+- n
+- t
+- i
+- f
+- i
+- q
+- u
+- e
+-  
+- e
+- l
+- 
+
+- p
+- r
+- o
+- g
+- r
+- e
+- s
+- o
+-  
+- y
+-  
+- e
+- l
+-  
+- g
+- r
+- a
+- d
+- o
+-  
+- d
+- e
+-  
+- c
+- u
+- m
+- p
+- l
+- i
+- m
+- i
+- e
+- n
+- t
+- o
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- o
+- b
+- j
+- e
+- t
+- i
+- v
+- o
+- s
+-  
+- d
+- e
+- l
+-  
+- a
+- p
+- r
+- e
+- n
+- d
+- i
+- z
+- a
+- j
+- e
+- .
+- 
+
+- -
+-  
+- C
+- o
+- n
+- o
+- z
+- c
+- a
+-  
+- y
+-  
+- u
+- t
+- i
+- l
+- i
+- c
+- e
+-  
+- c
+- o
+- r
+- r
+- e
+- c
+- t
+- a
+- m
+- e
+- n
+- t
+- e
+-  
+- l
+- a
+- s
+-  
+- h
+- e
+- r
+- r
+- a
+- m
+- i
+- e
+- n
+- t
+- a
+- s
+- ,
+-  
+- i
+- n
+- s
+- t
+- r
+- u
+- m
+- e
+- n
+- t
+- o
+- s
+-  
+- y
+-  
+- a
+- p
+- l
+- i
+- c
+- a
+- c
+- i
+- o
+- n
+- e
+- s
+-  
+- d
+- e
+-  
+- s
+- o
+- f
+- t
+- w
+- a
+- r
+- e
+-  
+- d
+- i
+- s
+- p
+- o
+- n
+- i
+- b
+- l
+- e
+- s
+-  
+- e
+- n
+-  
+- e
+- l
+-  
+- l
+- a
+- b
+- o
+- r
+- a
+- t
+- o
+- r
+- i
+- o
+- y
+-  
+- r
+- e
+- a
+- l
+- i
+- c
+- e
+- 
+
+- c
+- o
+- r
+- r
+- e
+- c
+- t
+- a
+- m
+- e
+- n
+- t
+- e
+-  
+- e
+- l
+-  
+- a
+- n
+- á
+- l
+- i
+- s
+- i
+- s
+-  
+- d
+- e
+-  
+- l
+- o
+- s
+-  
+- d
+- a
+- t
+- o
+- s
+-  
+- o
+- b
+- t
+- e
+- n
+- i
+- d
+- o
+- s
+- .
+
+## 4. Temario y Unidades de Contenido
+- {'title': 'TEMA 0: Introducción', 'description': "Se recuerdan los contenidos de cálculo necesarios para seguir la asignatura. En particular se revisan los conceptos de cálculo de flujo y circulación de campos vectoriales. Se introducen conceptos básicos de cálculo de errores de medidas experimentales. - Campos escalares y vectoriales - Sistemas de coordenadas - Flujo y circulación de campos de vectores - Cálculo d'errores"}
+- {'title': 'TEMA 2: Teorías de la conducción', 'description': 'Se definen los conceptos generales de transporte de carga, densidad de corriente superficial i de volumen, así como la intensidad de la corriente. Después de formular el principio de conservación de la carga se estudiarán las propiedades de los conductores óhmicos i se definirán la conductividad i resisténcia eléctricas. La ley de Ohm se justifica a partir del modelo clásico de electrones libres. Se explicarán las limitaciones de ésta teoria i se introducirá la estructura atómica i brevemente la teoría de bandas. - Transporte de carga, intensidad y densidad de corriente - Principio de conservación de la carga. Ecuación de continuidad - Teoria clásica de la conducción - Ley de Ohm y conductividad - Disipación de energía en los conductores - Estructura del atomo. Semiconductores'}
+- {'title': 'TEMA 3: Campo magnético independiente del tiempo', 'description': 'Se introduce el concepto de campo magnético independiente del tiempo mediante la fuerza de Lorentz. Se estudian los movimientos de cargas en presencia de campos estacionarios i algunas de las aplicaciones más importantes, tales com el ciclotrón o la sonda Hall. También se estudian los efectos de los campos magnéticos (fuerzas y momentos) sobre los conductores recorridos por corrientes. El estudio de la generación de campos magnéticos se hace introduciendo la lei de Biot i Savart i de Ampère, i finalmente se define la energia magnética. - Definición operacional de campo magnético. Fuerza de Lorentz - Movimento de cargas en el interior de campos magnéticos. Aplicaciones - Efecto de un campo magnético sobre una corriente. Fuerzas y momentos magnéticos. Dipolo magnético - Fuerzas entre corrientes - Campo magnético creado por una corriente: ley de Biot-Savart - Ley de Ampère. Aplicación al cálculo de campos magnéticos - Energía magnética'}
+- {'title': 'TEMA 4: Leyes fundamentales del electromagnetismo en forma integral', 'description': 'En este tema se estudia la generación de campo eléctrico i magnético debido a las variaciones de flujo de campo magnético i eléctrico con el tiempo, o bien por las variaciones temporales de los propios campos. Para ello se revisan las leyes de Gauss ya estudiadas i se formulan las leyes integrales de Faraday-Lenz y Ampère-Maxwell i se estudian algunas aplicaciones del fenómeno de inducción electromagnética. También se estudia el principio de conservación de la energia electromagnética, introduciendo el vector de Poynting y aprovechando que las diferentes formas de energía ya se han ido estudiando a lo largo del curso. - Ley de Gauss de los campos eléctrico y magnético - Ley de Faraday-Lenz. Inducción mútua y autoinducción. Inductores y transformadores. - Corrientes de desplazamiento. Ley de Ampère-Maxwell - Teorema de Poynting'}
+- {'title': 'TEMA 5: Equaciones de Maxwell en el vacio', 'description': 'Se recuerda el significado de los operadores diferenciales divergencia i rotacional de un campo de vectores i los teoremas de Gauss y Stokes. Aplicándolos se obtienen las ecuaciones fundamentales del Electromagnetismo en forma diferencial, és decir las equaciones de Maxwell en el vacio. - Divergencia i rotacional de un campo de vectores. Teoremas de Gauss y Stokes. - Forma diferencial de las ecuaciones fundamentales - Ecuacions de Maxwell'}
+- {'title': 'TEMA 6: Campo eléctrico en medios dieléctricos', 'description': 'Se comienza por describir el medio dieléctrico a nivel microscópico para entender el comportamiento eléctrico de estos materiales. Se introduce el concepto de polarización. Se explica la formación de densidades de polarización, como éstas modifican el campo eléctrico y la necesidad de modificar la lei de Gauss introduciendo el vector desplazamiento para cerrar el problema. A continuación se introduce la relación vector polarización-vector campo eléctrico para medios lineales i la susceptibilidad i permitividad eléctricas del medio. Finalmente se explican las condiciones de contorno del campo eléctrico en cambios de medio. - Modelo microscópic: dipolos permanentes e inducidos. Polaritzación. Cargas libres y ligadas - Ley de Gauss en dieléctricos. Vector desplazamiento eléctrico. - Medios lineales. Susceptibilidad y permitividad eléctricas - Ecuaciones de Poisson y Laplace en medios lineales homogeneos e isótropos - Condiciones de contorno en la superficie de separación de dos medios dieléctricos - Energía eléctrica'}
+- {'title': 'TEMA 7: Camp magnético en medis materiales', 'description': 'Se empieza describiendo el medio magnético a nivel microscópico para entender el comportamiento magnético de estos materiales. Se introduce el concepto de imantación, como las corrientes de imantación modifican el campo magnético y la necesidad de reformular la ley de Ampère-Maxwell, introduciendo el vector campo magnético H. Se describen los tipos de materiales magnéticos atendiendo a la relación vector imantación-vector campo magnético i se introducen la susceptibilidad y la permeabilidad magnéticas. Se explican las condiciones de contorno en la superficie de separación de dos medios magnéticos y finalmente se generalizan las leyes fundamentales, tanto en forma integral como diferencial. También se generaliza el teorema de Poynting. - Momentos magnéticos atómicos. Imantación magnética. Magnetón de Bohr - Ley de Ampère-Maxwell. Vector campo magnético H. - Medios lineales y nolineales. Susceptibilidad y permeabilidad magnética. Ciclo de histéresis - Condiciones de contorno en la superficie de separación de dos medios magnéticos. - Leyes de Maxwell en medios materiales - Energía magnética. Teorema de Poynting'}
+
+## 5. Modelado Matemático y Fórmulas Clave (LaTeX)
+### 5.1 Ecuaciones de Maxwell (Forma Diferencial)
+$$
+\nabla \cdot \vec{D} = \rho_v, \quad \nabla \cdot \vec{B} = 0, \quad \nabla \times \vec{E} = -\frac{\partial \vec{B}}{\partial t}, \quad \nabla \times \vec{H} = \vec{J} + \frac{\partial \vec{D}}{\partial t}
+$$
+
+### 5.2 Vector de Poynting
+$$
+\vec{S} = \vec{E} \times \vec{H} \quad [\text{W/m}^2]
+$$
+
+### 5.3 Velocidad de Propagación en Medios Dieléctricos
+$$
+v_p = \frac{1}{\sqrt{\mu \varepsilon}} = \frac{c}{\sqrt{\mu_r \varepsilon_r}}
+$$
+
+### 5.4 Impedancia Característica del Medio
+$$
+\eta = \sqrt{\frac{\mu}{\varepsilon}} \approx 377\,\Omega \text{ en el vacío}
+$$
+
+### 5.5 Profundidad de Penetración (Skin Depth)
+$$
+\delta = \sqrt{\frac{2}{\omega \mu \sigma}} = \frac{1}{\sqrt{\pi f \mu \sigma}}
+$$
+
+## 6. Banco de Ensayos / Laboratorio Virtual
+```spice
+* EMG - Linea de Transmision Coaxial sin Perdidas
+Tline in 0 out 0 Z0=50 TD=5ns
+Vin in 0 PULSE(0 5 0 100p 100p 10n 50n)
+Rgen in in2 50
+RL out 0 50
+.tran 50p 30n
+.end
+```
+
+## 7. Preguntas de Autoevaluación y Examen con Justificación Técnica
+#### Pregunta 1
+**¿La ley de Gauss para el campo magnético (div B = 0) implica la no existencia de monopolos magnéticos aislados?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Las líneas de campo B son siempre cerradas.
+
+#### Pregunta 2
+**¿La corriente de desplazamiento de Maxwell (dD/dt) permite la propagación de ondas EM a través del vacío?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Garantiza la continuidad de la corriente en condensadores y origina el campo magnético variable en ondas EM.
+
+#### Pregunta 3
+**¿El vector de Poynting S = E x H representa la densidad superficial de flujo de potencia electromagnética en W/m^2?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Dirección y sentido de la propagación energética.
+
+#### Pregunta 4
+**La velocidad de una onda electromagnética en un medio con eps_r = 4 es el doble de la velocidad en el vacío.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. vp = c / sqrt(eps_r) = c / 2 (la velocidad se reduce a la mitad).
+
+#### Pregunta 5
+**¿La impedancia de onda intrínseca del vacío es de aproximadamente 377 ohms (120*pi)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. eta0 = sqrt(mu0 / eps0) approx 376.73 ohms.
+
+#### Pregunta 6
+**¿El efecto pelicular (skin effect) provoca que las corrientes de alta frecuencia circulen confinadas cerca de la superficie del conductor?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. La densidad de corriente decae exponencialmente con la profundidad delta.
+
+#### Pregunta 7
+**La ley de Faraday establece que una fem inducida se opone siempre a la variación del flujo magnético que la produce.**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Expresado por el signo negativo de la ley de Lenz: fem = -dPhi/dt.
+
+#### Pregunta 8
+**En una onda EM plana TEM en el vacío, los campos E y H son paralelos entre sí y a la dirección de propagación.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. Son perpendiculares entre sí y perpendiculares a la dirección de propagación.
+
+#### Pregunta 9
+**¿La profundidad de penetración delta disminuye a medida que aumenta la frecuencia de la señal?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. delta es inversamente proporcional a sqrt(f).
+
+#### Pregunta 10
+**¿La fuerza de Lorentz total sobre una carga q es F = q * (E + v x B)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Combina la fuerza electrostática y magnética.
+
+#### Pregunta 11
+**Un dieléctrico perfecto sin pérdidas disipa energía electromagnética en forma de calor.**
+- **Respuesta**: `[F]` (Falso)
+- **Justificación Teórica**: Falso. En un dieléctrico perfecto la conductividad sigma = 0 y la permitividad es puramente real, sin pérdidas disipativas.
+
+#### Pregunta 12
+**¿El campo electrostático satisface rot(E) = 0, lo que permite definir un potencial escalar V tal que E = -grad(V)?**
+- **Respuesta**: `[V]` (Verdadero)
+- **Justificación Teórica**: Verdadero. Condición de campo conservativo.
+
+## 8. Sistema de Evaluación y Bibliografía Recomendada
+**Evaluación**: Cualquier acto de fraude académico, plagio o uso o mera tenencia al alcance de medios no autorizados en cualquier actividad de
+evaluación comportará la calificación de cero (0) en la prueba o entrega afectada. Además, de acuerdo con la normativa de la
+Universidad, la posible derivación de los hechos para la apertura de un expediente disciplinario implicará que la asignatura quede en
+el estado provisional de "pendiente de evaluación" hasta la resolución del expediente. La gestión de estas incidencias se lleva a cabo
+de acuerdo con el Marco de actuación para la integridad académica en la evaluación de la UPC.
+- Evaluación del trabajo experimental (TE) 15% de la nota final).
+El 60% de esta nota proviene de la evaluación de las prácticas realizadas y el 40% restante del examen final de prácticas que será
+individual.
+- Evaluación continuada (C): puede representar el 25% de la nota final.
+Proviene de la media ponderada de 1 o 2 exámenes parciales (dependiendo de la evolución del curso).
+- Examen final (F): Puede representar el 60% o el 85% de la nota final, dependiendo de la nota de la evaluación continuada. Se trata
+de una prueba final de problemas y teoría si se
+considerase conveniente.
+- La nota Final se evalua como 15% del TE+ máximo (25% C+60% F ó 85% F)
+- La asignatura tiene re-evaluación, salvo la parte del laboratorio para la que se mantiene la nota del quatrimestre
+- Examen de re-evaluación (EA) que será tipo test.
+- La nota final se evalua: 15% del TE+ 85% EA. La nota TE es la que se obtuvo al cursar la asignatura.
+NORMAS PARA LA REALIZACIÓN DE LAS PRUEBAS.
+- En cualquier prueba puntuable no se pueden tener ni móviles ni cualquier otro aparato electrónico encendidos, ni utilizar
+calculadoras programables.
+- No se puede salir del aula durante las pruebas (salvo por enfermedad u otra causa de fuerza mayor)
+- (Examen Final) El aula se publicará en la plataforma Atenea.
+
+**Bibliografía de Referencia**:
+- - Tipler, P.A.; Mosca, G. Física para la ciencia y la tecnología [en línea]. 6a ed. Barcelona: Reverté, 2010 [Consulta: 27/04/2022].
+- D i s p o n i b l e
+- https://www-ingebook-com.recursos.biblioteca.upc.edu/ib/NPcd/IB_BooksVis?cod_primaria=1000187&codigo_libro=10372.
+- 9788429144284.
+- - Purcell, E.M. Electricidad y magnetismo [en línea]. 2a ed. Barcelona: Reverté, 1988 [Consulta: 16/11/2020]. Disponible a:

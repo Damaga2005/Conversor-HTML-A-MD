@@ -42,6 +42,15 @@ except Exception as e:
     uc = None
     HAS_UNIVERSAL = False
 
+try:
+    import upc_degree_engine as upc_engine
+    from upc_gui_tab import setup_upc_degree_tab
+    HAS_UPC_DEGREE = True
+except Exception as e:
+    upc_engine = None
+    setup_upc_degree_tab = None
+    HAS_UPC_DEGREE = False
+
 # ----------------------------------------------------------------------
 # 1. TABLA DE OPERADORES Y SÍMBOLOS MATEMÁTICOS PARA MATHML
 # ----------------------------------------------------------------------
@@ -3716,7 +3725,8 @@ def run_gui():
         ("Calculadora GUM", "📐"),
         ("Filtros Activos", "🎛️"),
         ("Banco R-L-C", "🔌"),
-        ("Flashcards Anki", "🧠")
+        ("Flashcards Anki", "🧠"),
+        ("Plan UPC GREELEC", "🎓")
     ]):
         btn_t = tk.Button(
             seg_pill_box, text=f"{icon}  {tab_label}",
@@ -3724,7 +3734,7 @@ def run_gui():
             bg=COLOR_ACCENT_BLUE if i == 0 else COLOR_CARD,
             fg="#ffffff" if i == 0 else COLOR_TEXT_MUTED,
             activebackground=COLOR_ACCENT_HOVER, activeforeground="#ffffff",
-            cursor="hand2", relief="flat", bd=0, padx=12, pady=5,
+            cursor="hand2", relief="flat", bd=0, padx=10, pady=5,
             command=lambda idx=i: select_apple_tab(idx)
         )
         btn_t.pack(side="left", padx=2)
@@ -3742,6 +3752,7 @@ def run_gui():
     tab_filters = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_rlc = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_flashcards = tk.Frame(notebook, bg=COLOR_CANVAS)
+    tab_upc = tk.Frame(notebook, bg=COLOR_CANVAS)
 
     notebook.add(tab_convert, text="Conversión HTML")
     notebook.add(tab_universal, text="Conversor Universal")
@@ -3751,6 +3762,7 @@ def run_gui():
     notebook.add(tab_filters, text="Filtros & Acondicionadores")
     notebook.add(tab_rlc, text="Banco R-L-C & Presets")
     notebook.add(tab_flashcards, text="Flashcards & Examen")
+    notebook.add(tab_upc, text="Plan UPC GREELEC")
 
     def on_notebook_tab_changed(event):
         try:
@@ -3766,8 +3778,8 @@ def run_gui():
             pass
     notebook.bind("<<NotebookTabChanged>>", on_notebook_tab_changed)
 
-    # Atajos de teclado Apple / Windows: Ctrl+1 a Ctrl+8 para pestañas
-    for k_idx in range(8):
+    # Atajos de teclado Apple / Windows: Ctrl+1 a Ctrl+9 para pestañas
+    for k_idx in range(9):
         root.bind_all(f"<Control-Key-{k_idx+1}>", lambda e, idx=k_idx: select_apple_tab(idx))
 
     # ==================================================================
@@ -7525,6 +7537,8 @@ def run_gui():
     setup_filters_tab(tab_filters, root)
     setup_rlc_presets_tab(tab_rlc, root)
     setup_flashcards_tab(tab_flashcards, root)
+    if HAS_UPC_DEGREE and setup_upc_degree_tab:
+        setup_upc_degree_tab(tab_upc, root)
     root.after(250, lambda: setup_windows_drag_and_drop(root, on_files_dropped))
 
     root.mainloop()
@@ -7567,6 +7581,10 @@ Opciones y Modos:
   --ipynb                 Convierte Jupyter Notebook a Markdown con celdas e imágenes.
   --anki                  Genera mazo Anki (.apkg y .tsv) desde Markdown o banco de test.
   --universal             Ejecuta escaneo y conversión universal multi-formato de carpeta.
+  --degree-plan           Lista las 35 asignaturas obligatorias del plan GREELEC UPC.
+  --degree-stats          Muestra estadísticas del plan de estudios oficial.
+  --degree-export-md <d>  Exporta las 35 guías de estudio completas en Markdown a una carpeta.
+  --degree-export-anki <d> Exporta todos los mazos Anki de las 35 asignaturas a una carpeta.
   -h, --help              Muestra este mensaje de ayuda.
 """)
 
@@ -7575,6 +7593,30 @@ if __name__ == "__main__":
         run_gui()
     elif "-h" in sys.argv or "--help" in sys.argv:
         print_help()
+    elif "--degree-plan" in sys.argv or "--degree-list" in sys.argv:
+        if HAS_UPC_DEGREE and upc_engine:
+            print("=== Plan de Estudios GREELEC UPC (35 Asignaturas Obligatorias) ===")
+            for s in upc_engine.engine.get_all_subjects():
+                print(f"Q{s['semester']} | {s['code']} | {s['acronym']:<6} | {s['title']} ({s['ects']} ECTS)")
+        else:
+            print("Módulo upc_degree_engine no disponible.")
+        sys.exit(0)
+    elif "--degree-stats" in sys.argv:
+        if HAS_UPC_DEGREE and upc_engine:
+            print(json.dumps(upc_engine.engine.get_curriculum_statistics(), indent=2, ensure_ascii=False))
+        sys.exit(0)
+    elif "--degree-export-md" in sys.argv:
+        idx = sys.argv.index("--degree-export-md")
+        t_dir = sys.argv[idx + 1] if len(sys.argv) > idx + 1 else "upc_md"
+        n = upc_engine.engine.export_all_study_guides(t_dir)
+        print(f"✅ Exportadas {n} guías de estudio a: {t_dir}")
+        sys.exit(0)
+    elif "--degree-export-anki" in sys.argv:
+        idx = sys.argv.index("--degree-export-anki")
+        t_dir = sys.argv[idx + 1] if len(sys.argv) > idx + 1 else "upc_anki"
+        n = upc_engine.engine.export_all_anki_decks(t_dir)
+        print(f"✅ Exportadas {n} flashcards Anki a: {t_dir}")
+        sys.exit(0)
     else:
         args = sys.argv[1:]
         src = None
