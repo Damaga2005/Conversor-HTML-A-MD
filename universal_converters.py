@@ -223,6 +223,207 @@ def convert_pdf_to_markdown(
 # 2. CONVERSOR DOCX A MARKDOWN (Word XML con OMML a LaTeX Nativo)
 # ======================================================================
 
+OMML_NS = {
+    'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
+    'm': 'http://schemas.openxmlformats.org/officeDocument/2006/math',
+    'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+    'a': 'http://schemas.openxmlformats.org/drawingml/2006/main'
+}
+
+OMML_OPERATOR_MAP = {
+    '∑': r'\sum', '∫': r'\int', '∬': r'\iint', '∭': r'\iiint', '∮': r'\oint',
+    '∏': r'\prod', '∐': r'\coprod', '⋃': r'\bigcup', '⋂': r'\bigcap',
+    '±': r'\pm', '∓': r'\mp', '×': r'\times', '÷': r'\div', '·': r'\cdot',
+    '≤': r'\le', '≥': r'\ge', '≠': r'\ne', '≈': r'\approx', '≡': r'\equiv',
+    '∈': r'\in', '∉': r'\notin', '⊂': r'\subset', '⊆': r'\subseteq',
+    '→': r'\to', '⇒': r'\Rightarrow', '⇔': r'\Leftrightarrow', '↔': r'\leftrightarrow',
+    '∞': r'\infty', '∂': r'\partial', '∇': r'\nabla',
+    'α': r'\alpha', 'β': r'\beta', 'γ': r'\gamma', 'δ': r'\delta',
+    'ε': r'\varepsilon', 'ϵ': r'\epsilon', 'ζ': r'\zeta', 'η': r'\eta',
+    'θ': r'\theta', 'ϑ': r'\vartheta', 'ι': r'\iota', 'κ': r'\kappa',
+    'λ': r'\lambda', 'μ': r'\mu', 'ν': r'\nu', 'ξ': r'\xi',
+    'π': r'\pi', 'ρ': r'\rho', 'σ': r'\sigma', 'τ': r'\tau',
+    'φ': r'\phi', 'ϕ': r'\varphi', 'χ': r'\chi', 'ψ': r'\psi', 'ω': r'\omega',
+    'Γ': r'\Gamma', 'Δ': r'\Delta', 'Θ': r'\Theta', 'Λ': r'\Lambda',
+    'Ξ': r'\Xi', 'Π': r'\Pi', 'Σ': r'\Sigma', 'Υ': r'\Upsilon',
+    'Φ': r'\Phi', 'Ψ': r'\Psi', 'Ω': r'\Omega'
+}
+
+def _xml_children(elem) -> List[Any]:
+    return list(elem) if elem is not None else []
+
+def omml_to_latex(node, ns: Optional[Dict[str, str]] = None) -> str:
+    """
+    Convierte un elemento XML de Office Math Markup Language (OMML) de Microsoft Word a LaTeX.
+    Soporta:
+      - m:f (fracciones)
+      - m:sSup, m:sSub, m:sSubSup, m:sPre (subíndices y superíndices)
+      - m:rad (raíces cuadradas y de orden N)
+      - m:d (delimitadores con paréntesis, corchetes, llaves, barras)
+      - m:nary (integrales, sumatorios, productos con límites)
+      - m:m, m:mr, m:e (matrices bidimensionales)
+      - m:limLow, m:limUpp (límites inferior y superior)
+      - m:bar (barras y subrayados)
+      - m:acc (acentos, vectores, gorros)
+      - m:box (expresiones enmarcadas en caja)
+      - m:groupChr (llaves agrupadoras overbrace/underbrace)
+      - m:eqArr (alineaciones multilínea de ecuaciones)
+      - m:t (texto y caracteres matemáticos especiales)
+    """
+    if node is None:
+        return ""
+    if ns is None:
+        ns = OMML_NS
+
+    tag = node.tag.split('}')[-1] if '}' in node.tag else node.tag
+
+    if tag == 'f':
+        num = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:num', ns)))
+        den = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:den', ns)))
+        return f"\\frac{{{num.strip()}}}{{{den.strip()}}}"
+
+    elif tag == 'sSup':
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns)))
+        sup = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:sup', ns)))
+        return f"{{{e.strip()}}}^{{{sup.strip()}}}"
+
+    elif tag == 'sSub':
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns)))
+        sub = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:sub', ns)))
+        return f"{{{e.strip()}}}_{{{sub.strip()}}}"
+
+    elif tag == 'sSubSup':
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns)))
+        sub = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:sub', ns)))
+        sup = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:sup', ns)))
+        return f"{{{e.strip()}}}_{{{sub.strip()}}}^{{{sup.strip()}}}"
+
+    elif tag == 'sPre':
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns)))
+        sub = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:sub', ns)))
+        sup = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:sup', ns)))
+        return f"{{}}_{{{sub.strip()}}}^{{{sup.strip()}}}{{{e.strip()}}}"
+
+    elif tag == 'rad':
+        deg_node = node.find('m:deg', ns)
+        e_node = node.find('m:e', ns)
+        deg = "".join(omml_to_latex(c, ns) for c in _xml_children(deg_node)).strip()
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(e_node)).strip()
+        if deg:
+            return f"\\sqrt[{deg}]{{{e}}}"
+        return f"\\sqrt{{{e}}}"
+
+    elif tag == 'd':
+        d_pr = node.find('m:dPr', ns)
+        beg_chr = '('
+        end_chr = ')'
+        if d_pr is not None:
+            bc = d_pr.find('m:begChr', ns)
+            if bc is not None:
+                beg_chr = bc.attrib.get(f"{{{ns['m']}}}val", beg_chr)
+            ec = d_pr.find('m:endChr', ns)
+            if ec is not None:
+                end_chr = ec.attrib.get(f"{{{ns['m']}}}val", end_chr)
+        
+        delim_map = {
+            '(': r'\left(', ')': r'\right)',
+            '[': r'\left[', ']': r'\right]',
+            '{': r'\left\{', '}': r'\right\}',
+            '|': r'\left|', '||': r'\left\|',
+            '': '.'
+        }
+        l_delim = delim_map.get(beg_chr, f"\\left{beg_chr}")
+        r_delim = delim_map.get(end_chr, f"\\right{end_chr}")
+        inner = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns))).strip()
+        return f"{l_delim} {inner} {r_delim}"
+
+    elif tag == 'm':
+        rows = []
+        for mr in node.findall('m:mr', ns):
+            cols = []
+            for e in mr.findall('m:e', ns):
+                cols.append("".join(omml_to_latex(c, ns) for c in e).strip())
+            rows.append(" & ".join(cols))
+        return "\\begin{matrix} " + " \\\\ ".join(rows) + " \\end{matrix}"
+
+    elif tag == 'nary':
+        nary_pr = node.find('m:naryPr', ns)
+        chr_elem = nary_pr.find('m:chr', ns) if nary_pr is not None else None
+        chr_val = chr_elem.attrib.get(f"{{{ns['m']}}}val", "∫") if chr_elem is not None else "∫"
+        op_tex = OMML_OPERATOR_MAP.get(chr_val, r'\int')
+        sub = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:sub', ns))).strip()
+        sup = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:sup', ns))).strip()
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns))).strip()
+        limits = ""
+        if sub and sup:
+            limits = f"_{{{sub}}}^{{{sup}}}"
+        elif sub:
+            limits = f"_{{{sub}}}"
+        elif sup:
+            limits = f"^{{{sup}}}"
+        return f"{op_tex}{limits} {e}"
+
+    elif tag == 'limLow':
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns))).strip()
+        lim = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:lim', ns))).strip()
+        if "lim" in e.lower():
+            return f"\\lim_{{{lim}}} "
+        return f"\\underset{{{lim}}}{{{e}}}"
+
+    elif tag == 'limUpp':
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns))).strip()
+        lim = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:lim', ns))).strip()
+        return f"\\overset{{{lim}}}{{{e}}}"
+
+    elif tag == 'bar':
+        bar_pr = node.find('m:barPr', ns)
+        pos = "top"
+        if bar_pr is not None:
+            p_elem = bar_pr.find('m:pos', ns)
+            if p_elem is not None:
+                pos = p_elem.attrib.get(f"{{{ns['m']}}}val", "top")
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns))).strip()
+        return f"\\overline{{{e}}}" if pos != "bot" else f"\\underline{{{e}}}"
+
+    elif tag == 'acc':
+        acc_pr = node.find('m:accPr', ns)
+        chr_elem = acc_pr.find('m:chr', ns) if acc_pr is not None else None
+        chr_val = chr_elem.attrib.get(f"{{{ns['m']}}}val", "^") if chr_elem is not None else "^"
+        acc_map = {'^': r'\hat', '→': r'\vec', '.': r'\dot', '..': r'\ddot', '~': r'\tilde', '¯': r'\bar'}
+        cmd = acc_map.get(chr_val, r'\hat')
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns))).strip()
+        return f"{cmd}{{{e}}}"
+
+    elif tag == 'box':
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns))).strip()
+        return f"\\boxed{{{e}}}"
+
+    elif tag == 'groupChr':
+        g_pr = node.find('m:groupChrPr', ns)
+        pos = "bot"
+        if g_pr is not None:
+            p_elem = g_pr.find('m:pos', ns)
+            if p_elem is not None:
+                pos = p_elem.attrib.get(f"{{{ns['m']}}}val", "bot")
+        e = "".join(omml_to_latex(c, ns) for c in _xml_children(node.find('m:e', ns))).strip()
+        return f"\\underbrace{{{e}}}" if pos == "bot" else f"\\overbrace{{{e}}}"
+
+    elif tag == 'eqArr':
+        lines = ["".join(omml_to_latex(c, ns) for c in e).strip() for e in node.findall('m:e', ns)]
+        return "\\begin{aligned} " + " \\\\ ".join(lines) + " \\end{aligned}"
+
+    elif tag == 't':
+        txt = node.text or ""
+        for k, v in OMML_OPERATOR_MAP.items():
+            txt = txt.replace(k, f" {v} ")
+        return txt
+
+    res = ""
+    for child in node:
+        res += omml_to_latex(child, ns)
+    return res
+
+
 def convert_docx_to_markdown(
     docx_path: Path,
     output_path: Path,
@@ -243,58 +444,7 @@ def convert_docx_to_markdown(
         assets_dir.mkdir(parents=True, exist_ok=True)
 
     stats = {"images": 0, "tables": 0, "math_formulas": 0, "paragraphs": 0}
-
-    NS = {
-        'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
-        'm': 'http://schemas.openxmlformats.org/officeDocument/2006/math',
-        'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-        'a': 'http://schemas.openxmlformats.org/drawingml/2006/main'
-    }
-
-    def omml_to_latex(node) -> str:
-        tag = node.tag.split('}')[-1] if '}' in node.tag else node.tag
-        
-        if tag == 'f':
-            num = "".join(omml_to_latex(c) for c in node.find('m:num', NS) or [])
-            den = "".join(omml_to_latex(c) for c in node.find('m:den', NS) or [])
-            return f"\\frac{{{num.strip()}}}{{{den.strip()}}}"
-        
-        elif tag == 'sSup':
-            e = "".join(omml_to_latex(c) for c in node.find('m:e', NS) or [])
-            sup = "".join(omml_to_latex(c) for c in node.find('m:sup', NS) or [])
-            return f"{{{e.strip()}}}^{{{sup.strip()}}}"
-
-        elif tag == 'sSub':
-            e = "".join(omml_to_latex(c) for c in node.find('m:e', NS) or [])
-            sub = "".join(omml_to_latex(c) for c in node.find('m:sub', NS) or [])
-            return f"{{{e.strip()}}}_{{{sub.strip()}}}"
-
-        elif tag == 'sSubSup':
-            e = "".join(omml_to_latex(c) for c in node.find('m:e', NS) or [])
-            sub = "".join(omml_to_latex(c) for c in node.find('m:sub', NS) or [])
-            sup = "".join(omml_to_latex(c) for c in node.find('m:sup', NS) or [])
-            return f"{{{e.strip()}}}_{{{sub.strip()}}}^{{{sup.strip()}}}"
-
-        elif tag == 'rad':
-            deg_node = node.find('m:deg', NS)
-            e_node = node.find('m:e', NS)
-            deg = "".join(omml_to_latex(c) for c in deg_node or []) if deg_node is not None else ""
-            e = "".join(omml_to_latex(c) for c in e_node or []) if e_node is not None else ""
-            if deg.strip():
-                return f"\\sqrt[{deg.strip()}]{{{e.strip()}}}"
-            return f"\\sqrt{{{e.strip()}}}"
-
-        elif tag == 'd':
-            inner = "".join(omml_to_latex(c) for c in node.find('m:e', NS) or [])
-            return f"\\left( {inner.strip()} \\right)"
-
-        elif tag == 't':
-            return node.text or ""
-
-        res = ""
-        for child in node:
-            res += omml_to_latex(child)
-        return res
+    NS = OMML_NS
 
     md_lines = []
     md_lines.append(f"# {doc_stem.replace('_', ' ').title()}\n")
@@ -777,47 +927,214 @@ def convert_excel_csv_to_markdown(
 # 7. EXTRACTOR DE FORMULARIO RESUMEN DE ECUACIONES
 # ======================================================================
 
+# ======================================================================
+# 7. EXTRACTOR UNIVERSAL DE FORMULARIO DE ECUACIONES (MULTI-FORMATO)
+# ======================================================================
+
+def clean_latex_formula(tex: str) -> str:
+    """Normaliza y pule expresiones LaTeX para máxima pureza y rigor matemático."""
+    if not tex:
+        return ""
+    tex = tex.strip()
+    # Eliminar wrappers comunes de Wikipedia / MathJax
+    tex = re.sub(r"^\{\\displaystyle\s*(.*)\}$", r"\1", tex, flags=re.DOTALL).strip()
+    
+    # Raíz cuadrada: √[...] o √(...) -> \sqrt{...}
+    tex = re.sub(r"√\s*\[\s*(.*?)\s*\]", r"\\sqrt{\1}", tex)
+    tex = re.sub(r"√\s*\(\s*(.*?)\s*\)", r"\\sqrt{\1}", tex)
+    tex = re.sub(r"√\s*([a-zA-Z0-9_\{\}\\]+)", r"\\sqrt{\1}", tex)
+    
+    # Fracciones dentro de raíz: \sqrt{ A / B } -> \sqrt{\frac{A}{B}}
+    tex = re.sub(r"\\sqrt\{\s*([^/{]+?)\s*/\s*([a-zA-Z0-9_\{\}\(\)\+\-\s]+?)\s*\}", r"\\sqrt{\\frac{\1}{\2}}", tex)
+    
+    # Derivadas: dy/dx -> \frac{\mathrm{d}y}{\mathrm{d}x}
+    tex = re.sub(r"\bd([a-zA-Z])\s*/\s*d([a-zA-Z])\b", r"\\frac{\\mathrm{d}\1}{\\mathrm{d}\2}", tex)
+    
+    # Fracciones comunes: 1 / ( ... ) -> \frac{1}{...}
+    tex = re.sub(r"\b1\s*/\s*\(\s*([^()]+)\s*\)", r"\\frac{1}{\1}", tex)
+    tex = re.sub(r"\b1\s*/\s*([A-Za-z](?:_[a-zA-Z0-9]+)?)\b", r"\\frac{1}{\1}", tex)
+    
+    # Entidades HTML en fórmulas
+    tex = tex.replace("&lt;", "<").replace("&gt;", ">").replace("&le;", r"\le ").replace("&ge;", r"\ge ")
+    tex = tex.replace("&ne;", r"\ne ").replace("&plusmn;", r"\pm ").replace("&times;", r"\times ").replace("&amp;", r"\&")
+    
+    # Carácter % en LaTeX
+    tex = re.sub(r"(?<!\\)%", r"\\%", tex)
+    
+    # Convertir números decimales con coma a formato LaTeX: 2,2 -> 2{,}2
+    tex = re.sub(r"(\d+),(\d+)", r"\1{,}\2", tex)
+    
+    # Funciones estándar a comandos LaTeX
+    tex = re.sub(r"(?<!\\)\b(ln|log|exp|sin|cos|tan|cot|sec|csc|sinh|cosh|tanh|coth|arcsin|arccos|arctan|det|dim|gcd)\b", r"\\\1", tex)
+    tex = re.sub(r"(?<!\\)\b(max|màx)\b", r"\\max", tex)
+    tex = re.sub(r"(?<!\\)\b(min|mín)\b", r"\\min", tex)
+    tex = re.sub(r"(?<!\\)\b(lim|lím)\b", r"\\lim", tex)
+    
+    # Subíndices textuales con más de una letra: _{ref} -> _{\text{ref}}
+    tex = re.sub(r"_\{([a-zA-ZáéíóúàèòïüçÁÉÍÓÚÀÈÒÏÜÇ]{2,})\}", lambda m: f"_{{\\text{{{m.group(1)}}}}}" if not m.group(1).startswith("text") and m.group(1) not in ["max", "min", "lim", "sup", "inf"] else m.group(0), tex)
+    
+    # Auto-balanceo de llaves
+    open_b = tex.count("{")
+    close_b = tex.count("}")
+    if open_b > close_b:
+        tex += "}" * (open_b - close_b)
+    elif close_b > open_b:
+        tex = "{" * (close_b - open_b) + tex
+        
+    return re.sub(r"\s+", " ", tex).strip()
+
+
+def extract_raw_formulas_from_file(file_path: Path) -> List[str]:
+    """Extrae todas las fórmulas matemáticas válidas de un archivo de cualquier formato admitido."""
+    file_path = Path(file_path)
+    if not file_path.exists():
+        return []
+
+    ext = file_path.suffix.lower()
+    formulas = []
+
+    re_display = re.compile(r'\$\$(.+?)\$\$', re.DOTALL)
+    re_bracket = re.compile(r'\\\[(.+?)\\\]', re.DOTALL)
+    re_inline = re.compile(r'(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)')
+    re_paren = re.compile(r'\\\((.+?)\\\)')
+
+    if ext == ".md":
+        text = file_path.read_text(encoding="utf-8", errors="replace")
+        for m in re_display.finditer(text):
+            formulas.append(m.group(1).strip())
+        for m in re_bracket.finditer(text):
+            formulas.append(m.group(1).strip())
+        for m in re_inline.finditer(text):
+            f = m.group(1).strip()
+            if any(op in f for op in ['=', r'\frac', r'\sqrt', r'\int', r'\sum', r'\alpha', r'\beta', r'\Delta', r'\cdot', r'\times']) and len(f) > 3:
+                formulas.append(f)
+        for m in re_paren.finditer(text):
+            formulas.append(m.group(1).strip())
+
+    elif ext in (".html", ".htm"):
+        from bs4 import BeautifulSoup
+        text = file_path.read_text(encoding="utf-8", errors="replace")
+        soup = BeautifulSoup(text, "lxml" if "lxml" in sys.modules else "html.parser")
+        
+        # MathML
+        for math_tag in soup.find_all("math"):
+            ann = math_tag.find("annotation", attrs={"encoding": re.compile(r"tex|latex", re.I)})
+            if ann and ann.string:
+                formulas.append(ann.string.strip())
+            else:
+                from conversor_html_notebooklm import parse_mathml_to_latex
+                try:
+                    f = parse_mathml_to_latex(math_tag).strip()
+                    if f:
+                        formulas.append(f)
+                except Exception:
+                    pass
+
+        # Scripts math/tex
+        for script in soup.find_all("script", attrs={"type": re.compile(r"math/tex", re.I)}):
+            if script.string:
+                formulas.append(script.string.strip())
+
+        # Spans con fórmulas data-latex o data-tex
+        for el in soup.find_all(lambda e: e.has_attr("data-latex") or e.has_attr("data-tex")):
+            tex = el.get("data-latex") or el.get("data-tex")
+            if tex:
+                formulas.append(tex.strip())
+
+        # LaTeX en texto plano del HTML
+        plain = soup.get_text()
+        for m in re_display.finditer(plain):
+            formulas.append(m.group(1).strip())
+        for m in re_inline.finditer(plain):
+            f = m.group(1).strip()
+            if any(op in f for op in ['=', r'\frac', r'\sqrt', r'\int', r'\sum']) and len(f) > 3:
+                formulas.append(f)
+
+    elif ext == ".docx":
+        with zipfile.ZipFile(str(file_path), 'r') as docx_zip:
+            if 'word/document.xml' in docx_zip.namelist():
+                xml_content = docx_zip.read('word/document.xml')
+                root = ET.fromstring(xml_content)
+                for math_elem in root.findall('.//m:oMath', OMML_NS):
+                    tex = omml_to_latex(math_elem, OMML_NS).strip()
+                    if len(tex) > 3:
+                        formulas.append(tex)
+
+    elif ext == ".ipynb":
+        try:
+            nb = json.loads(file_path.read_text(encoding="utf-8", errors="replace"))
+            for cell in nb.get("cells", []):
+                src = "".join(cell.get("source", []))
+                for m in re_display.finditer(src):
+                    formulas.append(m.group(1).strip())
+                for m in re_inline.finditer(src):
+                    f = m.group(1).strip()
+                    if any(op in f for op in ['=', r'\frac', r'\sqrt', r'\int', r'\sum']) and len(f) > 3:
+                        formulas.append(f)
+        except Exception:
+            pass
+
+    elif ext in (".xlsx", ".csv"):
+        # Fórmulas de cálculo de hoja
+        if ext == ".xlsx":
+            try:
+                import openpyxl
+                wb = openpyxl.load_workbook(str(file_path), data_only=False)
+                for sname in wb.sheetnames:
+                    ws = wb[sname]
+                    for row in ws.iter_rows(values_only=False):
+                        for cell in row:
+                            val = str(cell.value or "")
+                            if val.startswith("="):
+                                formulas.append(val.replace("=", ""))
+            except Exception:
+                pass
+
+    # Filtrar, normalizar y limpiar
+    valid_formulas = []
+    seen = set()
+    for f in formulas:
+        cleaned = clean_latex_formula(f)
+        if len(cleaned) < 4:
+            continue
+        if cleaned.startswith("!") or cleaned.startswith("http"):
+            continue
+        if cleaned not in seen:
+            seen.add(cleaned)
+            valid_formulas.append(cleaned)
+
+    return valid_formulas
+
+
 def extract_formula_sheet_from_files(
-    md_paths: List[Path],
+    file_paths: List[Path],
     output_path: Path,
-    course_name: str = "Sistemes de Mesura (UPC EEBE)"
+    course_name: str = "Ingeniería Electrónica y Telecomunicación (UPC GREELEC)"
 ) -> Tuple[str, int]:
     """
-    Examina una lista de documentos Markdown, extrae todas las fórmulas LaTeX
-    únicas (inline y display) y compila un Formulario Maestro clasificado por temas.
+    Examina una lista de documentos de cualquier formato (MD, HTML, DOCX, IPYNB, PDF, XLSX, CSV),
+    extrae todas las fórmulas LaTeX únicas y compila un Formulario Maestro clasificado por temas.
     """
     output_path = Path(output_path)
     total_formulas = 0
     doc_sections = []
 
-    re_display = re.compile(r'\$\$(.+?)\$\$', re.DOTALL)
-    re_inline = re.compile(r'(?<!\$)\$(?!\$)(.+?)(?<!\$)\$(?!\$)')
-
-    for p in sorted(md_paths):
+    for p in sorted(file_paths):
         p = Path(p)
-        if not p.exists() or p.suffix.lower() != '.md':
+        if not p.exists():
             continue
-        text = p.read_text(encoding="utf-8", errors="replace")
         
-        formulas_in_doc = set()
-        for m in re_display.finditer(text):
-            f = m.group(1).strip()
-            if len(f) > 3 and not f.startswith("!"):
-                formulas_in_doc.add(f)
-
-        for m in re_inline.finditer(text):
-            f = m.group(1).strip()
-            if any(op in f for op in ['=', r'\frac', r'\sqrt', r'\int', r'\sum', r'\alpha', r'\beta', r'\Delta']) and len(f) > 3:
-                formulas_in_doc.add(f)
-
+        formulas_in_doc = extract_raw_formulas_from_file(p)
         if formulas_in_doc:
-            doc_sections.append((p.stem.replace("_", " ").title(), list(formulas_in_doc)))
+            clean_title = re.sub(r'([a-zA-Z])(\d+)', r'\1 \2', p.stem.replace("_", " ")).title()
+            doc_sections.append((clean_title, formulas_in_doc))
             total_formulas += len(formulas_in_doc)
 
     md_out = [
         f"# 📐 Formulario Oficial de Ecuaciones y Modelos Matemáticos\n",
-        f"> **Asignatura:** {course_name}  \n",
-        f"> **Total Fórmulas Compiladas:** {total_formulas} ecuaciones únicas  \n\n---\n"
+        f"> **Titulación / Asignatura:** {course_name}  \n",
+        f"> **Total Fórmulas Compiladas:** {total_formulas} ecuaciones únicas  \n",
+        f"> **Formatos Analizados:** Markdown, HTML, MathML, Word (OMML), Jupyter y Hojas de Cálculo  \n\n---\n"
     ]
 
     for topic_title, f_list in doc_sections:
@@ -829,8 +1146,186 @@ def extract_formula_sheet_from_files(
         md_out.append("\n")
 
     result = "\n".join(md_out)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(result, encoding="utf-8")
     return result, total_formulas
+
+
+# ======================================================================
+# 8. EXTRACTOR Y COMPILADOR UNIVERSAL DE PROBLEMAS Y EJERCICIOS
+# ======================================================================
+
+def extract_problems_from_text(text: str, source_name: str = "") -> List[Dict[str, Any]]:
+    """
+    Detecta problemas estructurados dentro de un texto técnico:
+    - Identifica encabezados de Problema / Ejercicio / Cuestión / Exercise.
+    - Separa Enunciado, Datos y Parámetros, Cuestiones, Solución y Resultados Clave.
+    """
+    problems = []
+    
+    # Patrón de encabezado de problema
+    re_prob_head = re.compile(
+        r'(?:^|\n)(?:#{1,4}\s*|\*\*|<b>)?\s*(Problema|Probleme|Problem|Ejercicio|Exercici|Exercise|Cuesti[oó]n|Qüesti[oó])\s*(\d+|[A-ZIVX]+)?[\s:.-]*([^\n*<]+)?',
+        re.IGNORECASE
+    )
+
+    matches = list(re_prob_head.finditer(text))
+    if not matches:
+        return []
+
+    for i, m in enumerate(matches):
+        p_type = m.group(1).title()
+        p_num = m.group(2) or str(i + 1)
+        p_title = (m.group(3) or "").strip().rstrip("*#")
+        if not p_title:
+            p_title = f"{p_type} {p_num}"
+
+        start_idx = m.end()
+        end_idx = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        block = text[start_idx:end_idx].strip()
+
+        # Separar en secciones: Enunciado, Datos, Solución
+        statement = block
+        solution = ""
+        given_data = []
+        questions = []
+        boxed_answers = []
+
+        # Detectar división de Solución
+        sol_match = re.search(r'(?:###?\s*|\*\*|<b>)?\s*(?:Soluci[oó]n|Resolution|Paso a Paso|Resoluci[oó])[:\s*<]', block, re.IGNORECASE)
+        if sol_match:
+            statement = block[:sol_match.start()].strip()
+            solution = block[sol_match.end():].strip()
+
+        # Extraer parámetros numéricos con unidades en el enunciado (ej: R = 100 Ohm, Vs = 12 V)
+        re_param = re.compile(r'([A-Za-z0-9_]{1,10})\s*=\s*([-+]?\d+(?:[.,]\d+)?(?:[eE][-+]?\d+)?)\s*([a-zA-ZΩµμ°%]+)?')
+        for pm in re_param.finditer(statement):
+            var_name = pm.group(1)
+            val = pm.group(2)
+            unit = pm.group(3) or ""
+            if var_name.lower() not in ("p", "de", "el", "la", "en", "un"):
+                given_data.append({"variable": var_name, "value": val, "unit": unit})
+
+        # Extraer preguntas numeradas
+        re_quest = re.compile(r'(?:^|\n)\s*(?:[-*]|\d+[.)]|[a-d][.)])\s+([^\n]+)')
+        for qm in re_quest.finditer(statement):
+            q_text = qm.group(1).strip()
+            if len(q_text) > 10 and not q_text.startswith("Montaje") and not q_text.startswith("Caso"):
+                questions.append(q_text)
+
+        # Extraer respuestas enmarcadas o en negrita final
+        re_boxed = re.compile(r'\\boxed\{([^}]+)\}')
+        for bm in re_boxed.finditer(solution or block):
+            boxed_answers.append(bm.group(1).strip())
+
+        re_res_text = re.compile(r'\*\*(?:Resultado|Respuesta|Soluci[oó]n final)[:\s]*\*\*\s*([^\n]+)', re.IGNORECASE)
+        for rm in re_res_text.finditer(solution or block):
+            boxed_answers.append(rm.group(1).strip())
+
+        problems.append({
+            "id": f"{p_type} {p_num}",
+            "title": p_title,
+            "statement": statement,
+            "parameters": given_data,
+            "questions": questions,
+            "solution": solution,
+            "boxed_answers": boxed_answers,
+            "source": source_name
+        })
+
+    return problems
+
+
+def extract_problems_from_files(
+    file_paths: List[Path],
+    output_path: Path,
+    course_name: str = "Ingeniería Electrónica y Telecomunicación (UPC GREELEC)"
+) -> Tuple[str, List[Dict[str, Any]]]:
+    """
+    Examina una lista de archivos (MD, HTML, DOCX, IPYNB, PDF), extrae todos los problemas
+    y ejercicios numéricos con sus enunciados, datos técnicos y resoluciones paso a paso,
+    y compila un Banco Maestro de Problemas Resueltos.
+    """
+    output_path = Path(output_path)
+    all_problems = []
+
+    for p in sorted(file_paths):
+        p = Path(p)
+        if not p.exists():
+            continue
+        ext = p.suffix.lower()
+        content = ""
+
+        if ext == ".md":
+            content = p.read_text(encoding="utf-8", errors="replace")
+        elif ext in (".html", ".htm"):
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(p.read_text(encoding="utf-8", errors="replace"), "lxml" if "lxml" in sys.modules else "html.parser")
+            # Buscar contenedores dedicados
+            for prob_div in soup.find_all(lambda el: el.has_attr("class") and any(c in ["problem", "ejercicio", "exercise", "question"] for c in (el["class"] if isinstance(el["class"], list) else [el["class"]]))):
+                content += "\n## Problema: " + prob_div.get_text() + "\n"
+            if not content:
+                content = soup.get_text()
+        elif ext == ".ipynb":
+            try:
+                nb = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+                content = "\n".join("".join(c.get("source", [])) for c in nb.get("cells", []))
+            except Exception:
+                pass
+
+        if content:
+            probs = extract_problems_from_text(content, source_name=p.name)
+            all_problems.extend(probs)
+
+    # Compilar en documento maestro Markdown
+    md_out = [
+        f"# 📚 Banco Maestro de Problemas y Ejercicios Resueltos\n",
+        f"> **Titulación / Asignatura:** {course_name}  \n",
+        f"> **Total Problemas Compilados:** {len(all_problems)} problemas completos  \n",
+        f"> **Estructura:** Enunciado, Datos Técnicos, Preguntas Formuladas, Resolución Paso a Paso y Resultados Clave  \n\n---\n",
+        "## 📑 Índice General de Problemas\n"
+    ]
+
+    for idx, prob in enumerate(all_problems, 1):
+        md_out.append(f"{idx}. [{prob['id']}: {prob['title']}](#{prob['id'].lower().replace(' ', '-')}-{prob['title'].lower().replace(' ', '-')})")
+    md_out.append("\n---\n")
+
+    for prob in all_problems:
+        md_out.append(f"## 📝 {prob['id']}: {prob['title']}\n")
+        md_out.append(f"> **Documento Origen:** `{prob['source']}`  \n\n")
+
+        md_out.append("### 📌 Enunciado\n")
+        md_out.append(f"{prob['statement']}\n\n")
+
+        if prob['parameters']:
+            md_out.append("### 📊 Datos Técnicos y Parámetros del Problema\n")
+            md_out.append("| Variable | Valor Numérico | Unidad de Medida |\n| :--- | :--- | :--- |")
+            for param in prob['parameters']:
+                md_out.append(f"| `${param['variable']}$` | {param['value']} | {param['unit']} |")
+            md_out.append("\n")
+
+        if prob['questions']:
+            md_out.append("### ❓ Cuestiones Formuladas\n")
+            for q_idx, q in enumerate(prob['questions'], 1):
+                md_out.append(f"{q_idx}. {q}")
+            md_out.append("\n")
+
+        if prob['solution']:
+            md_out.append("### 💡 Solución Paso a Paso\n")
+            md_out.append(f"{prob['solution']}\n\n")
+
+        if prob['boxed_answers']:
+            md_out.append("### 🎯 Resultados Clave y Respuestas Finales\n")
+            for ans in prob['boxed_answers']:
+                md_out.append(f"- **Resultado:** $${ans}$$\n")
+            md_out.append("\n")
+
+        md_out.append("---\n")
+
+    result = "\n".join(md_out)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(result, encoding="utf-8")
+    return result, all_problems
 
 
 # ======================================================================

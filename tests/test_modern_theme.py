@@ -4,6 +4,12 @@ from tkinter import ttk
 import pytest
 
 def test_modern_theme_styling():
+    from pathlib import Path
+    tcl_dir = Path(sys.base_prefix) / "tcl"
+    if tcl_dir.exists():
+        os.environ.setdefault("TCL_LIBRARY", str(tcl_dir / "tcl8.6"))
+        os.environ.setdefault("TK_LIBRARY", str(tcl_dir / "tk8.6"))
+
     # Test DPI awareness
     try:
         import ctypes

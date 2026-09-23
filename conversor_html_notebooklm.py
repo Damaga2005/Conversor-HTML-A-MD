@@ -446,6 +446,17 @@ def extract_and_shield_math(soup: BeautifulSoup) -> tuple[BeautifulSoup, dict[st
             math_registry[token] = f"${latex_code}$"
         math_tag.replace_with(NavigableString(f" {token} "))
 
+    # 3b. Spans y divs con atributos explícitos data-latex / data-tex / alt
+    for span_tex in soup.find_all(lambda el: el.name in ("span", "div") and (el.has_attr("data-latex") or el.has_attr("data-tex"))):
+        raw_tex = span_tex.get("data-latex") or span_tex.get("data-tex")
+        if raw_tex:
+            cleaned_tex = clean_latex_formula(raw_tex.strip("$").strip())
+            token = f"TOKENMATHFML{counter}X"
+            counter += 1
+            is_block = span_tex.name == "div" or "display" in (span_tex.get("class") or [])
+            math_registry[token] = f"\n\n$$\n{cleaned_tex}\n$$\n\n" if is_block else f"${cleaned_tex}$"
+            span_tex.replace_with(NavigableString(f" {token} "))
+
     # 4. Contenedores de ecuaciones numeradas (.eq, .eqwrap, .eqblock, .eqbody)
     for eq_container in soup.find_all(lambda el: el.has_attr("class") and any(c in ["eq", "eqwrap", "eqblock", "eqbody"] for c in (el["class"] if isinstance(el["class"], list) else [el["class"]]))):
         tag_el = eq_container.find(class_=re.compile(r"^(n|eqn|eqnum)$"))
@@ -878,6 +889,27 @@ def preprocess_course_components(soup: BeautifulSoup) -> BeautifulSoup:
         strong.string = f"{tag_text}{title_text}"
         prefix.append(strong)
         ex.insert(0, prefix)
+
+    # 4b. Formatear <div class="problem">, <div class="problema">, <div class="ejercicio"> como bloques de cálculo
+    for prob in soup.find_all(class_=re.compile(r"^(problem|problema|ejercicio|exercici|exercise)$", re.I)):
+        if prob.name == "blockquote" or prob.find(lambda t: t.name == "p" and t.string and t.string.startswith("[!")):
+            continue
+        tag = prob.find(class_=re.compile(r"^(tag|cap|title|num)$"))
+        tag_text = tag.get_text().strip() if tag else "Problema Técnico"
+        if tag: tag.decompose()
+
+        h_title = prob.find(["h3", "h4", "h5", "strong"])
+        title_text = f" — {h_title.get_text().strip()}" if h_title and h_title.name in ["h3", "h4"] else ""
+        if h_title and h_title.name in ["h3", "h4"]:
+            h_title.decompose()
+
+        prob.name = "blockquote"
+        prefix = soup.new_tag("p")
+        prefix.append(NavigableString("[!NOTE] "))
+        strong = soup.new_tag("strong")
+        strong.string = f"📝 {tag_text}{title_text}"
+        prefix.append(strong)
+        prob.insert(0, prefix)
 
     # 5. Formatear <div class="box ...">
     for box in soup.find_all(class_="box"):
@@ -7659,6 +7691,26 @@ if __name__ == "__main__":
         t_dir = sys.argv[idx + 1] if len(sys.argv) > idx + 1 else "upc_anki"
         n = upc_engine.engine.export_all_anki_decks(t_dir)
         print(f"✅ Exportadas {n} flashcards Anki a: {t_dir}")
+        sys.exit(0)
+    elif "--extract-formulas" in sys.argv:
+        idx = sys.argv.index("--extract-formulas")
+        src_path = sys.argv[idx + 1] if len(sys.argv) > idx + 1 else "."
+        dst_path = sys.argv[idx + 2] if len(sys.argv) > idx + 2 else "_Formulario_Maestro_Compilado.md"
+        src_p = Path(src_path)
+        files = [f for f in src_p.rglob("*") if f.is_file()] if src_p.is_dir() else [src_p]
+        import universal_converters as uc_mod
+        out_txt, count = uc_mod.extract_formula_sheet_from_files(files, Path(dst_path))
+        print(f"✅ Formulario Maestro generado con éxito: {count} fórmulas únicas compiladas en {dst_path}")
+        sys.exit(0)
+    elif "--extract-problems" in sys.argv:
+        idx = sys.argv.index("--extract-problems")
+        src_path = sys.argv[idx + 1] if len(sys.argv) > idx + 1 else "."
+        dst_path = sys.argv[idx + 2] if len(sys.argv) > idx + 2 else "_Problemas_Maestros_Compilados.md"
+        src_p = Path(src_path)
+        files = [f for f in src_p.rglob("*") if f.is_file()] if src_p.is_dir() else [src_p]
+        import universal_converters as uc_mod
+        out_txt, problems = uc_mod.extract_problems_from_files(files, Path(dst_path))
+        print(f"✅ Banco de Problemas generado con éxito: {len(problems)} problemas técnicos compilados en {dst_path}")
         sys.exit(0)
     else:
         args = sys.argv[1:]

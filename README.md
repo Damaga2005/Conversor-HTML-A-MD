@@ -8,7 +8,7 @@
 [![UPC GREELEC: 35 Courses & 424 Questions](https://img.shields.io/badge/UPC%20GREELEC-35%20Courses%20%7C%20424%20Exam%20Questions-purple.svg)]()
 [![Virtual Lab: 20 Modules 3D](https://img.shields.io/badge/Virtual%20Lab-20%20Modules%20WebGL%203D-orange.svg)]()
 [![Engineering Solvers: 37 Tools](https://img.shields.io/badge/Engineering%20Solvers-37%20Computational%20Tools-blueviolet.svg)]()
-[![Tests: Pytest Passing](https://img.shields.io/badge/tests-27%2F27%20passing-success.svg)]()
+[![Tests: Pytest Passing](https://img.shields.io/badge/tests-40%2F40%20passing-success.svg)]()
 
 > Suite integral de ingeniería documental, conversores universales de alta fidelidad y estación de trabajo virtual diseñada para transformar contenidos educativos, técnicos e interactivos (HTML, PDF, DOCX, IPYNB, MathML, scripts de examen) en **Markdown técnico estructurado de máxima pureza**, 100% optimizado para **Google NotebookLM**, Gemini, Claude, Obsidian y ChatGPT.
 > 
@@ -18,7 +18,7 @@
 
 ## 📑 Tabla de Contenidos
 - [✨ Características Principales](#-características-principales)
-  - [🔄 1. Conversores Universales de Archivos de Alta Fidelidad](#-1-conversores-universales-de-archivos-de-alta-fidelidad-universal_converterspy)
+  - [🔄 1. Conversores Universales de Archivos & Extractor de Fórmulas y Problemas](#-1-conversores-universales-de-archivos-de-alta-fidelidad-universal_converterspy)
   - [🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark)](#-2-interfaz-gráfica-de-escritorio-apple-liquid-glass-dark)
   - [🎓 3. Plan de Estudios UPC GREELEC: 35 Asignaturas & 424 Preguntas de Examen](#-3-plan-de-estudios-upc-greelec-35-asignaturas--424-preguntas-de-examen)
   - [🛠️ 4. Suite de 37 Solvers y Herramientas Especializadas de Ingeniería](#-4-suite-de-37-solvers-y-herramientas-especializadas-de-ingeniería-engineering_tools_suitepy)
@@ -39,13 +39,14 @@
 
 ### 🔄 1. Conversores Universales de Archivos de Alta Fidelidad (`universal_converters.py`)
 Módulo independiente de conversión universal con algoritmos especializados:
+- **Traductor OMML a LaTeX de Precisión Industrial:** Soporte exhaustivo para los 15 elementos matemáticos de Word (`m:f`, `m:sSup`, `m:sSub`, `m:sSubSup`, `m:sPre`, `m:rad`, `m:d`, `m:m`, `m:nary`, `m:limLow`, `m:limUpp`, `m:bar`, `m:acc`, `m:box`, `m:groupChr`, `m:eqArr`). Traduce matrices 2D, integrales múltiples con límites, sumatorios, raíces n-ésimas y acentos vectoriales directamente a $\LaTeX$ puro balanceado.
+- **Extractor Universal de Fórmulas Matemáticas Multi-Formato:** Escanea simultáneamente archivos `.md`, `.html`, `.docx`, `.ipynb`, `.pdf`, `.xlsx` y `.csv`, limpia la sintaxis matemática, auto-balancea delimitadores y compila un Formulario Maestro clasificado por temas y asignaturas.
+- **Extractor y Compilador Universal de Problemas y Ejercicios:** Identifica automáticamente enunciados, tablas de datos técnicos con unidades, listas de cuestiones formuladas, soluciones paso a paso y resultados clave enmarcados ($\boxed{...}$), generando un Banco Maestro de Problemas Resueltos.
 - **PDF a Markdown (PyMuPDF):** Extracción inteligente con detección de encabezados jerárquicos, tablas estructuradas en formato GitHub Flavored Markdown (GFM) e inferencia de bloques matemáticos en $\LaTeX$.
-- **Word DOCX a Markdown (OMML a LaTeX):** Parseador de Office Math Markup Language (OMML) que traduce fórmulas matemáticas complejas nativas de Microsoft Word (`<m:oMath>`, `<m:f>`, `<m:sSup>`, `<m:rad>`) directamente a $\LaTeX$ puro sin pérdidas.
 - **Jupyter Notebook (`.ipynb`) a Markdown:** Extracción secuencial de celdas Markdown y código fuente Python, preservando salidas de consola, trazas de ejecución e imágenes gráficas generadas.
 - **Extractor Automático de Imágenes Base64:** Decodifica recursos gráficos embebidos y los almacena físicamente en la carpeta `assets/` con control de hash SHA-256 para evitar duplicaciones.
 - **Excel (`.xlsx`) y CSV a Tablas Markdown:** Conversor tipado con detección de números, porcentajes y alineación columnar automática.
 - **Markdown a HTML Imprimible / PDF Académico:** Motor de maquetación con estilos de alta legibilidad (Apple Pro / San Francisco), integración con MathJax 3 y reglas CSS `@media print` optimizadas para generar PDFs A4 con un solo clic.
-- **Extractor de Formulario Maestro:** Escaneo automatizado de repositorios documentales para recopilar todas las ecuaciones matemáticas en una hoja de referencia unificada.
 - **Extractor de Netlists SPICE:** Detección de esquemas y circuitos en notas técnicas para exportar archivos `.cir` listos para simulación en LTspice, NGSpice o KiCad.
 - **Generador de Glosario Técnico A-Z:** Indexación alfabética automática de acrónimos y definiciones con enlace a sus fuentes.
 - **Conversión Universal en Lote (`batch_convert_universal`):** Exploración recursiva de directorios para procesar simultáneamente colecciones de archivos heterogéneos (PDF, DOCX, IPYNB, CSV, XLSX, HTML).
@@ -309,6 +310,12 @@ python upc_degree_engine.py --tools
 python conversor_html_notebooklm.py --tool microstrip_synthesizer --params '{"z0_target": 50.0, "er": 4.4, "h_mm": 1.6}'
 python upc_degree_engine.py --tool buck_converter_synthesizer --params '{"vin_v": 24.0, "vout_v": 5.0, "iout_a": 3.0, "fs_khz": 200.0}'
 python upc_degree_engine.py --tool lora_toa_and_energy_predictor --params '{"sf": 10, "bw_khz": 125.0, "payload_bytes": 32}'
+
+# 8. Extracción Universal de Fórmulas Matemáticas (Formulario Maestro)
+python conversor_html_notebooklm.py --extract-formulas ./mis_apuntes/ ./dist/_Formulario_Maestro.md
+
+# 9. Extracción Universal de Problemas y Ejercicios Resueltos (Banco de Problemas)
+python conversor_html_notebooklm.py --extract-problems ./mis_apuntes/ ./dist/_Banco_Problemas.md
 ```
 
 ### Compilar a Ejecutable de Windows (.exe)
@@ -317,7 +324,7 @@ pyinstaller --noconfirm conversor_html_notebooklm.spec
 ```
 El ejecutable compilado estará disponible en `dist/conversor_html_notebooklm/conversor_html_notebooklm.exe`.
 
-### Ejecutar la Suite Completa de Pruebas Automatizadas (27 Tests)
+### Ejecutar la Suite Completa de Pruebas Automatizadas (40 Tests)
 ```bash
 pytest -v tests/
 ```
