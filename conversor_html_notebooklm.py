@@ -35,6 +35,13 @@ from tkinter.scrolledtext import ScrolledText
 from bs4 import BeautifulSoup, Tag, NavigableString, Comment
 import markdownify
 
+try:
+    import universal_converters as uc
+    HAS_UNIVERSAL = True
+except Exception as e:
+    uc = None
+    HAS_UNIVERSAL = False
+
 # ----------------------------------------------------------------------
 # 1. TABLA DE OPERADORES Y SÍMBOLOS MATEMÁTICOS PARA MATHML
 # ----------------------------------------------------------------------
@@ -3702,12 +3709,14 @@ def run_gui():
             root.after(40, tab_callbacks[idx])
 
     for i, (tab_label, icon) in enumerate([
-        ("Conversión", "⚡"),
-        ("Visor Markdown & Prompts", "👁️"),
-        ("Biblioteca del Curso", "🗂️"),
+        ("HTML a MD", "⚡"),
+        ("Universal", "🚀"),
+        ("Visor Markdown", "👁️"),
+        ("Biblioteca", "🗂️"),
         ("Calculadora GUM", "📐"),
-        ("Filtros & Acondicionadores", "🎛️"),
-        ("Banco R-L-C & Presets", "🔌")
+        ("Filtros Activos", "🎛️"),
+        ("Banco R-L-C", "🔌"),
+        ("Flashcards Anki", "🧠")
     ]):
         btn_t = tk.Button(
             seg_pill_box, text=f"{icon}  {tab_label}",
@@ -3715,7 +3724,7 @@ def run_gui():
             bg=COLOR_ACCENT_BLUE if i == 0 else COLOR_CARD,
             fg="#ffffff" if i == 0 else COLOR_TEXT_MUTED,
             activebackground=COLOR_ACCENT_HOVER, activeforeground="#ffffff",
-            cursor="hand2", relief="flat", bd=0, padx=22, pady=6,
+            cursor="hand2", relief="flat", bd=0, padx=12, pady=5,
             command=lambda idx=i: select_apple_tab(idx)
         )
         btn_t.pack(side="left", padx=2)
@@ -3726,18 +3735,22 @@ def run_gui():
     notebook.pack(fill="both", expand=True, padx=20, pady=(0, 10))
 
     tab_convert = tk.Frame(notebook, bg=COLOR_CANVAS)
+    tab_universal = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_viewer = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_resources = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_gum = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_filters = tk.Frame(notebook, bg=COLOR_CANVAS)
     tab_rlc = tk.Frame(notebook, bg=COLOR_CANVAS)
+    tab_flashcards = tk.Frame(notebook, bg=COLOR_CANVAS)
 
-    notebook.add(tab_convert, text="Conversión")
+    notebook.add(tab_convert, text="Conversión HTML")
+    notebook.add(tab_universal, text="Conversor Universal")
     notebook.add(tab_viewer, text="Visor")
     notebook.add(tab_resources, text="Recursos")
     notebook.add(tab_gum, text="Calculadora GUM")
     notebook.add(tab_filters, text="Filtros & Acondicionadores")
     notebook.add(tab_rlc, text="Banco R-L-C & Presets")
+    notebook.add(tab_flashcards, text="Flashcards & Examen")
 
     def on_notebook_tab_changed(event):
         try:
@@ -3753,8 +3766,8 @@ def run_gui():
             pass
     notebook.bind("<<NotebookTabChanged>>", on_notebook_tab_changed)
 
-    # Atajos de teclado Apple / Windows: Ctrl+1 a Ctrl+6 para pestañas
-    for k_idx in range(6):
+    # Atajos de teclado Apple / Windows: Ctrl+1 a Ctrl+8 para pestañas
+    for k_idx in range(8):
         root.bind_all(f"<Control-Key-{k_idx+1}>", lambda e, idx=k_idx: select_apple_tab(idx))
 
     # ==================================================================
@@ -5698,18 +5711,323 @@ def run_gui():
                 log(f"📥 Drag & Drop: Carpeta detectada '{p.name}'. Modo 'Lote' fijado.", "info")
             update_mode_ui()
         elif p.is_file():
-            if p.suffix.lower() in [".html", ".htm"]:
+            suf = p.suffix.lower()
+            if suf in [".html", ".htm"]:
                 mode_var.set("single")
                 in_var.set(str(p))
                 out_var.set(str(p.parent / f"{p.stem}.md"))
                 update_mode_ui()
                 log(f"📥 Drag & Drop: Archivo HTML detectado '{p.name}'. Modo 'Archivo Único' fijado.", "info")
+            elif suf in [".pdf", ".docx", ".ipynb", ".xlsx", ".csv"]:
+                select_apple_tab(1)
+                if hasattr(root, "_universal_in_var"):
+                    root._universal_in_var.set(str(p))
+                if hasattr(root, "_universal_out_var"):
+                    root._universal_out_var.set(str(p.parent / "dist_md"))
+                log(f"📥 Drag & Drop: Archivo universal '{p.name}' detectado. Abriendo pestaña Conversor Universal.", "info")
             else:
-                log(f"⚠️ El archivo arrastrado no es HTML ({p.name})", "warn")
+                log(f"⚠️ Formato no reconocido ({p.name})", "warn")
 
-    
     # ==================================================================
-    # PESTAÑA 4: CALCULADORA METROLÓGICA GUM (ISO/IEC 98-3)
+    # PESTAÑA 2: CONVERSOR UNIVERSAL MULTI-FORMATO (PDF, DOCX, IPYNB, CSV, ANKI)
+    # ==================================================================
+    def setup_universal_converter_tab(parent, root_win):
+        p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
+        p.pack(fill="both", expand=True)
+
+        univ_in_var = tk.StringVar()
+        univ_out_var = tk.StringVar(value=str(Path("dist_md").resolve()))
+        univ_profile_var = tk.StringVar(value="NotebookLM (Fidelidad Máxima & LaTeX)")
+        univ_extract_img = tk.BooleanVar(value=True)
+        univ_merge_output = tk.BooleanVar(value=True)
+        univ_is_running = False
+
+        root_win._universal_in_var = univ_in_var
+        root_win._universal_out_var = univ_out_var
+
+        workspace = tk.Frame(p, bg=COLOR_CANVAS)
+        workspace.pack(fill="both", expand=True)
+
+        col_left = tk.Frame(workspace, bg=COLOR_CANVAS)
+        col_left.pack(side="left", fill="both", expand=True, padx=(0, 8))
+
+        col_right = tk.Frame(workspace, bg=COLOR_CANVAS, width=470)
+        col_right.pack(side="right", fill="both", expand=False, padx=(8, 0))
+        col_right.pack_propagate(False)
+
+        # Card 1: Entrada y Salida
+        card_io = make_card(col_left, "📂 Archivo o Carpeta de Entrada", badge="Multi-Formato")
+        card_io.pack(fill="x", pady=(0, 8))
+        io_inner = tk.Frame(card_io, bg=COLOR_CARD, padx=16, pady=10)
+        io_inner.pack(fill="x")
+
+        row_src = tk.Frame(io_inner, bg=COLOR_CARD)
+        row_src.pack(fill="x", pady=(0, 8))
+        tk.Label(row_src, text="Origen:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=8, anchor="w").pack(side="left")
+        entry_src = tk.Entry(row_src, textvariable=univ_in_var, font=FONT_CODE, bg=COLOR_INPUT_BG, fg=COLOR_TEXT_PRIMARY, insertbackground=COLOR_ACCENT_BLUE, bd=1, relief="solid")
+        entry_src.pack(side="left", fill="x", expand=True, padx=(0, 8), ipady=3)
+
+        def browse_univ_file():
+            f = filedialog.askopenfilename(
+                title="Seleccionar Archivo para Conversión",
+                filetypes=[
+                    ("Todos los soportados", "*.pdf;*.docx;*.ipynb;*.html;*.htm;*.xlsx;*.csv;*.md"),
+                    ("Documentos PDF (*.pdf)", "*.pdf"),
+                    ("Microsoft Word (*.docx)", "*.docx"),
+                    ("Jupyter Notebooks (*.ipynb)", "*.ipynb"),
+                    ("Documentos HTML (*.html;*.htm)", "*.html;*.htm"),
+                    ("Hojas de Cálculo (*.xlsx;*.csv)", "*.xlsx;*.csv"),
+                    ("Markdown (*.md)", "*.md"),
+                    ("Todos los archivos", "*.*")
+                ]
+            )
+            if f:
+                univ_in_var.set(f)
+                pf = Path(f)
+                univ_out_var.set(str(pf.parent / "dist_md"))
+
+        def browse_univ_dir():
+            d = filedialog.askdirectory(title="Seleccionar Carpeta con Archivos")
+            if d:
+                univ_in_var.set(d)
+                univ_out_var.set(str(Path(d) / "dist_md"))
+
+        btn_bf = create_btn(row_src, "📄 Archivo...", browse_univ_file, bg="#262a36", font=FONT_SMALL, padx=8, pady=3)
+        btn_bf.pack(side="left", padx=(0, 4))
+        btn_bd = create_btn(row_src, "📁 Carpeta...", browse_univ_dir, bg="#262a36", font=FONT_SMALL, padx=8, pady=3)
+        btn_bd.pack(side="left")
+
+        row_dst = tk.Frame(io_inner, bg=COLOR_CARD)
+        row_dst.pack(fill="x", pady=(0, 4))
+        tk.Label(row_dst, text="Destino:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=8, anchor="w").pack(side="left")
+        entry_dst = tk.Entry(row_dst, textvariable=univ_out_var, font=FONT_CODE, bg=COLOR_INPUT_BG, fg=COLOR_TEXT_PRIMARY, insertbackground=COLOR_ACCENT_BLUE, bd=1, relief="solid")
+        entry_dst.pack(side="left", fill="x", expand=True, padx=(0, 8), ipady=3)
+
+        def browse_univ_out():
+            d = filedialog.askdirectory(title="Seleccionar Carpeta de Destino")
+            if d: univ_out_var.set(d)
+
+        btn_bo = create_btn(row_dst, "📁 Destino...", browse_univ_out, bg="#262a36", font=FONT_SMALL, padx=8, pady=3)
+        btn_bo.pack(side="left")
+
+        chip_bar = tk.Frame(io_inner, bg=COLOR_CARD)
+        chip_bar.pack(fill="x", pady=(6, 0))
+        for fmt_tag, col in [("PDF (PyMuPDF)", "#ef4444"), ("Word DOCX (OMML)", "#3b82f6"), ("Jupyter .ipynb", "#f97316"), ("Excel / CSV", "#10b981"), ("HTML 5", "#8b5cf6")]:
+            tk.Label(chip_bar, text=fmt_tag, font=(FONT_FAMILY, 8, "bold"), fg=col, bg=COLOR_INSET, padx=6, pady=2).pack(side="left", padx=2)
+
+        # Card 2: Perfil y Opciones
+        card_cfg = make_card(col_left, "⚙️ Perfil de Conversión y Filtros Académicos", badge="Alta Fidelidad")
+        card_cfg.pack(fill="x", pady=(0, 8))
+        cfg_inner = tk.Frame(card_cfg, bg=COLOR_CARD, padx=16, pady=10)
+        cfg_inner.pack(fill="x")
+
+        row_prof = tk.Frame(cfg_inner, bg=COLOR_CARD)
+        row_prof.pack(fill="x", pady=(0, 8))
+        tk.Label(row_prof, text="Perfil:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD, width=8, anchor="w").pack(side="left")
+        combo_prof = ttk.Combobox(row_prof, textvariable=univ_profile_var, state="readonly", style="Modern.TCombobox", width=42)
+        combo_prof["values"] = [
+            "NotebookLM (Fidelidad Máxima & LaTeX)",
+            "Obsidian (YAML Frontmatter & Callouts)",
+            "Anki Flashcards (.apkg con Dark Mode & TSV)",
+            "Impresión Académica / PDF A4 (MathJax 3)",
+            "Formulario de Examen (Solo Ecuaciones)",
+            "Extracción de Netlists SPICE (.cir)",
+            "Glosario Técnico Indexado (A-Z)"
+        ]
+        combo_prof.pack(side="left", fill="x", expand=True)
+
+        row_opts = tk.Frame(cfg_inner, bg=COLOR_CARD)
+        row_opts.pack(fill="x", pady=(4, 0))
+        chk1 = tk.Checkbutton(row_opts, text="Extraer imágenes físicas a assets/", variable=univ_extract_img, font=FONT_BODY, fg=COLOR_TEXT_PRIMARY, bg=COLOR_CARD, selectcolor=COLOR_INPUT_BG, activebackground=COLOR_CARD)
+        chk1.pack(side="left", padx=(0, 14))
+        chk2 = tk.Checkbutton(row_opts, text="Consolidar en Documento Maestro", variable=univ_merge_output, font=FONT_BODY, fg=COLOR_TEXT_PRIMARY, bg=COLOR_CARD, selectcolor=COLOR_INPUT_BG, activebackground=COLOR_CARD)
+        chk2.pack(side="left")
+
+        # Card 3: Ejecución
+        card_run = make_card(col_left, "🚀 Lanzador de Procesamiento", badge="Async Thread")
+        card_run.pack(fill="x")
+        run_inner = tk.Frame(card_run, bg=COLOR_CARD, padx=16, pady=12)
+        run_inner.pack(fill="x")
+
+        row_btns = tk.Frame(run_inner, bg=COLOR_CARD)
+        row_btns.pack(fill="x", pady=(0, 8))
+
+        univ_progress = ttk.Progressbar(run_inner, style="Modern.Horizontal.TProgressbar", mode="determinate")
+        univ_progress.pack(fill="x", pady=(0, 4))
+        lbl_univ_prog = tk.Label(run_inner, text="Listo para procesar.", font=FONT_SUBTITLE, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD)
+        lbl_univ_prog.pack(anchor="w")
+
+        # Columna Derecha: Terminal y Log
+        card_console = make_card(col_right, "💻 Terminal de Conversión Universal", badge="Ultra Log")
+        card_console.pack(fill="both", expand=True)
+        cons_inner = tk.Frame(card_console, bg=COLOR_CARD, padx=12, pady=10)
+        cons_inner.pack(fill="both", expand=True)
+
+        txt_univ_log = ScrolledText(cons_inner, font=(FONT_CODE[0], 9), bg=COLOR_INPUT_BG, fg=COLOR_TEXT_PRIMARY, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER)
+        txt_univ_log.pack(fill="both", expand=True, pady=(0, 8))
+        txt_univ_log.tag_config("info", foreground=COLOR_TEXT_PRIMARY)
+        txt_univ_log.tag_config("success", foreground=COLOR_ACCENT_GREEN)
+        txt_univ_log.tag_config("warn", foreground=COLOR_ACCENT_AMBER)
+        txt_univ_log.tag_config("error", foreground=COLOR_ACCENT_RED)
+        txt_univ_log.tag_config("cyan", foreground=COLOR_ACCENT_CYAN)
+
+        def ulog(msg, level="info"):
+            txt_univ_log.insert("end", f"[{time.strftime('%H:%M:%S')}] {msg}\n", level)
+            txt_univ_log.see("end")
+
+        ulog("Conversor Universal Multi-Formato listo.", "cyan")
+        ulog("Soporta: PDF, DOCX, IPYNB, HTML, XLSX, CSV, Anki APKG, Formulario y SPICE.", "info")
+
+        row_fast = tk.Frame(cons_inner, bg=COLOR_CARD)
+        row_fast.pack(fill="x")
+
+        def open_univ_out():
+            out_p = Path(univ_out_var.get())
+            if not out_p.exists(): out_p.mkdir(parents=True, exist_ok=True)
+            os.startfile(str(out_p))
+
+        create_btn(row_fast, "📂 Abrir Carpeta", open_univ_out, bg="#262a36", font=FONT_SMALL, padx=8, pady=4).pack(side="left", padx=(0, 6))
+
+        def copy_univ_md():
+            out_p = Path(univ_out_var.get())
+            md_files = list(out_p.glob("*.md")) if out_p.is_dir() else ([out_p] if out_p.suffix == ".md" else [])
+            if md_files:
+                txt = md_files[0].read_text(encoding="utf-8", errors="replace")
+                root_win.clipboard_clear()
+                root_win.clipboard_append(txt)
+                ulog(f"✅ Copiado al portapapeles: {md_files[0].name}", "success")
+            else:
+                ulog("⚠️ No se encontraron archivos .md en el destino.", "warn")
+
+        create_btn(row_fast, "📋 Copiar Markdown", copy_univ_md, bg="#262a36", font=FONT_SMALL, padx=8, pady=4).pack(side="left", padx=(0, 6))
+
+        def go_to_viewer():
+            select_apple_tab(2)
+
+        create_btn(row_fast, "👁️ Ver en Visor", go_to_viewer, bg="#262a36", font=FONT_SMALL, padx=8, pady=4).pack(side="left")
+
+        def execute_universal():
+            nonlocal univ_is_running
+            src = univ_in_var.get().strip()
+            dst = univ_out_var.get().strip()
+            if not src:
+                messagebox.showerror("Error", "Selecciona un archivo o carpeta de entrada.")
+                return
+
+            src_path = Path(src)
+            dst_path = Path(dst)
+            if not src_path.exists():
+                messagebox.showerror("Error", f"La ruta de entrada no existe:\n{src}")
+                return
+
+            univ_is_running = True
+            btn_run_univ.config(state="disabled")
+            univ_progress["value"] = 15
+            lbl_univ_prog.config(text="Procesando archivos...")
+            ulog(f"▶️ Procesando entrada: {src_path.name}", "cyan")
+
+            ext_img = univ_extract_img.get()
+            prof = univ_profile_var.get()
+
+            def work():
+                start_t = time.time()
+                try:
+                    if uc is None:
+                        ulog("❌ Error: Módulo universal_converters no disponible.", "error")
+                        return
+
+                    dst_path.mkdir(parents=True, exist_ok=True)
+
+                    if src_path.is_file():
+                        suf = src_path.suffix.lower()
+                        out_md = dst_path / f"{src_path.stem}.md"
+
+                        if suf == ".pdf":
+                            ulog(f"📄 Convirtiendo PDF con PyMuPDF: {src_path.name} ...", "info")
+                            md_txt, stats = uc.convert_pdf_to_markdown(src_path, out_md, extract_images=ext_img)
+                            ulog(f"✅ PDF completado: {stats.get('pages', 0)} págs, {stats.get('tables', 0)} tablas, {stats.get('math_formulas', 0)} fórmulas.", "success")
+
+                        elif suf == ".docx":
+                            ulog(f"📝 Convirtiendo DOCX con motor OMML: {src_path.name} ...", "info")
+                            md_txt, stats = uc.convert_docx_to_markdown(src_path, out_md, extract_images=ext_img)
+                            ulog(f"✅ DOCX completado: {stats.get('paragraphs', 0)} párrafos, {stats.get('tables', 0)} tablas, {stats.get('math_formulas', 0)} fórmulas OMML.", "success")
+
+                        elif suf == ".ipynb":
+                            ulog(f"🪐 Convirtiendo Jupyter Notebook: {src_path.name} ...", "info")
+                            md_txt, stats = uc.convert_ipynb_to_markdown(src_path, out_md, extract_images=ext_img)
+                            ulog(f"✅ Notebook completado: {stats.get('cells', 0)} celdas.", "success")
+
+                        elif suf in [".xlsx", ".csv"]:
+                            ulog(f"📊 Convirtiendo tabla: {src_path.name} ...", "info")
+                            md_txt, stats = uc.convert_excel_csv_to_markdown(src_path, out_md)
+                            ulog(f"✅ Tabla GFM generada: {stats.get('sheets', 0)} hojas, {stats.get('rows', 0)} filas.", "success")
+
+                        elif suf in [".html", ".htm"]:
+                            ulog(f"🌐 Convirtiendo HTML científico: {src_path.name} ...", "info")
+                            stats = convert_single_file(str(src_path), str(out_md), extract_b64=ext_img)
+                            ulog(f"✅ HTML convertido: {stats.get('math', 0)} fórmulas, {stats.get('tables', 0)} tablas.", "success")
+
+                        elif suf == ".md":
+                            if "Anki" in prof:
+                                ulog(f"🧠 Generando mazo Anki desde Markdown: {src_path.name} ...", "info")
+                                apkg_path = dst_path / f"{src_path.stem}.apkg"
+                                stats = uc.convert_markdown_to_anki(src_path, apkg_path)
+                                ulog(f"✅ Anki APKG generado: {stats.get('cards_count', 0)} tarjetas exportadas con Dark Mode CSS.", "success")
+                            elif "Impresión" in prof:
+                                ulog(f"🖨️ Generando HTML imprimible / PDF: {src_path.name} ...", "info")
+                                html_out = dst_path / f"{src_path.stem}_Imprimible.html"
+                                stats = uc.convert_markdown_to_printable_html(src_path, html_out)
+                                ulog(f"✅ Documento imprimible A4 generado con MathJax 3: {html_out.name}", "success")
+                            else:
+                                ulog(f"ℹ️ Archivo ya es Markdown: {src_path.name}", "info")
+
+                    elif src_path.is_dir():
+                        ulog(f"📦 Procesando lote universal en carpeta: {src_path.name} ...", "info")
+                        stats = uc.batch_convert_universal(
+                            src_path, dst_path,
+                            extract_images=ext_img,
+                            generate_consolidated=univ_merge_output.get()
+                        )
+                        ulog(f"✅ Lote universal finalizado: {stats.get('total_converted', 0)} archivos convertidos.", "success")
+                        ulog(f"Métricas globales: {stats.get('total_math', 0)} fórmulas LaTeX, {stats.get('total_tables', 0)} tablas.", "cyan")
+
+                    if "Formulario" in prof:
+                        ulog("📐 Extrayendo Formulario Oficial de Ecuaciones...", "info")
+                        f_path = dst_path / "_Formulario_Oficial_Examen.md"
+                        st = uc.extract_formula_sheet_from_files(dst_path, f_path)
+                        ulog(f"✅ Formulario generado: {st.get('formulas_count', 0)} ecuaciones categorizadas.", "success")
+
+                    if "SPICE" in prof:
+                        ulog("⚡ Extrayendo Netlists SPICE (.cir)...", "info")
+                        st = uc.extract_spice_netlists_from_files(dst_path, dst_path / "spice_circuits")
+                        ulog(f"✅ Netlists SPICE extraídos: {st.get('netlists_count', 0)} ficheros .cir listos para simulación.", "success")
+
+                    if "Glosario" in prof:
+                        ulog("📚 Indexando Glosario Técnico A-Z...", "info")
+                        g_path = dst_path / "_Glosario_Tecnico_Indexado.md"
+                        st = uc.generate_technical_glossary_from_files(dst_path, g_path)
+                        ulog(f"✅ Glosario generado: {st.get('terms_count', 0)} términos técnicos indexados alfabéticamente.", "success")
+
+                    elapsed = time.time() - start_t
+                    univ_progress["value"] = 100
+                    lbl_univ_prog.config(text=f"¡Conversión completada en {elapsed:.2f} s!")
+                    ulog(f"🎉 ¡Proceso finalizado en {elapsed:.2f} s! Guardado en: {dst_path}", "success")
+                    root_win.after(0, lambda: messagebox.showinfo("Completado", f"Conversión universal finalizada en {elapsed:.2f} s.\nDestino: {dst_path}"))
+
+                except Exception as ex:
+                    ulog(f"❌ Error durante la conversión: {ex}", "error")
+                    root_win.after(0, lambda: messagebox.showerror("Error", f"Ocurrió un error:\n{ex}"))
+                finally:
+                    univ_is_running = False
+                    root_win.after(0, lambda: btn_run_univ.config(state="normal"))
+
+            threading.Thread(target=work, daemon=True).start()
+
+        btn_run_univ = create_btn(row_btns, "⚡ Iniciar Conversión Universal", execute_universal, bg=COLOR_ACCENT_BLUE, hover_bg=COLOR_ACCENT_HOVER, font=(FONT_FAMILY, 11, "bold"), padx=20, pady=8)
+        btn_run_univ.pack(side="left", padx=(0, 10))
+
+    # ==================================================================
+    # PESTAÑA 5: CALCULADORA METROLÓGICA GUM (ISO/IEC 98-3)
     # ==================================================================
     def setup_gum_calculator_tab(parent, root_win):
         p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
@@ -6074,7 +6392,8 @@ def run_gui():
         create_btn(row_res_btns, "📋 Copiar Tabla", copy_gum_markdown, bg="#2c2c2e", hover_bg="#3a3a3c", font=FONT_HEAD).pack(side="left")
 
         load_template_vars()
-        tab_callbacks[3] = calculate_and_display_gum
+        tab_callbacks[4] = calculate_and_display_gum
+        root_win.after(200, calculate_and_display_gum)
 
     # ==================================================================
     # PESTAÑA 5: DISEÑADOR DE FILTROS ACTIVOS & ACONDICIONADORES
@@ -6495,8 +6814,8 @@ def run_gui():
         combo_filter_mode.bind("<<ComboboxSelected>>", lambda e: calculate_filter())
         combo_approx.bind("<<ComboboxSelected>>", lambda e: calculate_filter())
         bode_canvas.bind("<Configure>", lambda e: calculate_filter())
-        tab_callbacks[4] = calculate_filter
-        root_win.after(100, calculate_filter)
+        tab_callbacks[5] = calculate_filter
+        root_win.after(250, calculate_filter)
 
     def setup_rlc_presets_tab(parent, root_win):
             p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
@@ -6993,14 +7312,219 @@ def run_gui():
 
             combo_rlc.bind("<<ComboboxSelected>>", lambda e: calculate_rlc())
             canvas_sch.bind("<Configure>", lambda e: calculate_rlc())
-            tab_callbacks[5] = calculate_rlc
+            tab_callbacks[6] = calculate_rlc
 
             # Cálculo inicial automático
-            root_win.after(200, calculate_rlc)
+            root_win.after(300, calculate_rlc)
 
+    # ==================================================================
+    # PESTAÑA 8: FLASHCARDS ANKI & GESTOR DE PREGUNTAS DE EXAMEN UPC
+    # ==================================================================
+    def setup_flashcards_tab(parent, root_win):
+        p = tk.Frame(parent, bg=COLOR_CANVAS, padx=12, pady=10)
+        p.pack(fill="both", expand=True)
+
+        in_dir = in_var.get().strip() or "dist_course_md"
+        cached_quizzes = load_all_course_quizzes(in_dir)
+        if not cached_quizzes:
+            cached_quizzes = load_all_course_quizzes("Curso_Completo_Sistemes_de_Mesura")
+        if not cached_quizzes:
+            cached_quizzes = load_all_course_quizzes(".")
+        if not cached_quizzes:
+            cached_quizzes = []
+
+        top_card = make_card(p, "🧠 Repaso Activo Anki & Gestor de Preguntas de Examen (UPC EEBE)", badge="500 Preguntas")
+        top_card.pack(fill="x", pady=(0, 8))
+        top_inner = tk.Frame(top_card, bg=COLOR_CARD, padx=16, pady=8)
+        top_inner.pack(fill="x")
+
+        row_fil = tk.Frame(top_inner, bg=COLOR_CARD)
+        row_fil.pack(fill="x", pady=(0, 6))
+
+        tk.Label(row_fil, text="Tema:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 6))
+        topics_opts = ["Todos los Temas (500 preguntas del curso)"]
+        for i in range(1, 11):
+            topics_opts.append(f"Tema {i} (50 preguntas oficiales)")
+        combo_fc_topic = ttk.Combobox(row_fil, values=topics_opts, state="readonly", style="Modern.TCombobox", width=34)
+        combo_fc_topic.current(0)
+        combo_fc_topic.pack(side="left", padx=(0, 14))
+
+        tk.Label(row_fil, text="🔍 Buscar:", font=FONT_HEAD, fg=COLOR_TEXT_MUTED, bg=COLOR_CARD).pack(side="left", padx=(0, 6))
+        search_fc_var = tk.StringVar()
+        entry_fc_search = tk.Entry(row_fil, textvariable=search_fc_var, font=FONT_CODE, width=22, bg=COLOR_INPUT_BG, fg=COLOR_TEXT_PRIMARY, insertbackground=COLOR_ACCENT_BLUE, bd=1, relief="solid")
+        entry_fc_search.pack(side="left", padx=(0, 14), ipady=2)
+
+        lbl_fc_count = tk.Label(row_fil, text=f"Total: {len(cached_quizzes)} preguntas", font=(FONT_FAMILY, 9, "bold"), fg=COLOR_ACCENT_CYAN, bg=COLOR_CARD)
+        lbl_fc_count.pack(side="left")
+
+        split_c = tk.Frame(p, bg=COLOR_CANVAS)
+        split_c.pack(fill="both", expand=True, pady=(0, 8))
+
+        left_card = make_card(split_c, "📋 Preguntas Seleccionadas")
+        left_card.pack(side="left", fill="both", expand=True, padx=(0, 6))
+        left_inner = tk.Frame(left_card, bg=COLOR_CARD, padx=10, pady=8)
+        left_inner.pack(fill="both", expand=True)
+
+        cols = ("id", "tema", "pregunta", "ans")
+        tree_fc = ttk.Treeview(left_inner, columns=cols, show="headings", selectmode="browse")
+        tree_fc.heading("id", text="#")
+        tree_fc.heading("tema", text="Tema")
+        tree_fc.heading("pregunta", text="Enunciado de la Pregunta")
+        tree_fc.heading("ans", text="Resp.")
+
+        tree_fc.column("id", width=45, anchor="center")
+        tree_fc.column("tema", width=75, anchor="center")
+        tree_fc.column("pregunta", width=360, anchor="w")
+        tree_fc.column("ans", width=55, anchor="center")
+        tree_fc.pack(fill="both", expand=True)
+
+        right_card = make_card(split_c, "🃏 Previsualización de Flashcard Anki")
+        right_card.pack(side="right", fill="both", expand=True, padx=(6, 0))
+        right_inner = tk.Frame(right_card, bg=COLOR_CARD, padx=14, pady=10)
+        right_inner.pack(fill="both", expand=True)
+
+        lbl_fc_front_badge = tk.Label(right_inner, text="ANVERSO (PREGUNTA)", font=FONT_SMALL, fg=COLOR_ACCENT_BLUE, bg=COLOR_CARD)
+        lbl_fc_front_badge.pack(anchor="w")
+
+        txt_fc_q = ScrolledText(right_inner, font=(FONT_FAMILY, 10), bg="#0f1117", fg="#f8fafc", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, height=5, wrap="word")
+        txt_fc_q.pack(fill="x", pady=(2, 10))
+
+        lbl_fc_back_badge = tk.Label(right_inner, text="REVERSO (SOLUCIÓN & JUSTIFICACIÓN TÉCNICA)", font=FONT_SMALL, fg=COLOR_ACCENT_GREEN, bg=COLOR_CARD)
+        lbl_fc_back_badge.pack(anchor="w")
+
+        lbl_fc_ans = tk.Label(right_inner, text="Respuesta: -", font=(FONT_FAMILY, 12, "bold"), fg=COLOR_ACCENT_AMBER, bg=COLOR_CARD)
+        lbl_fc_ans.pack(anchor="w", pady=(2, 4))
+
+        txt_fc_sol = ScrolledText(right_inner, font=(FONT_FAMILY, 9), bg="#0f1117", fg="#94a3b8", bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, height=6, wrap="word")
+        txt_fc_sol.pack(fill="both", expand=True, pady=(2, 8))
+
+        bot_bar = tk.Frame(p, bg=COLOR_HEADER, bd=1, relief="solid", highlightthickness=1, highlightbackground=COLOR_CARD_BORDER, padx=14, pady=8)
+        bot_bar.pack(fill="x")
+
+        displayed_quizzes = []
+
+        def filter_questions(event=None):
+            nonlocal displayed_quizzes
+            t_idx = combo_fc_topic.current()
+            query = search_fc_var.get().strip().lower()
+
+            pool = cached_quizzes
+            if t_idx > 0:
+                pool = [q for q in pool if q.get("tema_num") == t_idx]
+
+            if query:
+                pool = [q for q in pool if query in q.get("q", "").lower() or query in q.get("sol", "").lower()]
+
+            displayed_quizzes = pool
+            tree_fc.delete(*tree_fc.get_children())
+            for idx, q in enumerate(displayed_quizzes, 1):
+                clean_q = q.get("q", "").replace("\n", " ").strip()
+                ans_str = "V" if q.get("ans") in ["V", True, "True", "true"] else "F"
+                tree_fc.insert("", "end", values=(idx, f"Tema {q.get('tema_num', '?')}", clean_q[:80] + ("..." if len(clean_q) > 80 else ""), ans_str))
+
+            lbl_fc_count.config(text=f"Mostrando {len(displayed_quizzes)} de {len(cached_quizzes)}")
+            if displayed_quizzes:
+                tree_fc.selection_set(tree_fc.get_children()[0])
+                on_select_question()
+
+        def on_select_question(event=None):
+            sel = tree_fc.selection()
+            if not sel: return
+            item = tree_fc.item(sel[0])
+            idx = int(item["values"][0]) - 1
+            if 0 <= idx < len(displayed_quizzes):
+                q = displayed_quizzes[idx]
+                txt_fc_q.delete("1.0", "end")
+                txt_fc_q.insert("end", q.get("q", ""))
+                is_v = q.get("ans") in ["V", True, "True", "true"]
+                lbl_fc_ans.config(text=f"Respuesta Oficial: {'VERTADER (Verdadero)' if is_v else 'FALS (Falso)'}", fg=COLOR_ACCENT_GREEN if is_v else COLOR_ACCENT_RED)
+                txt_fc_sol.delete("1.0", "end")
+                txt_fc_sol.insert("end", q.get("sol", "Sin justificación adicional disponible."))
+
+        tree_fc.bind("<<TreeviewSelect>>", on_select_question)
+        combo_fc_topic.bind("<<ComboboxSelected>>", filter_questions)
+        entry_fc_search.bind("<KeyRelease>", filter_questions)
+
+        def export_anki_apkg():
+            if not displayed_quizzes:
+                messagebox.showwarning("Anki", "No hay preguntas seleccionadas para exportar.")
+                return
+            out_p = Path("dist_course_md")
+            out_p.mkdir(parents=True, exist_ok=True)
+            t_idx = combo_fc_topic.current()
+            stem = f"Sistemes_de_Mesura_Tema_{t_idx}" if t_idx > 0 else "Sistemes_de_Mesura_Curso_Completo"
+            tsv_path = out_p / f"{stem}_Anki.tsv"
+            apkg_path = out_p / f"{stem}.apkg"
+
+            lines = ["#separator:tab", "#html:true", "#tags column:3"]
+            for q in displayed_quizzes:
+                ans_str = "<b>VERTADER (V)</b>" if q.get("ans") in ["V", True] else "<b>FALS (F)</b>"
+                front = f"<b>[Tema {q.get('tema_num')}]</b><br>{q.get('q', '').replace(chr(10), '<br>')}"
+                back = f"{ans_str}<br><br><small style='color:#38bdf8;'>{q.get('sol', '').replace(chr(10), '<br>')}</small>"
+                tag = f"Tema_{q.get('tema_num')}"
+                lines.append(f"{front}\t{back}\t{tag}")
+            tsv_path.write_text("\n".join(lines), encoding="utf-8")
+
+            has_apkg = False
+            if uc and getattr(uc, "HAS_GENANKI", False):
+                try:
+                    import genanki
+                    model_id = 1607392319
+                    deck_id = 2059381192 + t_idx
+                    my_model = genanki.Model(
+                        model_id, 'UPC Exam Flashcard Model',
+                        fields=[{'name': 'Question'}, {'name': 'Answer'}],
+                        templates=[{
+                            'name': 'Card 1',
+                            'qfmt': '<div style="font-family: -apple-system, sans-serif; font-size: 16px; padding: 15px; color: #f8fafc; background: #0f172a; border-radius: 8px;">{{Question}}</div>',
+                            'afmt': '{{FrontSide}}<hr id="answer"><div style="font-family: -apple-system, sans-serif; font-size: 15px; padding: 15px; color: #f8fafc; background: #1e293b; border-radius: 8px;">{{Answer}}</div>'
+                        }]
+                    )
+                    deck_title = f"UPC Sistemes de Mesura · Tema {t_idx}" if t_idx > 0 else "UPC Sistemes de Mesura · Curso Completo (500 Preguntas)"
+                    my_deck = genanki.Deck(deck_id, deck_title)
+                    for q in displayed_quizzes:
+                        ans_str = "<b>VERTADER (V)</b>" if q.get("ans") in ["V", True] else "<b>FALS (F)</b>"
+                        f_html = f"<b>[Tema {q.get('tema_num')}]</b><br>{q.get('q', '').replace(chr(10), '<br>')}"
+                        b_html = f"{ans_str}<br><br><small style='color:#38bdf8;'>{q.get('sol', '').replace(chr(10), '<br>')}</small>"
+                        note = genanki.Note(model=my_model, fields=[f_html, b_html])
+                        my_deck.add_note(note)
+                    genanki.Package(my_deck).write_to_file(str(apkg_path))
+                    has_apkg = True
+                except Exception:
+                    has_apkg = False
+
+            msg = f"✅ Flashcards exportadas exitosamente ({len(displayed_quizzes)} tarjetas):\n\n"
+            if has_apkg:
+                msg += f"• Mazo Anki listo para importar: {apkg_path.resolve()}\n"
+            msg += f"• Archivo TSV estándar: {tsv_path.resolve()}\n"
+            messagebox.showinfo("Exportación Anki Completada", msg)
+
+        create_btn(bot_bar, "📦 Exportar Mazo Anki (.apkg)", export_anki_apkg, bg=COLOR_ACCENT_GREEN, hover_bg=COLOR_ACCENT_GREEN_HOVER, font=(FONT_FAMILY, 10, "bold"), padx=14, pady=5).pack(side="left", padx=(0, 8))
+
+        def export_tsv_only():
+            out_p = Path("dist_course_md")
+            out_p.mkdir(parents=True, exist_ok=True)
+            tsv_path = out_p / "_Banco_Preguntas_Oficial_UPC.tsv"
+            lines = ["#separator:tab", "#html:true", "#tags column:3"]
+            for q in displayed_quizzes:
+                ans_str = "VERTADER (V)" if q.get("ans") in ["V", True] else "FALS (F)"
+                lines.append(f"{q.get('q', '')}\t{ans_str} - {q.get('sol', '')}\tTema_{q.get('tema_num')}")
+            tsv_path.write_text("\n".join(lines), encoding="utf-8")
+            root_win.clipboard_clear()
+            root_win.clipboard_append("\n".join(lines))
+            messagebox.showinfo("TSV Exportado", f"✅ Fichero TSV guardado en:\n{tsv_path.resolve()}\n\n¡Y copiado al portapapeles para importar en Quizlet o AnkiWeb!")
+
+        create_btn(bot_bar, "📋 Exportar Tabla TSV (Quizlet/Web)", export_tsv_only, bg="#262a36", font=FONT_HEAD, padx=12, pady=5).pack(side="left", padx=(0, 8))
+        create_btn(bot_bar, "🖨️ Generar Examen Imprimible PDF/HTML", open_exam_simulator_modal, bg="#112530", hover_bg="#1b3b4d", font=FONT_HEAD, padx=12, pady=5).pack(side="left")
+
+        filter_questions()
+        tab_callbacks[7] = filter_questions
+
+    setup_universal_converter_tab(tab_universal, root)
     setup_gum_calculator_tab(tab_gum, root)
     setup_filters_tab(tab_filters, root)
     setup_rlc_presets_tab(tab_rlc, root)
+    setup_flashcards_tab(tab_flashcards, root)
     root.after(250, lambda: setup_windows_drag_and_drop(root, on_files_dropped))
 
     root.mainloop()
@@ -7038,6 +7562,11 @@ Opciones y Modos:
   --no-meta               No incluye la tarjeta de metadatos (Autor, Fecha, Fuente).
   --no-toc                No genera el índice de contenidos (TOC).
   --no-extract-b64        No extrae las imágenes Base64 a archivos físicos en assets/.
+  --pdf                   Convierte archivo PDF a Markdown de alta fidelidad (PyMuPDF).
+  --docx                  Convierte documento Word DOCX a Markdown con OMML a LaTeX.
+  --ipynb                 Convierte Jupyter Notebook a Markdown con celdas e imágenes.
+  --anki                  Genera mazo Anki (.apkg y .tsv) desde Markdown o banco de test.
+  --universal             Ejecuta escaneo y conversión universal multi-formato de carpeta.
   -h, --help              Muestra este mensaje de ayuda.
 """)
 
@@ -7082,6 +7611,39 @@ if __name__ == "__main__":
         if not src or not dst:
             print_help()
             sys.exit(1)
+
+        # Enrutadores para conversores universales por extensión o flag
+        src_lower = src.lower()
+        if "--pdf" in args or src_lower.endswith(".pdf"):
+            if uc:
+                print(f"📄 Convirtiendo PDF con PyMuPDF: {src} -> {dst}")
+                md_txt, stats = uc.convert_pdf_to_markdown(Path(src), Path(dst))
+                print(f"¡Éxito! Páginas: {stats.get('pages', 0)}, Fórmulas: {stats.get('math_formulas', 0)}, Tablas: {stats.get('tables', 0)}")
+                sys.exit(0)
+        elif "--docx" in args or src_lower.endswith(".docx"):
+            if uc:
+                print(f"📝 Convirtiendo Word DOCX (OMML LaTeX): {src} -> {dst}")
+                md_txt, stats = uc.convert_docx_to_markdown(Path(src), Path(dst))
+                print(f"¡Éxito! Párrafos: {stats.get('paragraphs', 0)}, Fórmulas: {stats.get('math_formulas', 0)}, Tablas: {stats.get('tables', 0)}")
+                sys.exit(0)
+        elif "--ipynb" in args or src_lower.endswith(".ipynb"):
+            if uc:
+                print(f"🪐 Convirtiendo Jupyter Notebook: {src} -> {dst}")
+                md_txt, stats = uc.convert_ipynb_to_markdown(Path(src), Path(dst))
+                print(f"¡Éxito! Celdas procesadas: {stats.get('cells', 0)}")
+                sys.exit(0)
+        elif "--anki" in args:
+            if uc:
+                print(f"🧠 Generando Flashcards Anki: {src} -> {dst}")
+                stats = uc.convert_markdown_to_anki(Path(src), Path(dst))
+                print(f"¡Éxito! Tarjetas exportadas: {stats.get('cards_count', 0)}")
+                sys.exit(0)
+        elif "--universal" in args:
+            if uc:
+                print(f"🚀 Ejecutando conversión universal por lotes: {src} -> {dst}")
+                stats = uc.batch_convert_universal(Path(src), Path(dst))
+                print(f"¡Éxito! Total convertidos: {stats.get('total_converted', 0)}, Fórmulas: {stats.get('total_math', 0)}")
+                sys.exit(0)
 
         # Configuración base por defecto (NotebookLM)
         rw_links = True

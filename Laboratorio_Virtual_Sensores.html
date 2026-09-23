@@ -794,7 +794,16 @@
       <span id="audio-icon">🔊</span> <span id="audio-text">Àudio: ON</span>
     </button>
     <button class="btn-macos" onclick="openBodeModal()" style="border-color: rgba(5,150,105,0.4); color:#34d399;">
-      📈 Bode
+      📈 Bode / Nyquist
+    </button>
+    <button class="btn-macos" onclick="openLogicModal()" style="border-color: rgba(14,165,233,0.4); color:#38bdf8;">
+      ⏱️ Lògica 8-CH
+    </button>
+    <button class="btn-macos" onclick="openNoiseModal()" style="border-color: rgba(234,179,8,0.4); color:#facc15;">
+      🔊 Soroll Johnson
+    </button>
+    <button class="btn-macos" onclick="openFirmwareModal()" style="border-color: rgba(168,85,247,0.4); color:#c084fc;">
+      💻 C/C++ Firmware
     </button>
     <button class="btn-macos" onclick="openFaultModal()" style="border-color: rgba(220,38,38,0.4); color:#f87171;">
       ⚠️ Fallades
@@ -817,15 +826,15 @@
 <!-- Asignaturas Filter Bar (Grau en Enginyeria Electrònica de Telecomunicació - UPC) -->
 <div class="subject-bar-container" id="subject-selector">
   <span class="subject-bar-label">Assignatures UPC:</span>
-  <button class="subject-tab active" data-sub="ALL" onclick="filterBySubject('ALL')">🏛️ Totes <span class="pill-cnt">16</span></button>
-  <button class="subject-tab sub-sm" data-sub="SM" onclick="filterBySubject('SM')">📘 SM: Mesura <span class="pill-cnt">10</span></button>
+  <button class="subject-tab active" data-sub="ALL" onclick="filterBySubject('ALL')">🏛️ Totes <span class="pill-cnt">20</span></button>
+  <button class="subject-tab sub-sm" data-sub="SM" onclick="filterBySubject('SM')">📘 SM: Mesura <span class="pill-cnt">14</span></button>
   <button class="subject-tab sub-cce" data-sub="CCE" onclick="filterBySubject('CCE')">⚡ CCE: Circuits <span class="pill-cnt">3</span></button>
   <button class="subject-tab sub-pee" data-sub="PEE" onclick="filterBySubject('PEE')">🔋 PEE: Potència <span class="pill-cnt">1</span></button>
   <button class="subject-tab sub-caf" data-sub="CAF" onclick="filterBySubject('CAF')">📡 CAF: Camps & RF <span class="pill-cnt">1</span></button>
   <button class="subject-tab sub-sc" data-sub="SC" onclick="filterBySubject('SC')">🎯 SC: Control <span class="pill-cnt">1</span></button>
 </div>
 
-<!-- Floating Glass Dock (16 Modules Navigation categorized by subject) -->
+<!-- Floating Glass Dock (20 Modules Navigation categorized by subject) -->
 <nav class="macos-dock-container" id="modules-bar">
   <!-- SM: Sistemes de Mesura -->
   <button class="dock-item active" data-mod="0" data-sub="SM" onclick="switchModule(0)"><span class="sub-badge sm">SM</span> ⚖️ 1. Galgues</button>
@@ -838,10 +847,16 @@
   <button class="dock-item" data-mod="7" data-sub="SM" onclick="switchModule(7)"><span class="sub-badge sm">SM</span> 🔊 8. Soroll</button>
   <button class="dock-item" data-mod="8" data-sub="SM" onclick="switchModule(8)"><span class="sub-badge sm">SM</span> 💎 9. Piezo 3D</button>
   <button class="dock-item" data-mod="9" data-sub="SM" onclick="switchModule(9)"><span class="sub-badge sm">SM</span> ⚡ 10. Capacitiu</button>
+  <button class="dock-item" data-mod="16" data-sub="SM" onclick="switchModule(16)"><span class="sub-badge sm">SM</span> 🛡️ 17. Aïllament</button>
+  <button class="dock-item" data-mod="17" data-sub="SM" onclick="switchModule(17)"><span class="sub-badge sm">SM</span> 🎚️ 18. Lock-In</button>
+  <button class="dock-item" data-mod="18" data-sub="SM" onclick="switchModule(18)"><span class="sub-badge sm">SM</span> 🔄 19. Bucle 4-20mA</button>
+  <button class="dock-item" data-mod="19" data-sub="SM" onclick="switchModule(19)"><span class="sub-badge sm">SM</span> 📐 20. Roseta Mohr</button>
 
   <!-- CCE: Components i Circuits Electrònics -->
   <div class="dock-divider" data-sub-group="CCE"><span class="sub-badge cce">CCE</span></div>
   <button class="dock-item greelec" data-mod="10" data-sub="CCE" onclick="switchModule(10)"><span class="sub-badge cce">CCE</span> 🔌 11. Banc R-L-C</button>
+  <button class="dock-item greelec" data-mod="13" data-sub="CCE" onclick="switchModule(13)"><span class="sub-badge cce">CCE</span> 🎛️ 14. BJT/MOSFET</button>
+  <button class="dock-item greelec" data-mod="15" data-sub="CCE" onclick="switchModule(15)" style="background: rgba(79, 70, 229, 0.25); border-color: #818cf8; color:#ffffff;"><span class="sub-badge cce">CCE</span> 🛠️ 16. Taller CAD</button>
 
   <!-- PEE: Potència i Energia Elèctrica -->
   <div class="dock-divider" data-sub-group="PEE"><span class="sub-badge pee">PEE</span></div>
@@ -851,17 +866,9 @@
   <div class="dock-divider" data-sub-group="CAF"><span class="sub-badge caf">CAF</span></div>
   <button class="dock-item greelec" data-mod="12" data-sub="CAF" onclick="switchModule(12)"><span class="sub-badge caf">CAF</span> 📡 13. Línies RF & Smith</button>
 
-  <!-- CCE: BJT/MOSFET -->
-  <div class="dock-divider" data-sub-group="CCE"><span class="sub-badge cce">CCE</span></div>
-  <button class="dock-item greelec" data-mod="13" data-sub="CCE" onclick="switchModule(13)"><span class="sub-badge cce">CCE</span> 🎛️ 14. BJT/MOSFET</button>
-
   <!-- SC: Sistemes de Control -->
   <div class="dock-divider" data-sub-group="SC"><span class="sub-badge sc">SC</span></div>
   <button class="dock-item greelec" data-mod="14" data-sub="SC" onclick="switchModule(14)"><span class="sub-badge sc">SC</span> 🎯 15. PID Feedback</button>
-
-  <!-- CCE: Taller CAD -->
-  <div class="dock-divider" data-sub-group="CCE"><span class="sub-badge cce">CCE</span></div>
-  <button class="dock-item greelec" data-mod="15" data-sub="CCE" onclick="switchModule(15)" style="background: rgba(79, 70, 229, 0.25); border-color: #818cf8; color:#ffffff;"><span class="sub-badge cce">CCE</span> 🛠️ 16. Taller CAD</button>
 </nav>
 
 <div class="workspace">
@@ -1058,6 +1065,111 @@
 <!-- Modal Report -->
 
 <!-- Modal Resistor Color Code Calculator -->
+
+<!-- Modal Logic Analyzer 8-Channel (Saleae Logic style) -->
+<div class="modal-overlay" id="modal-logic">
+  <div class="modal-box" style="max-width: 820px;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span>⏱️ Analitzador Lògic Digital de 8 Canals (24 MHz Logic Analyzer)</span>
+        <span style="font-size: 10px; background: rgba(14,165,233,0.2); color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-family: monospace;">I2C • SPI • UART</span>
+      </div>
+      <button class="btn" onclick="closeLogicModal()">✕ Tancar</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; background: #0b0f19; padding: 10px 14px; border-radius: 8px; border: 1px solid #1e293b;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <span style="font-size: 11px; color: #94a3b8; font-weight: bold;">Protocol:</span>
+          <select id="sel-logic-proto" class="select-styled" onchange="renderLogicPlot()" style="width: 140px; padding: 4px 8px; font-size: 11px;">
+            <option value="I2C" selected>I2C (SCL / SDA)</option>
+            <option value="SPI">SPI (SCK / MOSI / CS)</option>
+            <option value="UART">UART (TX / RX 115200)</option>
+          </select>
+          <span style="font-size: 11px; color: #94a3b8; font-weight: bold;">Freq. Rellotge:</span>
+          <span id="logic-clock-disp" style="font-family: monospace; color: #38bdf8; font-size: 12px; font-weight: bold;">100 kHz</span>
+        </div>
+        <div style="font-size: 11px; font-family: monospace; color: #34d399;" id="logic-decode-text">
+          Decodificat: <b>ADDR: 0x48 (ACK) • REG: 0x00 • DATA: 0x1A</b>
+        </div>
+      </div>
+      <canvas id="logic-canvas" width="780" height="260" style="background: #030712; border: 1px solid #1e293b; border-radius: 8px; width: 100%;"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Johnson-Nyquist Noise Injector -->
+<div class="modal-overlay" id="modal-noise">
+  <div class="modal-box" style="max-width: 650px;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span>🔊 Injector de Soroll Tèrmic Johnson-Nyquist & Anàlisi SNR</span>
+        <span style="font-size: 10px; background: rgba(234,179,8,0.2); color: #facc15; padding: 2px 6px; border-radius: 4px; font-family: monospace;">v_n = √(4·kB·T·R·Δf)</span>
+      </div>
+      <button class="btn" onclick="closeNoiseModal()">✕ Tancar</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="background: #0b0f19; padding: 14px; border-radius: 8px; border: 1px solid #1e293b;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Temperatura Ambient T (K):</label>
+            <input type="range" id="noise-temp-slider" min="200" max="450" value="298" oninput="updateNoiseCalc()" class="slider">
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #cbd5e1; font-family: monospace; margin-top: 2px;">
+              <span>-73 °C</span><b id="disp-temp-k">298.15 K (25 °C)</b><span>+177 °C</span>
+            </div>
+          </div>
+          <div>
+            <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px;">Ample de Banda Equiv. Δf (kHz):</label>
+            <input type="range" id="noise-bw-slider" min="1" max="1000" value="100" oninput="updateNoiseCalc()" class="slider">
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: #cbd5e1; font-family: monospace; margin-top: 2px;">
+              <span>1 kHz</span><b id="disp-bw-khz">100 kHz</b><span>1000 kHz</span>
+            </div>
+          </div>
+        </div>
+        <div style="background: #111827; padding: 12px; border-radius: 6px; border: 1px solid #374151; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 10px; color: #9ca3af; font-family: monospace;">DENSITAT ESPECTRAL DE SOROLL:</div>
+            <div id="noise-density-disp" style="font-size: 18px; font-weight: bold; color: #38bdf8; font-family: monospace;">4.07 nV/√Hz</div>
+          </div>
+          <div>
+            <div style="font-size: 10px; color: #9ca3af; font-family: monospace;">VOLTATGE TOTAL DE SOROLL RMS:</div>
+            <div id="noise-vrms-disp" style="font-size: 22px; font-weight: 800; color: #facc15; font-family: monospace;">1.288 µV rms</div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn btn-green" onclick="injectNoiseIntoOscilloscope()">⚡ Injectar a l'Oscil·loscopi</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Firmware C/C++ Generator -->
+<div class="modal-overlay" id="modal-firmware">
+  <div class="modal-box" style="max-width: 780px;">
+    <div class="modal-header">
+      <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+        <span>💻 Generador de Firmware C/C++ per Microcontroladors (UPC SM & PEE)</span>
+        <span style="font-size: 10px; background: rgba(168,85,247,0.2); color: #c084fc; padding: 2px 6px; border-radius: 4px; font-family: monospace;">Arduino • STM32 HAL • ESP32</span>
+      </div>
+      <button class="btn" onclick="closeFirmwareModal()">✕ Tancar</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span style="font-size: 11px; color: #94a3b8; font-weight: bold;">Plataforma Hardware:</span>
+          <select id="sel-firmware-plat" class="select-styled" onchange="generateFirmwareCode()" style="width: 170px; padding: 4px 8px; font-size: 11px;">
+            <option value="ARDUINO" selected>Arduino C++ (10-bit ADC)</option>
+            <option value="ESP32">ESP32 IDF / C++ (12-bit ADC)</option>
+            <option value="STM32">STM32 HAL C (12-bit DMA)</option>
+          </select>
+        </div>
+        <button class="btn btn-sm" onclick="copyFirmwareCode()">📋 Copiar Codi</button>
+      </div>
+      <textarea id="firmware-code-box" style="width: 100%; height: 320px; background: #030712; color: #34d399; font-family: 'SF Mono', monospace; font-size: 11px; padding: 12px; border: 1px solid #1e293b; border-radius: 6px; resize: none;" readonly></textarea>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-color-code">
   <div class="modal-box" style="max-width: 680px;">
     <div class="modal-header">
@@ -2166,7 +2278,55 @@ function build3DGeometry() {
     addBox(pPosA.x, 0.80, pPosA.z, 0.05, 0.20, 0.05, 0.9, 0.9, 0.9);
     addBox(pPosB.x, 0.45, pPosB.z, 0.14, 0.65, 0.14, 0.15, 0.45, 0.95);
     addBox(pPosB.x, 0.80, pPosB.z, 0.05, 0.20, 0.05, 0.9, 0.9, 0.9);
+  } else if (m === 16) { // 17. Amplificador d'Aïllament ISO124
+    // Base aïllada
+    addBox(0, -0.4, 0, 4.2, 0.15, 2.4, 0.12, 0.14, 0.18);
+    // Costat Primari (Entrada No Aïllada - Blau)
+    addBox(-1.2, 0.2, 0, 1.4, 0.65, 1.8, 0.15, 0.35, 0.85);
+    // Costat Secundari (Sortida Aïllada - Verd)
+    addBox(1.2, 0.2, 0, 1.4, 0.65, 1.8, 0.15, 0.75, 0.35);
+    // Barrera Dielèctrica Central (Policarbonat / Vidre transparent)
+    addBox(0, 0.4, 0, 0.35, 1.2, 2.2, 0.95, 0.95, 0.98, 0.45);
+    // Condensadors de Barrera Ceràmica
+    addBox(0, 0.2, 0.6, 0.5, 0.3, 0.3, 0.85, 0.85, 0.90);
+    addBox(0, 0.2, -0.6, 0.5, 0.3, 0.3, 0.85, 0.85, 0.90);
+
+  } else if (m === 17) { // 18. Demodulador Coherent Lock-In
+    // Xassís d'alumini blindat RF
+    addBox(0, 0, 0, 4.4, 0.9, 2.6, 0.35, 0.38, 0.42);
+    // Connectors BNC frontals daurats
+    addBox(-1.4, 0.0, 1.35, 0.25, 0.25, 0.35, 0.95, 0.80, 0.20);
+    addBox(-0.5, 0.0, 1.35, 0.25, 0.25, 0.35, 0.95, 0.80, 0.20);
+    addBox(0.5, 0.0, 1.35, 0.25, 0.25, 0.35, 0.95, 0.80, 0.20);
+    addBox(1.4, 0.0, 1.35, 0.25, 0.25, 0.35, 0.95, 0.80, 0.20);
+    // Mòdul PSD intern
+    addBox(0, 0.55, 0, 2.2, 0.25, 1.4, 0.15, 0.55, 0.75);
+
+  } else if (m === 18) { // 19. Transmissor 4-20 mA Industrial
+    // Capçal DIN d'alumini industrial blau
+    addBox(0, 0.2, 0, 2.4, 2.2, 2.2, 0.10, 0.35, 0.75);
+    // Tapa cargolada frontal amb visor de vidre
+    addBox(0, 0.2, 1.15, 1.8, 1.8, 0.15, 0.20, 0.22, 0.26);
+    addBox(0, 0.2, 1.25, 1.3, 1.3, 0.08, 0.05, 0.85, 0.35, 0.7); // Display LCD
+    // Vaina d'acer inoxidable per a termorresistència Pt100
+    addBox(0, -1.4, 0, 0.25, 1.4, 0.25, 0.85, 0.88, 0.92);
+    // Entrada premsaestopes per al cable de bucle
+    addBox(1.3, 0.2, 0, 0.4, 0.5, 0.5, 0.25, 0.28, 0.32);
+
+  } else if (m === 19) { // 20. Roseta de Galgues & Cercle de Mohr
+    // Placa metàl·lica sotmesa a tensió biaxial
+    addBox(0, 0, 0, 3.8, 0.12, 3.8, 0.55, 0.58, 0.65);
+    // Roseta de Galgues rectangular a 45°
+    // Galga A (0° horitzontal)
+    addBox(-0.3, 0.10, 0, 0.7, 0.04, 0.25, 0.85, 0.25, 0.25);
+    // Galga B (45° diagonal)
+    addBox(0, 0.10, 0, 0.6, 0.04, 0.25, 0.25, 0.85, 0.25);
+    // Galga C (90° vertical)
+    addBox(0.3, 0.10, 0, 0.25, 0.04, 0.7, 0.25, 0.45, 0.85);
+    // Cables d'instrumentació a borns
+    addBox(1.5, 0.08, 0, 0.4, 0.1, 1.2, 0.15, 0.18, 0.22);
   }
+
 
   currentGeoPositions = positions;
   currentGeoNormals = normals;
@@ -4157,6 +4317,190 @@ Medida DMM entre Nodo Salida (OUT) y GND`;
     }
   }
 
+,
+  // ====================================================================
+  // MÒDUL 17: AMPLIFICADOR D'AÏLLAMENT GALVÀNIC (ISO124 / IL300)
+  // ====================================================================
+  {
+    title: "17. Amplificador d'Aïllament & Barrera Galvànica (ISO124)",
+    hud: ["Model: Barrera Galvànica 1500 V", "IMRR: 140 dB Rebuig"],
+    controls: [
+      { id: "vin", label: "Tensió d'Entrada Vin", min: -10, max: 10, val: 2.5, unit: "V", step: 0.1 },
+      { id: "vcm", label: "Tensió Mode Comú Flotant V_CM", min: 0, max: 1500, val: 500, unit: "V", step: 25 },
+      { id: "fmod", label: "Freqüència de Modulació PWM", min: 100, max: 500, val: 250, unit: "kHz", step: 10 },
+      { id: "ciso", label: "Capacitat de Barrera C_iso", min: 1, max: 10, val: 2.0, unit: "pF", step: 0.5 }
+    ],
+    presets: [
+      { name: "Shunt Flotant Inversor 500V", vin: 0.25, vcm: 500, fmod: 250, ciso: 2.0 },
+      { name: "Monitoratge Mèdic ECG Segur", vin: 0.005, vcm: 230, fmod: 400, ciso: 1.2 }
+    ],
+    calc: (p) => {
+      const imrr_db = 140.0;
+      const v_error_cm = p.vcm / Math.pow(10, imrr_db / 20.0);
+      const v_out = p.vin + v_error_cm;
+      const i_leak_ua = 2 * Math.PI * (p.fmod * 1000) * p.vcm * (p.ciso * 1e-12) * 1e6;
+      return {
+        dmmText: v_out.toFixed(4) + " V",
+        dmmMin: "-10.000 V", dmmMax: "+10.000 V",
+        dmmBar: Math.max(0, Math.min(100, (v_out + 10) / 20 * 100)),
+        dmmUb: "±0.0002 V",
+        metrics: [
+          { name: "Tensió de Sortida Vout", val: v_out.toFixed(4) + " V", sub: "Aïllada galvànicament" },
+          { name: "Error per Mode Comú (IMRR)", val: (v_error_cm * 1e6).toFixed(2) + " µV", sub: "IMRR = 140 dB" },
+          { name: "Corrent de Fuga de Barrera", val: i_leak_ua.toFixed(3) + " µA", sub: `C_iso = ${p.ciso} pF @ ${p.fmod} kHz` }
+        ],
+        formula: "Vout = Vin + V_CM / 10^(IMRR/20)\nI_leak = 2·π·f·V_CM·C_iso\nBarrera Aïllament: 1500 Vrms continu (ISO124)",
+        challenge: {
+          q: "Si la tensió de mode comú és V_CM = 1000 V i l'IMRR és de 140 dB, quin és l'error de tensió en microvolts (µV) que apareix a la sortida?",
+          ans: 100.0, tol: 2.0, unit: "µV",
+          sol: "V_err = V_CM / 10^(140/20) = 1000 / 10^7 = 10^-4 V = 100 µV."
+        }
+      };
+    }
+  },
+
+  // ====================================================================
+  // MÒDUL 18: DEMODULACIÓ COHERENT & AMPLIFICADOR LOCK-IN (PSD)
+  // ====================================================================
+  {
+    title: "18. Demodulació Coherent & Amplificador Lock-In (PSD)",
+    hud: ["Model: Detecció Síncrona PSD", "Extracció Senyal sota Soroll (-20dB)"],
+    controls: [
+      { id: "vsig", label: "Amplitud Senyal Útil Vs", min: 0.005, max: 1.0, val: 0.05, unit: "V", step: 0.005 },
+      { id: "snrin", label: "Relació S/N Entrada", min: -30, max: 10, val: -15, unit: "dB", step: 1 },
+      { id: "fcar", label: "Freqüència Portadora fc", min: 100, max: 20000, val: 1000, unit: "Hz", step: 100 },
+      { id: "tau", label: "Constant de Temps LPF (τ)", min: 10, max: 1000, val: 100, unit: "ms", step: 10 },
+      { id: "dphi", label: "Desfase Referència Δθ", min: 0, max: 180, val: 0, unit: "°", step: 5 }
+    ],
+    presets: [
+      { name: "Senyal Enterrat en Soroll (-20 dB)", vsig: 0.02, snrin: -20, fcar: 1000, tau: 250, dphi: 0 },
+      { name: "Detecció Òptica Modulada (Chopper 1kHz)", vsig: 0.10, snrin: -10, fcar: 1000, tau: 50, dphi: 0 }
+    ],
+    calc: (p) => {
+      const rad = p.dphi * Math.PI / 180;
+      const v_i = (p.vsig / 2.0) * Math.cos(rad);
+      const v_q = (p.vsig / 2.0) * Math.sin(rad);
+      const v_recup = Math.sqrt(v_i*v_i + v_q*v_q) * 2.0;
+      const b_equiv = 1.0 / (4.0 * (p.tau * 1e-3));
+      const snr_out = p.snrin + 10 * Math.log10(p.fcar / Math.max(1, b_equiv));
+      return {
+        dmmText: (v_i * 1000).toFixed(3) + " mV",
+        dmmMin: "-500.0 mV", dmmMax: "+500.0 mV",
+        dmmBar: Math.max(0, Math.min(100, (v_i + 0.5) * 100)),
+        dmmUb: "±0.005 mV",
+        metrics: [
+          { name: "Canal en Fase (I)", val: (v_i * 1000).toFixed(3) + " mV", sub: "I = (Vs/2)·cos(Δθ)" },
+          { name: "Canal Quadratura (Q)", val: (v_q * 1000).toFixed(3) + " mV", sub: "Q = (Vs/2)·sin(Δθ)" },
+          { name: "Magnitud Reconstruïda R", val: (v_recup * 1000).toFixed(3) + " mV", sub: "R = 2·√(I² + Q²)" },
+          { name: "Ample Banda Equivalent B", val: b_equiv.toFixed(2) + " Hz", sub: "B = 1 / (4·τ)" }
+        ],
+        formula: "I = (Vs/2)·cos(Δθ)  |  Q = (Vs/2)·sin(Δθ)\nMagnitud R = 2·√(I² + Q²) = " + (v_recup*1000).toFixed(2) + " mV\nMillora SNR = 10·log10(fc / B) = " + (snr_out - p.snrin).toFixed(1) + " dB",
+        challenge: {
+          q: "Amb una constant de temps del filtre pas-baix τ = 100 ms, calcula l'ample de banda equivalent de soroll B en Hz:",
+          ans: 2.5, tol: 0.1, unit: "Hz",
+          sol: "B = 1 / (4 · τ) = 1 / (4 · 0.100 s) = 2.50 Hz."
+        }
+      };
+    }
+  },
+
+  // ====================================================================
+  // MÒDUL 19: TRANSMISSOR INDUSTRIAL DE CORRENT 4-20 mA (XTR115)
+  // ====================================================================
+  {
+    title: "19. Transmissor Industrial de Corrent 4-20 mA (XTR115)",
+    hud: ["Model: Bucle 2 Fils XTR115", "Compliance V_loop & Immunitat"],
+    controls: [
+      { id: "proc", label: "Variable de Procés Mesurada", min: 0, max: 100, val: 50, unit: "%", step: 1 },
+      { id: "vloop", label: "Tensió d'Alimentació Bucle V_loop", min: 12, max: 36, val: 24, unit: "V", step: 1 },
+      { id: "rload", label: "Resistència Shunt Receptor RL", min: 50, max: 500, val: 250, unit: "Ω", step: 25 },
+      { id: "rwire", label: "Resistència Cable d'Anada/Tornada", min: 0, max: 50, val: 10, unit: "Ω", step: 1 }
+    ],
+    presets: [
+      { name: "Punt Zero (0% -> 4.00 mA)", proc: 0, vloop: 24, rload: 250, rwire: 10 },
+      { name: "Escala Completa (100% -> 20.00 mA)", proc: 100, vloop: 24, rload: 250, rwire: 10 },
+      { name: "Línia Llarga 2 km (Rwire = 45 Ω)", proc: 75, vloop: 24, rload: 250, rwire: 45 }
+    ],
+    calc: (p) => {
+      const i_loop_ma = 4.0 + 16.0 * (p.proc / 100.0);
+      const i_loop_a = i_loop_ma * 1e-3;
+      const v_rl = i_loop_a * p.rload;
+      const v_wire = i_loop_a * (2 * p.rwire);
+      const v_xtr = p.vloop - v_rl - v_wire;
+      const v_comp_ok = (v_xtr >= 7.5);
+      return {
+        dmmText: i_loop_ma.toFixed(3) + " mA",
+        dmmMin: "0.000 mA", dmmMax: "24.000 mA",
+        dmmBar: Math.max(0, Math.min(100, (i_loop_ma / 20.0) * 100)),
+        dmmUb: "±0.004 mA",
+        metrics: [
+          { name: "Corrent de Bucle I_loop", val: i_loop_ma.toFixed(3) + " mA", sub: `${p.proc}% del rang de procés` },
+          { name: "Tensió en Shunt Receptor", val: v_rl.toFixed(3) + " V", sub: `RL = ${p.rload} Ω (Norma 1-5 V)` },
+          { name: "Tensió als Borns del XTR", val: v_xtr.toFixed(2) + " V", sub: v_comp_ok ? "✅ Compliance OK (≥7.5V)" : "⚠️ Compliance Insuficient" }
+        ],
+        formula: "I_loop = 4 mA + 16 mA · (Procés / 100)\nV_XTR = V_loop - I_loop·(RL + 2·R_wire) = " + v_xtr.toFixed(2) + " V\nTensió Compliance Mínima = 7.50 V (XTR115)",
+        challenge: {
+          q: "Per a una variable de procés al 62.5%, quin corrent exacte en mA ha de circular pel bucle industrial de 4-20 mA?",
+          ans: 14.0, tol: 0.1, unit: "mA",
+          sol: "I_loop = 4 mA + 16 mA · (62.5 / 100) = 4 + 10 = 14.00 mA."
+        }
+      };
+    }
+  },
+
+  // ====================================================================
+  // MÒDUL 20: ROSETA DE GALGUES A 45° & CERCLE DE MOHR DINÀMIC
+  // ====================================================================
+  {
+    title: "20. Roseta de Galgues a 45° & Cercle de Mohr Dinàmic",
+    hud: ["Model: Deformació Plana & Hooke", "Cercle de Mohr: ε1, ε2, γ_max, θp"],
+    controls: [
+      { id: "epsa", label: "Deformació Galga A (0°)", min: -1500, max: 1500, val: 650, unit: "με", step: 25 },
+      { id: "epsb", label: "Deformació Galga B (45°)", min: -1500, max: 1500, val: 250, unit: "με", step: 25 },
+      { id: "epsc", label: "Deformació Galga C (90°)", min: -1500, max: 1500, val: -350, unit: "με", step: 25 },
+      { id: "emod", label: "Mòdul d'Elasticitat E", min: 50, max: 250, val: 72, unit: "GPa", step: 2 },
+      { id: "nupoi", label: "Coeficient de Poisson (ν)", min: 0.20, max: 0.38, val: 0.33, unit: "", step: 0.01 }
+    ],
+    presets: [
+      { name: "Tracció Pura Biaxial (A=600, B=150, C=-300)", epsa: 600, epsb: 150, epsc: -300, emod: 72, nupoi: 0.33 },
+      { name: "Torsió Pura amb Cisallament (A=400, B=0, C=-400)", epsa: 400, epsb: 0, epsc: -400, emod: 210, nupoi: 0.30 }
+    ],
+    calc: (p) => {
+      const ex = p.epsa;
+      const ey = p.epsc;
+      const gxy = 2 * p.epsb - (p.epsa + p.epsc);
+      const e_avg = (ex + ey) / 2.0;
+      const r_mohr = Math.sqrt(Math.pow((ex - ey) / 2.0, 2) + Math.pow(gxy / 2.0, 2));
+      const e1 = e_avg + r_mohr;
+      const e2 = e_avg - r_mohr;
+      const g_max = 2.0 * r_mohr;
+      const theta_p_deg = 0.5 * Math.atan2(gxy, (ex - ey)) * (180.0 / Math.PI);
+      const E_pa = p.emod * 1e9;
+      const nu = p.nupoi;
+      const s1_mpa = (E_pa / (1.0 - nu*nu)) * (e1*1e-6 + nu * e2*1e-6) / 1e6;
+      const s2_mpa = (E_pa / (1.0 - nu*nu)) * (e2*1e-6 + nu * e1*1e-6) / 1e6;
+      return {
+        dmmText: e1.toFixed(1) + " με",
+        dmmMin: "-2000 με", dmmMax: "+2000 με",
+        dmmBar: Math.max(0, Math.min(100, (e1 + 2000) / 4000 * 100)),
+        dmmUb: "±1.5 με",
+        metrics: [
+          { name: "Deformació Principal ε1", val: e1.toFixed(1) + " με", sub: `Tracció màxima` },
+          { name: "Deformació Principal ε2", val: e2.toFixed(1) + " με", sub: `Compressió mínima` },
+          { name: "Cisallament Màxim γ_max", val: g_max.toFixed(1) + " µrad", sub: `γ_max = 2·R_mohr` },
+          { name: "Angle Principal θp", val: theta_p_deg.toFixed(1) + "°", sub: "Orientació eixos principals" },
+          { name: "Tensió Principal σ1", val: s1_mpa.toFixed(2) + " MPa", sub: `Llei de Hooke (E=${p.emod} GPa)` }
+        ],
+        formula: "ε_avg = (εx + εy)/2  |  R = √[((εx - εy)/2)² + (γxy/2)²]\nε1,2 = ε_avg ± R = " + e1.toFixed(1) + ", " + e2.toFixed(1) + " με\nγxy = 2·εb - (εa + εc) = " + gxy.toFixed(1) + " µrad\nσ1 = E/(1-ν²)·(ε1 + ν·ε2) = " + s1_mpa.toFixed(2) + " MPa",
+        challenge: {
+          q: "Si la galga A mesura 500 με, la galga B mesura 200 με i la galga C mesura -100 με, calcula el cisallament γxy en µrad:",
+          ans: 0.0, tol: 5.0, unit: "µrad",
+          sol: "γxy = 2·εb - (εa + εc) = 2·(200) - (500 + (-100)) = 400 - 400 = 0.0 µrad."
+        },
+        e_avg, r_mohr, e1, e2, g_max, theta_p_deg
+      };
+    }
+  }
 ];
 
 
@@ -4768,6 +5112,7 @@ function switchModule(idx) {
   if (mbMod) mbMod.innerText = modTitle;
 
   loadModuleUI();
+  if (typeof build3DGeometry === 'function') build3DGeometry();
   updateAudioSynthesis();
   renderCircuitSchematic();
 }
@@ -5697,6 +6042,93 @@ function renderCircuitSchematic() {
     ctx.fillStyle = '#fbbf24'; ctx.font = '10px "SF Mono", monospace';
     ctx.fillText(`Teorema de Tellegen: P_gen = ${(resC.P_gen*1000).toFixed(1)}mW = P_diss = ${(resC.P_diss*1000).toFixed(1)}mW (100% OK)`, col2X, cardY + 56);
 
+  } else if (m === 19) {
+    // Renderitzat especial: CERCLE DE MOHR DINÀMIC PER A LA ROSETA DE GALGUES
+    const calcRes = (modData && modData.calc) ? modData.calc(params) : null;
+    if (calcRes) {
+      const e_avg = calcRes.e_avg || 150;
+      const r_mohr = calcRes.r_mohr || 500;
+      const e1 = calcRes.e1 || 650;
+      const e2 = calcRes.e2 || -350;
+      const g_max = calcRes.g_max || 1000;
+      const th_p = calcRes.theta_p_deg || 15;
+
+      ctx.fillStyle = '#06080e';
+      ctx.fillRect(0, 0, w, h);
+
+      // Títol
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 13px -apple-system, sans-serif';
+      ctx.fillText('CERCLE DE MOHR DINÀMIC (DEFORMACIÓ PLANA EN TEMPS REAL)', 24, 30);
+      ctx.font = '10px "SF Mono", monospace';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(`Centre (ε_avg): ${e_avg.toFixed(1)} με  |  Radi (R): ${r_mohr.toFixed(1)} με  |  θp = ${th_p.toFixed(1)}°`, 24, 46);
+
+      const mOx = w / 2;
+      const mOy = h / 2 + 15;
+      const scale = Math.min(w, h) / (Math.max(800, r_mohr * 2.8));
+
+      // Eixos de coordenades (ε horitzontal, γ/2 vertical cap avall segons conveni)
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(30, mOy); ctx.lineTo(w - 30, mOy); // Eix ε
+      ctx.moveTo(mOx, 40); ctx.lineTo(mOx, h - 30); // Eix γ/2
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText('ε (Deformació Longitudinal)', w - 170, mOy - 8);
+      ctx.fillText('γ / 2 (Cisallament)', mOx + 8, 55);
+
+      // Cercle de Mohr
+      const cx_canvas = mOx + e_avg * scale;
+      const r_canvas = Math.max(15, r_mohr * scale);
+
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(cx_canvas, mOy, r_canvas, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Ombrejat interior del cercle
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.06)';
+      ctx.fill();
+
+      // Punts Principals ε1 i ε2
+      const x_e1 = cx_canvas + r_canvas;
+      const x_e2 = cx_canvas - r_canvas;
+
+      // Punt ε1 (Principal major)
+      ctx.fillStyle = '#34d399';
+      ctx.beginPath(); ctx.arc(x_e1, mOy, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillText(`ε1 = ${e1.toFixed(0)} με`, x_e1 + 8, mOy - 6);
+
+      // Punt ε2 (Principal menor)
+      ctx.fillStyle = '#f87171';
+      ctx.beginPath(); ctx.arc(x_e2, mOy, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillText(`ε2 = ${e2.toFixed(0)} με`, x_e2 - 80, mOy - 6);
+
+      // Punt de Cisallament Màxim (Top & Bottom)
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath(); ctx.arc(cx_canvas, mOy - r_canvas, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillText(`γ_max / 2 = ${(g_max/2).toFixed(0)}`, cx_canvas + 8, mOy - r_canvas + 4);
+
+      // Línia de diàmetre d'orientació amb angle 2θp
+      const rad2 = (th_p * 2) * Math.PI / 180;
+      const px_a = cx_canvas + Math.cos(rad2) * r_canvas;
+      const py_a = mOy - Math.sin(rad2) * r_canvas;
+      ctx.strokeStyle = '#e879f9';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(cx_canvas, mOy);
+      ctx.lineTo(px_a, py_a);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#e879f9';
+      ctx.fillText(`Estat (0°): 2θp = ${(th_p*2).toFixed(1)}°`, px_a + 6, py_a);
+    }
   } else {
     // Fallback de seguridad estilizado
     ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2;
@@ -5718,7 +6150,9 @@ function renderCircuitSchematic() {
   ctx.fillStyle = '#f8fafc'; ctx.font = '11px "SF Mono", monospace';
   ctx.fillText((res.formula || '').replace(new RegExp(String.fromCharCode(10), 'g'), '   |   '), 40, h - 30);
 
-  ctx.restore();
+  
+  
+    ctx.restore();
 }
 
 function openColorCodeModal() {
@@ -6699,6 +7133,7 @@ window.onload = () => {
   loadModuleUI();
   initInteractiveCanvasEvents();
   updatePsuDisplays();
+  if (typeof build3DGeometry === 'function') build3DGeometry();
 
   // Reloj en tiempo real de macOS en la barra de menú
   function updateMacClock() {
@@ -6712,6 +7147,245 @@ window.onload = () => {
   updateMacClock();
   loop();
 };
+
+// ======================================================================
+// NOUS INSTRUMENTS: ANALITZADOR LÒGIC, SOROLL JOHNSON & C/C++ FIRMWARE
+// ======================================================================
+function openLogicModal() {
+  const m = document.getElementById('modal-logic');
+  if (m) m.style.display = 'flex';
+  setTimeout(renderLogicPlot, 50);
+}
+function closeLogicModal() {
+  const m = document.getElementById('modal-logic');
+  if (m) m.style.display = 'none';
+}
+
+function renderLogicPlot() {
+  const canvas = document.getElementById('logic-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.fillStyle = '#030712';
+  ctx.fillRect(0, 0, w, h);
+
+  const proto = document.getElementById('sel-logic-proto')?.value || 'I2C';
+  const chNames = proto === 'I2C' ? ['D0 (SCL)', 'D1 (SDA)', 'D2 (INT)', 'D3 (RST)', 'D4 (TRIG)', 'D5', 'D6', 'D7']
+                : (proto === 'SPI' ? ['D0 (SCK)', 'D1 (MOSI)', 'D2 (MISO)', 'D3 (CS#)', 'D4 (RDY)', 'D5', 'D6', 'D7']
+                : ['D0 (TX)', 'D1 (RX)', 'D2 (RTS)', 'D3 (CTS)', 'D4', 'D5', 'D6', 'D7']);
+
+  const rowH = h / 8;
+  ctx.font = '10px "SF Mono", monospace';
+
+  for (let ch = 0; ch < 8; ch++) {
+    const yTop = ch * rowH;
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, yTop + rowH); ctx.lineTo(w, yTop + rowH); ctx.stroke();
+
+    ctx.fillStyle = ch < 4 ? '#38bdf8' : '#64748b';
+    ctx.fillText(chNames[ch], 10, yTop + rowH * 0.65);
+
+    // Dibuixar forma d'ona digital quadrada
+    ctx.strokeStyle = ch === 0 ? '#34d399' : (ch === 1 ? '#38bdf8' : (ch === 2 ? '#facc15' : '#a855f7'));
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    const bitW = 28;
+    const startX = 90;
+    const hiY = yTop + 6;
+    const loY = yTop + rowH - 6;
+
+    let curLevel = 1;
+    ctx.moveTo(startX, hiY);
+    for (let bx = startX; bx < w - 10; bx += bitW) {
+      if (ch === 0) { // SCL / SCK Clock
+        curLevel = (curLevel === 1) ? 0 : 1;
+      } else {
+        curLevel = ((bx / bitW + ch * 3) % 5 > 2) ? 1 : 0;
+      }
+      const targetY = curLevel ? hiY : loY;
+      ctx.lineTo(bx, targetY);
+      ctx.lineTo(bx + bitW, targetY);
+    }
+    ctx.stroke();
+  }
+}
+
+function openNoiseModal() {
+  const m = document.getElementById('modal-noise');
+  if (m) m.style.display = 'flex';
+  updateNoiseCalc();
+}
+function closeNoiseModal() {
+  const m = document.getElementById('modal-noise');
+  if (m) m.style.display = 'none';
+}
+
+function updateNoiseCalc() {
+  const tempK = parseFloat(document.getElementById('noise-temp-slider')?.value || 298.15);
+  const bwKhz = parseFloat(document.getElementById('noise-bw-slider')?.value || 100);
+  const kB = 1.380649e-23;
+  const R = 1000.0; // 1 kΩ equivalent
+  const deltaF = bwKhz * 1000.0;
+
+  const v_density = Math.sqrt(4 * kB * tempK * R); // V / sqrt(Hz)
+  const v_rms = v_density * Math.sqrt(deltaF);
+
+  const dispT = document.getElementById('disp-temp-k');
+  if (dispT) dispT.innerText = `${tempK.toFixed(1)} K (${(tempK - 273.15).toFixed(1)} °C)`;
+  const dispBw = document.getElementById('disp-bw-khz');
+  if (dispBw) dispBw.innerText = `${bwKhz.toFixed(0)} kHz`;
+
+  const dispDens = document.getElementById('noise-density-disp');
+  if (dispDens) dispDens.innerText = (v_density * 1e9).toFixed(2) + " nV/√Hz";
+  const dispVrms = document.getElementById('noise-vrms-disp');
+  if (dispVrms) dispVrms.innerText = (v_rms * 1e6).toFixed(3) + " µV rms";
+}
+
+function injectNoiseIntoOscilloscope() {
+  closeNoiseModal();
+  if (typeof animPhase !== 'undefined') animPhase += 0.5;
+  const toast = document.createElement('div');
+  toast.innerText = "🔊 Soroll Tèrmic injectat al canal CH2 de l'oscil·loscopi";
+  toast.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#eab308; color:#000; padding:8px 14px; border-radius:6px; font-weight:700; font-size:12px; z-index:9999; box-shadow:0 4px 12px rgba(0,0,0,0.5);';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+function openFirmwareModal() {
+  const m = document.getElementById('modal-firmware');
+  if (m) m.style.display = 'flex';
+  generateFirmwareCode();
+}
+function closeFirmwareModal() {
+  const m = document.getElementById('modal-firmware');
+  if (m) m.style.display = 'none';
+}
+
+function generateFirmwareCode() {
+  const plat = document.getElementById('sel-firmware-plat')?.value || 'ARDUINO';
+  const box = document.getElementById('firmware-code-box');
+  if (!box) return;
+
+  const m = currentModule;
+  const modTitle = MODULE_DATA[m]?.title || 'Sensor Industrial';
+
+  let code = '';
+  if (plat === 'ARDUINO') {
+    code = `// =====================================================================
+// FIRMWARE EMBEBIDO ARDUINO / C++ · UPC EEBE
+// Mòdul: ${modTitle}
+// =====================================================================
+#include <Arduino.h>
+
+const int SENSOR_PIN = A0;
+const float V_REF = 5.000;      // Tensió de referència ADC
+const int ADC_RES = 1024;       // 10-bit ADC (1024 nivells)
+const int NUM_SAMPLES = 64;     // Filtre de mitjana mòbil per reduir soroll
+
+void setup() {
+  Serial.begin(115200);
+  analogReference(DEFAULT);
+  pinMode(SENSOR_PIN, INPUT);
+  Serial.println("INIT: ${modTitle} preparat.");
+}
+
+float readCalibratedPhysical() {
+  long rawSum = 0;
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    rawSum += analogRead(SENSOR_PIN);
+    delayMicroseconds(50);
+  }
+  float avgRaw = (float)rawSum / NUM_SAMPLES;
+  float voltage = (avgRaw / (ADC_RES - 1)) * V_REF;
+
+  // Corba de Calibració segons model del laboratori
+  float physicalVal = voltage * 2.05f; // Factor de conversió
+  return physicalVal;
+}
+
+void loop() {
+  float val = readCalibratedPhysical();
+  Serial.print("TELEMETRY,Val:");
+  Serial.println(val, 4);
+  delay(100);
+}
+`;
+  } else if (plat === 'ESP32') {
+    code = `// =====================================================================
+// FIRMWARE ESP32 IDF / C++ · 12-BIT CALIBRATED ADC · UPC EEBE
+// Mòdul: ${modTitle}
+// =====================================================================
+#include <Arduino.h>
+#include <esp_adc_cal.h>
+
+#define SENSOR_PIN 36 // ADC1_CH0 (GPIO36 / VP)
+#define NUM_SAMPLES 64
+
+static esp_adc_cal_characteristics_t adc_chars;
+
+void setup() {
+  Serial.begin(115200);
+  analogReadResolution(12); // 12-bit (0..4095)
+  analogSetAttenuation(ADC_11db); // Rang complet fins a 3.3V
+  esp_adc_cal_characterize(ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, 1100, &adc_chars);
+  Serial.println("ESP32 Sensor DMA iniciat.");
+}
+
+void loop() {
+  uint32_t raw_sum = 0;
+  for (int i = 0; i < NUM_SAMPLES; i++) {
+    raw_sum += analogRead(SENSOR_PIN);
+    ets_delay_us(20);
+  }
+  uint32_t avg_raw = raw_sum / NUM_SAMPLES;
+  uint32_t voltage_mv = esp_adc_cal_raw_to_voltage(avg_raw, &adc_chars);
+
+  Serial.printf("VOLT_MV:%u,VAL_ENG:%.3f\n", voltage_mv, (float)voltage_mv * 0.001f);
+  delay(100);
+}
+`;
+  } else {
+    code = `// =====================================================================
+// FIRMWARE STM32 HAL (C99) · 12-BIT ADC WITH DMA · UPC EEBE
+// Mòdul: ${modTitle}
+// =====================================================================
+#include "main.h"
+
+extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_adc1;
+
+#define ADC_BUF_LEN 128
+uint16_t adc_dma_buffer[ADC_BUF_LEN];
+volatile uint8_t adc_conv_complete = 0;
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+  adc_conv_complete = 1;
+}
+
+float ProcessSensorReading(void) {
+  uint32_t sum = 0;
+  for (int i = 0; i < ADC_BUF_LEN; i++) {
+    sum += adc_dma_buffer[i];
+  }
+  float avg_raw = (float)sum / ADC_BUF_LEN;
+  float v_volts = (avg_raw / 4095.0f) * 3.300f;
+  return v_volts;
+}
+`;
+  }
+  box.value = code;
+}
+
+function copyFirmwareCode() {
+  const box = document.getElementById('firmware-code-box');
+  if (box) {
+    navigator.clipboard.writeText(box.value);
+    alert('✅ Codi firmware copiat al portapapeles!');
+  }
+}
+
 </script>
 </body>
 </html>
