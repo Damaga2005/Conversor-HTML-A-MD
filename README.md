@@ -12,23 +12,24 @@
 
 > Suite integral de ingeniería documental, conversores universales de alta fidelidad y estación de trabajo virtual diseñada para transformar contenidos educativos, técnicos e interactivos (HTML, PDF, DOCX, IPYNB, MathML, scripts de examen) en **Markdown técnico estructurado de máxima pureza**, 100% optimizado para **Google NotebookLM**, Gemini, Claude, Obsidian y ChatGPT.
 > 
-> Incluye el **Plan de Estudios Completo GREELEC (UPC ETSETB)** con las **35 asignaturas obligatorias**, **424 preguntas técnicas de examen con justificación**, 35 calculadoras interactivas de parámetros y bancos de ensayo SPICE/VHDL/C; además del **Laboratorio Virtual de Sensores e Instrumentación 3D (v8.5 Enterprise Workbench)** con 20 módulos circuitales, calculadora metrológica GUM con simulación Monte Carlo, diseñador de filtros activos, banco R-L-C y gestor de flashcards Anki.
+> Incluye el **Plan de Estudios Completo GREELEC (UPC ETSETB)** con las **35 asignaturas obligatorias**, **424 preguntas técnicas de examen con justificación**, 35 calculadoras interactivas de parámetros y bancos de ensayo SPICE/VHDL/C; la **Suite de 37 Solvers Especializados de Ingeniería**; el **Motor Universal de Extracción de Fórmulas Matemáticas y Problemas Resueltos**; y el **Laboratorio Virtual de Sensores e Instrumentación 3D (v8.5 Enterprise Workbench)** con 20 módulos circuitales, calculadora metrológica GUM con simulación Monte Carlo, diseñador de filtros activos, banco R-L-C y gestor de flashcards Anki.
 
 ---
 
 ## 📑 Tabla de Contenidos
 - [✨ Características Principales](#-características-principales)
-  - [🔄 1. Conversores Universales de Archivos & Extractor de Fórmulas y Problemas](#-1-conversores-universales-de-archivos-de-alta-fidelidad-universal_converterspy)
-  - [🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark)](#-2-interfaz-gráfica-de-escritorio-apple-liquid-glass-dark)
+  - [🔄 1. Conversores Universales de Archivos & Extractor de Fórmulas y Problemas](#-1-conversores-universales-de-archivos--extractor-de-fórmulas-y-problemas-universal_converterspy)
+  - [🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark — 9 Pestañas)](#-2-interfaz-gráfica-de-escritorio-apple-liquid-glass-dark--9-pestañas)
   - [🎓 3. Plan de Estudios UPC GREELEC: 35 Asignaturas & 424 Preguntas de Examen](#-3-plan-de-estudios-upc-greelec-35-asignaturas--424-preguntas-de-examen)
   - [🛠️ 4. Suite de 37 Solvers y Herramientas Especializadas de Ingeniería](#-4-suite-de-37-solvers-y-herramientas-especializadas-de-ingeniería-engineering_tools_suitepy)
-  - [🔬 5. Laboratorio Virtual de Sensores e Instrumentación 3D](#-5-laboratorio-virtual-de-sensores-e-instrumentación-3d-v85-enterprise)
+  - [🔬 5. Laboratorio Virtual de Sensores e Instrumentación 3D (20 Módulos + MNA + CAD)](#-5-laboratorio-virtual-de-sensores-e-instrumentación-3d-v85-enterprise)
   - [📐 6. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo](#-6-calculadora-metrológica-gum-isoiec-98-3--monte-carlo-supl-1)
-  - [🎛️ 7. Diseñador de Filtros Activos & Sensores](#-7-diseñador-de-filtros-activos-sensores--acondicionadores)
+  - [🎛️ 7. Diseñador de Filtros Activos & Sensores Acondicionadores](#-7-diseñador-de-filtros-activos-sensores--acondicionadores)
   - [🔌 8. Banco R-L-C & Presets Canónicos GREELEC](#-8-banco-r-l-c--presets-canónicos-greelec)
   - [🗂️ 9. Repaso Activo Anki & Gestor de Exámenes](#-9-repaso-activo-anki--gestor-de-exámenes)
 - [🚀 Instalación y Requisitos](#-instalación-y-requisitos)
 - [🖥️ Uso de la Aplicación (GUI y Terminal CLI)](#-uso-de-la-aplicación-gui-y-terminal-cli)
+- [🧪 Suite de Pruebas Automatizadas (40 Tests Pasando)](#-suite-de-pruebas-automatizadas-40-tests-pasando)
 - [📁 Estructura del Repositorio](#-estructura-del-repositorio)
 - [🤖 Integración con Google NotebookLM](#-integración-con-google-notebooklm)
 - [📄 Licencia](#-licencia)
@@ -37,33 +38,52 @@
 
 ## ✨ Características Principales
 
-### 🔄 1. Conversores Universales de Archivos de Alta Fidelidad (`universal_converters.py`)
-Módulo independiente de conversión universal con algoritmos especializados:
-- **Traductor OMML a LaTeX de Precisión Industrial:** Soporte exhaustivo para los 15 elementos matemáticos de Word (`m:f`, `m:sSup`, `m:sSub`, `m:sSubSup`, `m:sPre`, `m:rad`, `m:d`, `m:m`, `m:nary`, `m:limLow`, `m:limUpp`, `m:bar`, `m:acc`, `m:box`, `m:groupChr`, `m:eqArr`). Traduce matrices 2D, integrales múltiples con límites, sumatorios, raíces n-ésimas y acentos vectoriales directamente a $\LaTeX$ puro balanceado.
-- **Extractor Universal de Fórmulas Matemáticas Multi-Formato:** Escanea simultáneamente archivos `.md`, `.html`, `.docx`, `.ipynb`, `.pdf`, `.xlsx` y `.csv`, limpia la sintaxis matemática, auto-balancea delimitadores y compila un Formulario Maestro clasificado por temas y asignaturas.
-- **Extractor y Compilador Universal de Problemas y Ejercicios:** Identifica automáticamente enunciados, tablas de datos técnicos con unidades, listas de cuestiones formuladas, soluciones paso a paso y resultados clave enmarcados ($\boxed{...}$), generando un Banco Maestro de Problemas Resueltos.
-- **PDF a Markdown (PyMuPDF):** Extracción inteligente con detección de encabezados jerárquicos, tablas estructuradas en formato GitHub Flavored Markdown (GFM) e inferencia de bloques matemáticos en $\LaTeX$.
-- **Jupyter Notebook (`.ipynb`) a Markdown:** Extracción secuencial de celdas Markdown y código fuente Python, preservando salidas de consola, trazas de ejecución e imágenes gráficas generadas.
+### 🔄 1. Conversores Universales de Archivos & Extractor de Fórmulas y Problemas (`universal_converters.py`)
+Módulo independiente de conversión universal con algoritmos de máxima fidelidad:
+- **Traductor OMML a LaTeX de Precisión Industrial:** Soporte exhaustivo para los 15 elementos sintácticos de Microsoft Word Office Math Markup Language:
+  - Fracciones (`m:f`) recursivas $\frac{num}{den}$.
+  - Potencias, subíndices y pre-índices (`m:sSup`, `m:sSub`, `m:sSubSup`, `m:sPre`).
+  - Radicales cuadrados y raíces de orden $N$ (`m:rad`).
+  - Delimitadores dinámicos escalables (`m:d` con `()`, `[]`, `{}`, `||`).
+  - Matrices bidimensionales (`m:m`, `m:mr`, `m:e`) traducidas a entornos `\begin{matrix} ... \end{matrix}` con `&` y `\\`.
+  - Operadores n-arios (`m:nary` para $\int, \iint, \iiint, \oint, \sum, \prod, \bigcup, \bigcap$) con límites superior e inferior automáticos.
+  - Límites algebraicos (`m:limLow`, `m:limUpp`).
+  - Acentos vectoriales y derivadas (`m:acc` para `\vec{v}`, `\hat{x}`, `\dot{x}`, `\ddot{x}`).
+  - Ecuaciones enmarcadas (`m:box` para `\boxed{...}`).
+  - Barras y subrayados (`m:bar`).
+  - Llaves agrupadoras horizontales (`m:groupChr` para `\underbrace{...}` y `\overbrace{...}`).
+  - Alineaciones multilínea (`m:eqArr` para `\begin{aligned} ... \end{aligned}`).
+- **Extractor Universal de Formulario Maestro Multi-Formato (`extract_formula_sheet_from_files`):**
+  - Analiza simultáneamente documentos `.md`, `.html`, `.docx`, `.ipynb`, `.pdf`, `.xlsx` y `.csv`.
+  - Normalización sintáctica con `clean_latex_formula`: auto-balanceo de llaves desparejadas, eliminación de wrappers `\displaystyle`, conversión de raíces unicode `√`, corrección de comas decimales europeas (`2{,}2`) e inserción de barras invertidas en funciones estándar (`\sin`, `\cos`, `\ln`, `\max`, `\min`, `\lim`).
+  - Compilación automática clasificada por temas y asignaturas en formato tabla GFM (código inline `$formula$` y bloque renderizado `$$formula$$`).
+- **Extractor y Compilador Universal de Problemas y Ejercicios (`extract_problems_from_text` y `extract_problems_from_files`):**
+  - Reconocimiento de problemas técnicos en español, catalán e inglés (`Problema`, `Ejercicio`, `Exercici`, `Exercise`, `Cuestión`, `Qüestió`).
+  - Segmentación automática en: Enunciado, Tabla de Parámetros/Datos Técnicos con unidades, Lista de Cuestiones Formuladas, Solución Paso a Paso y Respuestas Clave enmarcadas ($\boxed{...}$).
+  - Compilación en documento maestro `_Problemas_Compilados_Maestros.md` con índice navegable de enlaces ancla.
+- **PDF a Markdown (PyMuPDF):** Extracción con detección de encabezados jerárquicos, tablas estructuradas GFM e inferencia de bloques matemáticos en $\LaTeX$.
+- **Jupyter Notebook (`.ipynb`) a Markdown:** Extracción secuencial de celdas Markdown y código fuente Python, preservando salidas de consola, trazas de ejecución e imágenes embebidas.
 - **Extractor Automático de Imágenes Base64:** Decodifica recursos gráficos embebidos y los almacena físicamente en la carpeta `assets/` con control de hash SHA-256 para evitar duplicaciones.
 - **Excel (`.xlsx`) y CSV a Tablas Markdown:** Conversor tipado con detección de números, porcentajes y alineación columnar automática.
 - **Markdown a HTML Imprimible / PDF Académico:** Motor de maquetación con estilos de alta legibilidad (Apple Pro / San Francisco), integración con MathJax 3 y reglas CSS `@media print` optimizadas para generar PDFs A4 con un solo clic.
 - **Extractor de Netlists SPICE:** Detección de esquemas y circuitos en notas técnicas para exportar archivos `.cir` listos para simulación en LTspice, NGSpice o KiCad.
 - **Generador de Glosario Técnico A-Z:** Indexación alfabética automática de acrónimos y definiciones con enlace a sus fuentes.
-- **Conversión Universal en Lote (`batch_convert_universal`):** Exploración recursiva de directorios para procesar simultáneamente colecciones de archivos heterogéneos (PDF, DOCX, IPYNB, CSV, XLSX, HTML).
+- **Conversor y Empaquetador Anki (`markdown_to_anki_deck`):** Generación automática de mazos TSV y paquetes binarios `.apkg` con plantillas visuales oscuras y MathJax.
+- **Conversión Universal en Lote (`batch_convert_universal`):** Exploración recursiva de directorios para procesar simultáneamente colecciones de archivos heterogéneos.
 
 ---
 
-### 🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark)
+### 🎨 2. Interfaz Gráfica de Escritorio (Apple Liquid Glass Dark — 9 Pestañas)
 La aplicación de escritorio (`conversor_html_notebooklm.py`) cuenta con una interfaz organizada en **9 pestañas temáticas** navegables mediante un selector segmentado tipo macOS:
-1. **HTML a MD:** Conversor interactivo con previsualización, extracción de imágenes y perfiles preconfigurados.
-2. **Universal:** Panel de control de conversión multi-formato (PDF, DOCX, IPYNB, CSV, Excel) con selección de opciones avanzadas y consola asíncrona en tiempo real.
-3. **Visor Markdown:** Lector con resaltado de sintaxis, barra de productividad (zoom tipográfico A-/100%/A+, estadísticas en vivo de palabras, caracteres, fórmulas y tiempo de lectura) y exportador HTML/PDF.
-4. **Biblioteca:** Acceso directo a documentos maestros, exámenes resueltos y enlaces de estudio.
-5. **Calculadora GUM:** Presupuesto de incertidumbres según la norma ISO/IEC 98-3 con simulación Monte Carlo.
-6. **Filtros Activos:** Calculadora y sintetizador de filtros Sallen-Key con diagrama de Bode en tiempo real y acondicionadores analógicos.
-7. **Banco R-L-C:** Simulador de topologías canónicas y esquemáticos vectoriales dinámicos.
-8. **Flashcards Anki:** Visor de preguntas de autoevaluación, buscador interactivo en vivo, filtrado temático y exportador de mazos Anki (`.apkg` y `.tsv`).
-9. **Plan UPC GREELEC:** Estación de trabajo académica completa del grado con explorador de las 35 asignaturas obligatorias, temarios oficiales extraídos de guías docentes PDF, fórmulas $\LaTeX$, 35 calculadoras interactivas de parámetros, bancos SPICE/VHDL/C y 424 preguntas oficiales de autoevaluación con justificación.
+1. **🚀 HTML a MD:** Conversor interactivo con previsualización, extracción de imágenes, blindaje de MathML/KaTeX y perfiles preconfigurados (NotebookLM, Obsidian, GitHub).
+2. **🌐 Universal:** Panel de control de conversión multi-formato (PDF, DOCX con OMML, IPYNB, CSV, Excel) con casillas de verificación para generación de formulario de ecuaciones, extracción de problemas, netlists SPICE, glosarios y mazos Anki.
+3. **👁️ Visor Markdown:** Lector con resaltado de sintaxis, barra de productividad (zoom tipográfico A-/100%/A+, estadísticas en vivo de palabras, caracteres, fórmulas y tiempo de lectura) y exportador a HTML imprimible/PDF.
+4. **📚 Biblioteca:** Acceso directo a documentos maestros, exámenes resueltos y enlaces de estudio.
+5. **📐 Calculadora GUM:** Presupuesto de incertidumbres según la norma ISO/IEC 98-3 con simulación Monte Carlo.
+6. **🎛️ Filtros Activos:** Calculadora y sintetizador de filtros Sallen-Key con diagrama de Bode en tiempo real y acondicionadores analógicos.
+7. **🔌 Banco R-L-C:** Simulador de topologías canónicas y esquemáticos vectoriales dinámicos.
+8. **🗂️ Flashcards Anki:** Visor de preguntas de autoevaluación, buscador interactivo en vivo, filtrado temático y exportador de mazos Anki (`.apkg` y `.tsv`).
+9. **🎓 Plan UPC GREELEC & Workbench:** Estación de trabajo académica completa del grado con explorador de las 35 asignaturas obligatorias, temarios oficiales extraídos de guías docentes PDF, fórmulas $\LaTeX$, 35 calculadoras interactivas de parámetros, bancos SPICE/VHDL/C, 424 preguntas oficiales de autoevaluación con justificación y acceso directo a la **Suite de 37 Solvers Especializados**.
 
 #### ⚡ Atajos de Teclado Globales:
 | Atajo | Acción |
@@ -71,7 +91,7 @@ La aplicación de escritorio (`conversor_html_notebooklm.py`) cuenta con una int
 | `Ctrl + 1` .. `Ctrl + 9` | Cambio instantáneo a cualquiera de las 9 pestañas |
 | `Ctrl + O` | Abrir diálogo de selección de archivo o carpeta de origen |
 | `Ctrl + S` | Guardar o exportar resultados de la pestaña activa |
-| `F5` / `Ctrl + R` | Recalcular parámetros activos (GUM, Filtros, RLC, UPC) |
+| `F5` / `Ctrl + R` | Recalcular parámetros activos (GUM, Filtros, RLC, UPC, Solvers) |
 | `Drag & Drop` | Arrastrar archivos PDF, DOCX, IPYNB, XLSX o HTML conmuta y precarga la herramienta correspondiente |
 
 ---
@@ -79,14 +99,44 @@ La aplicación de escritorio (`conversor_html_notebooklm.py`) cuenta con una int
 ### 🎓 3. Plan de Estudios UPC GREELEC: 35 Asignaturas & 424 Preguntas de Examen
 El motor académico `upc_degree_engine.py` incorpora los datos y competencias oficiales de todas las asignaturas obligatorias del **Grado en Ingeniería Electrónica de Telecomunicación (ETSETB - UPC)**:
 - **Catálogo de 35 Asignaturas Obligatorias (210 ECTS Totales):**
-  - **Q1:** `230339` IMATEC · `230900` CCE · `230901` APR · `230902` F · `230903` C · `230904` ALN
-  - **Q2:** `230905` AC · `230906` PRD · `230907` EMG · `230908` CVEC · `230909` EDT
-  - **Q3:** `230910` DE · `230911` DD · `230912` EAFO · `230913` SST · `230914` PPE
-  - **Q4:** `230915` CA · `230916` EMB · `230917` ICAF · `230918` TRS · `230919` EP
-  - **Q5:** `230920` SM · `230921` SDC · `230922` CIAF · `230923` CEM · `230924` CTR
-  - **Q6:** `230925` IOT · `230926` RT · `230927` PEE · `230928` TEL · `230929` TEM
-  - **Q7:** `230930` DMIC · `230931` HIPS · `230934` DIFO
-  - **Q8:** `230932` INT
+  - **Fase Inicial (Q1 - Q2):**
+    - `230339` IMATEC: Introducció a la Matemàtica per a les Tecnologies de la Informació i les Comunicacions (6 ECTS)
+    - `230900` CCE: Circuitos y Componentes Electrónicos (6 ECTS)
+    - `230901` APR: Aprendizaje y Programación (6 ECTS)
+    - `230902` F: Física (6 ECTS)
+    - `230903` C: Cálculo (6 ECTS)
+    - `230904` ALN: Álgebra Lineal (6 ECTS)
+    - `230905` AC: Análisis de Circuitos (6 ECTS)
+    - `230906` PRD: Proyecto de Redes y Dispositivos (6 ECTS)
+    - `230907` EMG: Electromagnetismo (6 ECTS)
+    - `230908` CVEC: Cálculo Vectorial y Ecuaciones Diferenciales (6 ECTS)
+    - `230909` EDT: Estructura de Datos (6 ECTS)
+  - **Fase Formativa Troncal (Q3 - Q6):**
+    - `230910` DE: Dispositivos Electrónicos (6 ECTS)
+    - `230911` DD: Diseño Digital (6 ECTS)
+    - `230912` EAFO: Electrónica Analógica y Fotónica (6 ECTS)
+    - `230913` SST: Señales y Sistemas de Telecomunicación (6 ECTS)
+    - `230914` PPE: Probabilidad y Procesos Estocásticos (6 ECTS)
+    - `230915` CA: Circuitos Analógicos (6 ECTS)
+    - `230916` EMB: Electrónica de Microondas y Radiofrecuencia (6 ECTS)
+    - `230917` ICAF: Instrumentación y Circuitos de Alta Frecuencia (6 ECTS)
+    - `230918` TRS: Transmisión y Radiación de Señales (6 ECTS)
+    - `230919` EP: Economía y Proyecto Profesional (6 ECTS)
+    - `230920` SM: Sistemas de Medida (6 ECTS)
+    - `230921` SDC: Sistemas Digitales y Comunicaciones (6 ECTS)
+    - `230922` CIAF: Circuitos Integrados y Arquitecturas Fotónicas (6 ECTS)
+    - `230923` CEM: Compatibilidad Electromagnética (6 ECTS)
+    - `230924` CTR: Sistemas de Control (6 ECTS)
+    - `230925` IOT: Internet of Things y Sistemas Embebidos (6 ECTS)
+    - `230926` RT: Radiocomunicaciones y Telefonía Móvil (6 ECTS)
+    - `230927` PEE: Procesamiento de Energía Electrónica (6 ECTS)
+    - `230928` TEL: Procesado de Señal para Telecomunicación (6 ECTS)
+    - `230929` TEM: Tecnologías de Fabricación Electrónica y Microelectrónica (6 ECTS)
+  - **Fase de Especialización y Cierre (Q7 - Q8):**
+    - `230930` DMIC: Diseño Microelectrónico VLSI (6 ECTS)
+    - `230931` HIPS: Hardware para Inteligencia Artificial y Procesado Masivo (6 ECTS)
+    - `230934` DIFO: Dispositivos Fotónicos y Óptica Integrada (6 ECTS)
+    - `230932` INT: Integración de Sistemas Electrónicos y Proyecto Avanzado (6 ECTS)
 - **424 Preguntas Oficiales con Justificación:** 12 a 13 cuestiones técnicas por asignatura con corrección automática y explicación teórica detallada.
 - **35 Calculadoras Paramétricas:** Simulación instantánea de divisores, impedancias, márgenes de estabilidad, inductancias Buck/Boost, enlaces LoRa, etc.
 - **35 Bancos de Ensayo SPICE / HDL / Firmware C:** Netlists listos para ejecución en simuladores circuitales.
@@ -192,7 +242,7 @@ Simulador web autónomo (`Laboratorio_Virtual_Sensores.html`) ejecutable localme
 
 ---
 
-### 📐 4. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo (Supl. 1)
+### 📐 6. Calculadora Metrológica GUM (ISO/IEC 98-3) & Monte Carlo (Supl. 1)
 - **Derivadas Numéricas Centrales:** Obtención automática de coeficientes de sensibilidad $c_i = \partial f / \partial x_i$ con perturbación simétrica óptima.
 - **Distribuciones de Probabilidad:** Normal ($k=1, 2, 3$), Rectangular ($a/\sqrt{3}$) y Triangular ($a/\sqrt{6}$).
 - **Presupuesto de Incertidumbres (Pareto):** Desglose porcentual de varianzas, cálculo de incertidumbre combinada $u_c(y)$ y expandida al 95% ($U_{95\%} = 2 \cdot u_c$).
@@ -201,7 +251,7 @@ Simulador web autónomo (`Laboratorio_Virtual_Sensores.html`) ejecutable localme
 
 ---
 
-### 🎛️ 5. Diseñador de Filtros Activos, Sensores & Acondicionadores
+### 🎛️ 7. Diseñador de Filtros Activos, Sensores & Acondicionadores
 - **Filtros Sallen-Key de 2º Orden:** Síntesis automática para aproximaciones Butterworth ($Q = 0.7071$), Chebyshev (0.5 dB y 3 dB) y Bessel ($Q = 0.577$).
 - **Diagrama de Bode Vectorial:** Trazado de ganancia y fase con retícula logarítmica y marcación visual de $f_c$ a $-3\text{ dB}$.
 - **Sensores de Temperatura:**
@@ -212,7 +262,7 @@ Simulador web autónomo (`Laboratorio_Virtual_Sensores.html`) ejecutable localme
 
 ---
 
-### 🔌 6. Banco R-L-C & Presets Canónicos GREELEC
+### 🔌 8. Banco R-L-C & Presets Canónicos GREELEC
 - Simulación y trazado de esquemáticos vectoriales dinámicos para topologías electrónicas fundamentales:
   - Divisores resistivos de nivel (Level Shifters 5V a 3.3V).
   - Redes de resistencias normalizadas (E12 / E24 / E96).
@@ -226,7 +276,7 @@ Simulador web autónomo (`Laboratorio_Virtual_Sensores.html`) ejecutable localme
 
 ---
 
-### 🗂️ 7. Repaso Activo Anki & Gestor de Exámenes
+### 🗂️ 9. Repaso Activo Anki & Gestor de Exámenes
 - **Pestaña Flashcards Nativa:** Explorador de más de 500 afirmaciones y preguntas técnicas oficiales del curso clasificadas por unidad temática.
 - **Buscador en Vivo:** Filtrado instantáneo por texto, tema o términos técnicos.
 - **Exportación Dual:**
@@ -269,53 +319,57 @@ python conversor_html_notebooklm.py
 ```
 
 ### Uso desde la Línea de Comandos (CLI)
-La aplicación incluye soporte completo por terminal:
+La aplicación incluye soporte completo por terminal con argumentos especializados:
 
 ```bash
-# Ayuda y lista de opciones
+# Ayuda general y lista de opciones
 python conversor_html_notebooklm.py --help
 
 # 1. Conversión de archivo individual HTML a Markdown
 python conversor_html_notebooklm.py origen.html destino.md
 
-# 2. Conversión universal de documentos (PDF, DOCX, Notebooks)
+# 2. Conversión universal de documentos individuales
 python conversor_html_notebooklm.py --pdf documento.pdf salida.md
 python conversor_html_notebooklm.py --docx documento.docx salida.md
 python conversor_html_notebooklm.py --ipynb practica.ipynb salida.md
 
-# 3. Conversión por lotes de una carpeta completa
+# 3. Conversión por lotes de una carpeta completa con perfiles
 python conversor_html_notebooklm.py carpeta_origen/ carpeta_destino/ --preset notebooklm
+python conversor_html_notebooklm.py carpeta_origen/ carpeta_destino/ --preset obsidian
+python conversor_html_notebooklm.py carpeta_origen/ carpeta_destino/ --preset github
 
 # 4. Procesamiento secuencial del curso completo (10 Temas + Documentos Maestros)
 python conversor_html_notebooklm.py --all-temas carpeta_curso/ dist_course_md/
 
-# 5. Plan de Estudios GREELEC UPC (35 Asignaturas & 424 Preguntas)
+# 5. Extracción Universal de Fórmulas Matemáticas (Formulario Maestro)
+# Examina recursivamente archivos .md, .html, .docx, .ipynb, .pdf, .xlsx, .csv
+python conversor_html_notebooklm.py --extract-formulas ./mis_apuntes/ ./dist/_Formulario_Maestro.md
+
+# 6. Extracción Universal de Problemas y Ejercicios Resueltos (Banco de Problemas)
+# Detecta enunciados, parámetros, cuestiones, resoluciones paso a paso y resultados enmarcados
+python conversor_html_notebooklm.py --extract-problems ./mis_apuntes/ ./dist/_Banco_Problemas.md
+
+# 7. Plan de Estudios GREELEC UPC (35 Asignaturas & 424 Preguntas)
 python conversor_html_notebooklm.py --degree-plan
 python conversor_html_notebooklm.py --degree-stats
 python conversor_html_notebooklm.py --degree-export-md mis_guias_upc/
 python conversor_html_notebooklm.py --degree-export-anki mis_mazos_anki/
 
-# 6. Motor Independiente de Asignaturas y Calculadoras
+# 8. Suite de 37 Solvers Especializados de Ingeniería
+# Listar las 37 herramientas organizadas por ramas técnicas
+python conversor_html_notebooklm.py --tools
+python upc_degree_engine.py --tools
+
+# Ejecutar un solver con parámetros JSON estructurados
+python conversor_html_notebooklm.py --tool microstrip_synthesizer --params '{"z0_target": 50.0, "er": 4.4, "h_mm": 1.6}'
+python conversor_html_notebooklm.py --tool buck_converter_synthesizer --params '{"vin_v": 24.0, "vout_v": 5.0, "iout_a": 3.0, "fs_khz": 200.0}'
+python conversor_html_notebooklm.py --tool lora_toa_and_energy_predictor --params '{"sf": 10, "bw_khz": 125.0, "payload_bytes": 32}'
+
+# 9. Motor Académico Independiente de Asignaturas UPC
 python upc_degree_engine.py --list
 python upc_degree_engine.py --subject CCE
 python upc_degree_engine.py --calc CCE --params '{"vs": 12.0, "r1": 2000, "r2": 4000}'
 python upc_degree_engine.py --cheatsheet
-
-# 7. Suite de 37 Solvers Especializados de Ingeniería
-# Listar las 37 herramientas agrupadas por rama técnica
-python conversor_html_notebooklm.py --tools
-python upc_degree_engine.py --tools
-
-# Ejecutar una herramienta con parámetros personalizados (JSON)
-python conversor_html_notebooklm.py --tool microstrip_synthesizer --params '{"z0_target": 50.0, "er": 4.4, "h_mm": 1.6}'
-python upc_degree_engine.py --tool buck_converter_synthesizer --params '{"vin_v": 24.0, "vout_v": 5.0, "iout_a": 3.0, "fs_khz": 200.0}'
-python upc_degree_engine.py --tool lora_toa_and_energy_predictor --params '{"sf": 10, "bw_khz": 125.0, "payload_bytes": 32}'
-
-# 8. Extracción Universal de Fórmulas Matemáticas (Formulario Maestro)
-python conversor_html_notebooklm.py --extract-formulas ./mis_apuntes/ ./dist/_Formulario_Maestro.md
-
-# 9. Extracción Universal de Problemas y Ejercicios Resueltos (Banco de Problemas)
-python conversor_html_notebooklm.py --extract-problems ./mis_apuntes/ ./dist/_Banco_Problemas.md
 ```
 
 ### Compilar a Ejecutable de Windows (.exe)
@@ -324,10 +378,59 @@ pyinstaller --noconfirm conversor_html_notebooklm.spec
 ```
 El ejecutable compilado estará disponible en `dist/conversor_html_notebooklm/conversor_html_notebooklm.exe`.
 
-### Ejecutar la Suite Completa de Pruebas Automatizadas (40 Tests)
+---
+
+## 🧪 Suite de Pruebas Automatizadas (40 Tests Pasando)
+La suite completa de pruebas unitarias e integración se ejecuta con `pytest`:
+
 ```bash
 pytest -v tests/
 ```
+
+### Desglose de Pruebas (40/40 Passing · 100% Green):
+- **`tests/test_formula_and_problem_extraction.py` (9 tests):**
+  1. `test_omml_fractions_and_radicals`: Conversión de fracciones y raíces cuadradas/n-ésimas de OMML a $\LaTeX$.
+  2. `test_omml_matrix`: Conversión de matrices 2D XML a matrices $\LaTeX$.
+  3. `test_omml_nary_and_limits`: Integrales múltiples, sumatorios con límites y operadores de límite.
+  4. `test_omml_accents_and_boxes`: Acentos vectoriales y cajas de ecuaciones $\boxed{...}$.
+  5. `test_clean_latex_formula`: Normalización de fórmulas, eliminación de `\displaystyle`, auto-balanceo de llaves y corrección de comas.
+  6. `test_html_math_shielding`: Protección de MathML y atributos `data-latex` / `data-tex` en HTML.
+  7. `test_extract_problems_from_text`: Extracción de problemas desde texto con parámetros, preguntas y soluciones.
+  8. `test_multi_format_formula_sheet_extractor`: Generador de formulario maestro multi-formato (.md, .html).
+  9. `test_multi_format_problem_extractor`: Extractor de banco de problemas a Markdown estructurado.
+- **`tests/test_engineering_tools.py` (8 tests):**
+  1. `test_tool_count_and_metadata_integrity`: Integridad de metadatos de las 37 herramientas especializadas.
+  2. `test_all_37_tools_default_execution`: Ejecución default sin errores de los 37 solvers.
+  3. `test_rf_microwave_tools`: Verificación analítica de los 10 solvers de RF y microondas.
+  4. `test_analog_and_power_tools`: Verificación analítica de los 8 solvers de analógica y potencia.
+  5. `test_digital_and_embedded_tools`: Verificación analítica de los 7 solvers digitales y firmware.
+  6. `test_dsp_and_signal_tools`: Verificación analítica de los 6 solvers de DSP y señales.
+  7. `test_physics_sensors_control_tools`: Verificación de los 6 solvers de sensores y control.
+  8. `test_engine_integration_bridge`: Puente de ejecución entre el motor y la suite.
+- **`tests/test_upc_curriculum.py` (8 tests):**
+  1. `test_engine_subjects_count`: Catálogo de las 35 asignaturas obligatorias.
+  2. `test_engine_total_questions`: Verificación de las 424 preguntas técnicas con justificación.
+  3. `test_all_35_calculators_execute`: Validación de las 35 calculadoras paramétricas.
+  4. `test_all_35_spice_templates_exist`: Verificación de plantillas circuitales SPICE.
+  5. `test_curriculum_search`: Motor de búsqueda y filtrado de asignaturas.
+  6. `test_quiz_evaluation`: Corrección automática de respuestas de test.
+  7. `test_study_guide_markdown`: Generación de guías de estudio para NotebookLM.
+  8. `test_curriculum_stats`: Métricas de ECTS, horas y créditos del plan.
+- **`tests/test_universal_and_lab.py` (9 tests):**
+  1. `test_universal_converters_functions_exist`: Verificación de API pública de conversores.
+  2. `test_ipynb_converter`: Conversión de notebooks de Jupyter.
+  3. `test_markdown_to_printable_html`: Generación de HTML con MathJax 3 y soporte de impresión.
+  4. `test_markdown_to_anki`: Conversión de tarjetas a mazos Anki.
+  5. `test_extract_formula_sheet`: Extractor de formulario de ecuaciones.
+  6. `test_extract_spice_netlist`: Extracción de netlists circuitales.
+  7. `test_technical_glossary`: Generación de glosario alfabético A-Z.
+  8. `test_flashcards_generator`: Generador de flashcards.
+  9. `test_virtual_lab_html_integrity`: Integridad de los 20 módulos del laboratorio WebGL 3D.
+- **`tests/test_full_gui.py` (1 test):** Layout de componentes ttk y estilo Apple Dark.
+- **`tests/test_modern_gui.py` (1 test):** Estructura del notebook de 9 pestañas.
+- **`tests/test_modern_theme.py` (1 test):** Estilos modernos, comboboxes y barras de progreso.
+- **`tests/test_modular_gui.py` (1 test):** Tarjetas y botones interactivos.
+- **`tests/test_resolver.py` & `tests/test_resolver_100.py` (2 tests):** Algoritmos heurísticos de resolución de enlaces rotos.
 
 ---
 
@@ -336,25 +439,32 @@ pytest -v tests/
 ```text
 Conversor-HTML-A-MD/
 ├── conversor_html_notebooklm.py        # Aplicación GUI (9 pestañas) y CLI principal
+├── universal_converters.py             # Motor de conversores universales (PDF, DOCX OMML, IPYNB, etc.)
 ├── upc_degree_engine.py                # Motor académico del grado GREELEC (35 asignaturas & 424 preguntas)
 ├── engineering_tools_suite.py          # Suite de 37 solvers numéricos, sintetizadores y generadores de hardware
 ├── upc_gui_tab.py                      # Pestaña interactiva de escritorio para el Plan UPC GREELEC & Workbench
-├── universal_converters.py             # Motor de conversores universales (PDF, DOCX, IPYNB, etc.)
-├── Laboratorio_Virtual_Sensores.html   # Simulador web 3D (20 módulos + instrumentos virtuales)
-├── conversor_html_notebooklm.spec      # Configuración de compilación PyInstaller
+├── Laboratorio_Virtual_Sensores.html   # Simulador web 3D autónomo (20 módulos + CAD + MNA)
+├── conversor_html_notebooklm.spec      # Configuración de compilación PyInstaller para Windows
 ├── requirements.txt                    # Dependencias Python del proyecto
 ├── data/
 │   ├── upc_curriculum_master.json      # Base de datos maestra de las 35 asignaturas con 424 preguntas
 │   ├── all_upc_compulsory_guides.json  # Guías docentes oficiales extraídas directamente de PDFs UPC
 │   ├── upc_study_guides_md/            # 35 Guías de estudio completas en Markdown para NotebookLM
 │   ├── upc_anki_decks/                 # 35 Mazos Anki (.tsv) + Mazo maestro con 424 preguntas
+│   ├── upc_guides_md/                  # Guías docentes oficiales transcritas a Markdown
 │   └── upc_pdf_raw/                    # 35 PDFs oficiales descargados de la web de la UPC
 ├── tests/
+│   ├── conftest.py                     # Configuración de entorno de pruebas y resolución de rutas Tcl/Tk
+│   ├── test_formula_and_problem_extraction.py # Pruebas de extracción de fórmulas OMML y problemas (9 tests)
 │   ├── test_engineering_tools.py      # Pruebas automatizadas de los 37 solvers especializados (8 tests)
 │   ├── test_upc_curriculum.py          # Pruebas de 35 asignaturas, 424 preguntas y calculadoras (8 tests)
 │   ├── test_universal_and_lab.py       # Pruebas de conversores universales y laboratorio (9 tests)
+│   ├── test_full_gui.py                # Verificación de interfaz completa ttk (1 test)
 │   ├── test_modern_gui.py              # Verificación de estructura moderna de componentes gráficos (1 test)
-│   └── test_modern_theme.py            # Verificación de estilos temáticos ttk y alta resolución DPI (1 test)
+│   ├── test_modern_theme.py            # Verificación de estilos temáticos ttk y alta resolución DPI (1 test)
+│   ├── test_modular_gui.py             # Verificación de tarjetas modulares de interfaz (1 test)
+│   ├── test_resolver.py                # Algoritmo de resolución heurística de enlaces (1 test)
+│   └── test_resolver_100.py            # Verificación al 100% de enlaces entre unidades temáticas (1 test)
 ├── dist_course_md/                     # Contenidos educativos del curso Sistemes de Mesura
 │   ├── Para_Subir_a_NotebookLM/        # Documentos maestros consolidados para NotebookLM
 │   ├── Tema 1/ a Tema 10/              # Carpetas individuales de cada unidad temática
@@ -372,13 +482,14 @@ Conversor-HTML-A-MD/
 ## 🤖 Integración con Google NotebookLM
 
 1. Abre tu navegador y accede a [Google NotebookLM](https://notebooklm.google.com/).
-2. Crea un nuevo cuaderno de estudio (ej: *"Sistemes de Mesura - UPC EEBE"*).
-3. Añade como fuentes los archivos ubicados en `dist_course_md/Para_Subir_a_NotebookLM/`:
+2. Crea un nuevo cuaderno de estudio (ej: *"Sistemes de Mesura - UPC EEBE"* o *"GREELEC UPC Master Study"*).
+3. Añade como fuentes los archivos ubicados en `dist_course_md/Para_Subir_a_NotebookLM/` o en `data/upc_study_guides_md/`:
    - `00_Formulario_Oficial_Examen.md`
    - `00_Glosario_Conceptos_Clave.md`
    - `00_Gran_Indice_Sistemes_de_Mesura.md`
    - `01_Cuaderno_Maestro_Tema_1_Sensores.md` a `10_Cuaderno_Maestro_Tema_10_Calibracion_Incertidumbres.md`
    - `_Examenes_Finales_Oficiales_UPC.md` y `_Problemas_Examen_Resueltos.md`
+   - Guías de estudio de asignaturas individuales (`UPC_230900_CCE_Guia_Estudio.md`, etc.)
 4. En el panel **Studio**:
    - Genera **Guías de estudio** y **Tarjetas de autoevaluación**.
    - Genera un **Audio Overview** (Podcast didáctico de repaso con dos ponentes virtuales).
